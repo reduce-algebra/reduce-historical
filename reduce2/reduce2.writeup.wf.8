@@ -1,0 +1,121 @@
+SPECIAL KEYPUNCH
+WIDTH OF COLUMN IS 65
+SENTENCES SEPARATED BY 2 BLANKS
+REPEAT TITLE
+TEXT STARTS ON LINE 5 IN POSITION 1
+INDENT (5,0),(10,0),(15,0),(20,0),(25,0)
+TABS AT 6 11 16 21 26 31 36 41
+NO CAPITALIZE
+TITLE 1
+9COMPUTING CENTER MEMO #M182сссссссссMTA/7-14-71
+)E 
+GO
+)LLLL )M REDUCE 2 )M
+)LLLL )P This memo describes the programming language REDUCE 2 and how to use it in MTS.  REDUCE 2
+is an improved version of REDUCE 1 (See CCMemo #M134) and will replace it.  By the end of 1971 the
+REDUCE 1 language will be removed from MTS and all those using it should switch to REDUCE 2.  This
+should present little trouble since the languages are similar and since REDUCE 2 is much easier to 
+use.  Most of the annoying problems in REDUCE 1, especially error handling, have been corrected in 
+REDUCE 2. 
+)P REDUCE 2 is intended primarily  as an interactive algebraic programming system.  However, it 
+may also be used in batch mode, and it contains facilities for solving general symbolic computations 
+either in batch mode or interactively.
+)P The bulk of this memo consists of the manual for REDUCE 2 from the Stanford Artificial Intelligence
+Project.  The remainder of these introductory pages describe changes made to REDUCE 2 in MTS and features
+not mentioned in the manual.  It should be noted that the Stanford manual was written for a version of 
+REDUCE 2 that uses a different character set than is available in MTS.  This should be only a minor 
+problem since most characters used in the manual which exists in MTS have the same meaning.  The 
+complete set of characters that are used for operators in REDUCE 2 in MTS is given below.  (See page
+ 2-4 in the manual for Stanford's set)
+)V
+TABS AT 6 20 35
+GO
+)LLT MTS )T OPERATOR )T CHARACTER
+)LT )U Character )U )T )U Name )U )T )U used in manual )U
+)LT := )T SETQ )T <
+)LT & )T AND )T /
+)LT | )T OR )T V
+)LT ~ )T NOT )T ~
+)LT = )T EQUAL )T =
+)LT ~= )T UNEQ )T =
+)LT >= )T GREATEQ )T >=
+)LT > )T GREATERP )T >
+)LT <= )T LESSEQ )T <=
+)LT < )T LESSP )T <
+)LT + )T PLUS )T +
+)LT - )T MINUS )T   - 
+)LT * )T TIMES )T *
+)LT / )T QUOTIENT )T /
+)LT ** )T EXPT )T |
+)LLLL )P There are two commands and one operator available in REDUCE 2 in MTS which are not mentioned in
+the manual.
+)V
+TABS AT 6 20
+INDENT (5,0),(19,0)
+GO
+)LLT MTS; )TH2 Return control to MTS in such a way that $RESTART will return to REDUCE.  Can be used to
+inspect or modify files while running REDUCE.
+)H2
+)LLT RETRY; )TH2 Attempt to reexecute the last REDUCE command that resulted in an error comment
+during execution.  Commands entered with incorrect syntax (for example missing parentheses) will not
+be saved and can not be retried.
+)H2
+)LLT SOLVE(L,R) )TH2 An operator with two matrix operands which will solve a set of linear equations.
+L is the left hand side matrix and R in the right hand side matrix for one or more right hand sides.
+)H2
+)P The remainder of this introduction consists of individual corrections to the REDUCE manual.  Each
+is given with a page reference.  For information on running REDUCE in MTS see Appendix B. 
+)LLT Page 2-1: )TH2 Numbers in this version of REDUCE are limited to the range -2147483648 to 2147483647
+(-2**31 to 2**31-1)
+)H2
+)LLT Page 2-2: )TH2 An identifier may be up to 80 characters long 
+)H2
+)LLT Page 2-4: )TH2 See the character set table above.
+)H2
+)LLT Page 2-12: )TH2 The result of the evaluation of an expression is printed )U only )U if it is entered
+directly in the input stream or from a file (and if it is ended with a ;).  It will not be printed if
+evaluated as part of a user defined operator.
+)H2
+)LLT Page 2-18: )TH2 A file name for use in the IN and OUT commands can be )U either )U an identifier
+)U or )U a string enclosed in quotes.  For example IN FILE; or OUT "-T";  Note that if the file name 
+does not follow the rules for an identifier, it must be enclosed in quotes.  A logical unit name (eg. 
+SPUNCH) can be used in an IN or OUT command. 
+)H2
+)LLT Page 2-18: )TH2 An output file is )U not )U erased before its first use (use the MTS command $EMPTY
+for this) and additional output will be appended to the end of a file only if no intervening SHUT command
+is given for it.
+)H2
+)LLT Page 2-19: )TH2 IN T; will cause input to be taken from SCARDS and OUT T; will cause output to be
+written on SPRINT.
+)H2
+)S
+)LLT Page 2-19: )TH2 The absence of a SHUT command will not cause output to be lost.
+)H2
+)LLT Page 3-10: )TH2 If a long expression is output with FORT mode on, it will be broken into two or
+more FORTRAN assignment statements without regard for parentheses.  This will often result in an incorrect
+FORTRAN statement.
+)H2
+)LLT Page 6-5: )TH2 This version of LISP has no such thing as a MACRO and they can't be defined in REDUCE.
+)H2
+)LLT Page A-1: )TH2 The following commands should be added to the list given:  MTS, RETRY, PAUSE, CONT,
+INDEX, and REMIND.
+)H2
+)LLT Page C-4: )TH2 The reference to page B-2 should be to page C-2.
+)H2
+)S
+)LLLL )M Appendix B )M
+)LLLLB.1  Running REDUCE in MTS 
+)P The commands necessary to run REDUCE in MTS are stored in the public file *REDUCE2.  All that is
+necessary to run REDUCE is
+)LLTT $SOURCE  *REDUCE2
+)LL This will cause the LISP interpreter to be loaded and REDUCE to be restored from a file.  The process
+of restoring REDUCE takes several seconds, be patient.  When LISP and REDUCE have been loaded, REDUCE will
+automatically be started and will print a heading identifying the version being used.  The only way to get
+back into LISP is to enter an END; command, errors will not cause this.
+)P When the REDUCE heading is printed the system is ready for REDUCE commands.  If commands are stored in a
+file use the IN command to cause them to be executed.  (See page 2-18).  An end of file from the terminal
+(or batch job) will unload REDUCE and LISP, and return to MTS.
+)P An example of the use of REDUCE is in the file *REDUCE2EXAMP.  To print it use the following MTS
+command (in Batch)
+)LLTT $COPY  *REDUCE2EXAMP
+)E
