@@ -1,0 +1,82 @@
+New PSL Changes (8 November 1982)
+
+---- PSL Changes -------------------------------------------------------------
+
+* The major change in PSL is that CATCH/THROW has been reimplemented to
+  conform to the Common Lisp definition (see Section 7.10 of the Common
+  Lisp manual).  In particular, CATCH has been changed to a special form
+  so that its second argument is evaluated only once, instead of twice.
+  THIS IS AN INCOMPATIBLE CHANGE: if you use CATCH, you must change your
+  programs.  For example, if you wrote:
+
+    (catch 'foo (list 'frobnicate x y z))
+
+  you should change it to:
+
+    (catch 'foo (frobnicate x y z))
+
+  One aspect of this change is that an "unhandled" throw is now reported
+  as an error in the context of the throw, rather than (as before) aborting
+  to top-level and restarting the job.
+
+  Also implemented are UNWIND-PROTECT, CATCH-ALL, and UNWIND-ALL, as
+  described in the Common Lisp manual, with the exception that the
+  catch-function in CATCH-ALL and UNWIND-ALL should expect exactly 2 arguments.
+
+  Note that in Common Lisp, the proper way to catch any throw is to
+  use CATCH-ALL, not CATCH with a tag of NIL.
+
+* A related change is that the RESET function is now implemented by
+  THROWing 'RESET, which is caught at the top-level.  Thus, UNWIND-PROTECTs
+  cannot be circumvented by RESET.
+
+---- NMODE Changes -----------------------------------------------------------
+
+New Features:
+
+* C-X C-B now enters a DIRED-like "Buffer Browser" that allows you to
+  select a buffer, delete buffers, etc.
+* DIRED and the Buffer Browser can now operate in a split-screen mode, where
+  the upper window is used for displaying the buffer/file list and the bottom
+  window is used to examine a particular buffer/file.  This mode is enabled
+  by setting the variable BROWSER-SPLIT-SCREEN to T.  If this variable is
+  NIL, then DIRED and the Buffer Browser will automatically start up in
+  one window mode.
+* M-X Apropos has been implemented.  It will show you all commands whose
+  corresponding function names contain a given string.  Thus, if you
+  enter "window", you will see all commands whose names include the string
+  "window", such as "ONE-WINDOW-COMMAND".
+* M-X Auto Fill Mode has been implemented by Jeff Soreff, along with
+  C-X . (Set Fill Prefix) and C-X F (Set Fill Column).  If you want NMODE
+  to start up in Auto Fill mode, put the following in your NMODE.INIT file:
+       (activate-minor-mode auto-fill-mode)
+* NMODE now attempts to display a message whenever PSL is garbage-collecting.
+  This feature is not 100% reliable: sometimes a garbage collect will happen
+  and no message will be displayed.
+
+Minor Improvements:
+
+* C-N now extends the buffer (like EMACS) if typed without a command argument
+  while on the last line of the buffer.
+* Lisp break handling has been made more robust.  In particular, NMODE now
+  ensures that IN* and OUT* are set to reasonable values.
+* The OUTPUT buffer now starts out with the "modified" attribute ("*") off.
+* The implementation of command prefix characters (i.e., C-X, M-X, C-], and
+  Escape) and command arguments (i.e., C-U, etc.) has changed.  The most
+  visible changes are that C-U, etc. echo differently, and that Escape can
+  now be followed by bit-prefix characters.  (In other words, NMODE will
+  recognize "Escape ^\ E" as Esc-M-E, rather than "Esc-C-\ E"; the 9836
+  terminal emulator has been modified to generate such escape sequences
+  under some circumstances.)  NMODE customizers may be interested to know
+  that all of these previously-magic characters can now be redefined (on a
+  per-mode basis, even), just like any other character.
+* If you are at or near the end of the buffer, NMODE will put the current
+  line closer to the bottom of the screen when it adjusts the window.
+* C-X C-F (Find File) and the Dired 'E' command will no longer "find" an
+  incorrect version of the specified file, should one happen to already be in
+  a buffer.
+* The 'C' (continue) command to the PSL break loop now works again.
+* The "NMODE" indicator on the current window's mode line no longer
+  disappears when the user is entering string input.
+* The command C-X 4 F (Find File in Other Window) now sets the buffer's
+  file name properly.

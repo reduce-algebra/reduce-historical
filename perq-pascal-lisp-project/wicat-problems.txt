@@ -1,0 +1,4 @@
+what is the relationship between 'a string', "a string" and arrays?
+
+buildup of old files          
+

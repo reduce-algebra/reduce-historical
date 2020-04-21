@@ -1,0 +1,209 @@
+PSL Manual                    14 January 1983                  Bibliography
+section 23.0                                                      page 23.1
+
+                                CHAPTER 23                                CHAPTER 23                                CHAPTER 23
+                               BIBLIOGRAPHY                               BIBLIOGRAPHY                               BIBLIOGRAPHY
+
+  The  following  books and articles either are directly referred to in the
+manual text, or will be helpful for supplementary reading.
+
+[Allen 79]     Allen, J. R.
+                 ___ _______ __ ____                 The Anatomy of LISP.
+                 McGraw-Hill, New York, New York, 1979.
+
+[Baker 78]     Baker, H. G.
+                 Shallow Binding in LISP 1.5.
+                 ____                 CACM 21(7):565, July, 1978.
+
+[Benson 81]    Benson, E. and Griss, M. L.
+                 _______  _ ________ ____ _____ _______ ______________                 SYSLISP: A Portable LISP Based Systems Implementation
+                    ________                    Language.
+                 Utah Symbolic Computation Group Report UCP-81, University
+                    of Utah, Department of Computer Science, February,
+                    1981.
+
+[Bobrow 76]    Bobrow, R. J.; Burton, R. R.; Jacobs, J. M.; and Lewis, D.
+                 ___ ____ ______  _______                 UCI LISP MANUAL (revised).
+                 Online Manual RS:UCLSP.MAN, University of California,
+                    Irvine, ??, 1976.
+
+[Charniak 80]  Charniak, E.; Riesbeck, C. K.; and McDermott, D. V.
+                 __________ ____________ ___________                 Artificial Intelligence Programming.
+                 Lawrence Erlbaum Associates, Hillsdale, New Jersey, 1980.
+
+[Fitch 77]     Fitch, J. and Norman, A.
+                 Implementing LISP in a High Level Language.
+                 ________  ________ ___ __________                 Software: Practise and Experience 7:713-xx, 1977.
+
+[Foderaro 81]  Foderaro, J. K. and Sklower, K. L.
+                 ___ _____ ____ ______                 The Franz LISP Manual
+                 1981.
+
+[Frick 78]     Frick, I. B.
+                 ______ ___ ________ ____ __ ___ _________ __ ___ __                 Manual for Standard LISP on the DECSYSTEM 10 and 20.
+                 Utah Symbolic Computation Group Technical Report TR-2,
+                    University of Utah, Department of Computer Science,
+                    July, 1978.
+
+[Griss 77a]    Griss, M. L.
+                 ___  _ ________ ______________ ________ ___ ____ ____                 BIL: A Portable Implementation Language for LISP-Like
+                    _______                    Systems.
+                 Utah Symbolic Computation Group Opnote No. 36, University
+                    of Utah, Department of Computer Science, 1977.Bibliography                  14 January 1983                    PSL Manual
+page 23.2                                                      section 23.0
+
+[Griss 77b]    Griss, M. L. and Swanson, M. R.
+                 MBALM/1700 : A Micro-coded LISP Machine for the Burroughs
+                    B1726.
+                    ___________ __ _____ __ ___                 In Proceedings of Micro-10 ACM, pages 15.  ACM, 1977.
+
+[Griss 78a]    Griss, M. L. and Kessler, R. R.
+                 REDUCE 1700: A Micro-coded Algebra System.
+                    ___________ __ ___ ____ ______ ________________                 In Proceedings of The 11th Annual Microprogramming
+                    ________                    Workshop, pages 130-138.  IEEE, November, 1978.
+
+[Griss 78b]    Griss, M. L.
+                 _____ ___  _ ________ ____ ___________                 MBALM/BIL: A Portable LISP Interpreter.
+                 Utah Symbolic Computation Group Opnote No. 38, University
+                    of Utah, Department of Computer Science, 1978.
+
+[Griss 79a]    Griss, M. L.; Kessler, R. R.; and Maguire, G. Q. Jr.
+                 TLISP - A Portable LISP Implemented in P-code.
+                    ___________ __ _______ __                 In Proceedings of EUROSAM 79, pages 490-502.  ACM, June,
+                    1979.
+
+[Griss 79b]    Griss, M. L. and Kessler, R. R.
+                 _ _______________ ______________ __ ____ ___ ______ __ ___                 A Microprogrammed Implementation of LISP and REDUCE on the
+                    _________ _____ _____ ________                    Burroughs B1700/B1800 Computer.
+                 Utah Symbolic Computation Group Report UCP 70, University
+                    of Utah, Department of Computer Science, 1979.
+
+[Griss 81]     Griss, M. L. and Hearn, A. C.
+                 A Portable LISP Compiler.
+                 ________   ________ ___ __________                 Software - Practice and Experience 11:541-605, June, 1981.
+
+[Griss 82]     Griss, M. L.; Benson. E.; and Hearn, A. C.
+                 Current Status of a Portable LISP Compiler.
+                    ___________ __ ___ _______ ____ _________ __ ________                 In Proceedings of the SIGPLAN 1982 Symposium on Compiler
+                    ____________                    Construction, pages 276-283.  ACM SIGPLAN, June, 1982.
+                 Also: Utah Symbolic Computation Group, Report UCP-82.
+
+[Harrison 73]  Harrison, M. C.
+                 ____ __________ ___ ___________                 Data structures and Programming.
+                 Scott, Foresman and Company, Glenview, Illinois, 1973.
+
+[Harrison 74]  Harrison, M. C.
+                 A Language Oriented Instruction Set for BALM.
+                    ___________ __ _______ ________ _                 In Proceedings of SIGPLAN/SIGMICRO 9, pages 161.  ACM,
+                    1974.
+
+[Hearn 66]     Hearn, A. C.
+                 Standard LISP.
+                 _______ _______ _______                 SIGPLAN Notices Notices 4(9):xx, September, 1966.
+                 Also Published in SIGSAM Bulletin, ACM Vol. 13, 1969,
+                    p. 28-49. .PSL Manual                    14 January 1983                  Bibliography
+section 23.0                                                      page 23.3
+
+[Hearn 73]     Hearn, A. C.
+                 ______ _ _____ ______                 REDUCE 2 Users Manual.
+                 Utah Symbolic Computation Group Report UCP-19, University
+                    of Utah, Department of Computer Science, 1973.
+
+[Kessler 79]   Kessler, R. R.
+                 _____   _______ ________ ____ ______                 PMETA - Pattern Matching META/REDUCE.
+                 Utah Symbolic Computation Group Opnote No. 40, University
+                    of Utah, Department of Computer Science, January, 1979.
+
+[Lefaivre 78]  Lefaivre, R.
+                 _______ ___ ____ ______                 RUTGERS/UCI LISP MANUAL.
+                 Online Manual,  RS:RUTLSP.MAN, Rutgers University,
+                    Computer Science Department, May, 1978.
+
+[LISP360 xx]   xx.
+                 ____ ___ _________ ______                 LISP/360 Reference Manual.
+                 Technical Report, Stanford Centre for Information
+                    Processing, Stanford University, xx.
+
+[MACLISP 76]   xx.
+                 _______ _________ ______                 MACLISP Reference Manual.
+                 Technical Report, MIT, March, 1976.
+
+[Marti 79]     Marti, J. B., et al.
+                 Standard LISP Report.
+                 _______ _______                 SIGPLAN Notices 14(10):48-68, October, 1979.
+
+[McCarthy 73]  McCarthy, J. C. et al.
+                 ____ _ _ __________ _ ______                 LISP 1.5 Programmer's Manual.
+                 M.I.T. Press, 1973.
+                 7th Printing January 1973.
+
+[Moore 76]     J. Strother Moore II.
+                 ___ _________ _______ _______ _____________                 The INTERLISP Virtual Machine Specification.
+                 CSL 76-5, Xerox, Palo Alto Research Center, 3333 Coyote
+                    Road,etc, September, 1976.
+
+[Nordstrom 73] Nordstrom, M.
+                 _ _______ _________                 A Parsing Technique.
+                 Utah Computational Physics Group Opnote No. 12, University
+                    of Utah, Department of Computer Science, November,
+                    1973.
+
+[Nordstrom 78] Nordstrom, M.; Sandewall, E.; and Breslaw, D.
+                 ____ __   _ _______ ______________ __ _________                 LISP F3 : A FORTRAN Implementation of InterLISP.
+                 Manual, Datalogilaboratoriet, Sturegatan 2 B, S 752 23,
+                    Uppsala, SWEDEN, 1978.
+                 Mentioned by M. Nordstrom in 'Short Announcement of LISP
+                    F3', a handout at LISP80.Bibliography                  14 January 1983                    PSL Manual
+page 23.4                                                      section 23.0
+
+[Norman 81]    Norman, A.C. and Morrison, D. F.
+                 ___ ______ _________ _______                 The REDUCE Debugging Package.
+                 Utah Symbolic Computation Group Opnote No. 49, University
+                    of Utah, Department of Computer Science, February,
+                    1981.
+
+[Pratt 73]     Pratt, V.
+                 Top Down Operator Precedence.
+                    ___________ __ ____ _                 In Proceedings of POPL-1, pages ??-??.  ACM, 1973.
+
+[Quam 69]      Quam, L. H. and Diffie, W.
+                 ________ ____ _ _ ______                 Stanford LISP 1.6 Manual.
+                 Operating Note 28.7, Stanford Artificial Intelligence
+                    Laboratory, 1969.
+
+[Sandewall 78] Sandewall, E.
+                 Programming in an Interactive Environment : The LISP
+                    Experience.
+                 _________ _______                 Computing Surveys 10(1):35-72, March, 1978.
+
+[Steele 81]    Steele, G. L. and Fahlman, S. E.
+                 _____ ____ _________ ______                 Spice LISP Reference Manual.
+                 Manual  , Carnegie-Mellon University, Pittsburgh,
+                    September, 1981.
+                 (Preliminary Common LISP Report).
+
+[Teitelman 78] Teitelman, W.; et al.
+                 _________ _________ ______   ___ ________                 Interlisp Reference Manual, (3rd Revision).
+                 Xerox Palo Alto Research Center, 3333 Coyote Hill Road,
+                    Palo Alto,Calif. 94304, 1978.
+
+[Teitelman 81] Teitleman, W. and Masinter, L.
+                 The InterLISP Programming Environment.
+                 ____ ________                 IEEE Computer 14(4):25-34, 1981.
+
+[Terashima 78] Terashima, M. and Goto, E.
+                 Genetic Order and Compactifying Garbage Collectors.
+                 ___________ __________ _______                 Information Processing Letters 7(1):27-32, 1978.
+
+[Weinreb 81]   Weinreb, D. and Moon, D.
+                 ____ _______ ______                 LISP Machine Manual
+                 1981.
+                 Fourth edition.
+
+[Weissman 67]  Weissman.
+                 ____ _ _ ______                 LISP 1.5 Primer.
+                 Dickenson Publishing Company, Inc., 1967.
+
+[Winston 81]   Winston, P. H., and Horn, B. K. P.
+                 ____                 LISP.
+                 Addison-Wesley Publishing Company, Reading, Mass., 1981.

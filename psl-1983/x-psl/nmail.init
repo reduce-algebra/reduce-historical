@@ -1,0 +1,18 @@
+% This is the default NMail.INIT file, which is run if there is no
+% NMail.INIT file in the user's home directory.  If you make your
+% own NMail.INIT file, it might be a good idea to put the statement
+% (nmode-read-and-evaluate-file nmail-default-init-file-name) at the
+% beginning, which will cause this file to be executed first.
+
+% This loads the "pre-defined" filters.
+(add-filters-from-file "<kendzierski.mail>filter-defs.sl")
+(add-to-command-list 'Mail-Command-List
+		     (x-char <)
+		     'display-filters-command)
+%(add-to-command-list 'Mail-Command-List
+%		     (x-char P)
+%		     'apply-filter-command)
+(add-to-command-list 'Mail-Command-List
+		     (x-char >)
+		     'remove-filters-command)
+(nmode-establish-current-mode)

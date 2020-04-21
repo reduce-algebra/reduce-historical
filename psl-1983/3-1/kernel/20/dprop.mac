@@ -1,0 +1,13 @@
+	radix 10
+	extern SYMNAM
+	extern SYMVAL
+	extern SYMFNC
+	extern SYMPRP
+	extern L0001
+	extern L0002
+	extern L0003
+UNDEFN:	<24377294848+<SYMFNC+0>>+516
+	intern UNDEFN
+LAMLNK:	<24377294848+<SYMFNC+0>>+512
+	intern LAMLNK
+	end

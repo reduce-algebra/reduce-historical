@@ -1,0 +1,25 @@
+RAND-RELAY (VAX 11/750-1Mb)    RAND-UNIX (VAX 11/780 4Mb )	
+
+*** GC 5: time 1122 ms, 
+EmptyTest 10000		85	        0
+SlowEmptyTest 10000	1122   		663
+Cdr1Test 100		2074		1632
+Cdr2Test 100		1598		1224
+CddrTest 100		1326		1071
+ListOnlyCdrTest1	9435		7208
+ListOnlyCddrTest1	15283		12410
+ListOnlyCdrTest2	12189		9418
+ListOnlyCddrTest2	18105		15164
+ReverseTest 10		1054		748
+*** GC 6: time 1139 ms,                  782 ms,
+MyReverse1Test 10	1156		697
+*** GC 7: time 1224 ms,                  646ms
+MyReverse2Test 10	1003		629
+*** GC 8: time 1190 ms, 		 765 ms
+LengthTest 100		2210		1700
+ArithmeticTest 10000	1938		867
+EvalTest 10000		8687		5083
+tak 18 12 6		1326		765
+gtak 18 12 6		7361		4267
+gtsta g0		5253		2533
+gtsta g1		5355		2465

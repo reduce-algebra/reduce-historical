@@ -1,0 +1,52 @@
+The historical files here represents copies of earlier versions of
+Reduce and PSL with (at present) the oldes ones being from the early 1980s.
+They are in general unaltered from the original archives that they were
+recovered from, and a consequence of that is that some have restrictive
+rights messages embedded which represented their status at that time.
+Tony Hearn and Martin Griss as lead copyright holders were senty an enquiry:
+> Would you grant permission for me to make these public as part of the
+> above-mentioned web site (which Im expecting will eventually be
+> formally accessioned into the Computer History Museum digital
+> repository? Thanks very much.
+
+Tony Hearn replied:
+> Fine with me.
+
+Martin Griss replied:
+> I have no objections to their release with an appropriate note, but its
+> important to know that several files were written or updated by
+> multiple students at Utah and by several staff at HP Laboratories; many
+> of these folks have most likely retired.
+>
+> So, I am not sure if we need to contact them for permission. Perhaps
+> they at least need to be listed as contributors. As far as I can
+> tell/recall, only some of the files have copyright notices that request
+> my permission for release - I assume (or intended -:) these notice on
+> the "main" files apply to all subsidiary files, both hand written and
+> generated.
+>
+> We will need certainly to add some sort of caveat/disclosure that says
+> these files are provided for historical interest only, and there is no
+> implied warrantee of fitness or correctness for use, nor may they be
+> used for any commercial pupose..
+
+Please note that last paragraph that these files are made availanle to
+record the historical trail of the Reduce project and the contributors -
+both those named within the filea and others deserve thanks and credit.
+
+For later copies of Reduce Tony Hearn arranged that contributors completed
+paperwork to confirm that they were willing to have their code distributed
+as part of Reduce. For PSL at some stage control and support was organised
+through HP Labs, and a modest while after Reduce became an open source
+project they confirmed that they were happy for their code to be included
+as part of the open source version. It is probable that the rights that they
+acquired in order to be able to develop and exploit PSL means that their
+release of the code covers almost all of the versions here. See the HP
+disclaimer in the PSL section of the main current version of the code.
+
+The bibliography in the file doc/manual/bibl.bib lists many of those who
+contributed to Reduce.
+
+                                                          ACN April 2020
+
+ 

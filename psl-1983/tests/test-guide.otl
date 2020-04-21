@@ -1,0 +1,10 @@
+@Comment{OUTLINE of TEST-GUIDE.MSS.32 by Scribe 3C(1254) on 22 August 1982 at 08:54}
+1. Introduction                                           1 TEST-GUIDE.MSS.32 line 54
+2. Basic I/O Support                                      1 TEST-GUIDE.MSS.32 line 67
+3. LAP and CMACRO Tests                                   4 TEST-GUIDE.MSS.32 line 184
+4. SysLisp Tests                                          4 TEST-GUIDE.MSS.32 line 192
+5. Mini PSL Tests                                        10 TEST-GUIDE.MSS.32 line 375
+6. Full PSL Tests                                        10 TEST-GUIDE.MSS.32 line 386
+7. References                                            10 TEST-GUIDE.MSS.32 line 402
+I. Sample DEC-20 Output                                  11 TEST-GUIDE.MSS.32 line 405
+ Table of Contents                                        1 -SCRIBE-SCRATCH-.15-5-1.100015 line 3

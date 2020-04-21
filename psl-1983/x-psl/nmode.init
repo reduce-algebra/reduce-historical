@@ -1,0 +1,39 @@
+% This is the "default" NMODE.INIT file.  It will be evaluated when NMODE starts
+% up, unless the file *NMODE.INIT exists, in which case that file will be
+% evaluated instead.  It is recommended that any personal NMODE.INIT file begin
+% with the form:
+%
+% (nmode-read-and-evaluate-file nmode-default-init-file-name)
+%
+% which will cause this file to be evaluated first.
+
+% Make the BACKSPACE key behave like Rubout!
+% Make M-BACKSPACE behave like M-Rubout!
+
+(remove-from-command-list 'Read-Only-Text-Command-List (x-char BACKSPACE))
+(remove-from-command-list 'Lisp-Command-List (x-char M-BACKSPACE))
+(add-to-command-list 'Text-Command-List
+		     (x-char BACKSPACE)
+		     'delete-backward-character-command)
+(add-to-command-list 'Text-Command-List
+		     (x-char M-BACKSPACE)
+		     'kill-backward-word-command)
+(add-to-command-list 'Lisp-Command-List
+		     (x-char BACKSPACE)
+		     'delete-backward-hacking-tabs-command)
+(nmode-establish-current-mode)
+
+(when (not (funboundp 'nmode-define-softkey))
+ (nmode-define-softkey 0 'exit-nmode "Exit")
+ (nmode-define-softkey 1 'buffer-browser-command "Buffers")
+ (nmode-define-softkey 2 'find-file-command "Find File")
+ (nmode-define-softkey 3 'save-file-command "Save File")
+ (if (not (funboundp 'browser-browser-command))
+   (nmode-define-softkey 4 'browser-browser-command "Browsers")
+   (nmode-define-softkey 4 'fill-paragraph-command "Fill Para")
+   )
+ (nmode-define-softkey 5 'pasemulate "Hulk")
+ (nmode-define-softkey 6 'pasfiler "Filer")
+ (nmode-define-softkey 8 (string (x-char ^!])) "Lisp-")
+ (nmode-define-softkey 9 (string (x-char ^!\) #/X) "M-X")
+ )

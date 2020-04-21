@@ -1,0 +1,2 @@
+(faslin "$pwb/windows-vax.b")
+(window-load-all)

@@ -1,0 +1,216 @@
+@u[Lisp Callable Functions, see Standard LISP Report]
+!*FIRST!-PROCEDURE	The top loop LISP reader
+ABS
+ADD1
+AND
+APPEND
+APPLY
+APPLY1                  (APPLY f (LIST u))
+ASSOC
+ATOM
+ATSOC
+CAAAAR
+CAAADR
+CAAAR
+CAADAR
+CAADDR
+CAADR
+CAAR
+CADAAR
+CADADR
+CADAR
+CADDAR
+CADDDR
+CADDR
+CADR
+CAR
+CATCH
+CDAAAR
+CDAADR
+CDAAR
+CDADAR
+CDADDR
+CDADR
+CDAR
+CDDAAR
+CDDADR
+CDDAR
+CDDDAR
+CDDDDR
+CDDDR
+CDDR
+CDR
+CLOSE
+CODEP
+COMPRESS
+COND
+CONS
+CONSTANTP
+DE
+DEFLIST
+DELATQ 		(DELATQ 'X alist) deletes (X . any) from alist
+DELETE
+DELQ             Efficient DELETE (using EQ)
+DF
+DIFFERENCE
+DIGIT
+DIVIDE
+DM
+DN
+DSKIN		(DSKIN file-id)
+EOFP            (EOFP channel)
+EQ
+EQCAR
+EQN
+EQUAL
+ERROR
+ERRORSET
+ERRPRT           Prints message with *'s
+EVAL
+EVLAM            Evaluates a LAMBDA expression
+EVLIS
+EXPAND
+EXPLODE
+EXPT
+FASTSTAT 	Prints RECLAIM message
+FIX
+FIXP
+FLAG
+FLAG1	        (FLAG (LIST x) y)
+FLAGP
+FLOAT
+FLOATP
+FLUID
+FLUIDP
+FUNCELL	        Accesses function cell
+FUNCTION
+GENSYM
+GET
+GETD
+GETV
+GLOBAL
+GLOBALP
+GO
+GREATERP
+IDP
+INTERN
+LBIND1		Binds a single ID in LAMBDA
+LBINDN
+LENGTH
+LESSP
+LIST2	        For efficent LIST compilation
+LIST3
+LIST4
+LIST5
+LITER
+MAP
+MAPC
+MAPCAN
+MAPCAR
+MAPCON
+MAPLIST
+MAX
+MAX2
+MEMBER
+MEMQ
+MIN
+MIN2
+MINUS
+MINUSP
+MKVECT
+MSGPRT
+NCONC
+NCONS
+NOT
+NULL
+NUMBERP
+ONEP
+OPEN
+OR
+ORDERP
+P!.N			Evaluates Implicit PROGNs
+PAIR
+PAIRP
+PBIND1			PROG binding
+PBINDN
+PLIST			Access full property list
+PLUS
+PLUS2
+PRIN1
+PRIN2
+PRIN2T
+PRIN2TL
+PRINC
+PRINT
+PROG
+PROG2
+PROGG0131
+PROGN
+PUT
+PUTC
+PUTD
+PUTL
+PUTV
+QUOTIENT
+RDEVPR			A read-eval-print loop
+RDS
+RDTOK
+READ
+READCH
+RECLAIM
+REMAINDER
+REMD
+REMFLAG
+REMFLAG1
+REMOB
+REMPROP
+RETURN
+REV
+REVERSE
+REVX
+RLIST
+RPLACA
+RPLACD
+SASSOC
+SET
+SETFUNCELL
+SETPLIST
+SETVALUE
+STRINGP		Equivalent to IDP
+SUB1
+SUBLIS
+SUBST
+TCATCH
+TERPRI
+THROW
+TIMES
+TIMES2
+TOKEN
+TTHROW
+UNBIND1
+UNBINDN
+UNBINDTO
+UNFLUID
+UPBV
+VALUE
+VECTORP
+WHILE
+WRS
+WRTOK
+XAPPLY
+XCONS
+ZEROP
+@u[Interesting Globals]
+!*RAISE		Raise lower case typing to upper case if not NIL
+!*ECHO          Selected input to selected output if not NIL.
+BSTK!*		Holds old values of rebound IDS
+EMSG!*		Error message in most recent call on ERROR
+ENUM!*		Error number in most recent call on ERROR.
+INITFORM!*      First Expression EVAL'ed
+THROWING!*	Indicates if throwing
+THROWTAG!*      Indicates TAG in TTHROW
+TOK!*		Holds last token scanned
+TOKTYPE		Indicates type of token scanned:
+			1: integer
+			2: id
+			3: character

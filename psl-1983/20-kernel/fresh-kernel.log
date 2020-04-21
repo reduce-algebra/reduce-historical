@@ -1,0 +1,15 @@
+
+LINK FROM KESSLER, TTY 101
+
+[DO: Execution of PS:<PSL.KERNEL.20>FRESH-KERNEL.CTL.3 started at 7-Mar-83 15:11:40]
+
+ TOPS-20 Command processor 5(712)-1
+@rename 20.SYM PREVIOUS-20.SYM
+%No such filename - 20.SYM
+@copy PC:BARE-PSL.SYM 20.SYM
+ <PSL.COMP>BARE-PSL.SYM.1 => 20.SYM.27 [OK]
+@; To regenerate the .CTL files:
+; PSL:PSL
+; (dskin "20-kernel-gen.sl")
+
+[DO: Execution finished at 7-Mar-83 15:11:56]

@@ -1,0 +1,4 @@
+1
+2
+(PRINT '(AHA OHO))
+(RDS NIL)

@@ -1,0 +1,10 @@
+% NBIG1.BUILD - BigNum Interface
+% Load with NBIG.LAP, rather than IMPORTS, for module order
+
+compiletime<<load syslisp;
+	     load fast!-vector;
+	     load inum>>;
+
+in "nbig1.red"$
+
+End;

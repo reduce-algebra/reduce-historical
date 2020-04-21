@@ -1,0 +1,261 @@
+,MOD
+- R 44X (11 February 1983) <PSL.NMODE-DOC>CHART.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+
+
+
+
+
+                                  202/9836 NMODE Command Summary
+
+                                         201/11 February 1983
+
+
+
+          202/Information
+
+          201/What Cursor Position               C-X =
+          Show Function on Key              M-?
+          List Matching Commands            <help>
+
+          202/Files
+
+          201/Find File                           C-X C-F
+          Write File                          C-X C-W
+          Save File                           C-X C-S
+          Save All Files                      M-X Save All Files
+          Write Region to File                M-X Write Region
+          Append Region to File              M-X Append to File
+          Prepend Region to File             M-X Prepend to File
+          Insert File                         M-X Insert File
+          Revert File                         M-X Revert File
+          Set Visited Filename                M-X Set Visited Filename
+
+          202/Buffers
+
+          201/Find File                           C-X C-F
+          Select Buffer                       C-X B
+          Select Previous Buffer              C-M-L
+          List Buffers                        C-X C-B
+          Go to Buffer Start                 M-<  (or)  <clr-end>
+          Go to Buffer End                   M->  (or)  Shift-<clr-end>
+          Kill Buffer                         C-X K
+          Kill Some Buffers                   M-X Kill Some Buffers
+          Append Region to Buffer           C-X A
+          Rename Buffer                     M-X Rename Buffer
+          Insert Buffer                       M-X Insert Buffer
+          Set Buffer Not-Modified            M-~
+
+          202/Regions
+
+          201/Kill Region                         C-W
+          Copy Region                       M-W
+          Fill Region                         M-G
+          Upcase Region                      C-X C-U
+          Downcase Region                   C-X C-L
+          Append Region to File              M-X Append to File
+          Prepend Region to File             M-X Prepend to File
+          Append Region to Buffer           C-X A
+
+          202/The Mark
+
+          201/Set/Pop Mark                       C-@
+          Exchange Point and Mark           C-X C-X
+          Set Mark at Beginning              C-<
+          Set Mark at End                    C->
+          Mark Word                         M-@
+          Mark Paragraph                    M-H
+          Mark Form                         C-M-@
+          Mark Defun                        M-Backspace
+          Mark Whole Buffer                  C-X H
+
+
+
+
+
+          202/Characters
+
+          201/Move Forward Character            C-F  (or)  <right-arrow>
+          Move Backward Character          C-B  (or)  <left-arrow>
+          Forward Delete Character           C-D  (or)  <del-chr>
+          Backward Delete Character         Rubout
+          Transpose Characters              C-T
+          Quote Character                    C-Q
+
+          202/Lines
+
+          201/Move to Next Line                  C-N  (or)  <down-arrow>
+          Move to Previous Line              C-P  (or)  <up-arrow>
+          Goto Start of Line                  C-A
+          Goto End of Line                   C-E
+          Kill Line                           C-K  (or)  <del-ln>
+          Transpose Lines                    C-X C-T
+          Center Line                        M-S
+          Join To Previous Line              M-^
+          Insert Blank Line                  C-O  (or)  <ins-ln>
+          Split Line                          C-M-O
+          Delete Blank Lines                 C-X C-O
+          Delete Matching Lines              M-X Delete Matching Lines
+          Delete Non-Matching Lines          M-X Delete Non-Matching Lines
+
+          202/Words
+
+          201/Move Forward Word                 M-F  (or)  Control-<right-arrow>
+          Move Backward Word               M-B  (or)  Control-<left-arrow>
+          Forward Kill Word                  M-D
+          Backward Kill Word                 M-Rubout
+          Mark Word                         M-@
+          Transpose Words                   M-T
+          Upcase Word                       M-U
+          Downcase Word                     M-L
+          Capitalize Word                     M-C
+
+          202/Sentences
+
+          201/Move Forward Sentence             M-E
+          Move Backward Sentence           M-A
+          Forward Kill Sentence              M-K
+          Backward Kill Sentence             C-X Rubout
+
+          202/Paragraphs
+
+          201/Move Forward Paragraph           M-]
+          Move Backward Paragraph          M-[
+          Mark Paragraph                    M-H
+          Fill Paragraph                      M-Q
+
+          202/Killing and Unkilling Text
+
+          201/Kill Line                           C-K  (or)  <del-ln>
+          Forward Kill Word                  M-D
+          Backward Kill Word                 M-Rubout
+          Forward Kill Sentence              M-K
+          Backward Kill Sentence             C-X Rubout
+          Forward Kill Form                  C-M-K
+          Backward Kill Form                 C-M-Rubout
+          Kill Region                         C-W
+          Copy Region                       M-W
+          Yank Killed Text                   C-Y
+          Yank Previous Kill                 M-Y
+          Append Next Kill                   C-M-W
+
+
+
+
+
+          202/Deleting Text
+
+          201/Forward Delete Character           C-D  (or)  <del-chr>
+          Backward Delete Character         Rubout
+          Delete Horizontal Spaces            M-\
+          Delete Blank Lines                 C-X C-O
+          Delete Matching Lines              M-X Delete Matching Lines
+          Delete Non-Matching Lines          M-X Delete Non-Matching Lines
+
+          202/String Search
+
+          201/Foward Search                     C-S
+          Reverse Search                     C-R
+          Count Occurrences                 M-X Count Occurrences
+
+          202/String Replacement
+
+          201/Query Replace                      M-%
+          Replace String                     C-%
+
+          202/Indentation
+
+          201/Back to Indentation on Line        M-M
+          Indent Line                        Tab
+          Indent New Line                    Newline
+          Indent Form                        C-M-Q
+          Indent Region                      C-M-\
+
+          202/Text Filling and Justification
+
+          201/Set Fill Prefix                      C-X .
+          Set Right Margin                   C-X F
+          Fill Region                         M-G
+          Fill Paragraph                      M-Q
+          Fill Comment                       M-Z
+          Auto Fill Mode (toggle)             M-X Auto Fill Mode
+
+          202/Case Conversion
+
+          201/Upcase Word                       M-U
+          Downcase Word                     M-L
+          Capitalize Word                     M-C
+          Upcase Region                      C-X C-U
+          Downcase Region                   C-X C-L
+
+          202/Modes
+
+          201/Enter Lisp Mode                    M-X Lisp Mode
+          Enter Text Mode                   M-X Text Mode
+
+          202/Lisp Forms
+
+          201/Move Forward Form                 C-M-F
+          Move Backward Form               C-M-B
+          Forward Kill Form                  C-M-K
+          Backward Kill Form                 C-M-Rubout
+          Transpose Forms                   C-M-T
+          Mark Form                         C-M-@
+          Indent Form                        C-M-Q
+
+          202/Lisp Lists
+
+          201/Move Backward Up List             C-(
+          Move Forward Up List              C-)
+          Move Forward Into List             C-M-D
+          Insert Parens                      M-(
+
+
+
+
+
+          202/Lisp Defuns
+
+          201/Mark Defun                        C-M-H
+          Beginning of Defun                 C-M-A
+          End of Defun                       C-M-E
+          Execute Defun                      C-] D
+
+          202/Lisp Execution
+
+          201/Execute Form                       C-] E
+          Execute Defun                      C-] D
+          Quit from Break Loop              C-] Q
+          Abort from Break Loop             C-] A
+          Backtrace from Break Loop         C-] B
+          Continue from Break Loop          C-] C
+          Retry from Break Loop             C-] R
+
+          202/Screen Management
+
+          201/Redisplay Screen                   C-L
+          Reposition Window                  C-M-R
+          Scroll to Next Screenful            C-V  (or)  <recall>
+          Scroll to Previous Screenful        M-V  (or)  Shift-<recall>
+          Scroll Buffer Up One Line          Control-<recall>
+          Scroll Buffer Down One Line       Shift-Control-<recall>
+          Invert Video                       C-X V
+
+          202/Windows
+
+          201/Two Windows                       C-X 2
+          One Window                        C-X 1
+          Go to Other Window                C-X O
+          Exchange Windows                  C-X E
+          Scroll Other Window                C-M-V
+          Grow Window                       C-X ^

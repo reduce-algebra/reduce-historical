@@ -1,0 +1,82 @@
+@Marker(Library,PSLMacrosNames)
+@comment{ <GRISS>PSLMAC.LIB.2,  by Griss, from}
+@comment{ <MAGUIRE>LOCALM.LIB.2, 13-May-82 05:46:06, Edit by MAGUIRE}
+@comment{ Started by G. Q. Maguire Jr. on 13.5.82 }
+@comment{ Various assorted commonly used macros for Local languages and
+          papers, so they look consistent. }
+@comment{ Commonly used and abused words}
+
+@Commandstring(Dec20="DECSystem-20")
+@Commandstring(VAX750="VAX 11/750")
+@Commandstring(Apollo="Apollo DOMAIN")
+@Commandstring(68000="Motorola MC68000")
+@Commandstring(Wicat="Wicat System 100")
+@Commandstring(PSL="@r[PSL]")
+
+@comment{ The Short version of the names }
+@Commandstring(sDec20="DEC-20")
+@Commandstring(sVAX750="VAX 11/750")
+@Commandstring(sApollo="Apollo")
+@Commandstring(s68000="MC68000")
+@Commandstring(sWicat="Wicat")
+
+@comment[to be set spacially]
+@Commandstring(cmacro="c-macro")
+@Commandstring(anyreg="anyreg")
+
+@TextForm(TM="@+[TM]@Foot[Trademark of @parm(text)]")
+
+@comment{ Favorite Abbreviations and macros }
+
+@Commandstring(xs = "s") @Comment{Plural for abbrevs}
+@Commandstring(xlisp = "@r[L@c[isp]]")
+@Commandstring(xlisps = "@xlisp systems")
+@Commandstring(Franzlisp = "@r[F@c[ranz]]@xlisp")
+@Commandstring(CommonLisp = "@r[C@c[ommon ]]@xlisp")
+@Commandstring(lmlisp = "@r[Lisp Machine @xlisp]")
+@Commandstring(newlisp = "@r[N@c[il]]")
+@Commandstring(slisp = "@r[S@c[pice]] @xlisp")
+@Commandstring(maclisp = "@r[M@c[ac]]@xlisp")
+@Commandstring(interlisp = "@r[I@c[nter]]@xlisp")
+@Commandstring(rlisp = "@r[R]@xlisp")
+@Commandstring(picturerlisp = "@r[P@c[icture]]@rlisp")
+@Commandstring(emode = "@r[E@c[mode]]")
+@Commandstring(syslisp = "@r[S@c[ys]]@xlisp")
+@Commandstring(stdlisp = "@r[S@c[tandard]] @xlisp")
+@Commandstring(macsyma = "@r[MACSYMA]")
+@Commandstring(reduce = "@r[REDUCE]")
+
+@Commandstring(fortran = "@r[FORTRAN]")
+
+@Comment[	Set Alpha_1 logo properly on the Omnitech	]
+@Case(GenericDevice,
+	Omnitech <
+		@Define(FSS,Script -0.2 lines,Size 14)
+		@CommandString(Alpha1="A@c(LPHA)@FSS(-)1")
+		@commandstring(LTS="@value(LT)")
+		@commandstring(EQS="@value(EQ)")
+		@commandstring(PLS="@value(PLUSSIGN)")
+		>,
+	Else <
+		@CommandString(Alpha1="Alpha_1")
+                @commandString(PLS="+")
+                @commandstring(EQS="=")
+                @commandstring(LTS="<")
+		>)
+
+@comment{ Do the Ada, UNIX, etc. TradeMark stuff }
+@Case(GenericDevice,
+	Omnitech <
+		@Define(Marks,Script +.5 lines, Size -5)
+		@CommandString(TMS="@Marks(TM)")
+		>,
+	Else <
+		@CommandString(TMS="@+(TM)")
+
+		>)
+@CommandString(ADA="Ada@TMS")
+@CommandString(UNIX="UNIX@TMS")
+
+@Case(GenericDevice, Omnitech {@TextForm<EI=[@i(@Parm(text))]>},
+              else     {@TextForm<EI=[@DQ(@Parm(Text))]>}
+     )

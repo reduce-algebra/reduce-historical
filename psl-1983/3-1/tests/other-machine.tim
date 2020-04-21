@@ -1,0 +1,41 @@
+12-Apr-83 10:11:22-MST,1358;000000000001
+Return-path: <marti@rand-unix>
+Received: from RAND-UNIX by UTAH-20; Tue 12 Apr 83 10:09:52-MST
+Date: Tuesday, 12 Apr 1983 09:05-PST
+To: griss at UTAH-20, kessler at UTAH-20
+Subject: Timing test foul up.
+From: marti at rand-unix
+
+Yes, you are right, they are for the 780. Corrected table is:
+
+			a	b	c	d	e
+
+Empty 10000		360	360	432	51	85
+Slow 10000		360	360	1072	629	1258
+CDR 1 (100)		6496	6497	5632	1700	2142
+CDR 2 (100)		2919	2918	1296	1292	1734
+CDDR  (100)		2410	2410	912	1088	1377
+ListOnlyCDR1 		20253	20522	5264	6630	9656
+ListOnlyCDDR		31733	31741	8080	13940	15708
+ListOnlyCDR2		38784	38784	30368	9299	10761
+ListOnlyCDDR2		49969	49978	33328	14569	18139
+REVERSE (10)		4402	4443	976	714	1156
+MyREVERSE (10)		5353	4340	2640	782	1139
+MyREVERSE2 (10)		4965	4861	1472	612	1479
+LENGTH (100)		8569	8570	5872	1734	2380
+Arithmetic (10000)	12694	13083	23808	952	1632
+EVAL (10000)		15374	15783	19616	6511	10200
+TAK 18 12 6		4813	4818	4880	765	1377
+GTAK 18 12 6		4732	4738	7408	4454	7463
+gtsta g0 		77765	80279	66656	2363	4573
+gtsta g1		92125	93813	74544	2431	4505
+
+a = Dolphin 1.5 meg, Interlisp-D.
+b = Dolphin 1 meg, Interlisp-D.
+c = VAX Interlisp (not newest??).
+d = VAX 780 PSL RAND (tests by JBM).
+e = VAX 750 PSL RAND (tests by JBM).
+
+Heaven only knows where I got those from. I can't find them in the
+newsletters. 
+Jed.

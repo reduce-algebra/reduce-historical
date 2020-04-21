@@ -1,0 +1,289 @@
+PSL Manual                    7 February 1983               The Interpreter
+section 11.0                                                      page 11.1
+
+                                CHAPTER 11                                CHAPTER 11                                CHAPTER 11
+                              THE INTERPRETER                              THE INTERPRETER                              THE INTERPRETER
+
+
+
+
+     11.1. Evaluator Functions Eval and Apply.  .  .  .  .  .  .  .    11.1
+     11.2. Support Functions for Eval and Apply .  .  .  .  .  .  .    11.5
+     11.3. Special Evaluator Functions, Quote, and Function .  .  .    11.6
+     11.4. Support Functions for Macro Evaluation  .  .  .  .  .  .    11.6
+
+
+
+
+11.1. Evaluator Functions Eval and Apply11.1. Evaluator Functions Eval and Apply11.1. Evaluator Functions Eval and Apply
+
+  The  PSL  evaluator uses an identifier's function cell (SYMFNC(id#) which
+is directly accessible from kernel functions only) to access the address of
+the code for executing the identifier's function definition,  as  described
+in  chapter  10.   The function cell contains either the entry address of a
+compiled function, or the address of a support routine that either  signals
+an  undefined function or calls the lambda interpreter.  The PSL model of a
+function call is to place the arguments  (after  treatment  appropriate  to
+function  type) in "registers", and then to jump to or call the code in the
+function cell.
+
+                                                        ____  Expressions which can be legally evaluated are called forms.    They  are
+restricted S-expressions:
+
+   ____      __   form ::=  id
+               ________             | constant
+                __ ____     ____             | (id form ... form)
+                          ___             | (special . any)   % Special cases: COND, PROG, etc.
+                                           _____     _____                                           _____     _____                                           _____     _____                                           fexpr     macro                                           fexpr     macro                                 % usually fexprs or macros.
+
+                   Eval     Apply                   Eval     Apply                                   ____The definitions of Eval and Apply may clarify which expressions are forms.
+
+     Eval  Apply                                   ContinuableError     Eval  Apply                                   ContinuableError  In Eval, Apply, and the support functions below, ContinuableError is used
+                      ______to indicate malformed lambda expressions, undefined functions or mismatched
+argument numbers; the user is permitted to correct the offending expression
+                                         Break                                         Breakor to define a missing function inside a Break loop.
+
+                  Eval     Apply                  Eval     Apply  The  functions  Eval and Apply are central to the PSL interpreter.  Since
+their efficiency is important, some of the support functions they  use  are
+                                   LambdaApply  LambdaEvalApply  CodeApply                                   LambdaApply  LambdaEvalApply  CodeApplyhand-coded  in LAP.  The functions LambdaApply, LambdaEvalApply, CodeApply,
+CodeEvalApply      IDApply1                               Eval       ApplyCodeEvalApply      IDApply1                               Eval       ApplyCodeEvalApply, and IDApply1 are  support  functions  for  Eval  and  Apply.
+CodeApply       CodeEvalApply                    IDApply1CodeApply       CodeEvalApply                    IDApply1CodeApply  and  CodeEvalApply are coded in LAP.  IDApply1 is handled by the
+compiler.The Interpreter               7 February 1983                    PSL Manual
+page 11.2                                                      section 11.1
+
+ Eval Eval _ ____   ___                                                     ____(Eval U:form): any                                                     expr
+
+                                _     The  value  of  the  form  U  is  computed.   The following is an
+     approximation of the real code, leaving out  some  implementation
+     details.              PSL Manual                    7 February 1983               The Interpreter
+section 11.1                                                      page 11.3
+
+        (DE EVAL (U)
+          (PROG (FN)
+            (COND
+              ((IDP U) (RETURN (VALUECELL U))))
+            % ValueCell  returns the contents of Value Cell if ID
+            % BoundP, else signals unbound error.
+            (COND ((NOT (PAIRP U)) (RETURN U)))
+
+            % This is a "constant" which EVAL's to itself
+            (COND
+              ((EQCAR (CAR U) 'LAMBDA)
+                (RETURN
+                  (LAMBDAEVALAPPLY (CAR U) (CDR U)))))
+
+            % LambdaEvalApply applies the lambda- expression Car U
+            % list containing the evaluation of each argument in C
+            (COND
+              ((CODEP (CAR U))
+                (RETURN (CODEEVALAPPLY (CAR U) (CDR U)))))
+
+            % CodeEvalApply applies the function with code-pointer
+            % to the list containing the evaluation of each argume
+            % Cdr U.
+            (COND
+              ((NOT (IDP (CAR U)))
+                (RETURN
+                  % permit user to correct U, and reevaluate.
+                  (CONTINUABLEERROR 1101
+                    "Ill-formed expression in EVAL" U))))
+
+            (SETQ FN (GETD (CAR U)))
+            (COND
+              ((NULL FN)
+                % user might define missing function and retry
+                (RETURN
+                   (CONTINUABLEERROR 1001 "Undefined function EVAL
+
+            (COND
+              ((EQ (CAR FN) 'EXPR)
+                (RETURN
+                  (COND
+                    ((CODEP (CDR FN))
+                      % CodeEvalApply applies the function with
+                      % codepointer Cdr FN to the list containing
+                      % evaluation of each argument in Cdr U.
+                      (CODEEVALAPPLY (CDR FN) (CDR U)))
+
+                    (T
+                      (LAMBDAEVALAPPLY
+                        (CDR FN) (CDR U)))))))
+
+            % LambdaEvalApply applies the lambda-expression Cdr FNThe Interpreter               7 February 1983                    PSL Manual
+page 11.4                                                      section 11.1
+
+            % list containing the evaluation of each argument in C
+            (COND
+              ((EQ (CAR FN) 'FEXPR)
+                % IDApply1 applies the fexpr Car U to the list of
+                % unevaluated arguments.
+                (RETURN (IDAPPLY1 (CDR U) (CAR U))))
+
+              ((EQ (CAR FN) 'MACRO)
+                % IDApply1 first expands the macro call U and then
+                % evaluates the result.
+                (RETURN (EVAL (IDAPPLY1 U (CAR U)))))
+
+              ((EQ (CAR FN) 'NEXPR)
+                % IDApply1 applies the nexpr Car U to the list obt
+                % by evaluating the arguments in Cdr U.
+                (RETURN (IDAPPLY1 (EVLIS (CDR U)) (CAR U)))))))
+
+
+ Apply Apply __  __ ________   ____ ____ ____   ___                          ____(Apply FN:{id,function}  ARGS:form-list): any                          expr
+
+     Apply     Apply     Apply  allows  one to make an indirect function call.  It returns
+                    __                            ____     the value  of  FN  with  actual  parameters  ARGS.    The  actual
+                     ____     parameters  in  ARGS are already in the form required for binding
+                                 __     to the formal parameters of FN.  PSL permits the  application  of
+     _____    ______     _____     _____    ______     _____     _____    ______     _____     macro    nexprs     fexpr                              Apply  Cdr     macro    nexprs     fexpr                              Apply  Cdr     macros,  nexprs and fexprs; the effect is the same as (Apply (Cdr
+      GetD      GetD __   ____     (GetD FN)) ARGS); i.e. no fix-up is done to quote arguments, etc.
+                                   Apply         List                                   Apply         List     as in some LISPs.  A call to  Apply  using  List  on  the  second
+                         Apply     List                         Apply     List     argument  [e.g.    (Apply  F (List X Y))] is compiled so that the
+     ____     list is not actually constructed.
+
+     The following is an approximation of the real code,  leaving  out
+     implementation details.      PSL Manual                    7 February 1983               The Interpreter
+section 11.1                                                      page 11.5
+
+        (DE APPLY (FN ARGS)
+          (PROG (DEFN)
+            (COND
+              ((CODEP FN)
+                % Spread the ARGS into the registers and transfer
+                % entry point of the function.
+                (RETURN (CODEAPPLY FN ARGS)))
+
+              ((EQCAR FN 'LAMBDA)
+                % Bind the actual parameters in ARGS to the formal
+                % parameters of the lambda expression If the two l
+                % are not of equal length then signal
+                % (CONTINUABLEERROR 1204
+                %         "Number of parameters do not match"
+                %         (CONS FN ARGS))
+
+                (RETURN (LAMBDAAPPLY FN ARGS)))
+
+              ((NOT (IDP FN))
+                (RETURN (CONTINUABLEERROR 1104
+                          "Ill-formed function in APPLY"
+                          (CONS FN ARG))))
+
+              ((NULL (SETQ DEFN (GETD FN)))
+                (RETURN (CONTINUABLEERROR 1004
+                          "Undefined function in Apply"
+                          (CONS FN ARGS))))
+
+              (T
+                % Do EXPR's, NEXPR's, FEXPR's and MACRO's alike, a
+                % EXPR's
+                (RETURN (APPLY (CDR DEFN) ARGS))))))
+
+  [???  Instead, could check for specific function types in Apply ???]  [???  Instead, could check for specific function types in Apply ???]  [???  Instead, could check for specific function types in Apply ???]
+
+
+
+11.2. Support Functions for Eval and Apply11.2. Support Functions for Eval and Apply11.2. Support Functions for Eval and Apply
+
+
+ EvLis EvLis _ ___ ____   ___ ____                                           ____(EvLis U:any-list): any-list                                           expr
+
+     EvLis     EvLis           ____                                      _     EvLis returns a list of the evaluation of each element of U.
+
+
+ LambdaApply LambdaApply __ ______  _ ___ ____   ___                               ____(LambdaApply FN:lambda, U:any-list): any                               expr
+
+                 __            ______                           ______     Checks that FN is a legal lambda, binds the formals of the lambda
+            LBind1                                          EvProgN            LBind1                         _                EvProgN     using  LBind1  to  the  arguments  in U, and then uses EvProgN to
+                               ______     evaluate the forms in the lambda body.  Finally the  formals  are
+                    UnBindN                    UnBindN     unbound, using UnBindN, and the result returned.The Interpreter               7 February 1983                    PSL Manual
+page 11.6                                                      section 11.2
+
+ LambdaEvalApply LambdaEvalApply __ ______  _ ____ ____   ___                          ____(LambdaEvalApply FN:lambda, U:form-list): any                          expr
+
+                    LambdaApply    EvLis                    LambdaApply __ EvLis _     Essentially    LambdaApply(FN,EvLis(U)),    though    done   more
+     efficiently.
+
+
+ CodeApply CodeApply __ ____ _______  _ ___ ____   ___                           ____(CodeApply FN:code-pointer, U:any-list): any                           expr
+
+                                          _     Efficiently spreads the arguments in U into the "registers",  and
+                                                           __     then transfers to the starting address referred to by FN
+
+
+ CodeEvalApply CodeEvalApply __ ____ _______  _ ___ ____   ___                       ____(CodeEvalApply FN:code-pointer, U:any-list): any                       expr
+
+                 CodeApply    EvLis                 CodeApply __ EvLis _     Essentially CodeApply(FN,EvLis(U)), though more efficient.
+
+  The  following  entry  points  are  used  to get efficient calls on named
+functions, and are open compiled.
+
+
+ IdApply0 IdApply0 __ __   ___                                                  ____(IdApply0 FN:id): any                                                  expr
+
+
+ IdApply1 IdApply1 __ ____  __ __   ___                                         ____(IdApply1 A1:form, FN:id): any                                         expr
+
+
+ IdApply2 IdApply2 __ ____  __ ____  __ __   ___                                ____(IdApply2 A1:form, A2:form, FN:id): any                                expr
+
+
+ IdApply3 IdApply3 __ ____  __ ____  __ ____  __ __   ___                       ____(IdApply3 A1:form, A2:form, A3:form, FN:id): any                       expr
+
+
+ IdApply4 IdApply4 __ ____  __ ____  __ ____  __ ____  __ __   ___              ____(IdApply4 A1:form, A2:form, A3:form, A4:form, FN:id): any              expr
+
+
+ EvProgN EvProgN _ ____ ____   ___                                             ____(EvProgN U:form-list): any                                             expr
+
+                            _     Evaluates each form in U in turn,  returning  the  value  of  the
+                                     ProgN                                     ProgN     last.  Used for various implied ProgNs.
+
+
+
+11.3. Special Evaluator Functions, Quote, and Function11.3. Special Evaluator Functions, Quote, and Function11.3. Special Evaluator Functions, Quote, and Function
+
+
+ Quote Quote _ ___   ___                                                    _____(Quote U:any): any                                                    fexpr
+
+                                                       Eval             _                                         Eval     Returns U.  Thus the argument is not evaluated by Eval.PSL Manual                    7 February 1983               The Interpreter
+section 11.3                                                      page 11.7
+
+ MkQuote MkQuote _ ___   ____                                                  ____(MkQuote U:any): list                                                  expr
+
+      MkQuote             List      MkQuote _           List     (MkQuote U) returns (List 'QUOTE  U)
+
+
+ Function Function __ ________   ________                                      _____(Function FN:function): function                                      fexpr
+
+                  __                                          __     The function FN is to be passed to another function.  If FN is to
+     have  side  effects  its  free variables must be FLUID or GLOBAL.
+     Function         Quote     Function         Quote     Function is like Quote  but  its  argument  may  be  affected  by
+     compilation.
+
+  [??? Add FQUOTE, and make FUNCTION become CLOSURE ???]  [??? Add FQUOTE, and make FUNCTION become CLOSURE ???]  [??? Add FQUOTE, and make FUNCTION become CLOSURE ???]
+
+                             Closure                             Closure  See also the discussion of Closure and related functions in Section 10.3.
+
+
+
+11.4. Support Functions for Macro Evaluation11.4. Support Functions for Macro Evaluation11.4. Support Functions for Macro Evaluation
+
+
+ Expand Expand _ ____  __ ________   ____                                     ____(Expand L:list, FN:function): list                                     expr
+
+     __     FN  is  a  defined  function  of  two arguments to be used in the
+                    _____                    _____                    _____                    macro   Expand                    macro   Expand           ____     expansion of a macro.  Expand returns a list in the form:
+
+     (FN L[0] (FN L[1] ... (FN L[n-1] L[n]) ... ))
+
+                                      _     "n" is the number of elements in L, L[i] is the i'th  element  of
+     _     L.
+
+        (DE EXPAND (L FN)
+           (COND ((NULL (CDR L)) (CAR L))
+                 (T (LIST FN (CAR L) (EXPAND (CDR L) FN)))))
+
+  [??? Add RobustExpand (sure!) (document) ???]  [??? Add RobustExpand (sure!) (document) ???]  [??? Add RobustExpand (sure!) (document) ???]
+
+  [??? Add an Evalhook and Apply hook for CMU toplevel (document) ???]  [??? Add an Evalhook and Apply hook for CMU toplevel (document) ???]  [??? Add an Evalhook and Apply hook for CMU toplevel (document) ???]

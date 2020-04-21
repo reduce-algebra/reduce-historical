@@ -1,0 +1,134 @@
+@build rel4:<psl>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.comp>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.20-comp>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.doc>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.doc-nmode>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.emode>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.glisp>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.help>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.kernel>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.20-kernel>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.lap>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.lpt>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.nmode>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.nonkernel>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.tests>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.20-tests>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.util>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.20-util>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+@build rel4:<psl.windows>
+@per 1000
+@work 2000
+@fi
+@gen 0
+@pres
+@
+

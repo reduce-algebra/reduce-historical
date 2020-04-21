@@ -1,0 +1,76 @@
+,MOD
+- R 44X (11 April 1983) <PSL.NMODE-DOC>NM-SELFDOC.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+          201/NMODE Manual (Help)                                                Page 9-1
+
+
+          202/9.  Help
+
+          201/NMODE has a great deal of internal documentation.  There are two basic
+          commands, the Apropos command and the Help Dispatch command.   The
+          Apropos command can be started by typing a "+" on the key pad at the far
+          right hand side of the hp9836 keyboard or by typing M-X Apropos.  The
+          Help Dispatch command can be started by typing C-?, M-/, or M-?.
+
+          The Help Dispatch command tells you what function is connected to a given
+          key or key combination.  The function names are often descriptive, so you
+          can sometimes find out which key does what with the Help Dispatch command.
+          To find out the function of a key or key combination, type M-?, then type
+          the keys exactly as if you wanted NMODE to act on them.
+
+          The Apropos command basically looks up command names containing a given
+          word or phrase, or relating to a given topic.  When you have started it, it
+          will ask you for the word or phrase you are looking for in a command name
+          (like "Move" or "Text" or "Remove", for instance).  It will then temporarily
+          cover up your text and show you a list of commands that match the phrase
+          you typed in.  At this point you can move up and down the list with the
+          normal NMODE move commands, or you can look at the documentation for a
+          particular command by typing V (for view).  This temporarily covers up the
+          list of commands while showing documentation for the command that you
+          choose.  Among other things this documentation tells you what key calls the
+          command.  You can get back to the list of commands by typing "Q" (for quit)
+          or C-M-L.  You can then get a more specific list of commands by typing "F"
+          (for filter) and another phrase relevant to the command(s) you want to find.
+          You can get back from the list of commands to your original text by typing
+          "Q" (for quit).
+
+          Here  is a set of Apropos strings that covers many classes of NMODE
+          commands, since there are strong conventions for naming the standard NMODE
+          commands.  By giving you a feel for the naming conventions, this set should
+          also serve to aid you in developing a technique for picking Apropos strings.
+
+               character, line, word, sentence, paragraph, region, page, buffer,
+               screen, window, bounds, file, dir, beginning, end, case, mode,
+               forward, backward, next, previous, up, down, search, kill, delete, mark,
+               fill, indent, change.
+
+          There is also a convention for how command names start for certain common
+          kinds of operations: many commands start with one of the words "Edit",
+          "View", "Insert", "List", or "What" "Move" "Mark".
+
+          Note that the ability to apply filters allows you to search for commands which
+          contain a set of strings, even if you don't know the order of the strings in
+          the command name.  If you find the list of commands containing or otherwise
+          tied to "word", you can then filter the list to find the sublist that is also
+          tied to "kill" and to "back" (in two filter operations), without knowing that
+          the operation being searched for is kill-backward-word-command, rather than
+          backward-kill-word-command or some other permutation.
+
+          Because topics and action types and modes are also searched for, it is
+          201/Page 9-2                                                NMODE Manual (Help)
+
+
+          possible to find broader classes of commands than would be possible from
+          names alone.  "Remove", for instance, is given as an action type for both kill
+          commands and delete commands, so one can search for both at once by
+          searching for "remove" and other specifying words.

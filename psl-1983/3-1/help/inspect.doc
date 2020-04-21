@@ -1,0 +1,33 @@
+INSPECT	                      M.L. Griss, Monday, 31 May 1982
+-------
+
+This is a simple utility to scan the contents of a source file to tell
+what functions are defined in it.  It will be embellished slightly to
+permit the on-line querying of certain attributes of files.  INSPECT
+reads one or more files, printing and collecting information on
+defined functions.
+
+Usage:
+
+LOAD INSPECT;
+
+INSPECT "file-name"; % Scans the file, and prints proc names.
+	             % It also builds the lists ProcedureList!*
+                     % FileList!* and ProcFileList!*
+
+		     % File-Name can IN other files
+
+On the Fly printing is controlled by !*PrintInspect, default is T.
+Other lists built include FileList!* and ProcFileList!*, which
+is a list of (procedure . filename) for multi-file processing.
+
+For more complete process, do:
+
+LOAD Inspect;
+Off PrintInspect;
+InspectOut(); % Later will get a file Name
+IN ....;
+IN ...;
+InspectEnd;
+
+Now use Gsort etc. to process the lists

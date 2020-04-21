@@ -1,0 +1,6 @@
+CompileTime <<
+load If!-System;
+load SysLisp;
+off UserMode;
+>>;
+in "DEC20-ASM.RED"$

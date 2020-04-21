@@ -1,0 +1,42 @@
+The DEBUG Package:           MLG/ 2 January 1982
+------------------
+
+PSL has some built-in debugging functions, but for a more powerful set
+one must load a debug package (Load Debug; in RLISP, (Load Debug) in
+LISP).  It is described in the manual.  This is a brief introduction
+to some of the functions in the supplementary Debug package; for more
+information on built-in functions do Help Mini-Trace; in RLISP [(Help
+MiniTrace) in LISP].
+
+[This help-file needs a LOT of work!]
+
+The following functions (all EXPRs) are defined:
+(they each redefine the functions, saving an old definition)
+
+(TR F1 ... Fn)           Cause TRace message to be printed on entry to
+                         and exit from calls to the functions F1 ... Fn.
+(UNTR F1 ... Fn)         Restore original definition.  Does UNTRST 
+			 automatically if necessary.
+
+(TRST F1 ... Fn)	 This traces interpreted functions to a deeper 
+			 level by redeining the body of the function so
+			 that all assignments made with SETQ are printed.
+			 Calling TRST automatically also calls TR.
+(UNTRST F1 ... Fn)	 Restores the original definition.
+
+In addition, the following macros are available in the resident
+MiniTrace package.
+
+(BR F1 ...  Fn)          Cause BREAK on entry and on EXIT from function,
+                         permitting arguments and results to be examined
+                         and modified.
+(UNBR F1 ... Fn)         Restore original definitions of the functions
+			 F1 ... Fn.
+
+Fluids:
+-------
+TrSpace!*                Controls indentation, may need to be reset to 0
+                         in "funny" cases.
+!*NoTrArgs               Set to T to suppress printing of arguments of
+                         traced functions.
+

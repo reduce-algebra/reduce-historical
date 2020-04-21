@@ -1,0 +1,1867 @@
+#padtwv (* PreProcessor Version - Run  through Filter *)
+#p      (* PERQ version *)
+#a      (* Apollo Version *)
+#d      (* DEC-20 Version *)
+#t      (* Terak Version *)
+#w      (* Wicat Version *)
+#v      (* VAX version *)
+(*********************************************************************
+                                    
+                PASCAL BASED MINI-LISP
+
+ File:  PAS0.PAS - PASCAL/LISP KERNEL
+ ChangeHistory:
+    3 Mar 82  RO: Apollo version finished, some changes for WICAT
+   16 Feb 82  RO: Implement !*ECHO
+   11 Feb 82  RO: Allow string as alias for identifier
+    8 Feb 82  RO: Fix GC bug & clean up for apollo
+   19 Jan 82  RO: Change I/O channel assginments
+   29 Dec 81  RO: File I/O for apollo & wicat
+   23 Dec 81  RO: More changes for Apollo & Wicat
+    9 Dec 81, RO: Remove apollo specific I/O.
+    1 Dec 81  RO: I/O fixes for wicat & fixnum bug
+   14 Nov 81, MLG:add some PERQ updates from Voelker
+   28 Oct 81, RO: GENSYM & fixnum gc
+ 
+   All RIGHTS RESERVED
+   COPYRIGHT (C) - 1981 - M. L. Griss and R. Ottenheimer
+   Computer Science Department
+           University of Utah
+
+           Do Not distribute with out written consent of M. L. Griss
+
+********************************************************************)
+
+#t (*$S+*) (* swapping mode *)
+#t (*$G+*) (* goto is legal *)
+
+#adtvw PROGRAM pas0 ; (* (input*,output) *)
+#p    PROGRAM pas0 (input,output, symin, finput,foutput);
+    (************************************************************)
+    (* support routines for a "lisp" machine.  uses a register  *)
+    (* model with a stack for holding frames.  stack also used  *)
+    (* to hold compiler generated constants.                    *)
+    (* written by:                                              *)
+    (*      william f. galway, martin l. griss                  *)
+    (*      ralph ottenheimer                                   *)
+    (* append pas1...pasn at  end                               *)
+    (* -------------------------------------------------------- *)
+
+    (* I/O channel assignments:
+     1: symin, used to init symbol table
+     2: stdin,
+     3: stdout,
+     4: finput,
+     5: foutput.
+    *)
+
+    (************************************************************)
+#a (* Apollo System include files *)
+#a %include '/sys/ins/base.ins.pas';
+#a %include '/sys/ins/pgm.ins.pas';
+
+
+#p imports Stream from Stream;
+#p imports system from system;
+#p imports io_others from io_others;
+#p imports io_unit from io_unit;
+
+    (************************************************************)
+
+CONST
+#aptv    (* for terak, perq, Apollo, vax  *)
+#aptvw sp = ' '; 
+#aptvw ht = 9;          (* ascii codes *)
+#aptvw lf = 10;
+#aptvw cr = 13; 
+#aptvw nul = 0;
+
+#d    eos = nul;      (* terminator character for strings. *)
+#t    (* use eos=chr(nul)  *)
+#av  eos=chr(nul) ;
+#pw  eos = chr(0);        (* KLUDGE: null string *)
+#adtwpv   inchns = 5;       (* number of input channels.  *)
+#adtwpv   outchns = 5;      (* number of output channels. *)
+    begin_comment = '%';
+
+(* Initial symbols, needed in Kernel *)
+    xtoktype  = 129;  (* slot in idspace for toktype. *)
+    xbstack   = 130;  (* Bstack Pointer *)
+    xthrowing = 131;  (* If throw mode *)
+    xinitform = 132;  (* for restart *)
+    xraise    = 133;  (* for RAISE of lc in ids *)
+    Xinput    = 134;  (* For Open *)
+    Xoutput   = 135;  (* For Open *)
+    xQuote    = 138;  (* For quoting ids in pascal code. *)
+    xEcho     = 136;  (* raw input is echoed if not NIL. *)
+    chartype  =  3;   (* various token types *)
+    inttype  =  1;
+    idtype  =  2;
+
+    max_gsym = 4;       (* number of digits in gen'd id. *)
+
+#dt  shift_const = 8192; (* tags and info are packed into an integer *)
+#a   (* no shift const *)
+#p   (* no shift const *)
+#w   (* no shift const *)
+#dt  (* assumed to be at least 16 bits long.  low order 13 bits  *)
+#dt  (* are the info, top 3 are the tag.                         *)
+#dt    int_offset = 4096;  (* small integers are stored 0..8191    *)
+#dt (* instead of -4096..4095 because it will pack smaller      *)
+#dt (* under ucsd pascal.                                       *)
+#apw     int_offset = 32767; (* Apollo, PERQ and WICAT items are records *)
+
+    (* the various tags - can't use a defined scalar type *)
+    (* because of the lack of convertion functions.       *)
+    inttag = 0;    (* info is an integer                  *)
+    chartag = 1;   (* info is a character code            *)
+    pairtag = 2;   (* info points to pair                 *)
+    idtag = 3;     (* info points to identifier           *)
+    codetag = 4;   (* info is index into a case statement *)
+    (*                that calls appropriate function.    *)
+    errtag = 5;    (* info is an error code - see below.  *)
+    fixtag = 6;    (* info points to a full word (or      *)
+    (*                longer) integer.                    *)
+    strtag = 7;    (* info points to a string.            *)
+
+    (* error codes.  corresponding to tag = errtag.  *)
+    noprspace = 1;    (* no more "pair space"--can't cons. *)
+    notpair = 2;      (* a pair operation attempted on a non-pair. *)
+    noidspace = 3;    (* no more free identifiers *)
+    undefined = 4;    (* used to mark undefined function cells (etc?) *)
+    noint = 5;        (* no free integer space after garbage collection *)
+    notid = 6;
+
+     (* data space sizes *)
+(* remember pointers to these things are inums, sometimes quite small *)
+#av      maxpair = 10000;  (* max number of pairs allowed. *)
+#dpw     maxpair = 3700;   (* max number of pairs allowed. *)
+#t       maxpair = 1000;   (* max number of pairs allowed *)
+#tw      maxident = 400;   (* max number of identifiers *)
+#adpv    maxident = 800;   (* max number of identifiers *)
+#adpv    maxstrsp = 4000;  (* size of string (literal) storage space. *)
+                           (* beware - string pointers are inums. *)
+#tw      maxstrsp = 2000;  (* size of string (literal) storage space. *)
+#adpv    maxintsp = 200;   (* max number of long integers allowed *) 
+#tw      maxintsp = 2;   (* max number of long integers allowed *)
+
+    hidmax = 50;      (* number of hash values for identifiers *)
+    maxgcstk = 100;   (* size of garbage collection stack.    *)
+    stksize = 500;    (* stack size *)
+    maxreg = 15;      (* number of registers in lisp machine. *)
+
+    eofcode = 26;     (* magic character code for eof, ascii for *)
+    (*  cntrl-z.  kludge, see note in xrdtok.  *)
+    choffset = 1;     (* add choffset to ascii code to get address  *)
+    (* in id space for corresponding identifier.  *)
+    nillnk = 0;       (* when integers are used as pointers.  *)
+#dptw end_flag = maxint;  (* marks end of fixnum space *)
+#a    end_flag = -2147483648;  (* marks end of fixnum space *)
+
+    (************************************************************)
+
+TYPE
+#w   regblk_type = array[0..16] of longint;
+#d   onechar = ascii;     (* for DEC *)
+#aptvw    onechar = char;     (* for terak,perq,Apollo,Wicat*)
+#awv FileName=Packed ARRAY[0..59] of onechar;
+#p   FileName: string;
+#t   FileName: string[60];
+#d   FileName=Packed ARRAY[1..9] of onechar;
+
+    (* note we allow zero for id_ptr, allowing a "nil" link. *)
+    stringp = 1..maxstrsp;        (* pointer into string space. *)
+    id_ptr = 0..maxident;            (* pointer into id space. *)
+
+#dtv    itemref = integer;
+#apw      itemref = RECORD
+#apw                tag:integer;
+#apw                info:integer;
+#apw                END;
+    itemtype = 0..7;    (* the tags *)
+
+
+    pair = PACKED RECORD
+                      prcar: itemref;
+                      prcdr: itemref;
+                  END;
+
+
+#aw       ascfile = text;
+#dptv    ascfile = PACKED FILE OF onechar;
+#d       textfile =PACKED FILE of char;
+
+    ident = PACKED RECORD           (* identifier *)
+                       idname: stringp;
+                       val: itemref;       (* value *)
+                       plist: itemref;     (* property list *)
+                       funcell: itemref;   (* function cell *)
+                       idhlink: id_ptr;    (* hash link *)
+                   END;
+#dptvw   longint = integer;
+#a       longint = integer32;
+
+    (************************************************************)
+
+VAR
+    (* global information *)
+    nilref, trueref, tmpref: itemref; 
+    (* refers to identifiers "nil", "t", and a temp to get around bug in. *)
+    (* apollo & wicat pascal *)
+    initphase: integer;                (* Start up *)
+#adpvw r: ARRAY[1..maxreg] OF itemref;
+#t     r: ARRAY[0..maxreg] OF itemref;  (* cuts code size down *)
+    rxx,ryy: itemref;
+
+#t  CHARCNT: INTEGER;   (* input buffer & pointer *)
+#t  LINE: STRING;
+
+    (* "st" is the stack pointer into "stk".  it counts the number of  *)
+    (* items on the stack, so it runs from zero while the stack starts *)
+    (* at one.                                                         *)
+    st: 0..stksize;
+    stk: ARRAY[1..stksize] OF itemref;
+
+    (* pair space *)
+    prspace: PACKED ARRAY[1..maxpair] OF pair; (* all pairs stored here. *)
+    freepair: integer;          (* pointer to next free pair in prspace. *)
+
+    (* identifier space *)
+    idhead: ARRAY[0..hidmax] OF id_ptr;
+    idspace: PACKED ARRAY[1..maxident] OF ident;
+    freeident: integer;
+    g_sym: ARRAY[1..max_gsym] OF onechar;
+
+    (* string space *)
+    strspace: PACKED ARRAY[1..maxstrsp] OF onechar;
+    freestr: stringp;
+
+    (* large integer space *)
+    intspace: ARRAY[1..maxintsp] OF longint;
+    freeint: 1..maxintsp;
+
+
+    (* i/o channels *)
+#p  (* files declared on header *)
+#adptvw    symin: ascfile;
+#adptvw    finput : ascfile;
+#aptvw    foutput: ascfile;
+#d       foutput: textfile;
+#d  input: ascfile;
+#a  IoStatus:Integer32;
+    inchnl: 1..inchns;      (* current input channel number  *)
+    outchnl: 1..outchns;    (* current output channel number *)
+
+    (* "current character" for each input channel.                    *)
+    (* may want to include more than one character at some later date *)
+    (* (for more lookahead).                                          *)
+    ichrbuf: ARRAY[1..inchns] OF onechar;
+
+    (* for collecting statistics. *)
+    gccount: integer;           (* counts garbage collections *)
+    (* counts from last garbage collection. *)
+    consknt: integer;           (* number of times "cons" called *)
+
+
+
+(* ........ Everything nested inside CATCH *)
+
+#w procedure _setjmp(var regblk:regblk_type);external;
+#w procedure _long_jump(var regblk:regblk_type);external;
+
+Procedure Xcatch;  (* ----------- Outermost Procedure ----------- *)
+#adv LABEL 9999;
+#w  (* need to use special ASM68 procedures for Wicat *)
+ var catch_stk:0..stksize;
+     catch_Bstk:itemref;
+#w   Catch_regs:regblk_type;
+
+PROCEDURE xread;
+    FORWARD;
+
+PROCEDURE xprint;
+    FORWARD;
+
+PROCEDURE xunbindto;
+    FORWARD;
+
+PROCEDURE xeval;
+    FORWARD;
+
+ Procedure Xthrow;
+    begin (* throw value *)
+        idspace[Xthrowing].val := trueref;
+#dav     goto 9999
+#w       _long_jump(Catch_regs);
+#tp      exit(xeval)
+    end (* throw *);
+#p (* Special handlers *)
+#p Handler CtlC;  (* ------- handle runaway aborts ------- *)
+
+#p begin
+#p    write('^C');
+#p    IOKeyClear;
+#p    IObeep;
+#p    if initphase > 1 then Xthrow;
+#p end;
+
+    (********************************************************)
+    (*                                                      *)
+    (*             item selectors & constructors            *)
+    (*                                                      *)
+    (********************************************************)
+
+#a (* use some SHIFTS ? *)
+
+FUNCTION tag_of(item: itemref): itemtype;
+#t       VAR gettag: PACKED RECORD
+#t                   CASE boolean OF
+#t                   TRUE: (i: itemref);
+#t                   FALSE: (info: 0..8191;
+#t                           tag: 0..7)
+#t               END;
+
+    BEGIN (* tag_of *)
+#t    gettag.i := item;
+#t    tag_of := gettag.tag
+#dv   tag_of := item DIV shift_const;
+#apw  tag_of := item.tag;
+    END;
+    (* tag_of *)
+
+FUNCTION info_of(item: itemref): integer;
+#t       VAR getinfo: PACKED RECORD
+#t                   CASE boolean OF
+#t                   TRUE: (i: itemref);
+#t                   FALSE: (info: 0..8191;
+#t                           tag: 0..7)
+#t               END;
+
+ BEGIN (* info_of *)
+#t    getinfo.i := item;
+#t    if getinfo.tag = inttag then
+#t        info_of := getinfo.info - int_offset
+#t    else info_of := getinfo.info
+#dv  IF item DIV shift_const = inttag THEN
+#dv      info_of := item MOD shift_const - int_offset
+#dv  ELSE
+#dv      info_of := item MOD shift_const
+#apw   info_of := item.info
+    END;
+    (* info_of *)
+
+FUNCTION xnull(item: itemref): boolean;
+    BEGIN
+    xnull := (tag_of(item) = tag_of(nilref)) AND 
+             (info_of(item) = info_of(nilref))
+    END;
+
+
+PROCEDURE mkitem(tag: itemtype; info: longint; VAR item: itemref);
+    (* do range checking on info. ints run from -4096 to +4095 *)
+    (* everything else runs from 0 to 8191. ints & chars       *)
+    (* contain their info, all others points into an           *)
+    (* appropriate space.                                      *)
+
+    PROCEDURE mkfixint;
+        VAR nextfree: integer;
+
+        PROCEDURE gc_int;
+            VAR i: integer;
+            mark_flag: PACKED ARRAY[1..maxintsp] OF boolean;
+
+
+            PROCEDURE mark(u: itemref);
+                BEGIN (* Mark *)
+                IF tag_of(u) = pairtag THEN
+                    BEGIN
+                    mark(prspace[info_of(u)].prcar);
+                    mark(prspace[info_of(u)].prcdr)
+                    END
+                ELSE IF tag_of(u) = fixtag THEN
+                    mark_flag[info_of(u)] := true
+                END (* Mark *);
+
+            BEGIN (* Gc_int *)
+            writeln('*** Gc int');
+            FOR i := 1 TO maxintsp do   (* clear mark flags *)
+                mark_flag[i] := false;
+
+            FOR i := 1 TO st DO             (* mark from the stack *)
+                Mark(stk[i]);
+
+            FOR i := 1 TO maxident DO       (* mark from the symbol table *)
+                BEGIN
+                Mark(idspace[i].val);
+                Mark(idspace[i].plist);
+                Mark(idspace[i].funcell)        (* probably NOT necessary *)
+                END;
+
+            (* reconstruct free list *)
+            FOR i := 1 TO maxintsp - 1 DO
+                IF NOT mark_flag[i] THEN
+                    BEGIN
+                    intspace[i] := freeint;
+                    freeint := i
+                    END
+            END (* Gc_int *);
+
+        BEGIN (* mkfixint *)
+        IF info = end_flag THEN (* user can't use magic number *)
+                BEGIN info := 0;
+                writeln('*****Mkfixint: Info too large')
+                END;
+        IF intspace[freeint] = end_flag THEN 
+            gc_int;    (* garbage collect intspace *)
+
+        IF intspace[freeint] <> end_flag THEN 
+            BEGIN    (* convert to fixnum *)
+            tag := fixtag;
+            nextfree := intspace[freeint];
+            intspace[freeint] := info;
+            info := freeint;        (* since we want the pointer *)
+            freeint := nextfree
+            END
+        ELSE
+            BEGIN mkitem(errtag, noint, r[1]);
+            writeln('***** Integer space exhausted')
+            END
+        END;
+        (* mkfixint *)
+
+
+    BEGIN (* mkitem *)
+    IF tag = inttag THEN
+#apw     BEGIN
+        IF (info < -int_offset) OR (info > int_offset - 1) THEN mkfixint
+#dtv   ELSE info := info + int_offset    (* info was in range so add offset *)
+#apw     END
+    ELSE IF tag = fixtag THEN mkfixint
+
+         ELSE IF info < 0 THEN
+                  BEGIN
+                  writeln('*****Mkitem: bad neg');
+#d                break(output); 
+#dtv              halt;
+#p                exit(pas0);
+#a                pgm_$exit;
+                  END;
+    (* nothing special to do for other types *)
+
+#dtv     (* pack tag and info into 16-bit item.   *)
+#dtv     item := tag * shift_const + info
+#apw     item.tag := tag;
+#apw     item.info := info
+    END;
+    (* mkitem *)
+
+PROCEDURE mkerr(info: longint; VAR item: itemref);
+ Begin
+     mkitem(errtag,info,item);
+ End;
+
+
+PROCEDURE set_info(VAR item: itemref; newinfo: longint);
+    BEGIN (* set_info *)
+    mkitem(tag_of(item), newinfo, item)
+    END;
+    (* set_info *)
+
+PROCEDURE set_tag(VAR item: itemref; newtag: itemtype);
+    BEGIN (* set_tag *)
+    mkitem(newtag, info_of(item), item)
+    END;
+    (* set_tag *)
+
+PROCEDURE mkident(id: integer; reg: integer);
+    (* make identifier "id" in register "reg" *)
+    BEGIN       (* mkident *)
+    mkitem(idtag, id, r[reg]);
+    END;
+    (* mkident *)
+
+PROCEDURE mkint(int: longint; reg: integer);
+    BEGIN       (* mkint *)
+    mkitem(inttag, int, r[reg]);
+    END;
+    (* mkint *)
+
+PROCEDURE mkpair(pr: integer; reg: integer);
+    BEGIN (* mkpair *)
+    mkitem(pairtag, pr, r[reg])
+    END;
+    (* mkpair *)
+
+PROCEDURE int_val(item: itemref; VAR number: longint);
+    (* returns integer value of item (int or fixnum). *)
+    (* must return 'number' in var parameter instead  *)
+    (* of function value since long integers are not  *)
+    (* a legal function type in ucsd pascal.          *)
+    BEGIN (* int_val *)
+    IF tag_of(item) = inttag THEN
+        number := info_of(item)
+    ELSE IF tag_of(item) = fixtag THEN
+             number := intspace[info_of(item)]
+    ELSE writeln(tag_of(item), ' *****Illegal data type for numeric operation')
+        (* halt or fatal error *)
+    END;
+    (* int_val *)
+
+
+    (********************************************************)
+    (*                                                      *)
+    (*                  stack allocation                    *)
+    (*                                                      *)
+    (********************************************************)
+
+PROCEDURE alloc(n: integer);
+    BEGIN
+    IF n + st <= stksize THEN
+        st := n+st
+    ELSE
+        BEGIN
+        writeln('*****LISP stack overflow');
+        writeln('     tried to allocate ',n);
+        writeln('     current stack top is ',st);
+#d      break(output);
+        END;
+    END;
+
+PROCEDURE dealloc(n: integer);
+    BEGIN
+    IF st - n >= 0 THEN
+        st := st - n
+    ELSE
+        writeln('*****Lisp stack underflow');
+    END;
+
+    (* optimized allocs *)
+
+PROCEDURE alloc1;
+    BEGIN alloc(1) END;
+
+PROCEDURE dealloc1;
+    BEGIN dealloc(1) END;
+
+PROCEDURE alloc2;
+    BEGIN alloc(2) END;
+
+PROCEDURE dealloc2;
+    BEGIN dealloc(2) END;
+
+PROCEDURE alloc3;
+    BEGIN alloc(3) END;
+
+PROCEDURE dealloc3;
+    BEGIN dealloc(3) END;
+
+
+    (********************************************************)
+    (*                                                      *)
+    (*              support for register model              *)
+    (*                                                      *)
+    (********************************************************)
+
+PROCEDURE load(reg: integer; sloc: integer);
+    BEGIN
+    IF sloc < 0 THEN r[reg] := r[-sloc]
+    ELSE  r[reg] := stk[st-sloc];
+    (* will, fix for load (pos,pos) *)
+    END;
+
+PROCEDURE store(reg: integer; sloc: integer);
+    BEGIN
+    stk[st-sloc] := r[reg];
+    END;
+
+    (* optimized load/store. *)
+PROCEDURE load10;
+    BEGIN
+    load(1,0);
+    END;
+
+PROCEDURE store10;
+    BEGIN
+    store(1,0);
+    END;
+
+PROCEDURE storenil(sloc: integer);
+    BEGIN
+    stk[st-sloc] := nilref;
+    END;
+
+
+    (********************************************************)
+    (*                                                      *)
+    (*              identifier lookup & entry               *)
+    (*                                                      *)
+    (********************************************************)
+
+function nmhash(nm: stringp): integer;
+    CONST
+        hashc = 256;
+    VAR
+        i,tmp: integer;
+    BEGIN
+    tmp := 0;
+    i := 1;     (* get hash code from first three chars of string. *)
+    WHILE (i <= 3) AND (strspace[nm+i] <> eos) DO
+        BEGIN
+        tmp := ord(strspace[nm+i]) + hashc*tmp;
+        i := i + 1;
+        END;
+    nmhash := abs(tmp) MOD hidmax;      (* abs because mod is screwy. *)
+    END;
+
+FUNCTION eqstr(s1,s2: stringp): boolean;
+    BEGIN
+    WHILE (strspace[s1] = strspace[s2]) AND (strspace[s1] <> eos) DO
+        BEGIN
+        s1 := s1 + 1;
+        s2 := s2 + 1;
+        END;
+    eqstr := (strspace[s1] = strspace[s2]);
+    END;
+
+PROCEDURE nmlookup(nm: stringp; VAR found: boolean; VAR hash: integer;
+                   VAR loc: itemref);
+    (* lookup a name in "identifier space".                                 *)
+    (* "hash" returns the hash value for the name.                          *)
+    (* "loc" returns the location in the space for the (possibly new)       *)
+    (* identifier.                                                          *)
+    BEGIN
+    hash := nmhash(nm);
+    mkitem(idtag, idhead[hash], loc);
+    (* default is identifier, but may be "error". *)
+    (* start at appropriate hash chain. *)
+
+    found := false;
+    WHILE (info_of(loc) <> nillnk) AND (NOT found) DO
+        BEGIN
+        found := eqstr(nm, idspace[info_of(loc)].idname);
+        IF NOT found THEN
+            set_info(loc, idspace[info_of(loc)].idhlink);
+        (* next id in chain *)
+        END;
+    IF NOT found THEN               (* find spot for new identifier *)
+        BEGIN
+        IF freeident=nillnk THEN    (* no more free identifiers. *)
+            BEGIN
+            mkerr(noidspace, loc);
+            writeln('*****Identifer space exhausted')
+            END
+        ELSE
+            BEGIN
+            set_info(loc, freeident);
+            freeident := idspace[freeident].idhlink;
+            END;
+        END;
+    END;
+
+PROCEDURE putnm(nm: stringp; VAR z: itemref; VAR found: boolean);
+    (* put a new name into identifier space, or return old location *)
+    (* if it's already there.                                       *)
+    VAR
+        tmp: ident;
+        hash: integer;
+    BEGIN
+    nmlookup(nm, found, hash, z);
+    IF (NOT found) AND (tag_of(z) = idtag) THEN
+        BEGIN
+        tmp.idname := nm;
+        tmp.idhlink := idhead[hash];   (* put new ident at head of chain     *)
+        tmp.val := nilref;             (* initialize value and property list *)
+        tmp.plist := nilref;
+        tmp.funcell := nilref;         (* also, the function cell *)
+        idhead[hash] := info_of(z);
+        idspace[info_of(z)] := tmp;
+        END;
+    END;
+
+
+    (********************************************************)
+    (*                                                      *)
+    (*              the garbage collector                   *)
+    (*                                                      *)
+    (********************************************************)
+
+PROCEDURE xfaststat;
+    (* give quick summary of statistics gathered *)
+    BEGIN
+#dw       writeln('Next free pair:   ', freepair, ' out of ', maxpair);
+#dw       writeln('Next free fixnum: ', freeint, ' out of ', maxintsp);
+#dw       writeln('Next free string: ', freestr, ' out of ', maxstrsp);
+          writeln('Next free id loc: ', freeident, ' out of ', maxident);
+          writeln('Pair space reclaimed ', gccount, ' times');
+          writeln('Conses since last reclaim:',consknt);
+          writeln('Stack top is:',st);
+#d       break(output)
+    END;
+
+
+PROCEDURE xgcollect;
+    VAR
+        i: integer;
+        markedk: integer;   (* counts the number of pairs marked *)
+        freedk: integer;    (* counts the number of pairs freed. *)
+        gcstkp: 0..maxgcstk; (* note the garbage collection stack   *)
+        mxgcstk: 0..maxgcstk;           (* is local to this procedure. *)
+        gcstk: ARRAY[1..maxgcstk] OF integer;
+        markflag: PACKED ARRAY[1..maxpair] OF boolean;
+        
+    PROCEDURE pushref(pr: itemref);
+        (* push the address of an unmarked pair, if that's what it is. *)
+        BEGIN
+        IF tag_of(pr) = pairtag THEN
+            IF NOT markflag[info_of(pr)] THEN  (* was .markflag *)
+                BEGIN
+                IF gcstkp < maxgcstk THEN
+                    BEGIN
+                    gcstkp := gcstkp + 1;
+                    gcstk[gcstkp] := info_of(pr);
+                    IF gcstkp > mxgcstk THEN
+                        mxgcstk := gcstkp;
+                    END
+                ELSE
+                    BEGIN
+                    writeln('*****Garbage stack overflow');
+#dtv                halt;
+#p                  exit(pas0);
+#a                pgm_$exit;
+                    END;
+                END;
+        END;
+
+    PROCEDURE mark;
+        (* "recursively" mark pairs referred to from gcstk. gcstk is used to *)
+        (* simulate recursion.                                               *)
+        VAR
+            prloc: integer;
+        BEGIN
+        WHILE gcstkp > 0 DO
+            BEGIN
+            prloc := gcstk[gcstkp];
+            gcstkp := gcstkp - 1;
+            markflag[prloc] := true;
+            pushref(prspace[prloc].prcdr);
+            pushref(prspace[prloc].prcar);  (* trace the car first. *)
+            END;
+        END;
+
+    BEGIN       (* xgcollect *)
+    writeln;
+    writeln('***Garbage collector called');
+#d  break(output);
+    gccount := gccount + 1;          (* count garbage collections. *)
+    xfaststat;   (* give summary of statistics collected *)
+    consknt := 0;       (* clear out the cons counter *)
+    gcstkp := 0;        (* initialize the garbage stack pointer. *)
+    mxgcstk := 0;       (* keeps track of max stack depth. *)
+
+    (* clear markflags *)
+    FOR i := 1 TO maxpair DO markflag[i] := false;
+    (* mark things from the "computation" stack. *)
+    FOR i := 1 TO st DO
+        BEGIN
+        pushref(stk[i]);
+        mark;
+        END;
+    (* mark things from identifier space. *)
+    FOR i := 1 TO maxident DO
+        BEGIN
+        pushref(idspace[i].val);
+        mark;
+        pushref(idspace[i].plist);
+        mark;
+        pushref(idspace[i].funcell);
+        mark;
+        END;
+
+    (* reconstruct free list by adding things to the head. *)
+    freedk := 0;
+    markedk := 0;
+    FOR i:= 1 TO maxpair - 1 DO
+        BEGIN
+        IF markflag[i] THEN
+            BEGIN
+            markedk := markedk + 1;
+            markflag[i] := false
+            END
+        ELSE
+            BEGIN
+            prspace[i].prcar := nilref;
+            mkitem(pairtag, freepair, prspace[i].prcdr);
+            freepair := i;
+            freedk := freedk + 1
+            END
+        END;
+    writeln(freedk,' pairs freed.');
+    writeln(markedk,' pairs in use.');
+    writeln('Max gc stack was ',mxgcstk);
+#d  break(output);
+    mkint(gccount, 1) (* return number of garbage collections *)
+    END;
+    (* xgcollect *)
+
+    (********************************************************)
+    (*                                                      *)
+    (*                  lisp primitives                     *)
+    (*                                                      *)
+    (********************************************************)
+
+    (* return r[1].r[2] in r[1] *)
+PROCEDURE xcons;
+    VAR p: integer;
+
+    BEGIN
+    (* push args onto stack, in case we need to garbage collect the *)
+    (* references will be detected.                                 *)
+    alloc(2);
+    stk[st] := r[1];
+    stk[st-1] := r[2];
+
+    IF xNull(prspace[freepair].prcdr) THEN xgcollect;
+
+    p := freepair;
+    freepair := info_of(prspace[p].prcdr);
+    prspace[p].prcar := stk[st];
+    prspace[p].prcdr := stk[st - 1];
+    mkpair(p, 1);       (* leave r[1] pointing at new pair. *)
+
+    consknt := consknt + 1;
+    dealloc(2);
+    END;
+
+PROCEDURE xncons;
+    BEGIN r[2] := nilref;
+    xcons;
+    END;
+
+PROCEDURE xxcons;
+    BEGIN rxx := r[1];
+    r[1] := r[2];
+    r[2] := rxx;
+    xcons;
+    END;
+(* Makes things too big for Apollo ...
+PROCEDURE xWrtok;       FORWARD;
+
+PROCEDURE err_not_pair(VAR u: itemref);
+    BEGIN
+    write('*****Pair operation attempted on '); xwrtok; writeln;
+    mkerr(notpair, u);
+    END;
+*)
+
+    (* return car of r[1] in r[1] *)
+PROCEDURE xcar;
+    BEGIN
+    IF tag_of(r[1]) = pairtag THEN
+        r[1] := prspace[info_of(r[1])].prcar
+    ELSE
+        mkerr(notpair, r[1]);
+    END;
+
+PROCEDURE xcdr;
+    BEGIN
+    IF tag_of(r[1]) = pairtag THEN
+        r[1] := prspace[info_of(r[1])].prcdr
+    ELSE
+        mkerr(notpair, r[1]);
+    END;
+
+PROCEDURE xrplaca;
+    BEGIN
+    IF tag_of(r[1]) = pairtag THEN
+        prspace[info_of(r[1])].prcar:=r[2]
+    ELSE
+        mkerr(notpair, r[1]);
+    END;
+
+PROCEDURE xrplacd;
+    BEGIN
+    IF tag_of(r[1]) = pairtag THEN
+        prspace[info_of(r[1])].prcdr :=r[2]
+    ELSE
+        mkerr(notpair, r[1]);
+    END;
+
+    (* anyreg car and cdr *)
+PROCEDURE anycar(a: itemref; VAR b: itemref);
+    BEGIN
+    IF tag_of(a) = pairtag THEN
+        b := prspace[info_of(a)].prcar
+    ELSE
+        mkerr(notpair, b);
+    END;
+
+PROCEDURE anycdr(a: itemref; VAR b: itemref);
+    BEGIN
+    IF tag_of(a) = pairtag THEN
+        b := prspace[info_of(a)].prcdr
+    ELSE
+        mkerr(notpair, b);
+    END;
+
+
+    (********************************************************)
+    (*                                                      *)
+    (*              compress & explode                      *)
+    (*                                                      *)
+    (********************************************************)
+
+PROCEDURE compress;     (* returns new id from list of chars *)
+      VAR i: stringp;
+          clist, c: itemref;
+          found: boolean;
+          int: longint;
+
+    FUNCTION is_int(i: stringp; VAR int: longint): boolean;
+        VAR negative, could_be: boolean;
+
+        BEGIN   (* is_int *)
+        int := 0;
+        could_be := true;
+        negative := strspace[i] = '-';
+        IF negative OR (strspace[i] = '+') THEN i := i + 1;
+
+        WHILE could_be AND (strspace[i] <> eos) DO
+            BEGIN
+            IF (strspace[i] >= '0') AND (strspace[i] <= '9') THEN
+                 int := int * 10 + (ord(strspace[i]) - ord('0'))
+            ELSE could_be := false;
+            i := i + 1
+            END;
+
+        IF negative THEN int := -int;
+        is_int := could_be
+        END     (* is_int *);
+
+    BEGIN     (* compress *)
+    clist := r[1];        (* list of chars *)
+    i := freestr; (* point to possible new string *)
+
+    WHILE (i < maxstrsp) AND NOT xNull(clist) DO
+        BEGIN
+        IF tag_of(clist) = PAIRTAG THEN
+            BEGIN
+            c := prspace[info_of(clist)].prcar;
+            clist := prspace[info_of(clist)].prcdr;
+            IF tag_of(c) = IDTAG THEN
+                IF (info_of(c) > choffset) AND
+                   (info_of(c) < choffset + 128) THEN 
+                    BEGIN 
+                    strspace[i] := chr(info_of(c) - choffset);
+                    i := i + 1
+                    END
+                ELSE 
+                    writeln('*****Compress: list item not single char')
+            ELSE 
+                writeln('*****Compress: list item not ID');
+            END 
+        ELSE 
+            writeln('*****Compress: item not list')
+        END (* WHILE *);
+
+    strspace[i] := eos;   (* terminate string *)
+
+    IF (i >= maxstrsp) THEN
+        writeln('*****String space exhausted')
+    ELSE IF is_int(freestr, int) THEN
+         mkint(int, 1)
+    ELSE (* look the name up, return itemref for it *)
+        BEGIN
+        putnm(freestr, r[1], found);
+        IF NOT found THEN
+            freestr := i + 1;
+        END
+    END       (* compress *);
+
+PROCEDURE explode;      (* returns list of chars from id or int *)
+      
+      FUNCTION id_explode(i: stringp): itemref;
+          BEGIN (* id_explode *)
+          IF strspace[i] = eos THEN id_explode := nilref
+          ELSE 
+              BEGIN
+              r[2] := id_explode(i + 1);
+              mkident(ord(strspace[i]) + choffset, 1);
+              xcons;
+              id_explode := r[1]
+              END
+          END   (* id_explode *);
+
+     FUNCTION int_explode(i: longint): itemref;
+          VAR negative: boolean;
+
+          BEGIN (* int_explode *)
+          r[1] := nilref;
+          IF i < 0 THEN
+              BEGIN negative := true;
+              i := -i
+              END
+          ELSE negative := false;
+
+          WHILE i > 0 DO
+              BEGIN
+              r[2] := r[1];
+              mkident(i MOD 10 + ord('0') + choffset, 1);
+              xcons;
+              i := i DIV 10
+              END;
+
+          IF negative THEN
+              BEGIN 
+              r[2] := r[1];
+              mkident(ord('-') + choffset, 1);
+              xcons
+              END;
+          int_explode := r[1]
+          END (* int_explode *);
+
+      BEGIN     (* explode *)
+      IF tag_of(r[1]) = IDTAG THEN 
+          r[1] := id_explode(idspace[info_of(r[1])].idname)
+      ELSE IF tag_of(r[1]) = INTTAG THEN 
+          r[1] := int_explode(info_of(r[1]))
+      ELSE IF tag_of(r[1]) = FIXTAG THEN
+          r[1] := int_explode(intspace[info_of(r[1])])
+      ELSE IF tag_of(r[1]) = CODETAG THEN
+          r[1] := int_explode(info_of(r[1]))
+      ELSE 
+          writeln('***** EXPLODE: Arg bad type')
+      END       (* explode *);
+
+PROCEDURE gensym;
+    VAR i: integer;
+
+    PROCEDURE kick(i: integer);     (* increments gsym digit *)
+        BEGIN (* Kick *)
+        IF (g_sym[i] = '9') THEN 
+            BEGIN
+            g_sym[i] := '0';
+            IF (i < max_gsym) THEN kick(i + 1)  (* otherwise wrap around *)
+            END
+        ELSE g_sym[i] := succ(g_sym[i])
+        
+        END (* Kick *);
+
+    BEGIN (* gensym *)
+    r[1] := nilref;
+
+    FOR i := 1 TO max_gsym DO
+        BEGIN
+        r[2] := r[1];
+        mkident(ord(g_sym[i]) + choffset, 1);
+        xcons
+        END;
+    r[2] := r[1];
+    mkident(ord('G') + choffset, 1);
+    xcons;
+    compress;
+
+    Kick(1);
+    END; (* gensym *)
+
+
+    (********************************************************)
+    (*                                                      *)
+    (*                    i/o primitives                    *)
+    (*                                                      *)
+    (********************************************************)
+
+PROCEDURE xopen;   (* Simple OPEN, but see NPAS0 *)
+
+var s1: FileName;
+    i,j : integer;
+#a  io_status: integer32;
+#p (* catch some I/O errors *)
+#p  handler ResetError(name: PathName);
+#p  begin
+#p    writeln('**** Could not open file -  ',name,' for read');
+#p    exit(xopen);
+#p  end;
+
+#p  handler RewriteError(name: PathName);
+#p  begin
+#p    writeln('**** Could not open file -  ',name,' for write');
+#p    exit(xopen);
+#p  end;
+  
+begin
+      IF tag_of(r[1]) = IDTAG THEN 
+      begin
+        i := idspace[info_of(r[1])].idname;
+#p      s1[0] := chr(255);  (* set length *)
+#d     s1:='         ';
+#w     s1:="                    ";
+#aptv  s1:='                                                            ';
+#adpvw j:= 0;
+#t     j := 1;
+
+        WHILE (i <= maxstrsp) AND (strspace[i] <> eos) 
+#d             AND (j <9 )
+          do
+        begin
+#d      IF strspace[i] <> '.' THEN (* ignore dots in 20 file names. *)
+#d      BEGIN
+#d        j:= j + 1;
+          s1[j] := strspace[i];
+#d        END;
+#aptvw    j:= j + 1;
+          i:= i + 1;
+        end;
+#p      s1[0]:= chr(j);  (* set Actual Length *)
+       
+        IF tag_of(r[2]) = IDTAG THEN 
+          BEGIN
+           If info_of(r[2])= Xinput then
+             begin 
+#t              close(finput);
+#twp            reset(finput, s1);
+#d              reset(finput,s1,0,0,'DSK   '); 
+#a              close(finput);
+#a              open(finput, s1, 'old', io_status);
+#a              IF io_status = 0 THEN 
+#a                  BEGIN 
+#a                  reset(finput);
+                    mkint(4,1)
+#a                  END
+#a              ELSE BEGIN writeln('***** OPEN: Could not open ', s1);
+#a                   r[1] := nilref END
+             end
+
+           else if info_of(r[2])= Xoutput then
+             begin 
+#t           close(foutput);
+#twp         rewrite(foutput, s1);
+#d           rewrite(foutput,s1,0,0,'DSK   '); 
+#a           close(foutput);
+#a           open(foutput, s1, 'new', io_status);
+#a              IF io_status = 0 THEN 
+#a                  BEGIN 
+#a                  rewrite(foutput);
+                    mkint(5,1) 
+#a                  END
+#a              ELSE BEGIN writeln('***** OPEN: Could not open ', s1);
+#a                   r[1] := nilref
+#a                   END 
+             END
+           ELSE
+             BEGIN writeln('***** Open: arg2 not INPUT/OUTPUT');
+                   mkerr(notid,r[1])
+             END
+         END  ELSE writeln('***** Open: arg2 bad type')
+     END ELSE writeln('***** Open: arg1 bad type');
+END;
+
+PROCEDURE xclose;
+begin
+  case info_of(r[1]) of
+        1: ;
+        2: ;
+        3: ;
+#w      4: ;
+#w      5: ;
+#apt    4: close(finput);
+#apt    5: close(foutput);
+#d      4: break(finput);
+#d      5: break(foutput);
+  end;
+end;
+
+PROCEDURE xrds;
+  (* Select channel for input *)        
+  VAR tmp: longint;
+    BEGIN
+        tmp:=inchnl;
+        inchnl := info_of(r[1]);
+        mkint(tmp,1)
+    END;
+
+PROCEDURE Xwrs;
+  (* Select channel for output *)
+  VAR tmp:longint;
+    BEGIN
+        tmp:=outchnl;
+        outchnl := info_of(r[1]);
+        mkint(tmp,1)
+    END;
+
+PROCEDURE xterpri;
+    BEGIN
+    CASE outchnl OF
+#p     3: writeln(' ');
+#d     3: begin writeln(output); break(output); end;
+#dp    5: begin writeln(foutput,' '); break(foutput); end;
+#atw   3: writeln(output);
+#atw   5: writeln(foutput);
+    END (* CASE *)
+    END;
+
+ FUNCTION Int_field(I: longint): Integer;
+     VAR width: integer;
+         n: longint;
+     BEGIN
+     width := 1;
+     n := 10;
+     IF i < 0 THEN width := width + 1; (* For minus sign *)
+     i := abs(i);
+     WHILE (i >= n) AND (width < 10) DO
+         BEGIN width := width + 1;
+         n := n * 10
+         END;
+     int_field := width
+     END;
+
+PROCEDURE XwriteInt(I:integer);
+    BEGIN
+        CASE outchnl OF
+        3: write(i: int_field(i));
+        5: write(foutput, i: int_field(i));
+        END     (* CASE *)
+    END  (* XwriteInt *);
+
+PROCEDURE XwriteChar(C:onechar);
+    BEGIN
+#adptw CASE outchnl OF
+#p         3: write('  ', C);
+#adtvw     3: write(C);
+#p         5: write(foutput,'  ', C);
+#adtvw     5: write(foutput,C);
+#adptw     END        (* CASE *)
+    END;
+
+PROCEDURE xwrtok;
+    (* doesn't expand escaped characters in identifier names *)
+  VAR  i: integer;
+  BEGIN
+   IF tag_of(r[1]) = inttag THEN  XwriteInt(info_of(R[1]))
+    ELSE IF tag_of(r[1]) = fixtag THEN XwriteInt(intspace[info_of(R[1])])
+    ELSE IF tag_of(r[1]) = idtag THEN
+         BEGIN
+           i := idspace[info_of(r[1])].idname;
+           WHILE (i <= maxstrsp) AND (strspace[i] <> eos) DO
+                    BEGIN
+                    XwriteChar(strspace[i]);
+                    i:= i + 1;
+                    END;
+         END
+(*
+    ELSE IF tag_of(r[1]) = strtag THEN
+        BEGIN xWriteChar('"');
+        i := info_of(r[1]);
+        WHILE (i <= maxstrsp) AND (strspace[i] <> eos) DO
+            BEGIN
+            XwriteChar(strspace[i]);
+            i := i + 1;
+            END;
+        xWriteChar('"')
+        END
+*)
+
+    ELSE IF tag_of(r[1]) = chartag THEN
+           XwriteChar(chr(info_of(r[1]) - choffset))
+    ELSE IF tag_of(r[1]) = errtag THEN
+      Begin XwriteChar(' ');
+         XwriteChar('*'); XwriteChar('*'); XwriteChar('*');
+         XwriteChar(' '); XwriteChar('#'); XwriteChar(' ');
+            XwriteInt(info_of(r[1]));   Xterpri;
+      End
+    ELSE IF tag_of(r[1]) = codetag THEN
+         Begin XwriteChar(' '); XwriteChar('#'); XwriteChar('#');
+               XwriteInt(info_of(r[1]));
+         End
+    ELSE
+         Begin
+         XwriteChar(' '); XwriteChar('?'); XwriteChar(' ');
+            XwriteInt(tag_of(r[1]));
+         XwriteChar(' '); XwriteChar('/'); XwriteChar(' ');
+            XwriteInt(info_of(r[1]));
+         XwriteChar(' '); XwriteChar('?'); XwriteChar(' ');
+         End;
+#d   break(output);  
+    END;
+
+#aptvw FUNCTION eol: boolean;
+#aptvw    BEGIN
+#aptvw    CASE inchnl OF
+#aptvw       1:  eol := eoln(symin);
+#aptvw       2:  eol := eoln(input);
+#aptvw       4:  eol := eoln(finput);
+#aptvw        END;
+#aptvw    END;
+
+PROCEDURE rdchnl(chnlnum: integer; VAR ch: onechar);
+    BEGIN
+    IF (chnlnum < 1) OR (chnlnum > inchns) THEN
+     writeln('*****Bad input channel for RDCHNL', chnlnum)
+    ELSE
+        CASE chnlnum OF
+            1:  BEGIN
+            ch := symin^;  (* a little strange, but avoids  *)
+            get(symin);              (* initialization problems *)
+            ichrbuf[inchnl] := symin^; (* Peek ahead *)
+            END;
+
+            2:  BEGIN
+#t             IF charcnt > Length(line) THEN
+#t                 BEGIN
+#t                 charcnt := 1;
+#t                 Readln(line)
+#t                 END;
+#t             ch := line[charcnt];
+#t             IF Length(line) > charcnt THEN
+#t                 ichrbuf[inchnl] := line[charcnt + 1]
+#t             ELSE ichrbuf[inchnl] := sp;
+#t             charcnt := charcnt + 1
+#adpvw      ch := input^;
+#adpvw      get(input);
+#adpvw      ichrbuf[inchnl] := input^;
+            END;
+         4:  begin
+             ch := finput^;
+             get(finput);
+             ichrbuf[inchnl] := finput^;
+            END;
+            END;
+    (* case *)
+    IF idspace[xEcho].val <> nilref THEN
+#aptvw  IF eol THEN BEGIN xWriteChar(ch); xTerpri END ELSE xWriteChar(ch);
+#d            xWriteChar(ch);
+    END;
+    (* rdchnl *)
+
+FUNCTION eofchnl: boolean;
+    BEGIN
+#adptvw  CASE inchnl OF
+#adptvw      1:  eofchnl := eof(symin);
+#adptvw      2:  eofchnl := eof(input);
+#adptvw      4:  eofchnl := eof(finput);
+#adptvw      END;
+    END;
+
+
+    (********************************************************)
+    (*                                                      *)
+    (*                   token scanner                      *)
+    (*                                                      *)
+    (********************************************************)
+
+PROCEDURE xrdtok;
+LABEL 1;
+
+    VAR
+        ch,ch1,ChangedCh: onechar;
+        i: integer;
+        anint: longint;
+        moreid: boolean;
+        found: boolean;
+        negflag: integer;
+
+    FUNCTION digit(ch: onechar): boolean;
+        BEGIN
+        digit := ( '0' <= ch ) AND ( ch <= '9');
+        END;
+
+
+    FUNCTION escalpha(VAR ch: onechar): boolean;
+        (* test for alphabetic or escaped character. *)
+        (* note side effect in ChangedCh.            *)
+        BEGIN
+        ChangedCh := Ch;
+        IF ( 'A' <= ch ) AND ( ch <= 'Z') THEN
+            escalpha := true
+        ELSE IF ( ord('A')+32 <= ord(ch)) AND ( ord(ch) <= ord('Z')+32) THEN
+               BEGIN
+                 IF NOT xNull(idspace[xraise].val) THEN
+                     Changedch := chr(ord(ch)-32);
+                 escalpha := true;    (* lower case alphabetics *)
+               END
+             ELSE IF ch='!' THEN
+                      BEGIN
+                      rdchnl(inchnl,ch);
+                      ChangedCh:=Ch;
+                      escalpha := true;
+                      END
+                  ELSE
+                      escalpha := false;
+        END;
+
+    FUNCTION alphanum(VAR ch: onechar): boolean;
+        (* test if escalfa or digit *)
+        VAR b: boolean;
+        BEGIN
+        ChangedCh:=Ch;
+        b := digit(ch);
+        IF NOT b THEN b := escalpha(ch);
+        alphanum := b;
+        END;
+
+    FUNCTION whitesp(ch: onechar): boolean;
+#d     BEGIN
+#d      (* may want a faster test *)
+#d      whitesp := (ch = sp) OR (ch = cr) OR (ch = lf) OR (ch = ht)
+#d      OR (ch = nul);       (* null?? *)
+#aptvw    VAR ascode:integer;
+#aptvw    BEGIN
+#aptvw        ascode:=ord(ch);
+#aptvw        WHITESP := (CH = SP) OR (ascode = CR) OR (ascode = LF)
+#aptvw    OR (ascode = ht) or (ascode = nul);        (* null?? *)
+    END; 
+
+    BEGIN       (* xrdtok *)
+1:
+    IF NOT eofchnl THEN
+        REPEAT                          (* skip leading white space. *)
+            rdchnl(inchnl,ch)
+        UNTIL (NOT whitesp(ch)) OR eofchnl;
+    IF eofchnl THEN
+        mkitem(chartag, eofcode + choffset, r[1])
+        (* should really return !$eof!$  *)
+    ELSE
+        BEGIN
+        IF digit(ch) or (ch = '-') THEN
+            set_tag(r[1], inttag)
+        ELSE IF ch = '"' THEN set_tag(r[1], strtag)
+        ELSE IF escalpha(ch) THEN
+                 set_tag(r[1], idtag)
+             ELSE
+                 set_tag(r[1], chartag);
+
+        CASE tag_of(r[1]) OF
+            chartag:  BEGIN
+                  if ch = begin_comment then
+                      BEGIN
+#d                    While (ch <> cr) do rdchnl(inchnl,ch);
+#aptvw                While not eol do rdchnl(inchnl,ch);
+                      rdchnl(inchnl, ch);
+                      GOTO 1
+                      END;
+                  set_tag(r[1], idtag);
+                  mkitem(inttag, chartype, tmpref);
+                  idspace[xtoktype].val := tmpref;
+                  set_info(r[1], ord(ch) + choffset);
+                  END;
+            inttag:   BEGIN
+                 mkitem(inttag, inttype, tmpref);
+                 idspace[xtoktype].val :=tmpref;
+                 negflag := 1;
+                 if ch = '-' then
+                 begin anint := 0; negflag :=-1 end
+                     else anint := ord(ch) - ord('0');
+                 WHILE digit(ichrbuf[inchnl]) DO
+                     BEGIN
+                     rdchnl(inchnl,ch);
+                     anint := 10 * anint + (ord(ch) - ord('0'))
+                     END;
+                 anint := negflag * anint;
+                 set_info(r[1], anint)
+                 END;
+            idtag:    BEGIN
+                mkitem(inttag, idtype, tmpref);
+                idspace[xtoktype].val:=tmpref;
+                i := freestr; (* point to possible new string *)
+                moreid := true;
+                WHILE (i < maxstrsp) AND moreid DO
+                    BEGIN
+                    strspace[i] := ChangedCh;
+                    (* May have Case Change, etc *)
+                    i:= i + 1;
+                    moreid :=alphanum(ichrbuf[inchnl]);  (* PEEK ahead char *)
+                    IF moreid THEN rdchnl(inchnl,ch) (* Advance readch *)
+                    END;
+                strspace[i] := eos;   (* terminate string *)
+                IF (i >= maxstrsp) THEN
+                   writeln('*****String space exhausted')
+                ELSE  (* look the name up, return itemref for it *)
+                    BEGIN
+                    putnm(freestr, r[1], found);
+                    IF NOT found THEN
+                        freestr := i + 1;
+                    END;
+                END   (* of case idtag *);
+                strtag: BEGIN
+                        (* an alias for quoted identifier - special *)
+                        (* characters need not be escaped.   *)
+                        mkitem(inttag, idtype, tmpref);
+                        idspace[xtoktype].val:=tmpref;
+                        i := freestr;
+                        rdchnl(inchnl, ch); (* scan past " *)
+                        WHILE (ch <> '"') AND (i < maxstrsp) DO
+                            BEGIN
+                            strspace[i] := ch;
+                            i := i + 1;
+                            rdchnl(inchnl, ch);
+                            END;
+#adw                    strspace[i] := eos;
+#ptv                    strspace[i] := chr(eos);
+                        i := i + 1;
+                        IF ch <> '"' THEN
+                            writeln('***** String space exhausted')
+                        ELSE  (* look the name up, return itemref for it *)
+                            BEGIN
+                            putnm(freestr, r[1], found);
+                            set_tag(r[1], idtag);
+			    (* must have the form ('QUOTE . id . NIL) *)
+                            (* to give the effect of a quoted id.     *)
+                            r[2] := nilref;
+                            xcons;
+                            r[2] := r[1];
+                            mkident(xQuote, 1);
+                            xcons;
+                            IF NOT found THEN
+                                freestr := i;
+                            END;
+                        END (* OF CASE strtag *);
+            END (* of case *);
+        END;
+    END (* xrdtok *);
+
+    (********************************************************)
+    (*                                                      *)
+    (*                    initialization                    *)
+    (*                                                      *)
+    (********************************************************)
+
+
+PROCEDURE init;
+    (* initialization procedure depends on  *)
+    (* ability to load stack with constants *)
+    (* from a file.                         *)
+    VAR
+        strptr: stringp;
+#dptvw  nam: PACKED ARRAY[1..3] OF onechar;
+#a      nam: PACKED ARRAY[1..4] OF onechar; (* SPL bug for Apollo *)
+        (* holds 'nil', other strings? *)
+        i, n: integer;
+        idref: itemref;
+        found: boolean;
+
+#aptv   (* init is divided into two parts so it can compile on terak *)
+    PROCEDURE init1;
+        BEGIN
+#t      CHARCNT := 1;
+#t      LINE := '';
+#t      eos := chr(nul);
+
+        (* initialize top of stack *)
+        st := 0;
+
+        (* initialize fixnum free list *)
+        FOR freeint := 1 TO maxintsp - 1 DO 
+            intspace[freeint] := freeint + 1;
+        intspace[maxintsp] := end_flag;
+        freeint := 1;
+
+        (* define nilref - the id, nil, is defined a little later. *)
+        freeident := 1;
+        mkitem(idtag, freeident, nilref);
+
+        (* initialize pair space. *)
+        FOR i := 1 TO maxpair - 1 DO      (* initialize free list. *)
+            BEGIN
+            prspace[i].prcar := nilref;         (* just for fun *)
+            mkitem(pairtag, i + 1, prspace[i].prcdr);
+            END;
+        prspace[maxpair].prcar := nilref;
+        prspace[maxpair].prcdr := nilref;       (* end flag *)
+        freepair := 1;                  (* point to first free pair *)
+
+
+        (* initialize identifier space and string space. *)
+        freestr := 1;
+        FOR i := 0 TO hidmax - 1 DO
+            idhead[i] := nillnk;
+        FOR i := 1 TO maxident DO
+            BEGIN
+            IF i < maxident THEN
+                idspace[i].idhlink := i + 1
+            ELSE    (* nil to mark the final identifier in the table. *)
+                idspace[i].idhlink := nillnk;
+            (* set function cells to undefined *)
+            mkerr(undefined, tmpref);
+            idspace[i].funcell :=tmpref;
+            idspace[i].val :=tmpref;
+            idspace[i].plist :=tmpref;
+            END;
+
+        (* nil must be the first identifier in the table--id #1 *)
+        (* must fill in fields by hand for nilref.*)
+        (* putnm can handle any later additions.  *)
+        nam := 'NIL';
+        strptr := freestr;
+        FOR i := 1 TO 3 DO
+            BEGIN
+            strspace[strptr] := nam[i];
+            strptr:= strptr + 1;
+            END;
+        strspace[strptr] := eos;
+        putnm(freestr, nilref, found);
+        IF NOT found THEN
+            freestr := strptr + 1;
+
+        (* make the single character ascii identifiers, except nul(=eos). *)
+        FOR i := 1 TO 127  DO
+            BEGIN
+            strspace[freestr] := chr(i);
+            strspace[freestr + 1] := eos;
+            putnm(freestr, idref, found);
+            IF NOT found THEN
+                freestr := freestr + 2;
+            IF i = ord('T') THEN
+                BEGIN 
+                trueref := idref;    (* returns location for 't. *)
+                idspace[info_of(idref)].val := trueref (* Set T to T *)
+                END
+            END;
+
+        
+        (* init gensym id list *)
+        FOR i := 1 TO max_gsym DO g_sym[i] := '0';
+
+        (* clear the counters *)
+        idspace[xraise].val := trueref; (* gets undone when !*RAISE is read *)
+        idspace[xEcho].val := nilref;  (* prevent echo until !*ECHO is read *)
+        gccount := 0;
+        consknt := 0;
+        END;
+        (* init1 *)
+
+    PROCEDURE init2;
+        BEGIN
+        (* load "symbol table" with identifiers, constants, and functions.  *)
+        inchnl := 1;        (* select symbol input file. *)
+        outchnl := 3;        (* select output file. *)
+#p      reset(symin,'paslsp.ini');
+#p      reset(input);
+#p      rewrite(output);
+#w      reset(symin, "paslsp.ini");
+#t      reset(symin,'#5:lspini.text');
+#d      reset(symin,'paslspini',0,0,'DSK   ');
+#d      reset(input,'tty      ',0,0,'TTY   ');
+#d      rewrite(output,'tty      ',0,0,'TTY   ');
+#a      open(symin,'paslsp.ini','old',iostatus);
+#a      reset(symin);
+#a      for i:=1 to inchns do
+#a         ichrbuf[i]:=' ';
+        xrdtok;     (* get count of identifiers. *)
+        IF tag_of(r[1]) <> inttag THEN
+           writeln('*****Bad symbol table, integer expected at start');
+        n := info_of(r[1]);
+        FOR i := 1 TO n DO
+            xrdtok;
+        (* reading token magically loads it into id space. *)
+        xrdtok;         (* look for zero terminator. *)
+        IF (tag_of(r[1]) <> inttag) OR (info_of(r[1]) <> 0) THEN
+          writeln('*****Bad symbol table, zero expected after identifiers');
+
+        xrdtok;         (* count of constants  *)
+        IF tag_of(r[1]) <> inttag THEN
+           writeln('*****Bad symbol table, integer expected before constants');
+        n := info_of(r[1]);
+        alloc(n);       (* space for constants on the stack *)
+        FOR i := 1 TO n DO
+            BEGIN
+            xread;
+            stk[i] := r[1];
+            END;
+        xrdtok;
+        IF (tag_of(r[1]) <> inttag) OR (info_of(r[1]) <> 0) THEN
+         writeln('*****Bad symbol table, zero expected after constants');
+        xrdtok;     (* count of functions. *)
+        IF tag_of(r[1]) <> inttag THEN
+           writeln('*****Bad symbol table, integer expected before functions');
+        n := info_of(r[1]);
+        FOR i := 1 TO n DO
+            (* for each function *)
+            (* store associated code *)
+            BEGIN
+            xrdtok;
+            mkitem(codetag, i, tmpref);
+            idspace[info_of(r[1])].funcell :=tmpref;
+            END;
+        xrdtok;
+        IF (tag_of(r[1]) <> inttag) OR (info_of(r[1]) <> 0) THEN
+         writeln('*****Bad symbol table, zero expected after functions');
+        END;
+        (* init2 *)
+
+(*
+PROCEDURE dumpids;
+    VAR i, p: integer;
+
+    BEGIN
+    FOR i := 1 TO freeident - 1 DO
+        BEGIN
+        p := idspace[i].idname;
+        write('id #', i:5, ' at', p:5, ': ');
+        WHILE strspace[p] <> eos DO
+            BEGIN 
+            write(strspace[p]);
+            p := p + 1
+            END;
+        write('.  Function code: ');
+        writeln(INFO_OF(idspace[i].funcell)); 
+        END
+    END;
+*)
+
+    BEGIN       (* init *)
+    init1;
+    init2;
+    END;
+    (* init *)
+
+    (********************************************************)
+    (*                                                      *)
+    (*                 arithmetic functions                 *)
+    (*                                                      *)
+    (********************************************************)
+
+PROCEDURE xadd1;
+    VAR i: longint;
+
+    BEGIN
+    int_val(r[1], i);
+    mkint(i + 1, 1)
+    END;
+
+PROCEDURE xdifference;
+    VAR i1, i2: longint;
+
+    BEGIN
+    int_val(r[1], i1);
+    int_val(r[2], i2);
+    mkint(i1 - i2, 1)
+    END;
+
+PROCEDURE xdivide;      (* returns dotted pair (quotient . remainder). *)
+    VAR quot, rem: integer;
+        i1, i2: longint;
+
+    BEGIN
+    int_val(r[1], i1);
+    int_val(r[2], i2);
+    IF i2 = 0 THEN writeln('*****Attempt to divide by 0 in DIVIDE')
+    ELSE BEGIN mkint(i1 DIV i2, 1);
+         mkint(i1 MOD i2, 2);
+         END;
+    xcons
+    END;
+
+PROCEDURE xgreaterp;
+    VAR i1, i2: longint;
+
+    BEGIN
+    int_val(r[1], i1);
+    int_val(r[2], i2);
+
+    IF i1 > i2 THEN
+        r[1] := trueref
+    ELSE
+        r[1] := nilref;
+    END;
+
+PROCEDURE xlessp;
+    VAR i1, i2: longint;
+
+    BEGIN
+    int_val(r[1], i1);
+    int_val(r[2], i2);
+
+    IF i1 < i2 THEN
+        r[1] := trueref
+    ELSE
+        r[1] := nilref;
+    END;
+
+PROCEDURE xminus;
+    VAR i: longint;
+
+    BEGIN
+    int_val(r[1], i);
+    mkint(-i, 1)
+    END;
+
+PROCEDURE xplus2;
+    VAR i1, i2: longint;
+
+    BEGIN
+    int_val(r[1], i1);
+    int_val(r[2], i2);
+    mkint(i1 + i2, 1)
+    END;
+
+PROCEDURE xquotient;
+    VAR i1, i2: longint;
+
+    BEGIN
+    int_val(r[1], i1);
+    int_val(r[2], i2);
+    IF i2 = 0 THEN writeln('*****Attempt to divide by 0 in QUOTIENT')
+    ELSE mkint(i1 DIV i2, 1)
+    END;
+
+PROCEDURE xremainder;
+    VAR i1, i2: longint;
+
+    BEGIN
+    int_val(r[1], i1);
+    int_val(r[2], i2);
+    IF i2 = 0 THEN writeln('*****Attempt to divide by 0 in REMAINDER')
+    ELSE mkint(i1 MOD i2, 1)
+    END;
+
+PROCEDURE xtimes2;
+    VAR i1, i2: longint;
+
+    BEGIN
+    int_val(r[1], i1);
+    int_val(r[2], i2);
+    mkint(i1 * i2, 1)
+    END;
+    (* xtimes2 *)
+
+
+    (********************************************************)
+    (*                                                      *)
+    (*                    support for eval                  *)
+    (*                                                      *)
+    (********************************************************)
+
+
+PROCEDURE execute(code: integer);
+    FORWARD;
+
+    (* Xapply(fn,arglist)-- "fn" is an operation code. *)
+PROCEDURE xxapply;
+    VAR
+        i: integer;
+        code: integer;
+        tmp: itemref;
+        tmpreg: ARRAY[1..maxreg] OF itemref;
+    BEGIN
+    code := info_of(r[1]);
+    r[1] := r[2];
+    i := 1;
+    (* spread the arguments  *)
+    WHILE NOT xNull(r[1]) AND (i <= maxreg) DO
+        BEGIN
+        tmp := r[1];
+        xcar;
+        tmpreg[i] := r[1];
+        i := i + 1;
+        r[1] := tmp;
+        xcdr;
+        END;
+    WHILE i > 1 DO
+        BEGIN
+        i := i - 1;
+        r[i] := tmpreg[i];
+        END;
+    execute(code);
+    END;
+
+    (*  rest of pas1...pasn follow , pasn Closes definition of Catch *)
+

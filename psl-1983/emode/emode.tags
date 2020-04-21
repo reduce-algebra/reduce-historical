@@ -1,0 +1,638 @@
+PS:<PSL.EMODE>EMODE-DISPHELP.RED.0
+00090,RLISP
+lisp procedure DisplayHelpFile F;92
+
+PS:<PSL.EMODE>EMODE-FILES-1.RED.0
+00051,RLISP
+
+PS:<PSL.EMODE>EMODE-FILES-2.RED.0
+00051,RLISP
+
+PS:<PSL.EMODE>EMODE1.RED.0
+03536,RLISP
+Symbolic Procedure DBG1(x);2018
+Symbolic Procedure DBG2(x);2086
+Symbolic Procedure EMODE();2210
+Symbolic Procedure EMODEinitialize();3929
+Symbolic Procedure EMODEbreak();5000
+Symbolic Procedure OldFACE();5557
+Symbolic Procedure SelectEmodeChannels();5835
+Symbolic Procedure OldEMODE();6349
+Symbolic Procedure EMODE1(msg);7259
+Symbolic Procedure EMODEdispatchLoop();7516
+Symbolic Procedure FreshEMODE();7997
+Symbolic Procedure EMODEerror(x);8138
+Symbolic Procedure SetBufferText(i,text);9613
+Symbolic Procedure GetBufferText(i);9741
+Symbolic Procedure NextIndex(i);9930
+Symbolic Procedure PreviousIndex(i);10009
+Symbolic Procedure SetupInitialBufferStructure();10074
+Symbolic Procedure SelectBuffer(BufferName);11746
+Symbolic Procedure DeSelectBuffer(BufferName);13274
+Symbolic Procedure CountLinesFrom(P1,P2);13704
+Symbolic Procedure CountAllLines;13937
+Symbolic Procedure CountLinesLeft;14074
+Symbolic Procedure CountLinesBefore;14209
+Symbolic Procedure InsertSelfCharacter();14526
+Symbolic Procedure InsertCharacter(ch);14611
+Symbolic Procedure transpose_characters();14830
+Symbolic Procedure AppendLine(contents, PreviousLine);15520
+Symbolic Procedure Insert_string(strng);16168
+Procedure append_line(s);16960
+Symbolic Procedure InsertLine(linetext);17105
+Symbolic Procedure insert_kill_buffer();17453
+Symbolic Procedure unkill_previous();18989
+Symbolic Procedure InsertListEntry(oldlist,pos,val);19591
+Symbolic Procedure DeleteCharacter();19953
+Symbolic Procedure DeleteListEntry(oldlist,pos);20129
+Symbolic Procedure CurrentCharacter();20369
+Symbolic Procedure Head(x,n);20599
+Symbolic Procedure PackLine(lst);20756
+Symbolic Procedure UnpackLine(str);20866
+Symbolic Procedure PutLine();21065
+Symbolic Procedure GetLine(x);21231
+Symbolic Procedure SelectLine(x);21387
+Symbolic Procedure delete_or_copy(del_flg, line1,point1, line2, point2);21718
+Symbolic Procedure DeleteTextEntry(x);25622
+ Symbolic Procedure leave_dispatch_loop();26296
+ Symbolic Procedure !$DeleteBuffer();26557
+ Symbolic Procedure !$BeginningOfBuffer();27062
+ Symbolic Procedure !$EndOfBuffer();27186
+ Symbolic Procedure SetMark();27308
+ Symbolic Procedure ExchangePointAndMark();27470
+ Symbolic Procedure EndOfBufferP(i);28010
+ Symbolic Procedure BeginningOfBufferP(i);28160
+ Symbolic Procedure !$CRLF();28408
+ Symbolic Procedure !$BeginningOfLine();28919
+ Symbolic Procedure !$EndOfLine();29007
+ Symbolic Procedure !$BackwardLine();29176
+ Symbolic Procedure !$ForwardLine();29449
+ Symbolic Procedure !$BackwardCharacter();29952
+ Symbolic Procedure !$ForwardCharacter();30352
+ Symbolic Procedure !$DeleteBackwardCharacter();30773
+ Symbolic Procedure !$DeleteForwardCharacter();31051
+Symbolic Procedure rotate_kill_index(N);31712
+Symbolic Procedure update_kill_buffer(killed_text);32256
+Symbolic Procedure kill_region();34177
+Symbolic Procedure copy_region();34403
+Symbolic Procedure kill_line();34702
+Symbolic Procedure kill_forward_word();35141
+Symbolic Procedure kill_backward_word();35434
+Symbolic Procedure kill_forward_sexpr();35728
+Symbolic Procedure kill_backward_sexpr();36023
+Symbolic Procedure Print1Dispatch(ch1, ch2, fname);36405
+Symbolic Procedure PrintAllDispatch;36838
+Symbolic Procedure GetInternalName(ch,DispatchTable);37319
+Symbolic Procedure character_name(ch);37847
+Symbolic Procedure !$HelpDispatch();38980
+Symbolic Procedure OpenLine();40012
+
+PS:<PSL.EMODE>MENU.RED.0
+00211,RLISP
+Symbolic Procedure MakeMenu();99
+Procedure KillMenu();955
+Procedure ExitMenu();1042
+procedure MenuReader();1159
+Procedure NoPrint x;1235
+procedure Menu;1259
+
+PS:<PSL.EMODE>MOVE-STRINGS.RED.0
+00200,RLISP
+syslsp procedure MoveSubstringToFrom(DestString, SourceString,620
+syslsp procedure FillSubstring(DestString, DestIndex, SubrangeLength, chr);2127
+
+PS:<PSL.UTIL>RAWIO.RED.0
+00682,RLISP
+lisp procedure BITS1 U;780
+macro procedure BITS U;902
+lap '((!*entry PBIN expr 0)1145
+lap '((!*entry PBOUT expr 1)1344
+lap '((!*entry CharsInInputBuffer expr 0)1524
+lap '((!*entry RFMOD expr 1)1970
+lap '((!*entry RFCOC expr 1)2170
+lap '((!*entry RTIW expr 1)2673
+lisp procedure SaveInitialTerminalModes();2972
+lap '((!*entry SFMOD expr 2)3205
+lap '((!*entry STPAR expr 2)3473
+lap '((!*entry SFCOC expr 3)3740
+lap '((!*entry STIW expr 2)4131
+lisp procedure EchoOff();4396
+lisp procedure EchoOn();5436
+Symbolic Procedure PBIN();6267
+Symbolic Procedure PBOUT(chr);6435
+Symbolic Procedure rawio_break();6633
+
+PS:<PSL.EMODE>REFRESH.RED.0
+02087,RLISP
+Symbolic Procedure Coords(col,rw);1324
+Symbolic Procedure Column pos;1375
+Symbolic Procedure Row pos;1452
+Symbolic Procedure FrameScreen(scrn);1750
+Symbolic Procedure FramedWindowDescriptor(BufferName, upperleft, dxdy);2639
+Symbolic Procedure UnframedWindowDescriptor(BufferName, upperleft, dxdy);5185
+Symbolic Procedure OneWindow();7347
+Symbolic Procedure MajorWindowCount();10319
+Symbolic Procedure next_window();10465
+Symbolic Procedure previous_window_command();10959
+Symbolic Procedure next_major_window(pntr, wlist);11525
+Symbolic Procedure Buffer_VisibleP(BufferName);12026
+Symbolic Procedure Setup_Windows(WindowDescriptorList);12342
+Symbolic Procedure SelectWindow(WindowDescriptor);12792
+Symbolic Procedure SelectWindowContext(WindowDescriptor);13017
+Symbolic Procedure DeselectCurrentWindow();13756
+Symbolic Procedure remove_current_view();14316
+Symbolic Procedure cleanup_text_view();14661
+Symbolic Procedure CntrlXCscroll();14829
+Symbolic Procedure SetScreen;14991
+Symbolic Procedure WriteScreenPhoto();15287
+Symbolic Procedure Refresh();15656
+Symbolic Procedure optional_refresh();16337
+Symbolic Procedure refresh_unframed_window();16512
+Symbolic Procedure refresh_unframed_label();16815
+Symbolic Procedure refresh_framed_window();17764
+Symbolic Procedure refresh_frame_label();18037
+Symbolic Procedure refresh_text();21841
+Symbolic Procedure Nils(n);22673
+Symbolic Procedure Nlist(n,element);22775
+Symbolic Procedure Zeroes(n);22899
+Symbolic Procedure ClearToEndOfWindow(x);22961
+Symbolic Procedure ClearEol(x);23470
+Symbolic Procedure DisplaySpaces(pos, N);23651
+Symbolic Procedure RefreshLine(lineindex,image_linenumber);24299
+Symbolic Procedure DisplayCharacter(pos,chr);27399
+Symbolic Procedure nxt_item(strm);28010
+Symbolic Procedure create_stream(gvec);28801
+Symbolic Procedure MatchLength(l1,l2);28921
+Symbolic Procedure LineColumn(N,line);29298
+Symbolic Procedure FullRefresh();29978
+Symbolic Procedure AdjustTopOfDisplayIndex();30251
+
+PS:<PSL.EMODE>RFACE.RED.0
+00835,RLISP
+Symbolic Procedure OpenBufferChannel(Inbuffer, Outbuffer, Outwindow);2421
+Symbolic Procedure CloseBufferChannel(chn);3012
+Symbolic Procedure BufferPrintChar(Chn,ch);3533
+Symbolic Procedure EnsureOutputVisible(outbuffername,oldbuffername);5600
+Symbolic Procedure BufferReadChar(Chn);6268
+Symbolic Procedure TwoRFACEWindows();8076
+Symbolic Procedure insert_last_expression();12644
+Symbolic Procedure ReturnFromEmodeEdit();13322
+Symbolic Procedure quit();14814
+Symbolic Procedure EmodeChannelEdit(chn, PromptStr);15255
+Symbolic Procedure PromptAndEdit(PromptStr);16210
+Symbolic Procedure PromptAndEditOnChannel(chn, PromptStr);16373
+Symbolic Procedure MakeInputAvailable();16696
+Symbolic Procedure SelectOldChannels();16964
+Symbolic Procedure InsertComment();17888
+
+PS:<PSL.EMODE>SEARCH.RED.0
+00753,RLISP
+Symbolic Procedure forward_string_search();880
+Symbolic Procedure reverse_string_search();1372
+Symbolic Procedure buffer_search(strng,dir);1855
+Symbolic Procedure subscript(pattern,strng,start,dir);3517
+Symbolic Procedure RaiseChar(ch);4027
+Symbolic Procedure is_substring(substrng,strng,start);4291
+Symbolic Procedure adjust_depth(ch);4736
+Symbolic Procedure skip_forward_blanks();4967
+Symbolic Procedure skip_backward_blanks();5371
+Symbolic Procedure forward_word();5973
+Symbolic Procedure backward_word();6657
+Symbolic Procedure LetterP(ch);7529
+Symbolic Procedure forward_sexpr();7674
+Symbolic Procedure backward_sexpr();8860
+Symbolic Procedure insert_matching_paren();10123
+
+PS:<PSL.EMODE>SETWINDOW.RED.0
+00224,RLISP
+ Procedure OneWindow();23
+Symbolic Procedure TwoWindows();2472
+procedure ResetEmode(rows,cols,f);5853
+procedure resetrows(r);6287
+procedure SetEmode(rows,cols,f);6359
+
+PS:<PSL.EMODE>TEMPORARY-EMODE-FIXES.RED.0
+00191,RLISP
+Symbolic Procedure counting_cons(x,y);529
+Symbolic Procedure start_cons_count();739
+Symbolic Procedure stop_cons_count();1095
+
+PS:<PSL.EMODE>VS-DEMO.RED.0
+00045,RLISP
+
+PS:<PSL.EMODE>WIN-DEMO.RED.0
+00194,RLISP
+procedure BufferNames;22
+procedure FindWindowName N;99
+procedure FindWindowField(F,N);177
+procedure SelectName N;363
+procedure Break;1545
+
+PS:<PSL.EMODE>AAA.SL.0
+00154,PSL
+(DE EraseScreen ()996
+(DE Ding ()1214
+(DE TerminalClearEol ()1324
+(DE SetTerminalCursor (ColLoc RowLoc)1507
+
+PS:<PSL.EMODE>BUFFER.SL.0
+00637,PSL
+(de char-blank? (ch)553
+(de current-line-length () (length CurrentLine))652
+(de current-line-empty () (= (length CurrentLine) 0))709
+(de current-line-blank? ()739
+(de at-buffer-end? ()837
+(de at-buffer-start? ()930
+(de current-line-is-last? ()1007
+(de current-line-is-first? ()1090
+(de current-line-fetch (n) (car (pnth CurrentLine (+ n 1))))1181
+(de current-line-store (n c)1211
+(de current-buffer-size ()1318
+(de current-buffer-visible-size ()1618
+(de current-buffer-goto (line-number char-number)2165
+(de move-to-next-line ()2254
+(de move-to-previous-line ()2485
+
+PS:<PSL.EMODE>BUFFER-POSITION.SL.0
+00293,PSL
+(de buffer-position-create (line-number column-number)506
+(de buffer-position-line (bp)576
+(de buffer-position-column (bp)624
+(de buffer-position-compare (bp1 bp2)678
+(de buffer-get-position ()1001
+(de buffer-set-position (bp)1085
+
+PS:<PSL.EMODE>BUFFERS.SL.0
+00634,PSL
+(de declare_data_mode (name buffer-creator)987
+(de CreateBuffer (BufferName buffer-creator)1528
+(de select_or_create_buffer (buffer-name buffer-creator)2510
+(de ChooseBuffer ()5171
+(de create_text_view (buffer-name)5862
+(de create_raw_text_buffer ()7557
+(de create_text_buffer ()9021
+(de create_rlisp_buffer ()9307
+(de create_lisp_buffer ()9549
+(de buffer-create (buffer-name buffer-creator)9687
+(de buffer-make-unique-name (buffer-name)10110
+(de buffer-exists (buffer-name)10480
+(de buffer-kill (buffer-name)10549
+(de select-buffer-if-existing (buffer-name)10985
+
+PS:<PSL.EMODE>CUSTOMIZE-RLISP-FOR-EMODE.SL.0
+00301,PSL
+(de listp (x)778
+(de tail (lst n)874
+(de read_from_string (string_for_read_from_string)1764
+(de channel_read_from_string (chn)2803
+(de PrintF_into_string3548
+(de channel_write_into_string (chn chr)4246
+(de DummyClose (chn)4891
+
+PS:<PSL.EMODE>DIRECTORY.SL.0
+00517,PSL
+(de find-matching-files (filename include-deleted-files)388
+(de file-deleted-status (file-name)2241
+(de file-delete (file-name)2607
+(de file-undelete (file-name)2857
+(de jfn-deleted? (jfn)3350
+(de jfn-write-date (jfn)3459
+(de jfn-read-date (jfn)3539
+(de jfn-byte-count (jfn)3620
+(de jfn-page-count (jfn)3701
+(de file-date-to-string (fdate)3991
+(de fixup-directory-name (name)4400
+(de fixup-file-name (name)4789
+(de trim-filename-to-prefix (s)5099
+
+PS:<PSL.EMODE>DIRED.SL.0
+01704,PSL
+(defmacro fi-full-name (fi) `(nth ,fi 1))   % string for file primitives759
+(defmacro fi-deleted? (fi) `(nth ,fi 2))    % is file marked 'deleted'?832
+(defmacro fi-size (fi) `(nth ,fi 3))        % "size" of file894
+(defmacro fi-write-date (fi) `(nth ,fi 4))  % date/time file last written969
+(defmacro fi-read-date (fi) `(nth ,fi 5))   % date/time file last read1041
+(defmacro fi-nice-name (fi) `(nth ,fi 6))   % string to show user1108
+(de dired-command ()2096
+(de dired-fixup-file-list (file-list)2890
+(de load-dired-buffer (file-list)3701
+(de file-info-to-string (file-info)3928
+(de dired-exit ()4544
+(de dired-delete-file ()4989
+(de dired-undelete ()5221
+(de dired-reverse-undelete ()5452
+(de dired-help ()5685
+(de dired-next-hog ()5810
+(de dired-automatic-delete ()5920
+(de dired-edit-file ()6031
+(de dired-reverse-sort ()6456
+(de dired-sort ()7203
+(de dired-srccom-file ()7901
+(de dired-valid-line ()8194
+(de dired-determine-actions (file-list)8355
+(de dired-present-actions (action-list)9357
+(de get-upchar ()10306
+(de dired-present-list (list prompt)10478
+(de dired-perform-actions (action-list)10790
+(de dired-perform-sort (prompt sorter)11071
+(de dired-filename-sorter (f1 f2)11246
+(de dired-filename-reverser (f1 f2)11340
+(de dired-size-sorter (f1 f2)11428
+(de dired-size-reverser (f1 f2)11616
+(de dired-write-sorter (f1 f2)11803
+(de dired-write-reverser (f1 f2)12016
+(de dired-read-sorter (f1 f2)12226
+(de dired-read-reverser (f1 f2)12434
+(de string-pad-right (s desired-length)12841
+(de string-pad-left (s desired-length)13036
+(de string-largest-common-prefix (s1 s2)13233
+
+PS:<PSL.EMODE>DISPCH.SL.0
+00839,PSL
+(DE define_prefix_character (chr prompt-string)2893
+(DM CharSequence (chlist)3538
+(DS MetaP (chr)4123
+(DS MakeMeta (chr)4208
+(DS UnMeta (chr)4328
+(DE X-UpperCaseP (chr)4437
+(DE X-Char-DownCase (chr)4562
+(DE ClearDispatch ()4735
+(DE SetKey (xchar op)5029
+(DE MakeSelfInserting (chr)6844
+(DE Undefine (chr)6956
+(DE Dispatcher ()7099
+(DE Dispatch (chr)7283
+(DE do-prefix ()7531
+(DE EscapeAsMeta ()8422
+(DE DoControlMeta ()8611
+(DE GetNextCommandCharacter ()9094
+(DE push_back (chr)9443
+(De EstablishCurrentMode ()9827
+(de AddToKeyList (listname chr opr)13347
+(de SetTextKey (chr opr)14073
+(de SetLispKey (chr opr)14187
+(de SetKeys (lis)14454
+(de NormalSelfInserts ()14533
+(de DefinePrefixChars ()16221
+(de $iterate ()16837
+(de char-digit (c)17962
+
+PS:<PSL.EMODE>DM1520.SL.0
+00154,PSL
+(DE EraseScreen ()699
+(DE Ding ()772
+(DE TerminalClearEol ()882
+(DE SetTerminalCursor (ColLoc RowLoc)978
+
+PS:<PSL.EMODE>EDC.SL.0
+00258,PSL
+(DE InsertAndTotal ()370
+(DE DeleteBackwardAndTotal ()465
+(DE DeleteForwardAndTotal ()565
+(DE kill_line_and_total ()662
+(DE insert_kill_buffer_and_total ()753
+(DE FindBufferTotal ()840
+(DE SetDCmode ()2341
+
+PS:<PSL.EMODE>ENVSEL.SL.0
+00090,PSL
+(DE SaveEnv (env)557
+(DE RestoreEnv (env)868
+
+PS:<PSL.EMODE>FILEIO.SL.0
+00787,PSL
+(de CopyFile (filename1 filename2)674
+(de WriteLine (file-descriptor lin)1148
+(de read_line_from_file (file-descriptor)1734
+(de read_channel_into_text_buffer (file-descriptor)2354
+(de write_text_buffer_to_channel (file-descriptor)2810
+(de ReadFile (filename)3353
+(de WriteFile (filename)3922
+(de CntrlXread ()4511
+(de CntrlXwrite ()4683
+(de save_file ()4871
+(de find_file ()5176
+(de find_file_named (filename)5478
+(de filename-buffername (filename)6326
+(de declare_file_mode (file-extension buffer-creator)7621
+(de files_data_mode (filename)8040
+  (de buffer-name-field (filename)       % Dec20 version.8515
+  (de buffer-name-field (filename)       % Unix version.9206
+(de file-extension-field (filename)10162
+
+PS:<PSL.EMODE>HP-EMODEX.SL.0
+01459,PSL
+(de scroll-window-by-lines (n)1207
+(de scroll-window-by-pages (n)2122
+(de scroll-window-up-line-command ()3226
+(de scroll-window-down-line-command ()3303
+(de scroll-window-up-page-command ()3379
+(de scroll-window-down-page-command ()3456
+(de current-line-indent ()3716
+(de current-line-strip-indent ()3962
+(de strip-previous-blanks ()4213
+(de indent-current-line (n)4408
+(de delete-horizontal-space-command ()5139
+(de delete-blank-lines-command ()5621
+(de delete-following-blank-lines ()6159
+(de back-to-indentation-command ()6953
+(de delete-indentation-command ()7142
+(de lisp-tab-command ()7949
+(de lisp-linefeed-command ()8034
+(de lisp-indent-sexpr ()8126
+(de lisp-current-line-indent ()8618
+(de transpose-characters-command ()9555
+(de mark-word-command ()10321
+(de mark-sexp-command ()10555
+(de mark-whole-buffer-command ()10809
+(de beginning-of-defun-command ()11243
+(de beginning-of-defun ()11562
+(de end-of-defun-command ()12232
+(de forward-defun ()12704
+(de end-of-defun ()13109
+(de mark-defun-command ()13412
+(de move-past-previous-list ()14027
+(de backward-up-list ()14506
+(de reverse-scan-for-left-paren (depth)14678
+(de move-past-next-list ()15408
+(de forward-up-list ()15874
+(de forward-scan-for-right-paren (depth)16180
+(de down-list ()16879
+(de move-down-list ()17138
+(de insert-parens ()17597
+(de move-over-paren ()17783
+
+PS:<PSL.EMODE>HP2648A.SL.0
+00233,PSL
+(de EraseScreen ()1458
+(de Ding ()1621
+(de TerminalClearEol ()1674
+(de SetTerminalCursor (ColLoc RowLoc)1821
+(de terminal-enter-raw-mode ()3742
+(de terminal-leave-raw-mode ()3915
+
+PS:<PSL.EMODE>INPUT-STREAM.SL.0
+00799,PSL
+(defun open-input (file-name)749
+(defflavor input-stream ((jfn NIL)	% TOPS-20 file number973
+(defmethod (input-stream getc) ()1609
+(defmethod (input-stream fill-buffer-and-getc) ()3283
+(defmethod (input-stream getc-image) ()4006
+(defmethod (input-stream fill-buffer-and-getc-image) ()4380
+(defmethod (input-stream empty?) ()4691
+(defmethod (input-stream peekc) ()4766
+(defmethod (input-stream fill-buffer-and-peekc) ()5198
+(defmethod (input-stream open) (name-of-file)5514
+(defmethod (input-stream close) ()6377
+(de test-buffered-input (name-of-file)6782
+(de time-buffered-input (name-of-file)6982
+(de time-buffered-input-1 (name-of-file)7187
+(de time-standard-input (name-of-file)7380
+(de time-input (name-of-file)7600
+
+PS:<PSL.EMODE>MISC-EMODE.SL.0
+00225,PSL
+(de execute_command ()422
+(de InsertNextCharacter ()745
+(de PrintBufferNames ()961
+(de save-important-channels ()1397
+(de restore-important-channels (saved-channels)1542
+
+PS:<PSL.EMODE>NEW-FILEIO.SL.0
+00259,PSL
+(de readfile (file-name)837
+(de read-file-into-buffer (s)1088
+(de append-file-to-buffer (s)1412
+(de append-line-to-buffer (contents)2203
+(de WriteFile (file-name)2587
+(de write-buffer-to-stream (s)3138
+
+PS:<PSL.EMODE>OUTPUT-STREAM.SL.0
+00765,PSL
+(defun open-output (file-name)752
+(defun open-append (file-name)867
+(defflavor output-stream ((jfn NIL)	% TOPS-20 file number1100
+(defmethod (output-stream putc) (ch)1474
+(defmethod (output-stream put-newline) ()2981
+(defmethod (output-stream puts) (str)3314
+(defmethod (output-stream putl) (str)3662
+(defmethod (output-stream open) (name-of-file)3854
+(defmethod (output-stream open-append) (name-of-file)4685
+(defmethod (output-stream close) ()5505
+(defmethod (output-stream flush) ()5668
+(de time-buffered-output (n-lines)6125
+(de time-buffered-output-1 (n-lines)6507
+(de time-standard-output (n-lines)6879
+(de time-output (n-lines)7208
+(de time-buffered-output-string (n-lines)7423
+
+PS:<PSL.EMODE>PROMPTING.SL.0
+00305,PSL
+(de prompt_for_character (prompt_string)909
+(de prompt_for_string (prompt_string  default_string)2335
+(de setup_insert_single_line_mode ()3822
+(de show_prompt (prompt_string)6077
+(de show_message (strng)6256
+(de string_in_window (strng  window)6794
+
+PS:<PSL.EMODE>QUERY-REPLACE.SL.0
+00208,PSL
+(de query-replace-command ()508
+(de do-string-replacement (pattern replacement)2859
+(de advance-over-string (pattern)3330
+(de write-prompt (string)3699
+
+PS:<PSL.EMODE>RING-BUFFER.SL.0
+00200,PSL
+(de ring-buffer-create (number-of-elements)565
+(de ring-buffer-push (rb new-element)798
+(de ring-buffer-top (rb)1220
+(de ring-buffer-pop (rb)1417
+
+PS:<PSL.EMODE>SLEEP.SL.0
+00180,PSL
+  (de sleep-until-timeout-or-input (n-60ths)     % Dec-20 version498
+  (de sleep-until-timeout-or-input (n-60ths)     % Unix version913
+
+PS:<PSL.EMODE>TELERAY.SL.0
+00156,PSL
+(DE EraseScreen ()692
+(DE Ding ()773
+(DE TerminalClearEol ()883
+(DE SetTerminalCursor (ColLoc RowLoc)1020
+
+PS:<PSL.EMODE>TOY-MODE.SL.0
+00274,PSL
+(de create_toy_buffer ()647
+(de create_toy_view (buffer-name)1997
+(de refresh_toy_window ()3815
+(de backwards-WriteToScreen (Scrn chr rw col)4517
+(de quietly_copyd (dest src)4653
+(de quietly_putd (fname ftype body)4758
+
+PS:<PSL.EMODE>TTY-SIZE.SL.0
+00133,PSL
+(DM SubField (args)302
+(DE TTyWord ()464
+(DE PageLength ()609
+(DE PageWidth ()663
+
+PS:<PSL.EMODE>V-SCREEN.SL.0
+01206,PSL
+(DefConst MaxMaskNumber 127)2332
+(DS index_screen (Scrn rw col)2433
+  (DE LeftAssociativeExpand (args Fn)2814
+  (DE LeftAssociativeExpand1 (Fn ProcessedArgs args)3084
+  (DM indexn (U)3418
+(DS WithinRangeP (x  rnge)3756
+(DE PutValueIntoRange (x rnge)3913
+(DS VirtualScreenHeight (Scrn)5365
+(DS VirtualScreenWidth (Scrn)5511
+(DE CreateScreenImage (chr rws cols)6650
+(DE WriteScreenImage (ScrnImage chn)7003
+(DE InitializeScreenPackage ()7483
+(DE CreateVirtualScreen (rws cols CornerRow CornerCol)9551
+(de ClearVirtualScreen (scrn)10365
+(DE WithinArrayP (ScrnArray rw col)10672
+(DS WriteToNewScreenImage (chr absrow abscol)11187
+(DE WriteToScreen (Scrn chr rw col)11515
+(DE WriteToScreenRange (Scrn chr rw LeftCol RightCol)14355
+(DE WriteRange (Scrn chr rw LeftCol RightCol)15847
+(DE DrawActiveList ()16079
+(DE SelectScreen (Scrn)16523
+(DE DeSelectScreen (Scrn)18022
+(DE DrawScreenOnTop (Scrn)20290
+(DE RefreshPhysicalScreen (BreakoutAllowed)23449
+(DE WritePhysicalCharacter (chr rw col)25779
+(DE MoveToScreenLocation (Scrn rw col)26596
+(DE MoveToPhysicalLocation (rw col)26877
+(DE ClearPhysicalScreen ()27777
+
+PS:<PSL.EMODE>VS-SUPPORT.SL.0
+00126,PSL
+(de RewriteChangedCharacters (oldline newline RowLocation LeftCol RightCol)517
+
+PS:<PSL.EMODE>VT100.SL.0
+00155,PSL
+(DE EraseScreen ()688
+(DE Ding ()918
+(DE TerminalClearEol ()1028
+(DE SetTerminalCursor (ColLoc RowLoc)1188
+
+PS:<PSL.EMODE>VT52.SL.0
+00153,PSL
+(DE EraseScreen ()733
+(DE Ding ()806
+(DE TerminalClearEol ()916
+(DE SetTerminalCursor (ColLoc RowLoc)1053
+
+PS:<PSL.EMODE>WINDOW.SL.0
+00163,PSL
+(de current-window-height ()545
+(de current-window-top-line ()672
+(de current-window-set-top-line (new-top-line)823
+
+PS:<PSL.EMODE>WINDOWS.SL.0
+00073,PSL
+(de window-kill-buffer ()611
+

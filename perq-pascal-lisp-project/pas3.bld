@@ -1,0 +1,56 @@
+DEF s: <SCRATCH>
+DEF DSK: DSK:,SYS:
+DEF SYS: DSK:,SYS:
+pas:PASCMP
+OFF SYSLISP$
+OFF MSG$
+OFF NOUUO$
+OFF DOMOVE$             % Can't have BOTH DOMOVE and FXFRM
+OFF NOFIXFRM;		% Reduce ALLOCS
+ON MACECHO$		%OFF Cuts down size of output file.
+
+% passer fixups
+
+REMPROP('W,'STAT);
+REMPROP('PLIST,'STAT);
+PUT(QUOTE SETQ,QUOTE UNARY,QUOTE SETQ)$	% Permit FEXPR definitions
+PUT(QUOTE AND,QUOTE UNARY,QUOTE AND)$
+PUT(QUOTE OR,QUOTE UNARY,QUOTE OR)$
+
+IN PAS2.SYM$
+% Perhaps the following lines should really be in POLY.RED, but they
+% don't work correctly inside body of text being compiled.
+PUT('CAR,'ANYREG,'T)$
+PUT('CDR,'ANYREG,'T)$
+PUT('VALUE,'OPENCOD,'("        R[1] := idspace[info_of(R[1])].val;"));
+PUT('PLIST,'OPENCOD,'("        R[1] := idspace[Info_of(r[1])].plist;"));
+PUT('FUNCELL,'OPENCOD,'("        R[1] := idspace[Info_of(r[1])].funcell;"));
+PUT('SETVALUE,'OPENCOD,'("       idspace[Info_of(r[1])].val := R[2];"));
+PUT('SETPLIST,'OPENCOD,'("        idspace[Info_of(r[1])].plist := R[2];"));
+PUT('SETFUNCELL,'OPENCOD,'("        idspace[Info_of(r[1])].funcell := R[2];"));
+PUT('CHAR2ID,'OPENCOD,'("     set_tag(R[1], idtag);"));
+PUT('CODEP, 'OPENCOD, '("     tag_of(r[1]) = codetag;"));
+
+OUT PAS3.PAS$
+DRT1('PAS3,PAS2IDS,PAS2CSTS,PAS2LITS,PAS2FNS)$
+IN PAS3.RED$
+DRT2()$
+SHUT PAS3.PAS$
+
+OUT PAS3.SYM$
+DUMPSYMS('PAS3)$
+SHUT PAS3.SYM$
+
+OUT PAS3.SLI$
+DRT3()$
+SHUT PAS3.SLI$
+
+OUT EXEC.PAS$
+DMPFLST()$		% Construct EXECUTE table
+SHUT EXEC.PAS$
+
+OUT PAS3.INI$
+DUMPINI()$
+SHUT PAS3.INI$
+QUIT$
+

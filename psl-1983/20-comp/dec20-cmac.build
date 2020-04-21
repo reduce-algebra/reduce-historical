@@ -1,0 +1,9 @@
+CompileTime <<
+on EolInStringOK;
+macro procedure !* U;
+    NIL;
+flag('(TagNumber InumP), 'lose);
+>>;
+imports '(dec20-comp);
+in "pc:tags.red"$
+in "dec20-cmac.sl"$

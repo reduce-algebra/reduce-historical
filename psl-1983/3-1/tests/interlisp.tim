@@ -1,0 +1,194 @@
+15-Apr-83 17:10:22-MST,2596;000000000001
+Return-path: <marti@rand-unix>
+Received: from RAND-UNIX by UTAH-20; Fri 15 Apr 83 17:10:03-MST
+Date: Friday, 15 Apr 1983 16:02-PST
+To: Masinter at PARC-MAXC, hearn at RAND-RELAY, griss at UTAH-20,
+    kessler at UTAH-20
+Cc: marti at rand-unix, henry at rand-unix
+Subject: New Dolphin timinings.
+From: marti at rand-unix
+
+Larry Masinter at Xerox as kindly suggested a number of changes in the
+Griss timing suite which resulted in the tests running more than 1.4
+times faster than previously. Significant speedups resulted from the
+use of NLISTP rather than ATOM, and APPLY* rather than APPLY. This 
+brings the Dolphin to not quite 1/4 the speed of the Rand Vax 780 
+running PSL 3.1c. 
+
+The following are timings for the Griss test suite under various
+conditions. All times are in milliseconds.
+
+
+
+Machine: Dolphin, 1.5 megabytes, InterLisp-D
+
+
+			Block		Standard	Improved
+
+
+EmptyTest 10000		360		360		360
+SlowEmptyTest 10000	360		360		361
+Cdr1Test 100		6497		6497		3884*
+Cdr2Test 100		2919		2919		2917
+CddrTest 100		2411		2410		2404
+ListOnlyCdrTest1        20525		20519		20524
+ListOnlyCddrTest1       31736		31733		31713
+ListOnlyCdrTest2        38786		38778		26295*
+ListOnlyCddrTest2	49978		49949		37489*
+ReverseTest 10		4095		6360		6465
+MyReverse1Test 10	5087		5405		5023
+MyReverse2Test 10	4417		5390		5493
+LengthTest 100		8570		8568		8562
+ArithmeticTest 10000	12759		14542		14228
+EvalTest 10000		15782		15837		15491
+tak 18 12 6		4817		4817		4814
+gtak 18 12 6		4737		4737		4729
+gtsta g0		79000		80874		26708+
+gtsta g1		93854		94149		40291+
+MKVECT 1000             52630		51850		51047
+GETV 10000              432		432		431
+PUTV 10000              3807		3808		3807
+
+Total:			443559		450294		313036
+
+Block Compilation: Used (bcompl ...) on standard test file with 
+   declarations of local variables and block apply.
+Standard Compilation: Used (tcompl ...) on standard test file.
+Improved: * means use of NLISTP rather than ATOM. + means use of
+   APPLY* rather than APPLY.
+
+
+Machine: VAX 11/780, 4 megabytes, PSL V3.1c
+
+
+
+EmptyTest 10000		34
+SlowEmptyTest 10000	646
+Cdr1Test 100		1649
+Cdr2Test 100		1173
+CddrTest 100		1003
+ListOnlyCdrTest1	7174
+ListOnlyCddrTest1	12869
+ListOnlyCdrTest2	9622
+ListOnlyCddrTest2	15878
+ReverseTest 10		680
+MyReverse1Test 10	612
+MyReverse2Test 10	697
+LengthTest 100		1615
+ArithmeticTest 10000	850
+EvalTest 10000		5967
+tak 18 12 6		714
+gtak 18 12 6		4165
+gtsta g0		2244
+gtsta g1		2397
+MKVECT 1000             119
+GETV 10000              425
+PUTV 10000              442
+
+Total			70975
+24-Apr-83 14:13:22-MDT,3391;000000000001
+Return-path: <Masinter.PA@PARC-MAXC>
+Received: from PARC-MAXC by UTAH-20; Sun 24 Apr 83 14:10:12-MDT
+Date: 24 Apr 83 13:08:50 PDT (Sunday)
+From: Masinter.PA@PARC-MAXC.ARPA
+Subject: Re: New Dolphin timinings.
+In-reply-to: marti's message of Fri, 15 Apr 83 16:02 PST
+To: marti@rand-unix.ARPA
+cc: Masinter.PA@PARC-MAXC.ARPA, hearn@RAND-RELAY.ARPA,
+ griss@UTAH-20.ARPA, kessler@UTAH-20.ARPA, henry@rand-unix.ARPA
+
+I haven't had a lot of time to spend on this, and I am going to be out
+of town for the next two weeks. I will comment on your revised figures,
+and hope that I can get through. To summarize: Averaging the figures for
+a set of simple benchmarks is nonsense. If you are planning to write a
+summary of performance of Lisp systems, I suggest you read the paper
+Dick Gabriel and I put together for the last Lisp conference, and then
+attempt to measure some of the more important dimensions at the various
+levels to get an accurate picture of total system performance. You
+should be careful (by analyzing the compiled code of your benchmarks) to
+use examples that scale appropriately. Thus, the series of CDR1TEST and
+CDDRTEST is incomplete until you complete the suite with enough
+instances to exceed the available register space.
+
+Finally, at the very least, you should report a range of performance
+data, rather than an average, since averages depend so heavily on the
+weighting you give to each end of the range. You should also be careful
+to identify the version number of the software and the date when you ran
+the test.
+
+Some minor additional comments about the nature of the "Griss suite":
+
+The "Arithmetic Test" is configured such that it operates in the range
+which is outside of the "small number range" of Interlisp-D (+/- 2^16)
+but still inside the "small number range" of PSL on the VAX and 9836
+(+/- 2^31, no?).  Ether larger or smaller would have given figures which
+were more comperable.
+
+On storage allocation: Interlisp-D has two kinds of allocation, of
+"fixed size" blocks (i.e., DATATYPES which you declare) and of "variable
+size" blocks. While ARRAY is the allocator for variable sized blocks,
+you create the fixed size ones with "create". Thus, one 'might'
+translate MKVECT and PUTV for some applications into the equivalents of
+(create DATATYPE) and (fetch FIELD --) and (replace FIELD --). I think
+you will get dramaticly different results if you use those instead.
+
+Is the "reverse" in REVERSETEST  handcoded? Why is ReverseTest slower on
+the VAX/PSL than MyReverse?
+
+In Interlisp-D, you cannot "turn off" the overhead for the reference
+count GC: every operation, including CONS, does reference counting.
+There is in addition some time associated with "RECLAIM" which is the
+time to thread items onto the free list. However, we've found for most
+serious programs which have resident large address space data (e.g., AI
+systems which might have a "knowledge base" or a set of theorems or some
+reformulation rules rather than simple benchmarks) that it was important
+that GC time be proportional to the amount of garbage rather than the
+size of the address space. Several of the  benchmarks you quote do
+significant amounts of CONSing however, do not include GC time. Of
+course, GC time can be highly variable under most GC algorithms because
+it is proportional to the size of the address space.
+
+Larry
+26-Apr-83 20:58:56-MDT,1436;000000000001
+Return-path: <@UTAH-CS:GRISS@HP-HULK>
+Received: from UTAH-CS by UTAH-20; Tue 26 Apr 83 20:58:35-MDT
+Date: 25 Apr 1983 2005-PDT
+From: GRISS@HP-HULK
+Subject: Marti's latest
+Message-Id: <420175670.20672.hplabs@HP-VENUS>
+Received: by HP-VENUS via CHAOSNET; 25 Apr 1983 20:27:49-PDT
+Received: by UTAH-CS.ARPA (3.320.6/3.7.8)
+	id AA03294; 26 Apr 83 20:53:59 MDT (Tue)
+To: kessler@HP-VENUS, griss@HP-VENUS
+
+NIL
+
+RATIO FASTDOLPHIN STD20
+EMPTYTEST-10000                    20.000
+GEMPTYTEST-10000                    1.286
+CDR1TEST-100                        7.398
+CDR2TEST-100                        7.847
+CDDRTEST-100                        8.799
+LISTONLYCDRTEST1                   11.531
+LISTONLYCDDRTEST1                   9.356
+LISTONLYCDRTEST2                    9.664
+LISTONLYCDDRTEST2                   9.113
+REVERSETEST-10                     15.453
+MYREVERSE1TEST-10                  18.813
+MYREVERSE2TEST-10                  17.955
+LENGTHTEST-100                     15.088
+ARITHMETICTEST-10000               21.516
+EVALTEST-10000                      8.224
+TAK-18-12-6                         9.771
+GTAK-18-12-6                        2.398
+GTSTA-G0                           36.437
+GTSTA-G1                           50.427
+NIL
+(TOTAL (RATIO FASTDOLPHIN STD20)): 
+          Tot    281.075, avg     14.793, dev      11.423 ,      19.000 tests
+NIL
+
+As you see, variation tremendous.
+-------
+
+

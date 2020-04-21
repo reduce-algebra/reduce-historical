@@ -1,0 +1,5 @@
+(faslin "pw:hp2648a.b")
+(faslin "pw:physical-screen.b")
+(faslin "pw:shared-physical-screen.b")
+(faslin "pw:virtual-screen.b")
+(faslin "pw:vt52x.b")

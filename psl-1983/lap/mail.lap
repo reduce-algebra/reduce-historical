@@ -1,0 +1,22 @@
+(load nmode)
+(faslin "ps:<kendzierski.psl>output-stream-aux.b")
+(faslin "ps:<kendzierski.psl>file-support-aux.b")
+(faslin "ps:<kendzierski.psl>util.b")
+(faslin "ps:<kendzierski.psl>date.b")
+
+% Subsystems: load last!  (This is a subsystem of NMODE)
+
+(faslin "ps:<kendzierski.mail>mail-base.b")
+(faslin "ps:<kendzierski.mail>mail-file.b")
+(faslin "ps:<kendzierski.mail>mail-message.b")
+(faslin "ps:<kendzierski.mail>mail-support.b")
+(faslin "ps:<kendzierski.mail>mail-filter.b")
+(faslin "ps:<kendzierski.mail>mail-filter-base.b")
+
+(prog ()
+  (add-to-command-list 'Basic-Command-List
+		       (x-chars (control X) M) 'mail-command)
+  (add-to-command-list 'Basic-Command-List
+		       (x-chars (control X) S) 'mail-set-up-send-buffer)
+  (nmode-establish-current-mode)
+  (return "Mail subsystem defined"))

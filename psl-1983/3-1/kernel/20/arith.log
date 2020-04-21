@@ -1,0 +1,61 @@
+
+			 8-Jun-83  9:34:15
+
+BATCON Version	104(4133)			GLXLIB Version	1(527)
+
+	    Job ARITH Req #477 for KESSLER in Stream 0
+
+	OUTPUT:	 Nolog				TIME-LIMIT: 0:10:00
+	UNIQUE:	 Yes				BATCH-LOG:  Supersede
+	RESTART: No				ASSISTANCE: Yes
+						SEQUENCE:   1734
+
+	Input from => PS:<PSL.KERNEL.20.EXT>ARITH.CTL.3
+	Output to  => PS:<PSL.KERNEL.20.EXT>ARITH.LOG
+
+
+
+ 9:34:16 MONTR	 Univ of Utah Computer Science KL-20, TOPS-20AN Monitor 5.3(1500)
+ 9:34:16 MONTR	@SET TIME-LIMIT 600
+ 9:34:16 MONTR	@LOGIN KESSLER SMALL
+ 9:34:19 MONTR	 Job 12 on TTY224 8-Jun-83 09:34:19
+ 9:34:19 MONTR	 Previous login at 8-Jun-83 09:32:11
+ 9:34:20 MONTR	 There is 1 other job logged in as user KESSLER
+ 9:34:29 MONTR	@
+ 9:34:29 MONTR	[PS Mounted]
+ 9:34:29 MONTR	
+ 9:34:29 MONTR	[CONNECTED TO PS:<PSL.KERNEL.20.EXT>]
+		;Modifications to this file may disappear, as this file is generated
+		;automatically using information in P20:20-KERNEL-GEN.SL.
+ 9:34:29 MONTR	def dsk: dsk:,p20e:,pk:,p20:
+ 9:34:30 MONTR	@S:EX-DEC20-CROSS.EXE
+ 9:34:32 USER	[20] ASMOut "arith";
+ 9:34:34 USER	ASMOUT: IN files; or type in expressions
+ 9:34:34 USER	When all done execute ASMEND;
+ 9:34:36 USER	[21] PathIn "arith.build";
+ 9:34:37 USER	%
+ 9:34:37 USER	% ARITH.BUILD - Files dealing with arithmetic
+ 9:34:37 USER	% 
+ 9:34:37 USER	% Author:      Eric Benson
+ 9:34:37 USER	%              Symbolic Computation Group
+ 9:34:37 USER	%              Computer Science Dept.
+ 9:34:37 USER	%              University of Utah
+ 9:34:38 USER	% Date:        19 May 1982
+ 9:34:38 USER	% Copyright (c) 1982 University of Utah
+ 9:34:38 USER	%
+ 9:34:38 USER	
+ 9:34:38 USER	PathIn "arithmetic.red"$                % Lisp arithmetic functions
+ 9:35:10 USER	[22] ASMEnd;
+ 9:35:10 USER	*** Garbage collection starting
+ 9:35:12 USER	*** GC 9: time 1574 ms, 106103 recovered, 243208 free
+ 9:35:20 USER	0
+ 9:35:20 USER	[23] quit;
+ 9:35:20 MONTR	@compile arith.mac, darith.mac
+ 9:35:23 USER	MACRO:  .MAIN
+ 9:35:28 USER	MACRO:  .MAIN
+ 9:35:29 USER	
+ 9:35:29 USER	EXIT
+ 9:35:29 MONTR	@
+ 9:35:30 MONTR	Killed by OPERATOR, TTY 221
+ 9:35:30 MONTR	Killed Job 12, User KESSLER, Account SMALL, TTY 224,
+ 9:35:30 MONTR	  at  8-Jun-83 09:35:30,  Used 0:00:34 in 0:01:10

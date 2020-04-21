@@ -1,0 +1,25 @@
+CompileTime <<
+load Syslisp;
+put('negint,'wconst,63);
+>>;
+
+Compiletime <<
+exported WConst TagStartingBit = 0,
+		TagBitLength = 6,
+		InfStartingBit = 6,
+		InfBitLength = 30,
+		GCStartingBit = 0,
+		GCBitLength = 0,
+		AddressingUnitsPerItem = 1,
+		CharactersPerWord = 5,
+		BitsPerWord = 36,
+		AddressingUnitsPerFunctionCell = 1,
+		StackDirection = 1;
+
+>>;
+
+in "p20e:system-faslout.red"$
+in "dec20-lap.red"$
+in "instrs.sl"$
+
+end;

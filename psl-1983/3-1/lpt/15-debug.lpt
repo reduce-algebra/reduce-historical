@@ -1,0 +1,1066 @@
+PSL Manual                    7 February 1983               Debugging Tools
+section 15.0                                                      page 15.1
+
+                                CHAPTER 15                                CHAPTER 15                                CHAPTER 15
+                              DEBUGGING TOOLS                              DEBUGGING TOOLS                              DEBUGGING TOOLS
+
+
+
+
+     15.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    15.1
+          15.1.1. Brief Summary of Full Debug Package .  .  .  .  .    15.1
+          15.1.2. Mini-Trace Facility  .  .  .  .  .  .  .  .  .  .    15.2
+          15.1.3. Step  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    15.3
+                                                                       ....          15.1.4. Functions Which Depend on Redefining User Functions..15.4
+                  
+          15.1.5. A Few Known Deficiencies.  .  .  .  .  .  .  .  .    15.5
+     15.2. Tracing Function Execution  .  .  .  .  .  .  .  .  .  .    15.5
+          15.2.1. Tracing Functions .  .  .  .  .  .  .  .  .  .  .    15.5
+          15.2.2. Saving Trace Output  .  .  .  .  .  .  .  .  .  .    15.6
+          15.2.3. Making Tracing More Selective .  .  .  .  .  .  .    15.7
+          15.2.4. Turning Off Tracing  .  .  .  .  .  .  .  .  .  .    15.9
+          15.2.5. Enabling Debug Facilities and Automatic Tracing of   15.9
+                  Newly Defined Functions .  .  .  .  .  .  .  .  .  
+     15.3. A Heavy Handed Backtrace Facility .  .  .  .  .  .  .  .   15.10
+     15.4. Embedded Functions .  .  .  .  .  .  .  .  .  .  .  .  .   15.11
+     15.5. Counting Function Invocations  .  .  .  .  .  .  .  .  .   15.12
+     15.6. Stubs  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   15.12
+     15.7. Functions for Printing Useful Information  .  .  .  .  .   15.13
+     15.8. Printing Circular and Shared Structures .  .  .  .  .  .   15.13
+     15.9. Internals and Customization .  .  .  .  .  .  .  .  .  .   15.14
+          15.9.1. User Hooks  .  .  .  .  .  .  .  .  .  .  .  .  .   15.14
+          15.9.2. Functions Used for Printing/Reading .  .  .  .  .   15.15
+     15.10. Example  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   15.16
+
+
+
+
+15.1. Introduction15.1. Introduction15.1. Introduction
+
+  PSL  offers  a small group of debugging functions in a mini-trace package
+described in Section MINITRACE; in addition, there is a separate  debugging
+package  which  is  the  subject  of  the bulk of this Chapter.  To use the
+debugging package (LOAD DEBUG).  An extensive example showing  the  use  of
+the facilities in the debugging package can be found in Section 15.10.
+
+
+15.1.1. Brief Summary of Full Debug Package15.1.1. Brief Summary of Full Debug Package15.1.1. Brief Summary of Full Debug Package
+
+  The  PSL  debugging package contains a selection of functions that can be
+                                                                   1
+used to aid program development and to investigate faulty programs. 
+_______________
+
+  1
+   Much of this Chapter was adapted from a paper by Norman and Morrison.Debugging Tools               7 February 1983                    PSL Manual
+page 15.2                                                      section 15.1
+
+  It contains the following facilities.
+
+
+   - A  trace  package.    This  allows  the user to see the arguments
+     passed to and the values returned by selected functions.   It  is
+     also  possible to have traced interpreted functions print all the
+                                SetQ                                SetQ     assignments they make with SetQ (see Section 15.2).
+
+   - A backtrace facility.  This allows one to see which of a  set  of
+     selected  functions were active as an error occurred (see Section
+     15.3).
+
+   - Embedded functions make it possible to  do  everything  that  the
+     trace  package  can do, and much more besides (see Section 15.4).
+     This facility is available only in RLISP.
+
+   - Some primitive statistics gathering (see Section 15.5).
+
+   - Generation of simple stubs.  If invoked,  procedures  defined  as
+     stubs simply print their argument and read a value to return (see
+     Section 15.6).
+
+   - Some  functions for printing useful information, such as property
+     lists, in an intelligible format (see Section 15.7).
+
+     PrintX     PrintX   - PrintX is a function that can print circular and re-entrant lists
+     and vectors, and so can sometimes allow debugging to proceed even
+                                                            RplacA                                                            RplacA     in the face of severe damage caused by the wild use of RplacA and
+     RplacD     RplacD     RplacD (see Section 15.8).
+
+
+  [??? Install a feature BR and UNBR to wrap a  break  around  functions.  [??? Install a feature BR and UNBR to wrap a  break  around  functions.  [??? Install a feature BR and UNBR to wrap a  break  around  functions.
+  See the old mini-trace (PK:MINI-TRACE.RED).  ???]  See the old mini-trace (PK:MINI-TRACE.RED).  ???]  See the old mini-trace (PK:MINI-TRACE.RED).  ???]
+
+
+15.1.2. Mini-Trace Facility15.1.2. Mini-Trace Facility15.1.2. Mini-Trace Facility
+
+  A  small  trace  package  is  provided  in  the bare PSL and RLISP.  This
+                   Tr                   Trprovides a command Tr for tracing LISP function calls,  as  does  the  full
+                                                           UnTr                                                           UnTrDebug  package.    This command and the associated command UnTr are used in
+the form:
+
+
+   Tr   Tr   Tr <function name>, <function name>,..., <function name>;
+ or
+   Tr   Tr   Tr( <function name>, <function name>,..., <function name>);
+
+  from RLISP, and
+
+    Tr    Tr   (Tr <function name> <function name> ... <function name>)
+
+  from LISP.PSL Manual                    7 February 1983               Debugging Tools
+section 15.1                                                      page 15.3
+
+ Tr Tr  _____ __    _________                                            _____(Tr [FNAME:id]): Undefined                                            macro
+
+
+ UnTr UnTr  _____ __    _________                                          _____(UnTr [FNAME:id]): Undefined                                          macro
+
+  Mini-Trace also contains the capability for tracing interpreted functions
+                      Trst                      Trstat  a  deeper level.  Trst causes the body of an interpreted function to be
+                                                                    Trst                                                                    Trstredefined so that all assignments in its body are printed.  Calling Trst on
+                                     Tr                          UnTrst                                     Tr                          UnTrsta function has the effect of doing a Tr on it too.  The function UnTrst  is
+                                Trst                                Trstused to turn off the effects of Trst.  These functions are used in the same
+       Tr     UnTr       Tr     UnTrway as Tr and UnTr.
+
+
+ Trst Trst  _____ __    _________                                          _____(Trst [FNAME:id]): Undefined                                          macro
+
+
+ UnTrst UnTrst  _____ __    _________                                        _____(UnTrst [FNAME:id]): Undefined                                        macro
+
+                                    Tr     Trst                                    Tr     Trst  Note  that  only  the  functions  Tr and Trst are in Mini-Trace.  However
+invoking either of them causes the debug package to be loaded,  making  the
+rest of the functions in Debug available.
+
+  Do (HELP TRACE) for more information, or see Section 15.2.
+
+
+15.1.3. Step15.1.3. Step15.1.3. Step
+
+
+ Step Step _ ____   ___                                                     ____(Step F:form): any                                                     expr
+
+     Step     Step                                                           _     Step  is a loadable option (LOAD STEP).  It evaluates the form F,
+                       _     single-stepping.  F is printed, preceded by -> on entry, <->  for
+                                              _     macro  expansions.    After  evaluation, F is printed preceded by
+     <- and followed by the result of evaluation.  A single  character
+     is read at each step to determine the action to be taken:
+
+
+     <Ctrl-N> (Next)
+               Step  to  the  Next thing.  The stepper continues until
+               the next thing to print out,  and  it  accepts  another
+               command.
+
+     Space     Go  to  the  next thing at this level.  In other words,
+               continue to evaluate at  this  level,  but  don't  step
+               anything  at  lower levels.  This is a good way to skip
+               over parts of the evaluation that don't interest you.
+
+     <Ctrl-U> (Up)
+               Continue evaluating until we go up one level.  This  is
+               like  the  space  command,  only more so; it skips over
+               anything on the current level as well as lower levels.Debugging Tools               7 February 1983                    PSL Manual
+page 15.4                                                      section 15.1
+
+     <Ctrl-X> (eXit)
+               Exit; finish evaluating without any more stepping.
+
+     <Ctrl-G> or <Ctrl-P> (Grind)
+               Grind (i.e. prettyprint) the current form.
+
+     <Ctrl-R>  Grind the form in Rlisp syntax.
+
+     <Ctrl-E> (Editor)
+               Invoke the structure editor on the current form.
+
+     <Ctrl-B> (Break)
+               Enter  a  break  loop  from  which  you can examine the
+               values of variables and other aspects  of  the  current
+               environment.
+
+     <Ctrl-L>  Redisplay the last 10 pending forms.
+
+     ?         Display the help file.
+
+
+                                                H                                                H             _     To step through the evaluation of function H on argument X do
+
+        (Step '(H X))
+
+
+15.1.4. Functions Which Depend on Redefining User Functions15.1.4. Functions Which Depend on Redefining User Functions15.1.4. Functions Which Depend on Redefining User Functions
+
+  A  number  of facilities in Debug depend on redefining user functions, so
+that they may log or print behavior if called.  The Debug package tries  to
+redefine   user  functions  once  and  for  all,  and  then  keep  specific
+information about what is required at run time in a  table.    This  allows
+considerable flexibility, and is used for a number of different facilities,
+including  trace/traceset  in Section 15.2, a backtrace facility in Section
+15.3, some statistics gathering in Section 15.5 and embedding functions  in
+Section 15.4.
+
+  Some  facilities,  like trace and EMB (the embedding function), only take
+effect if further action is requested on specific user functions.   Others,
+like  backtrace  and  statistics, are of a more global nature.  Once one of
+these global facilities is enabled it applies to all functions  which  have
+                                                   Restr                                                   Restrbeen  made  "known"  to  Debug.  To undo this, use Restr defined in Section
+15.2.4.
+
+
+15.1.5. A Few Known Deficiencies15.1.5. A Few Known Deficiencies15.1.5. A Few Known Deficiencies
+
+
+                                                         Cons                                                         Cons   - An attempt to trace certain system functions (e.g.  Cons)  causes
+     the  trace  package  to  overwrite  itself.    Given the names of
+     functions that cause this sort of trouble it is  fairly  easy  to
+     change the trace package to deal gracefully with them - so reportPSL Manual                    7 February 1983               Debugging Tools
+section 15.1                                                      page 15.5
+
+     trouble to a system expert.
+
+   - The Portable LISP Compiler uses information about registers which
+     certain  system  functions  destroy.  Tracing these functions may
+     make the optimizations based thereon invalid.  The correct way of
+     handling this problem is currently under consideration.   In  the
+     mean  time you should avoid tracing any functions with the ONEREG
+     or TWOREG flags.
+
+
+
+15.2. Tracing Function Execution15.2. Tracing Function Execution15.2. Tracing Function Execution
+
+
+15.2.1. Tracing Functions15.2.1. Tracing Functions15.2.1. Tracing Functions
+
+  To see when a function gets called, what arguments it is given  and  what
+value it returns, do  
+
+   (TR functionname)
+
+or if several functions are of interest,   
+
+   (TR name1 name2 ...)
+
+
+ Tr Tr  _____ __    _________                                            _____(Tr [FNAME:id]): Undefined                                            macro
+
+                                                 ____  _____  _____                                                 ____  _____  _____                                                 ____  _____  _____                                                 expr  fexpr  nexpr                                                 expr  fexpr  nexpr     If  the specified functions are defined (as expr, fexpr, nexpr or
+     _____     _____     _____     macro   Tr     macro   Tr     macro), Tr modifies the  function  definition  to  include  print
+     statements.    The  following  example  shows the style of output
+     produced by this sort of tracing:
+
+     The input...
+
+        (DE XCDR (A)
+          (CDR A) %A very simple function)
+        (TR XCDR)
+        (XCDR '(P Q R))
+
+     gives output...
+
+        XCDR entered
+           A: (P Q R)
+        XCDR = (Q R)
+
+  Interpreted functions can also be traced at a deeper level.Debugging Tools               7 February 1983                    PSL Manual
+page 15.6                                                      section 15.2
+
+ Trst Trst  _____ __    _________                                          _____(Trst [FNAME:id]): Undefined                                          macro
+
+        (TRST name1 name2 ...)
+
+     causes  the  body  of  an interpreted function to be redefined so
+                                     SetQ                                     SetQ     that all assignments (made with SetQ) in its  body  are  printed.
+              Trst              Trst     Calling  Trst on a function automatically has the effect of doing
+       Tr       Tr     a Tr on it too, so that it is not possible  to  have  a  function
+                Trst         Tr                Trst         Tr     subject to Trst but not Tr.
+
+  Trace  output  often  appears mixed up with output from the program being
+                                         Tr                                         Trstudied, and to avoid too much confusion Tr arranges to preserve the column
+in which printing was taking place across any output that it generates.  If
+trace output is produced as part of a line has been printed, the trace data
+are enclosed in markers '<' and '>', and these symbols are  placed  on  the
+line  so  as  to  mark  out the amount of printing that had occurred before
+trace was entered.
+
+
+            __________                                               ______!*NOTRARGS [Initially: NIL]                                          switch
+
+     If !*NOTRARGS is T, printing of the arguments of traced functions
+     is suppressed.
+
+
+15.2.2. Saving Trace Output15.2.2. Saving Trace Output15.2.2. Saving Trace Output
+
+  The trace facility makes it possible to discover in  some  detail  how  a
+function  is  used,  but  in  certain  cases  its direct use results in the
+generation of vast amounts  of  (mostly  useless)  print-out.    There  are
+several  options.    One  is  to  make  tracing more selective (see Section
+15.2.3).  The other, discussed here, is  to  either  print  only  the  most
+recent information, or dump it all to a file to be perused at leisure.
+
+  Debug  has  a  ring buffer in which it saves information to reproduce the
+                                                            Tr       Trst                                                            Tr       Trstmost recent information printed by the trace facility (both Tr  and  Trst).
+                                       Tr                                       TrTo see the contents of this buffer use Tr without any arguments
+
+   (TR)
+
+
+ NewTrBuff NewTrBuff _ _______   _________                                       ____(NewTrBuff N:integer): Undefined                                       expr
+
+     To set the number of entries retained to n use  
+
+        (NEWTRBUFF n)
+
+     Initially the number of entries in the ring buffer is 5.PSL Manual                    7 February 1983               Debugging Tools
+section 15.2                                                      page 15.7
+
+         __________                                                  ______!*TRACE [Initially: T]                                               switch
+
+     Enables runtime printing of trace information for functions which
+     have been traced.
+
+  Turning off the TRACE switch  
+
+   (OFF TRACE)
+
+suppresses  the  printing of any trace information at run time; it is still
+saved in the ring buffer.   Thus  a  useful  technique  for  isolating  the
+function  in  which an error occurs is to trace a large number of candidate
+functions, do OFF TRACE and after the failure  look  at  the  latest  trace
+                       Tr                       Trinformation by calling Tr with no arguments.
+
+
+ TrOut TrOut  _____ __    _________                                          ____(TrOut [FNAME:id]): Undefined                                          expr
+
+
+ StdTrace StdTrace    _________                                                 ____(StdTrace ): Undefined                                                 expr
+
+     Normally  trace  information  is directed to the standard output,
+     rather than the currently selected output.  To send it  elsewhere
+     use the statement  
+
+        (TROUT filename)
+
+     The statement  
+
+        (STDTRACE)
+
+     closes  that file and cause future trace output to be sent to the
+     standard output.  Note that output saved in the  ring  buffer  is
+     sent  to  the  currently  selected  output,  not that selected by
+     TrOut     TrOut     TrOut.
+
+
+15.2.3. Making Tracing More Selective15.2.3. Making Tracing More Selective15.2.3. Making Tracing More Selective
+
+
+ TraceCount TraceCount _ _______   _________                                      ____(TraceCount N:integer): Undefined                                      expr
+
+                   TraceCount                   TraceCount     The function (TraceCount n) can  be  used  to  switch  off  trace
+                                                            TraceCount                                                            TraceCount     output.    If n is a positive number, after a call to (TraceCount
+     n) the next n items of trace output that are  generated  are  not
+                  TraceCount                  TraceCount     printed.    (TraceCount  n)  with n negative or zero switches all
+                              TraceCount                              TraceCount     trace output back on.   (TraceCount  NIL)  returns  the  residual
+     count,  i.e.  the  number  of  additional  trace entries that are
+     suppressed.
+
+  To get detailed tracing in the stages of a calculation that lead up to an
+error, try Debugging Tools               7 February 1983                    PSL Manual
+page 15.8                                                      section 15.2
+
+   (TRACECOUNT 1000000) % or some other suitable large number
+   (TR ...)  % as required
+   %run the failing problem
+   (TRACECOUNT NIL)
+
+It  is now possible to calculate how many trace entries occurred before the
+                                                  TraceCount                                                  TraceCounterror, and so the problem can now be re-run with  TraceCount  set  to  some
+number slightly less than that.
+
+                                TraceCount                                TraceCount  An  alternative to the use of TraceCount for getting more selective trace
+          TrIn          TrInoutput is TrIn.
+
+
+ TrIn TrIn  _____ __    _________                                          _____(TrIn [FNAME:id]): Undefined                                          macro
+
+            TrIn            TrIn     To use TrIn, establish tracing for  a  collection  of  functions,
+            Tr                                     TrIn            Tr                                     TrIn     using  Tr  in  the  normal  way.    Then  do  TrIn  on some small
+                                                                   Tr                                                                   Tr     collection of other functions.  The effect is  just  as  for  Tr,
+     except  that  trace  output  is  inhibited  except  if control is
+                            TrIn                            TrIn     dynamically within the TrIn functions.  This makes it possible to
+         Tr         Tr     use Tr on a number of heavily used general purpose functions, and
+     then only see the calls to them that occur within  some  specific
+     subpart of your entire program.
+
+
+                 __________                                          ______TRACEMINLEVEL!* [Initially: 0]                                       global
+
+
+                 __________                                          ______TRACEMAXLEVEL!* [Initially: 1000]                                    global
+
+     The  global  variables TRACEMINLEVEL!* and TRACEMAXLEVEL!* (whose
+     values should be  non-negative  integers)  are  the  minimum  and
+     maximum  depths of recursion at which to print trace information.
+     Thus if you only  want  to  see  top  level  calls  of  a  highly
+                                                               Length                                                               Length     recursive  function  (like  a  simple-minded  version  of Length)
+     simply do   
+
+        (SETQ TRACEMAXLEVEL!* 1)
+
+
+15.2.4. Turning Off Tracing15.2.4. Turning Off Tracing15.2.4. Turning Off Tracing
+
+  If a particular function no longer needs tracing, do  
+
+   (UNTR functionname)
+
+or   
+
+   (UNTR name1 name2 ...)PSL Manual                    7 February 1983               Debugging Tools
+section 15.2                                                      page 15.9
+
+ UnTr UnTr  _____ __    _________                                          _____(UnTr [FNAME:id]): Undefined                                          macro
+
+     This  merely  suppresses  generation  of  trace  output.    Other
+     information, such as invocation  counts,  backtrace  information,
+     and the number of arguments is retained.
+
+  To completely destroy information about a function use   
+
+   (RESTR name1 name2 ...)
+
+
+ Restr Restr  _____ __    _________                                          ____(Restr [FNAME:id]): Undefined                                          expr
+
+     This returns the function to it's original state.
+
+  To suppress traceset output without suppressing normal trace output use  
+
+
+   (UNTRST name1 name2 ...)
+
+
+ UnTrst UnTrst  _____ __    _________                                        _____(UnTrst [FNAME:id]): Undefined                                        macro
+
+  UnTr      Trst                 UnTrst  UnTr      Trst                 UnTrst  UnTring a Trsted function also UnTrst's it.
+
+  TrIn                                UnTr             UnTrst  TrIn                                UnTr             UnTrst  TrIn in Section 15.2.3 is undone by UnTr (but not by UnTrst).
+
+
+15.2.5. Enabling Debug Facilities and Automatic Tracing15.2.5. Enabling Debug Facilities and Automatic Tracing15.2.5. Enabling Debug Facilities and Automatic Tracing
+
+  Under the influence of  
+
+   (ON TRACEALL)
+
+                                        PutD                           PutD                                        PutD                           PutDany  functions  successfully defined by PutD are traced.  Note that if PutD
+fails (as might happen under the influence of the LOSE flag) no attempt  is
+made to trace the function.
+
+                                         Btr                     TrCount                                         Btr                     TrCount  To  enable  those  facilities (such as Btr in Section 15.3 and TrCount in
+Section 15.5) which require redefinition, but without tracing, use  
+
+   (ON INSTALL)
+
+  Thus, a common scenario might look like 
+
+   (ON INSTALL)
+   (DSKIN "MYFNS.SL")
+   (OFF INSTALL)
+
+which would enable the backtrace and statistics routines to work  with  all
+the functions defined in the MYFNS file.Debugging Tools               7 February 1983                    PSL Manual
+page 15.10                                                     section 15.2
+
+           __________                                                ______!*INSTALL [Initially: NIL]                                           switch
+
+                                                           PutD                                                           PutD     Causes DEBUG to know about all functions defined with PutD.
+
+
+            __________                                               ______!*TRACEALL [Initially: NIL]                                          switch
+
+                                       PutD                                       PutD     Causes all functions defined with PutD to be traced.
+
+
+
+15.3. A Heavy Handed Backtrace Facility15.3. A Heavy Handed Backtrace Facility15.3. A Heavy Handed Backtrace Facility
+
+  The  backtrace  facility  allows  one  to  see which of a set of selected
+                                                            Btr                                                            Btrfunctions were active as an error occurred.  The  function  Btr  gives  the
+backtrace information.  The information kept is controlled by two switches:
+!*BTR and !*BTRSAVE.
+
+  When  backtracing  is  enabled  (BTR is on), a stack is kept of functions
+entered but not left.  This stack records the names of  functions  and  the
+arguments  that  they were called with.  If a function returns normally the
+stack is unwound.  If however the function fails, the stack is  left  alone
+by the normal LISP error recovery processes.
+
+
+ Btr Btr  _____ __    _________                                           _____(Btr [FNAME:id]): Undefined                                           macro
+
+                                           Btr                                           Btr     When   called   with  no  arguments,  Btr  prints  the  backtrace
+     information available.  When called with arguments (which  should
+     be  function names), the stack is reset to NIL, and the functions
+     named are added to the list of functions Debug knows about.
+
+
+ ResBtr ResBtr  _____ __    _________                                         ____(ResBtr [FNAME:id]): Undefined                                         expr
+
+     ResBtr     ResBtr     ResBtr resets the backtrace stack to NIL.
+
+
+       __________                                                    ______!*BTR [Initially: T]                                                 switch
+
+     If !*BTR is T, it enables  backtracing  of  functions  which  the
+     Debug  package  has  been  told  about.   If it is NIL, backtrace
+     information is not saved.
+
+
+           __________                                                ______!*BTRSAVE [Initially: T]                                             switch
+
+     Controls the disposition of  information  about  functions  which
+                      ErrorSet                      ErrorSet     failed within an ErrorSet.  If it is on, the information is saved
+     separately  and printed when the stack is printed.  If it is off,
+     the information is thrown away.PSL Manual                    7 February 1983               Debugging Tools
+section 15.4                                                     page 15.11
+
+15.4. Embedded Functions15.4. Embedded Functions15.4. Embedded Functions
+
+  Embedding  means  redefining  a  function in terms of its old definition,
+usually with the intent that the new version does some tests  or  printing,
+uses  the  old  one,  does some more printing and then returns.  If ff is a
+function of two arguments, it can be embedded  using  a  statement  of  the
+form:
+
+   SYMBOLIC EMB PROCEDURE ff(A1,A2);
+     << PRINT A1;
+        PRINT A2;
+        PRINT ff(A1,A2) >>;
+
+                                                                         Tr                                                                         TrThe  effect of this particular use of embed is broadly similar to a call Tr
+ff, and arranges that whenever ff is called it prints  both  its  arguments
+and  its  result.  After a function has been embedded, the embedding can be
+temporarily removed by the use of 
+
+   UNEMBED ff;
+
+and it can be reinstated by 
+
+   EMBED ff;
+
+  This facility is available only to RLISP users.
+
+
+
+15.5. Counting Function Invocations15.5. Counting Function Invocations15.5. Counting Function Invocations
+
+
+           __________                                                ______!*TRCOUNT [Initially: T]                                             switch
+
+     Enables counting invocations of functions known to Debug.  If the
+     switch TRCOUNT is ON, the number of times user functions known to
+     Debug are entered is counted.  The statement  
+
+        (ON TRCOUNT)
+
+     also resets that count to zero.  The statement  
+
+        (OFF TRCOUNT)
+
+     causes a simple histogram of function invocations to be printed.
+
+                                  Tr                                  Tr  If regular tracing (provided by Tr) is not desired, but you wish to count
+the function invocations, use   
+
+   (TRCNT name1 name2 ...)Debugging Tools               7 February 1983                    PSL Manual
+page 15.12                                                     section 15.5
+
+ TrCnt TrCnt  _____ __    _________                                         _____(TrCnt [FNAME:id]): Undefined                                         macro
+
+  See also Section 15.2.5.
+
+
+
+15.6. Stubs15.6. Stubs15.6. Stubs
+
+  Stubs  are useful in top-down program development.  If a stub is invoked,
+it prints its arguments and asks for a value to return.
+
+
+ Stub Stub  __________ ____                                                _____(Stub [FuncInvoke:form]):                                             macro
+
+          __________     Each FUNCINVOKE must be of the form (id  arg1  arg2  ...),  where
+                                                    ____                                                    ____                                                    ____                                    Stub            expr                                    Stub            expr     there  may be zero arguments.  Stub defines an expr for each form
+     with name id and formal arguments arg1, arg2, etc.   If  executed
+     such a stub prints its arguments and reads a value to return.
+
+  The statement   
+
+   (STUB (FOO U V))
+
+           ____           ____           ____           expr  Foo           expr  Foodefines an expr, Foo, of two arguments.
+
+
+ FStub FStub  __________ ____    ___                                        _____(FStub [FuncInvoke:form]): Nil                                        macro
+
+                                             _____                                             _____                                             _____     FStub                  Stub             fexpr     FStub                  Stub             fexpr     FStub does the same as Stub but defines fexprs.
+
+  At  present the currently (i.e. when the stub is executed) selected input
+and output are used.  This may be changed in the  future.    Algebraic  and
+         _____         _____         _____         macro         macropossibly macro stubs may be implemented in the future.
+
+
+
+15.7. Functions for Printing Useful Information15.7. Functions for Printing Useful Information15.7. Functions for Printing Useful Information
+
+
+ PList PList  _ __                                                          _____(PList [X:id]):                                                       macro
+
+        (PLIST id1 id2 ...)
+
+                                                      __     prints  the  property  lists  of  the  specified ids in an easily
+     readable form.
+
+
+ Ppf Ppf  _____ __                                                        _____(Ppf [FNAME:id]):                                                     macro
+
+        (PPF fn1 fn2 ...)
+
+     prints the definitions and other  useful  information  about  thePSL Manual                    7 February 1983               Debugging Tools
+section 15.7                                                     page 15.13
+
+     specified functions.
+
+
+
+15.8. Printing Circular and Shared Structures15.8. Printing Circular and Shared Structures15.8. Printing Circular and Shared Structures
+
+  Some  LISP  programs rely on parts of their data structures being shared,
+           Eq                                                   Equal           Eq                                                   Equalso that an Eq test can be used rather than the more  expensive  Equal  one.
+Other  programs  (either  deliberately  or  by accident) construct circular
+                         RplacA    RplacD                         RplacA    RplacDlists through the use of RplacA or RplacD.  Such lists can be displayed  by
+                    PrintX                    PrintXuse of the function PrintX.  This function also prints circular vectors.
+
+
+ PrintX PrintX _ ___   ___                                                    ____(PrintX A:any): NIL                                                    expr
+
+     If  given  a normal list the behavior of this function is similar
+                Print                Print     to that of Print; if it is given  a  looped  or  re-entrant  data
+     structures  it prints it in a special format.  The representation
+             PrintX             PrintX     used by PrintX for re-entrant structures is based on the idea  of
+     labels for those nodes in the structure that are referred to more
+     than once.
+
+  Consider the list created by the operations:  
+
+   (SETQ R '(S W))
+   (RPLACA R (CDR R))
+
+             Print             Print                    _The function Print called on the list R gives
+
+   ((W) W)
+
+    PrintX    PrintX                             _                              _If  PrintX  is  called  on  the  list  R, it discovers that the list (W) is
+referred to twice, and invents the label %L1 for it.  The structure is then
+printed as 
+
+   (%L1: (W) . %L1)
+
+%L1: sets the label, and the other instance  of  %L1  refers  back  to  it.
+Labeled  sublists  can appear anywhere within the list being printed.  Thus
+the list created by the following statements     
+
+   (SETQ L '(A B C))
+   (SETQ K (CDR L))
+   (SETQ X (CONS L K))
+
+which is printed as 
+
+   ((A B C) B C)
+
+   Print                     PrintX   Print                     PrintXby Print could be printed by PrintX asDebugging Tools               7 February 1983                    PSL Manual
+page 15.14                                                     section 15.8
+
+   ((A %L1, B C) . %L1)
+
+A  label  set  with  a comma (rather than a colon) is a label for part of a
+list, not for the sublist.
+
+
+             __________                                              ______!*SAVENAMES [Initially: NIL]                                         switch
+
+                                                 PrintX                                                 PrintX     If on, names assigned to substructures  by  PrintX  are  retained
+     from one use to the next.  Thus substructures common to different
+     items will be shown as the same.
+
+
+
+15.9. Internals and Customization15.9. Internals and Customization15.9. Internals and Customization
+
+  This  Section  describes some internal details of the Debug package which
+may be useful in customizing it for specific applications.  The  reader  is
+urged to consult the source for further details.
+
+
+15.9.1. User Hooks15.9.1. User Hooks15.9.1. User Hooks
+
+  These  are  all  global  variables  whose  values  are  normally NIL.  If
+                        ____                        ____                        ____                        expr                        exprnon-NIL, they should be exprs taking the number of variables specified, and
+are called as specified.
+
+
+            __________                                               ______PUTDHOOK!* [Initially: NIL]                                          global
+
+     Takes one argument, the function name.  It is  called  after  the
+     function has been defined, and any tracing under the influence of
+     !*TRACEALL or !*INSTALL has taken place.  It is not called if the
+     function  cannot  be defined (as might happen if the function has
+     been flagged LOSE).
+
+
+                 __________                                          ______TRACENTRYHOOK!* [Initially: NIL]                                     global
+
+     Takes two arguments, the function name and a list of  the  actual
+     arguments.    It  is  called  by  the  trace  package if a traced
+     function is entered, but before it is executed.  The execution of
+     a surrounding EMB function takes place after  TRACENTRYHOOK!*  is
+     called.  This is useful if you need to call special user-provided
+     print  routines  to  display  critical  data  structures,  as are
+     TRACEXITHOOK!* and TRACEXPANDHOOK!*.
+
+
+                __________                                           ______TRACEXITHOOK!* [Initially: NIL]                                      global
+
+     Takes two arguments, the function name and  the  value.    It  is
+     called after the function has been evaluated.PSL Manual                    7 February 1983               Debugging Tools
+section 15.9                                                     page 15.15
+
+                  __________                                         ______TRACEXPANDHOOK!* [Initially: NIL]                                    global
+
+                                                      _____                                                      _____                                                      _____                                                      macro                                                      macro     Takes  two  arguments, the function name and the macro expansion.
+                           _____                             _____                           _____                             _____                           _____                             _____                           macro                             macro                           macro                             macro     It is only called for macros, and is called after  the  macro  is
+     expanded, but before the expansion has been evaluated.
+
+
+                 __________                                          ______TRINSTALLHOOK!* [Initially: NIL]                                     global
+
+     Takes  one argument, a function name.  It is called if a function
+     is redefined by the Debug package, as  for  example  when  it  is
+     first traced.  It is called before the redefinition takes place.
+
+
+15.9.2. Functions Used for Printing/Reading15.9.2. Functions Used for Printing/Reading15.9.2. Functions Used for Printing/Reading
+
+                            _____                            _____                            _____                            EXPRS                            EXPRS  These  should all contain EXPRS taking the specified number of arguments.
+The initial values are given in square brackets.
+
+
+              __________                                             ______PPFPRINTER!* [Initially: PRINT]                                      global
+
+                                        Ppf                                        Ppf     Takes one argument.  It is used by Ppf to print the  body  of  an
+     interpreted function.
+
+
+                   __________                                        ______PROPERTYPRINTER!* [Initially: PRETTYPRINT]                           global
+
+                                          PList                                          PList     Takes  one  argument.  It is used by PList to print the values of
+     properties.
+
+
+               __________                                            ______STUBPRINTER!* [Initially: PRINTX]                                    global
+
+                                               Stub/FStub                                               Stub/FStub     Takes one argument.  Stubs defined  with  Stub/FStub  use  it  to
+     print their arguments.
+
+
+              __________                                             ______STUBREADER!* [Initially: !-REDREADER]                                global
+
+                                             Stub/FStub                                             Stub/FStub     Takes no arguments.  Stubs defined with Stub/FStub use it to read
+     their return value.
+
+
+               __________                                            ______TREXPRINTER!* [Initially: PRINT]                                     global
+
+     Takes one argument.  It is used to print the expansions of traced
+     _____     _____     _____     macro     macro     macros.Debugging Tools               7 February 1983                    PSL Manual
+page 15.16                                                     section 15.9
+
+             __________                                              ______TRPRINTER!* [Initially: PRINTX]                                      global
+
+     Takes one argument.  It is used to print the arguments and values
+     of traced functions.
+
+
+           __________                                                ______TRSPACE!* [Initially: 0]                                             global
+
+     Controls indentation.
+
+
+
+15.10. Example15.10. Example15.10. Example
+
+  This  contrived  example demonstrates many of the available features.  It
+is a transcript of an actual PSL session.PSL Manual                    7 February 1983               Debugging Tools
+section 15.10                                                    page 15.17
+
+   @PSL
+   PSL 3.1, 15-Nov-82
+   1 lisp> (LOAD DEBUG)
+   NIL
+   2 lisp> (DE FOO (N)
+   2 lisp>  (PROG (A)
+   2 lisp>   (COND ((AND (NEQ (REMAINDER N 2) 0) (LESSP N 0))
+   2 lisp>               (SETQ A (CAR N)))) %Should err out if N is a n
+   2 lisp>   (COND ((EQUAL N 0) (RETURN 'BOTTOM)))
+   2 lisp>   (SETQ N (DIFFERENCE N 2))
+   2 lisp>   (SETQ A (BAR N))
+   2 lisp>   (SETQ N (DIFFERENCE N 2))
+   2 lisp>   (RETURN (LIST A (BAR N) A))))
+   FOO
+   3 lisp> (DE FOOBAR (N)
+   3 lisp>  (PROGN (FOO N) NIL))
+   FOOBAR
+   4 lisp> (TR FOO FOOBAR)
+   (FOO FOOBAR)
+   5 lisp> (PPF FOOBAR FOO)
+
+
+   EXPR procedure FOOBAR(N) [TRACED;Invoked 0 times]:
+   PROGN
+   (FOO N)
+   NIL
+
+
+   EXPR procedure FOO(N) [TRACED;Invoked 0 times]:
+   PROG
+   (A)
+   (COND ((AND (NEQ (REMAINDER N 2) 0) (LESSP N 0)) (SETQ A (CAR N))))
+   (COND ((EQUAL N 0) (RETURN 'BOTTOM)))
+   (SETQ N (DIFFERENCE N 2))
+   (SETQ A (BAR N))
+   (SETQ N (DIFFERENCE N 2))
+   (RETURN (LIST A (BAR N) A))
+
+   (FOOBAR FOO)
+   6 lisp> (ON COMP)
+   NIL
+   7 lisp> (DE BAR (N)
+   7 lisp>  (COND ((EQUAL (REMAINDER N 2) 0) (FOO (TIMES 2 (QUOTIENT N
+   7 lisp>        (T (FOO (SUB1 (TIMES 2 (QUOTIENT N 4)))))))
+   *** (BAR): base 275266, length 21 words
+   BAR
+   8 lisp> (OFF COMP)
+   NIL
+   9 lisp> (FOOBAR 8)
+   FOOBAR being entered
+      N:   8
+     FOO being enteredDebugging Tools               7 February 1983                    PSL Manual
+page 15.18                                                    section 15.10
+
+        N: 8
+       FOO (level 2) being entered
+          N:       2
+         FOO (level 3) being entered
+            N:     0
+         FOO (level 3) = BOTTOM
+         FOO (level 3) being entered
+            N:     0
+         FOO (level 3) = BOTTOM
+       FOO (level 2) = (BOTTOM BOTTOM BOTTOM)
+       FOO (level 2) being entered
+          N:       2
+         FOO (level 3) being entered
+            N:     0
+         FOO (level 3) = BOTTOM
+         FOO (level 3) being entered
+            N:     0
+         FOO (level 3) = BOTTOM
+       FOO (level 2) = (BOTTOM BOTTOM BOTTOM)
+     FOO = (%L1: (BOTTOM BOTTOM BOTTOM) (BOTTOM BOTTOM BOTTOM)
+   %L1)
+   FOOBAR = NIL
+   NIL
+   10 lisp> % Notice how in the above PRINTX printed the return values
+   10 lisp> % to show shared structure
+   10 lisp> (TRST FOO)
+   (FOO)
+   11 lisp> (FOOBAR 8)
+   FOOBAR being entered
+      N:   8
+     FOO being entered
+        N: 8
+     N := 6
+       FOO (level 2) being entered
+          N:       2
+       N := 0
+         FOO (level 3) being entered
+            N:     0
+         FOO (level 3) = BOTTOM
+       A := BOTTOM
+       N := -2
+         FOO (level 3) being entered
+            N:     0
+         FOO (level 3) = BOTTOM
+       FOO (level 2) = (BOTTOM BOTTOM BOTTOM)
+     A := (BOTTOM BOTTOM BOTTOM)
+     N := 4
+       FOO (level 2) being entered
+          N:       2
+       N := 0
+         FOO (level 3) being entered
+            N:     0PSL Manual                    7 February 1983               Debugging Tools
+section 15.10                                                    page 15.19
+
+         FOO (level 3) = BOTTOM
+       A := BOTTOM
+       N := -2
+         FOO (level 3) being entered
+            N:     0
+         FOO (level 3) = BOTTOM
+       FOO (level 2) = (BOTTOM BOTTOM BOTTOM)
+     FOO = (%L1: (BOTTOM BOTTOM BOTTOM) (BOTTOM BOTTOM BOTTOM)
+   %L1)
+   FOOBAR = NIL
+   NIL
+   12 lisp> (TR BAR)
+   (BAR)
+   13 lisp> (FOOBAR 8)
+   FOOBAR being entered
+      N:   8
+     FOO being entered
+        N: 8
+       BAR being entered
+          A1:      6
+         FOO (level 2) being entered
+            N:     2
+           BAR (level 2) being entered
+              A1:  0
+             FOO (level 3) being entered
+                N: 0
+             FOO (level 3) = BOTTOM
+           BAR (level 2) = BOTTOM
+           BAR (level 2) being entered
+              A1:  -2
+             FOO (level 3) being entered
+                N: 0
+             FOO (level 3) = BOTTOM
+           BAR (level 2) = BOTTOM
+         FOO (level 2) = (BOTTOM BOTTOM BOTTOM)
+       BAR = (BOTTOM BOTTOM BOTTOM)
+       BAR being entered
+          A1:      4
+         FOO (level 2) being entered
+            N:     2
+           BAR (level 2) being entered
+              A1:  0
+             FOO (level 3) being entered
+                N: 0
+             FOO (level 3) = BOTTOM
+           BAR (level 2) = BOTTOM
+           BAR (level 2) being entered
+              A1:  -2
+             FOO (level 3) being entered
+                N: 0
+             FOO (level 3) = BOTTOM
+           BAR (level 2) = BOTTOMDebugging Tools               7 February 1983                    PSL Manual
+page 15.20                                                    section 15.10
+
+         FOO (level 2) = (BOTTOM BOTTOM BOTTOM)
+       BAR = (BOTTOM BOTTOM BOTTOM)
+     FOO = (%L1: (BOTTOM BOTTOM BOTTOM) (BOTTOM BOTTOM BOTTOM)
+   %L1)
+   FOOBAR = NIL
+   NIL
+   14 lisp> (OFF TRACE)
+   NIL
+   15 lisp> (FOOBAR 8)
+   NIL
+   16 lisp> (TR)
+   *** Start of saved trace information ***
+           BAR (level 2) = BOTTOM
+         FOO (level 2) = (BOTTOM BOTTOM BOTTOM)
+       BAR = (BOTTOM BOTTOM BOTTOM)
+     FOO = (%L1: (BOTTOM BOTTOM BOTTOM) (BOTTOM BOTTOM BOTTOM)
+   %L1)
+   FOOBAR = NIL
+   *** End of saved trace information ***
+   NIL
+   17 lisp> (FOOBAR 13)
+   ***** An attempt was made to do CAR on `-1', which is not a pair
+   Break loop
+   18 lisp break>> Q
+   19 lisp> (TR)
+   *** Start of saved trace information ***
+     FOO being entered
+        N: 13
+       BAR being entered
+          A1:      11
+         FOO (level 2) being entered
+            N:     3
+           BAR (level 2) being entered
+              A1:  1
+             FOO (level 3) being entered
+                N: -1
+   *** End of saved trace information ***
+   NIL
+   20 lisp> (BTR)
+   *** Backtrace: ***
+   These functions were left abnormally:
+     FOO
+        N: -1
+     BAR
+        A1:        1
+     FOO
+        N: 3
+     BAR
+        A1:        11
+     FOO
+        N: 13
+     FOOBARPSL Manual                    7 February 1983               Debugging Tools
+section 15.10                                                    page 15.21
+
+        N: 13
+   *** End of backtrace ***
+   NIL
+   21 lisp> (STUB (FOO N))
+   *** Function `FOO' has been redefined
+   NIL
+   22 lisp> (FOOBAR 13)
+    Stub FOO called
+
+   N: 13
+   Return? :
+   22 lisp> (BAR (DIFFERENCE N 2))
+    Stub FOO called
+
+   N: 3
+   Return? :
+   22 lisp> (BAR (DIFFERENCE N 2))
+    Stub FOO called
+
+   N: -1
+   Return? :
+   22 lisp> 'ERROR
+   NIL
+   23 lisp> (TR)
+   *** Start of saved trace information ***
+     BAR being entered
+        A1:        11
+       BAR (level 2) being entered
+          A1:      1
+       BAR (level 2) = ERROR
+     BAR = ERROR
+   FOOBAR = NIL
+   *** End of saved trace information ***
+   NIL
+   24 lisp> (OFF TRCOUNT)
+
+
+   FOOBAR(6)           ******************
+   BAR(16)             ************************************************
+
+
+   NIL
+   22 lisp> (QUIT)

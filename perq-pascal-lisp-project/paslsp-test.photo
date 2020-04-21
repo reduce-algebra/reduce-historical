@@ -1,0 +1,890 @@
+
+[PHOTO:  Recording initiated  Mon 15-Feb-82 5:11PM]
+
+LINK FROM CAI.OTTENHEIMER, TTY 102
+
+ TOPS-20 Command processor 4(714)-2
+@PLJJS:PL20
+
+PASCAL LISP V2 - 15 NOV 1981 
+COPYRIGHT (C) 1981 U UTAH 
+ALL RIGHTS RESERVED 
+UserInitStart
+UserInitEnd
+>(*JSETQ *!RAISE T)
+NIL
+>(SETQ !*RAISE T)
+T
+>(SETQ !*ECHO T)
+T
+>(DSKIN "PASLSP>TSTJJJJ.TST")
+%%%%%%%%%%%%  Standard - LISP Verification file. %%%%%%%%%%%%%%%%%%%%%%%
+%
+% Copyright (C) M. Griss and J. Marti, February 1981
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+% Flags for SYSLISP based PSL
+
+
+(SETQ !*ECHO T)T
+
+(SETQ FZERO (FLOAT 0))0
+
+(SETQ FONE (FLOAT 1))1
+
+
+%  The following should return T:
+TT
+ 
+(NULL NIL)T
+ 
+(COND (T T))T
+ 
+(COND (NIL NIL) (T T))T
+ 
+%  The following should return NIL:
+NILNIL
+ 
+(NULL T)NIL
+ 
+(COND (T NIL))NIL
+ 
+(COND (NIL T) 
+      (T NIL))NIL
+ 
+%  The following should be 0
+00
+ (QUOTE 0)0
+ 
+%  The following minimum set of functions must work:
+%   PUTD, PROG, SET, QUOTE, COND, NULL, RETURN, LIST, CAR, CDR,
+%   EVAL, PRINT, PRIN1, TERPRI, PROGN, GO.
+%  Check PUTD, GETD, LAMBDA 
+(PUTD (QUOTE FOO) (QUOTE EXPR) (QUOTE (LAMBDA (X) 3)))FOO
+
+% Expect (EXPR LAMBDA (X) 3)
+(GETD (QUOTE FOO))(EXPR LAMBDA (X) 3)
+
+%  Should return 3
+(FOO 1)3
+
+(FOO 2)3
+
+%  Test SET :
+(SET (QUOTE A) 1)1
+
+A1
+
+(SET (QUOTE B) 2)2
+
+B2
+
+%  Test LIST, CAR, CDR 
+%  Expect (1 2 3 4) 1 and (2 3 4) 
+(SET (QUOTE A) (LIST 1 2 3 4))(1 2 3 4)
+
+(CAR A)1
+
+(CDR A)(2 3 4)
+
+% Test REDEFINITION in PUTD, PROGN, PRIN1, TERPRI 
+(PUTD (QUOTE FOO) (QUOTE EXPR) 
+      (QUOTE (LAMBDA (X) (PROGN (PRIN1 X) (TERPRI)))))*** (FUNCTION FOO REDEFINE
+D)
+FOO
+
+%  expect 1 and 2 printed , value NIL
+(FOO 1)1
+NIL
+
+(FOO 2)2
+NIL
+
+%  Test simple PROG, GO, RETURN 
+(PROG NIL (PRINT 1) (PRINT 2))1
+2
+NIL
+
+(PROG (A) (PRINT A) (PRINT 1))NIL
+1
+NIL
+
+% Now test GO, RETURN, PROG binding
+(SET 'A 'AA)AA
+ (SET 'B 'BB)BB
+
+(PROG (A B) (PRINT 'test! binding! of! A!,! B! expect! NIL)
+            (PRIN1 A) (PRINT B) 
+            (PRINT 'Reset! to! 1!,2)
+            (SET 'A 1) (SET 'B 2)
+               (PRIN1 A) (PRINT B)
+            (PRINT 'test! forward! GO)
+               (GO LL)
+               (PRINT 'forward! GO! failed)
+LL            (PRINT 'Forward! GO! ok)
+            (GO L2)
+L1        (PRINT '! Should! be! after! BACKWARD! go )
+        (PRINT '! now! return! 3)
+        (RETURN 3)
+L2        (PRINT 'Test! backward! GO)
+        (GO L1) )TEST BINDING OF A, B EXPECT NIL
+NILNIL
+RESET TO 1,2
+12
+TEST FORWARD GO
+FORWARD GO OK
+TEST BACKWARD GO
+ SHOULD BE AFTER BACKWARD GO
+ NOW RETURN 3
+3
+
+% Test that A,B correctly rebound, expect AA and BB% 
+AAA
+ BBB
+
+%  Test simple FEXPR% 
+(PUTD (QUOTE FOO) (QUOTE FEXPR) (QUOTE (LAMBDA (X) (PRINT X))))*** (FUNCTION FOO
+ REDEFINED)
+FOO
+
+% Expect (FEXPR LAMBDA (X) (PRINT X))% 
+(GETD (QUOTE FOO))(FEXPR LAMBDA (X) (PRINT X))
+
+%  Expect (1) (1 2) and (1 2 3)% 
+(FOO 1)(1)
+(1)
+
+(FOO 1 2)(1 2)
+(1 2)
+
+(FOO 1 2 3)(1 2 3)
+(1 2 3)
+
+%  Finally, TEST EVAL inside an FEXPR % 
+(PUTD (QUOTE FOO) (QUOTE FEXPR)
+  (QUOTE (LAMBDA (XX) (PRINT (EVAL (CAR XX))))))*** (FUNCTION FOO REDEFINED)
+FOO
+
+(FOO 1)1
+1
+
+(FOO (NULL NIL))T
+T
+
+%  PUTD is being used here to define a function !$TEST.%  
+(PUTD (QUOTE !$TEST) (QUOTE FEXPR) (QUOTE 
+  (LAMBDA (!$X) 
+   (PROG (A B) 
+     (SET (QUOTE A) (CDR !$X)) 
+LOOP (while A (progn
+         %  (print (list 'trying (car a)))
+           (SET (QUOTE B) (EVAL (CAR A)))
+           (COND ( (null (eq b T)) 
+            (PROGN (PRIN1 (LIST '!*!*!*!*!*  (CAR A) '! returned B)) 
+                   (TERPRI)))) 
+     (SET (QUOTE A) (CDR A)) 
+     (GO LOOP)))
+     (return (LIST (CAR !$X) '! test! complete)) 
+           ))))$TEST
+ 
+% $TEST should be defined.
+(GETD (QUOTE !$TEST))(FEXPR LAMBDA ($X) (PROG (A B) (SET (QUOTE A) (CDR $X)) LOO
+P (WHILE A (PROGN (SET (QUOTE B) (EVAL (CAR A))) (COND ((NULL (EQ B T)) (PROGN (
+PRIN1 (LIST (QUOTE *****) (CAR A) (QUOTE  RETURNED) B)) (TERPRI)))) (SET (QUOTE 
+A) (CDR A)) (GO LOOP))) (RETURN (LIST (CAR $X) (QUOTE  TEST COMPLETE)))))
+ 
+%  Global, vector, function-pointer partial test.
+(!$TEST 'GLOBAL!,VECTOR (NULL (GLOBAL (QUOTE (!$VECTOR !$CODE TEMP)))) 
+     (GLOBALP (QUOTE !$VECTOR)) 
+     (GLOBALP (QUOTE !$CODE)) 
+     (SET (QUOTE !$VECTOR) (MKVECT 4)) 
+     (SET (QUOTE !$CODE) (CDR (GETD (QUOTE CDR)))) )(***** (GLOBALP (QUOTE $VECT
+OR))  RETURNED (GLOBAL))
+(***** (GLOBALP (QUOTE $CODE))  RETURNED (GLOBAL))
+(***** (SET (QUOTE $VECTOR) (MKVECT 4))  RETURNED NIL)
+(***** (SET (QUOTE $CODE) (CDR (GETD (QUOTE CDR))))  RETURNED  ##89)
+((QUOTE GLOBAL,VECTOR)  TEST COMPLETE)
+ 
+ 
+ 
+(!$TEST LIST (EQUAL (LIST 1 (QUOTE A) 'STRING ) 
+                    (QUOTE (1 A STRING))))(LIST  TEST COMPLETE)
+ 
+
+% -----3.1 Elementary Predicates-----%  
+% This section tests the elementary predicates of section 3.1 of 
+% the Standard LISP Report. In general they will test that the 
+% predicate returns non-NIL for the correct case, and NIL for all 
+% others.  
+ 
+% CODEP should not return T for numbers as function 
+% pointers must not be implemented in this way.  
+(!$TEST CODEP (CODEP !$CODE) (NULL (CODEP 1)) 
+     (NULL (CODEP T)) (NULL (CODEP NIL)) 
+     (NULL (CODEP (QUOTE IDENTIFIER))) 
+     (NULL (CODEP 'STRING)) (NULL (CODEP (QUOTE (A . B)))) 
+     (NULL (CODEP (QUOTE (A B C)))) 
+     (NULL (CODEP !$VECTOR)) )(CODEP  TEST COMPLETE)
+ 
+ 
+% PAIRP must not return T for vectors even if vectors are 
+% implemented as lists.  
+(!$TEST PAIRP 
+     (PAIRP (QUOTE (A . B))) (PAIRP (QUOTE (NIL))) 
+     (PAIRP (QUOTE (A B C))) (NULL (PAIRP 0)) 
+     (NULL (PAIRP (QUOTE IDENTIFIER))) 
+     (NULL (PAIRP 'STRING)) 
+     (NULL (PAIRP !$VECTOR)) )(PAIRP  TEST COMPLETE)
+ 
+ 
+(!$TEST FIXP (FIXP 1) 
+     (NULL (FIXP (QUOTE IDENTIFIER))) 
+     (NULL (FIXP (QUOTE 'STRING))) 
+     (NULL (FIXP (QUOTE (A . B)))) 
+     (NULL (FIXP (QUOTE (A B C)))) 
+     (NULL (FIXP !$VECTOR)) 
+     (NULL (FIXP !$CODE))  )(FIXP  TEST COMPLETE)
+ 
+ 
+% T and NIL must test as identifiers as must specially 
+% escaped character identifiers.  
+(!$TEST IDP (IDP (QUOTE IDENTIFIER)) 
+     (IDP NIL)  (IDP T) 
+     (IDP (QUOTE !1)) (IDP (QUOTE !A)) (IDP (QUOTE !!)) 
+     (IDP (QUOTE !()) (IDP (QUOTE !))) (IDP (QUOTE !.)) 
+     (IDP (QUOTE !')) (IDP (QUOTE !*)) (IDP (QUOTE !/)) 
+     (IDP (QUOTE !+)) (IDP (QUOTE !-)) (IDP (QUOTE !#)) 
+     (IDP (QUOTE ! )) (IDP (QUOTE !1!2!3)) (IDP (QUOTE !*!*!*)) 
+     (IDP (QUOTE !'ID)) 
+     (NULL (IDP 1)) 
+     (NULL (IDP 'STRING)) 
+     (NULL (IDP (QUOTE (A . B)))) 
+     (NULL (IDP (QUOTE (A B C)))) 
+     (NULL (IDP !$VECTOR)) 
+     (NULL (IDP !$CODE)) )(***** (NULL (IDP (QUOTE STRING)))  RETURNED NIL)
+(***** (NULL (IDP $VECTOR))  RETURNED NIL)
+(IDP  TEST COMPLETE)
+ 
+ 
+% STRINGP should answer T to strings only and not things 
+% that might look like strings if the system implements them as 
+% identifiers.  
+(!$TEST STRINGP (STRINGP 'STRING) 
+     (NULL (STRINGP (QUOTE (STRING NOTASTRING)))) 
+     (NULL (STRINGP 1)) 
+     (NULL (STRINGP (QUOTE A))) 
+     (NULL (STRINGP (QUOTE (A . B)))) 
+     (NULL (STRINGP (QUOTE (A B C)))) 
+     (NULL (STRINGP !$VECTOR)) 
+     (NULL (STRINGP !$CODE)) )(***** (NULL (STRINGP (QUOTE A)))  RETURNED NIL)
+(***** (NULL (STRINGP $VECTOR))  RETURNED NIL)
+(STRINGP  TEST COMPLETE)
+ 
+ 
+% VECTORP should not answer T to pairs if vectors are 
+% implemented as pairs.  
+(!$TEST VECTORP (VECTORP !$VECTOR) 
+     (NULL (VECTORP 1)) 
+     (NULL (VECTORP (QUOTE A))) 
+     (NULL (VECTORP 'STRING)) 
+     (NULL (VECTORP (QUOTE (A . B)))) 
+     (NULL (VECTORP (QUOTE (A B C)))) 
+     (NULL (VECTORP !$CODE)) )(***** (VECTORP $VECTOR)  RETURNED NIL)
+(VECTORP  TEST COMPLETE)
+ 
+ 
+% Vectors are constants in Standard LISP. However T and NIL 
+% are special global variables with the values T and NIL.  
+(!$TEST CONSTANTP (CONSTANTP 1) 
+     (CONSTANTP 'STRING) 
+     (CONSTANTP !$VECTOR) 
+     (CONSTANTP !$CODE) 
+     (NULL (CONSTANTP NIL)) 
+     (NULL (CONSTANTP T)) 
+     (NULL (CONSTANTP (QUOTE A))) 
+     (NULL (CONSTANTP (QUOTE (A . B)))) 
+     (NULL (CONSTANTP (QUOTE (A B C)))) )(***** (CONSTANTP (QUOTE STRING))  RETU
+RNED NIL)
+(***** (CONSTANTP $VECTOR)  RETURNED NIL)
+
+***GARBAGE COLLECTOR CALLED
+CONSES:        3699
+ST    :          58
+        3465 PAIRS FREED.
+         234 PAIRS IN USE.
+MAX GC STACK WAS            5
+(CONSTANTP  TEST COMPLETE)
+ 
+ 
+% An ATOM is anything that is not a pair, thus vectors are 
+% atoms.  
+(!$TEST ATOM (ATOM T) (ATOM NIL) (ATOM 1) (ATOM 0) 
+     (ATOM 'STRING) (ATOM (QUOTE IDENTIFIER)) 
+     (ATOM !$VECTOR) 
+     (NULL (ATOM (QUOTE (A . B)))) 
+     (NULL (ATOM (QUOTE (A B C)))) )(ATOM  TEST COMPLETE)
+ 
+ 
+ 
+(!$TEST EQ (EQ NIL NIL) (EQ T T) 
+     (EQ !$VECTOR !$VECTOR) 
+     (EQ !$CODE !$CODE) 
+     (EQ (QUOTE A) (QUOTE A)) 
+     (NULL (EQ NIL T)) 
+     (NULL (EQ NIL !$VECTOR)) 
+     (NULL (EQ (QUOTE (A . B)) (QUOTE (A . B)))) )(***** (NULL (EQ NIL $VECTOR))
+  RETURNED NIL)
+(EQ  TEST COMPLETE)
+ 
+ 
+% Function pointers are not numbers, therefore the function 
+% pointer $CODE is not EQN to the fixed number 0. Numbers must have 
+% the same type to be EQN.  
+(!$TEST EQN (EQN 1 1) (EQN 0 0) 
+     (EQN FONE FONE)  (EQN FZERO FZERO) 
+     (NULL (EQN FONE FZERO)) (NULL (EQN FZERO FONE)) 
+     (NULL (EQN 1 FONE)) (NULL (EQN 0 FZERO)) 
+     (NULL (EQN 1 0)) (NULL (EQN 0 1)) 
+     (NULL (EQN 0 !$CODE)) 
+     (NULL (EQN NIL 0)) 
+     (EQN NIL NIL)  (EQN T T) (EQN !$VECTOR !$VECTOR) 
+     (EQN !$CODE !$CODE) (EQN (QUOTE A) (QUOTE A)) 
+     (NULL (EQN (QUOTE (A . B)) (QUOTE (A . B)))) 
+     (NULL (EQN (QUOTE (A B C)) (QUOTE (A B C))))  )(***** (NULL (EQN 1 FONE))  
+RETURNED NIL)
+(***** (NULL (EQN 0 FZERO))  RETURNED NIL)
+(EQN  TEST COMPLETE)
+ 
+ 
+% EQUAL checks for general equality rather than specific, so 
+% it must check all elements of general expressions and all elements 
+% of vectors for equality. This test assumes that CAR does not have 
+% the function pointer value  EQUAL to 0. Further tests of EQUAL 
+% are in the vector section 3.9.  
+(!$TEST EQUAL (EQUAL NIL NIL) 
+     (EQUAL T T) 
+     (NULL (EQUAL NIL T)) 
+     (EQUAL !$CODE !$CODE) 
+     (NULL (EQUAL !$CODE (CDR (GETD (QUOTE CAR))))) 
+     (EQUAL (QUOTE IDENTIFIER) (QUOTE IDENTIFIER)) 
+     (NULL (EQUAL (QUOTE IDENTIFIER1) (QUOTE IDENTIFIER2))) 
+     (EQUAL 'STRING 'STRING) 
+     (NULL (EQUAL 'STRING1 'STRING2)) 
+     (EQUAL 0 0) 
+     (NULL (EQUAL 0 1)) 
+     (EQUAL (QUOTE (A . B)) (QUOTE (A . B))) 
+     (NULL (EQUAL (QUOTE (A . B)) (QUOTE (A . C)))) 
+     (NULL (EQUAL (QUOTE (A . B)) (QUOTE (C . B)))) 
+     (EQUAL (QUOTE (A B)) (QUOTE (A B))) 
+     (NULL (EQUAL (QUOTE (A B)) (QUOTE (A C)))) 
+     (NULL (EQUAL (QUOTE (A B)) (QUOTE (C B)))) 
+     (EQUAL !$VECTOR !$VECTOR) 
+     (NULL (EQUAL 0 NIL)) 
+     (NULL (EQUAL 'T T)) 
+     (NULL (EQUAL 'NIL NIL)) )(***** (NULL (EQUAL (QUOTE T) T))  RETURNED NIL)
+(***** (NULL (EQUAL (QUOTE NIL) NIL))  RETURNED NIL)
+(EQUAL  TEST COMPLETE)
+ 
+ 
+% -----3.2 Functions on Dotted-Pairs-----%  
+% Test the C....R functions by simply verifying that they select
+% correct part of a structure.
+(!$TEST CAR (EQ (CAR (QUOTE (A . B))) (QUOTE A)) 
+    (EQUAL (CAR (QUOTE ((A) . B))) (QUOTE (A))) )(CAR  TEST COMPLETE)
+ 
+ 
+(!$TEST CDR (EQ (CDR (QUOTE (A . B))) (QUOTE B)) 
+     (EQUAL (CDR (QUOTE (A B))) (QUOTE (B))) )(CDR  TEST COMPLETE)
+ 
+ 
+(!$TEST CAAR (EQ (CAAR (QUOTE ((A)))) (QUOTE A)))(CAAR  TEST COMPLETE)
+ 
+(!$TEST CADR (EQ (CADR (QUOTE (A B))) (QUOTE B)))(CADR  TEST COMPLETE)
+ 
+(!$TEST CDAR (EQ (CDAR (QUOTE ((A . B)))) (QUOTE B)))(CDAR  TEST COMPLETE)
+ 
+(!$TEST CDDR (EQ (CDDR (QUOTE (A . (B . C)))) (QUOTE C)))(CDDR  TEST COMPLETE)
+ 
+ 
+(!$TEST CAAAR (EQ (CAAAR (QUOTE (((A))))) (QUOTE A)))(CAAAR  TEST COMPLETE)
+ 
+(!$TEST CAADR (EQ (CAADR (QUOTE (A (B)))) (QUOTE B)))(CAADR  TEST COMPLETE)
+ 
+(!$TEST CADAR (EQ (CADAR (QUOTE ((A B)))) (QUOTE B)))(CADAR  TEST COMPLETE)
+ 
+(!$TEST CADDR (EQ (CADDR (QUOTE (A B C))) (QUOTE C)))(CADDR  TEST COMPLETE)
+ 
+(!$TEST CDAAR (EQ (CDAAR (QUOTE (((A . B)) C))) (QUOTE B)))(CDAAR  TEST COMPLETE
+)
+ 
+(!$TEST CDADR (EQ (CDADR (QUOTE (A (B . C)))) (QUOTE C)))(CDADR  TEST COMPLETE)
+ 
+(!$TEST CDDAR (EQ (CDDAR (QUOTE ((A . (B . C))))) (QUOTE C)))(CDDAR  TEST COMPLE
+TE)
+ 
+(!$TEST CDDDR (EQ (CDDDR (QUOTE (A . (B . (C . D))))) (QUOTE D)))(CDDDR  TEST CO
+MPLETE)
+ 
+ 
+(!$TEST CAAAAR (EQ (CAAAAR (QUOTE ((((A)))))) (QUOTE A)))(CAAAAR  TEST COMPLETE)
+ 
+(!$TEST CAAADR (EQ (CAAADR (QUOTE (A ((B))))) (QUOTE B)))(CAAADR  TEST COMPLETE)
+ 
+(!$TEST CAADAR (EQ (CAADAR (QUOTE ((A (B))))) (QUOTE B)))(CAADAR  TEST COMPLETE)
+ 
+(!$TEST CAADDR (EQ (CAADDR (QUOTE (A . (B (C))))) (QUOTE C)))(CAADDR  TEST COMPL
+ETE)
+ 
+(!$TEST CADAAR (EQ (CADAAR (QUOTE (((A . (B)))))) (QUOTE B)))(CADAAR  TEST COMPL
+ETE)
+ 
+(!$TEST CADADR (EQ (CADADR (QUOTE (A (B . (C))))) (QUOTE C)))(CADADR  TEST COMPL
+ETE)
+ 
+(!$TEST CADDAR (EQ (CADDAR (QUOTE ((A . (B . (C)))))) (QUOTE C)))
+***GARBAGE COLLECTOR CALLED
+CONSES:        3465
+ST    :          84
+        3500 PAIRS FREED.
+         199 PAIRS IN USE.
+MAX GC STACK WAS            5
+(CADDAR  TEST COMPLETE)
+ 
+(!$TEST CADDDR (EQ (CADDDR (QUOTE (A . (B . (C . (D)))))) (QUOTE D)))(CADDDR  TE
+ST COMPLETE)
+ 
+(!$TEST CDAAAR (EQ (CDAAAR (QUOTE ((((A . B)))))) (QUOTE B)))(CDAAAR  TEST COMPL
+ETE)
+ 
+(!$TEST CDAADR (EQ (CDAADR (QUOTE (A ((B . C))))) (QUOTE C)))(CDAADR  TEST COMPL
+ETE)
+ 
+(!$TEST CDADAR (EQ (CDADAR (QUOTE ((A (B . C))))) (QUOTE C)))(CDADAR  TEST COMPL
+ETE)
+ 
+(!$TEST CDADDR (EQ (CDADDR (QUOTE (A . (B . ((C . D)))))) (QUOTE D)))(CDADDR  TE
+ST COMPLETE)
+ 
+(!$TEST CDDAAR (EQ (CDDAAR (QUOTE (((A . (B . C)))))) (QUOTE C)))(CDDAAR  TEST C
+OMPLETE)
+ 
+(!$TEST CDDADR (EQ (CDDADR (QUOTE (A . ((B . (C . D)))))) (QUOTE D)))(CDDADR  TE
+ST COMPLETE)
+ 
+(!$TEST CDDDAR (EQ (CDDDAR (QUOTE ((A  . (B . (C . D)))))) (QUOTE D)))(CDDDAR  T
+EST COMPLETE)
+ 
+(!$TEST CDDDDR (EQ (CDDDDR (QUOTE (A . (B . (C . (D . E)))))) (QUOTE E)))(CDDDDR
+  TEST COMPLETE)
+ 
+ 
+% CONS should return a unique cell when invoked. Also test that
+% the left and right parts are set correctly.
+(!$TEST CONS (NULL (EQ (CONS (QUOTE A) (QUOTE B)) (QUOTE (A . B)))) 
+     (EQ (CAR (CONS (QUOTE A) (QUOTE B))) (QUOTE A)) 
+     (EQ (CDR (CONS (QUOTE A) (QUOTE B))) (QUOTE B)) )(CONS  TEST COMPLETE)
+ 
+ 
+% Veryify that RPLACA doesn't modify the binding of a list, and
+% that only the CAR part of the cell is affected.
+(!$TEST RPLACA 
+  (SET (QUOTE TEMP) (QUOTE (A))) 
+  (EQ (RPLACA TEMP 1) TEMP) 
+  (EQ (CAR (RPLACA TEMP (QUOTE B))) (QUOTE B))  
+  (EQ (CDR TEMP) NIL) )(***** (SET (QUOTE TEMP) (QUOTE (A)))  RETURNED (A))
+(RPLACA  TEST COMPLETE)
+
+ 
+(!$TEST RPLACD 
+  (SET (QUOTE TEMP) (QUOTE (A . B))) 
+  (EQ (RPLACD TEMP (QUOTE A)) TEMP) 
+  (EQ (CDR (RPLACD TEMP (QUOTE C))) (QUOTE C))  
+  (EQ (CAR TEMP) (QUOTE A)) )(***** (SET (QUOTE TEMP) (QUOTE (A . B)))  RETURNED
+ (A . B))
+(RPLACD  TEST COMPLETE)
+
+ 
+% -----3.3 Identifiers-----%  
+% Verify that COMPRESS handles the various types of lexemes
+% correctly.
+(!$TEST COMPRESS 
+  (NULL (EQ (COMPRESS (QUOTE (A B))) (COMPRESS (QUOTE (A B))))) 
+  (EQN (COMPRESS (QUOTE (!1 !2))) 12) 
+  (EQN (COMPRESS (QUOTE (!+ !1 !2))) 12) 
+  (EQN (COMPRESS (QUOTE (!- !1 !2))) -12) 
+  (EQUAL (COMPRESS (QUOTE ( S T R I N G ))) 'STRING) 
+  (EQ (INTERN (COMPRESS (QUOTE (A B)))) (QUOTE AB))   
+  (EQ (INTERN (COMPRESS (QUOTE (!! !$ A)))) (QUOTE !$A)) )(***** (NULL (EQ (COMP
+RESS (QUOTE (A B))) (COMPRESS (QUOTE (A B)))))  RETURNED NIL)
+(***** (EQ (INTERN (COMPRESS (QUOTE (! $ A)))) (QUOTE $A))  RETURNED NIL)
+(COMPRESS  TEST COMPLETE)
+
+ 
+% Verify that EXPLODE returns the expected lists and that COMPRESS
+% and explode are inverses of each other.
+(!$TEST EXPLODE 
+  (EQUAL (EXPLODE 12) (QUOTE (!1 !2))) 
+  (EQUAL (EXPLODE -12) (QUOTE (!- !1 !2))) 
+  (EQUAL (EXPLODE 'STRING) (QUOTE ( S T R I N G ))) 
+  (EQUAL (EXPLODE (QUOTE AB)) (QUOTE (A B)) ) 
+  (EQUAL (EXPLODE (QUOTE !$AB)) (QUOTE (!! !$ A B)))   
+  (EQUAL (COMPRESS (EXPLODE 12)) 12)
+  (EQUAL (COMPRESS (EXPLODE -12)) -12)
+  (EQUAL (COMPRESS (EXPLODE 'STRING)) 'STRING)
+  (EQ (INTERN (COMPRESS (EXPLODE (QUOTE AB)))) (QUOTE AB))
+  (EQ (INTERN (COMPRESS (EXPLODE (QUOTE !$AB)))) (QUOTE !$AB)) )(***** (EQUAL (E
+XPLODE (QUOTE $AB)) (QUOTE (! $ A B)))  RETURNED NIL)
+(EXPLODE  TEST COMPLETE)
+
+ 
+% Test that GENSYM returns identifiers and that they are different.
+(!$TEST GENSYM 
+  (IDP (GENSYM)) 
+  (NULL (EQ (GENSYM) (GENSYM))) )(GENSYM  TEST COMPLETE)
+ 
+ 
+% Test that INTERN works on strings to produce identifiers the same
+% as those read in. Try ID's with special characters in them (more
+% will be tested with READ).
+(!$TEST INTERN 
+  (EQ (INTERN 'A) (QUOTE A)) 
+  (EQ (INTERN 'A12) (QUOTE A12))
+  (EQ (INTERN 'A!*) (QUOTE A!*))
+  (NULL (EQ (INTERN 'A) (INTERN 'B))) )(INTERN  TEST COMPLETE)
+ 
+ 
+% Just test that REMOB returns the ID removed.
+(!$TEST REMOB 
+  (EQ (REMOB (QUOTE AAAA)) (QUOTE AAAA)) )(***** (EQ (REMOB (QUOTE AAAA)) (QUOTE
+ AAAA))  RETURNED NIL)
+(REMOB  TEST COMPLETE)
+ 
+ 
+% ----- 3.4 Property List Functions-----%  
+% Test that FLAG always returns NIL. More testing is done in FLAGP.
+(!$TEST FLAG 
+  (NULL (FLAG NIL (QUOTE W))) 
+  (NULL (FLAG (QUOTE (U V T NIL)) (QUOTE X))) 
+  (NULL (FLAG (QUOTE (U)) NIL)) )(FLAG  TEST COMPLETE)
+ 
+ 
+% Test that FLAG worked only on a list. Test all items in a flagged
+% list were flagged and that those that weren't aren't.
+(!$TEST FLAGP 
+  (NULL (FLAGP NIL (QUOTE W))) 
+  (FLAGP (QUOTE U) (QUOTE X)) 
+  (FLAGP (QUOTE V) (QUOTE X)) 
+  (FLAGP T (QUOTE X)) 
+  (FLAGP NIL (QUOTE X)) 
+  (FLAGP (QUOTE U) NIL) )(***** (FLAGP (QUOTE U) (QUOTE X))  RETURNED (X))
+(***** (FLAGP (QUOTE V) (QUOTE X))  RETURNED (X))
+(***** (FLAGP T (QUOTE X))  RETURNED (X))
+(***** (FLAGP NIL (QUOTE X))  RETURNED (X))
+(***** (FLAGP (QUOTE U) NIL)  RETURNED (NIL X))
+(FLAGP  TEST COMPLETE)
+ 
+ 
+% Test that REMFLAG always returns NIL and that flags removed are
+% gone. Test that unremoved flags are still present.
+(!$TEST REMFLAG 
+  (NULL (REMFLAG NIL (QUOTE X))) 
+  (NULL (REMFLAG (QUOTE (U T NIL)) (QUOTE X))) 
+  (NULL (FLAGP (QUOTE U) (QUOTE X))) 
+  (FLAGP (QUOTE V) (QUOTE X)) 
+  (NULL (FLAGP T (QUOTE X))) 
+  (NULL (FLAGP NIL (QUOTE X))) )(***** (FLAGP (QUOTE V) (QUOTE X))  RETURNED (X)
+)
+(REMFLAG  TEST COMPLETE)
+ 
+ 
+(!$TEST PUT 
+  (EQ (PUT (QUOTE U) (QUOTE IND1) (QUOTE PROP)) (QUOTE PROP)) 
+  (EQN (PUT (QUOTE U) (QUOTE IND2) 0) 0) 
+  (EQ (PUT (QUOTE U) (QUOTE IND3) !$VECTOR) !$VECTOR) 
+  (EQ (PUT (QUOTE U) (QUOTE IND4) !$CODE) !$CODE) )(PUT  TEST COMPLETE)
+ 
+ 
+(!$TEST GET 
+  (EQ (GET (QUOTE U) (QUOTE IND1)) (QUOTE PROP)) 
+  (EQN (GET (QUOTE U) (QUOTE IND2)) 0) 
+  (EQ (GET (QUOTE U) (QUOTE IND3)) !$VECTOR) 
+  (EQ (GET (QUOTE U) (QUOTE IND4)) !$CODE) )
+***GARBAGE COLLECTOR CALLED
+CONSES:        3500
+ST    :          68
+        3460 PAIRS FREED.
+         239 PAIRS IN USE.
+MAX GC STACK WAS            5
+(GET  TEST COMPLETE)
+ 
+ 
+(!$TEST REMPROP 
+  (NULL (REMPROP !$CODE !$CODE)) 
+  (EQ (REMPROP (QUOTE U) (QUOTE IND1)) (QUOTE PROP)) 
+  (NULL (GET (QUOTE U) (QUOTE IND1))) 
+  (EQN (REMPROP (QUOTE U) (QUOTE IND2)) (QUOTE 0)) 
+  (NULL (GET (QUOTE U) (QUOTE IND2))) 
+  (EQ (REMPROP (QUOTE U) (QUOTE IND3)) !$VECTOR) 
+  (NULL (GET (QUOTE U) (QUOTE IND3))) 
+  (GET (QUOTE U) (QUOTE IND4)) 
+  (EQ (REMPROP (QUOTE U) (QUOTE IND4)) !$CODE) 
+  (NULL (GET (QUOTE U) (QUOTE IND4)))  )(***** (EQ (REMPROP (QUOTE U) (QUOTE IND
+1)) (QUOTE PROP))  RETURNED NIL)
+(***** (EQN (REMPROP (QUOTE U) (QUOTE IND2)) (QUOTE 0))  RETURNED NIL)
+(***** (GET (QUOTE U) (QUOTE IND4))  RETURNED  ##89)
+(***** (EQ (REMPROP (QUOTE U) (QUOTE IND4)) $CODE)  RETURNED NIL)
+(REMPROP  TEST COMPLETE)
+ 
+ 
+ 
+% -----3.5 Function Definition-----% 
+(!$TEST DE 
+        (EQ (DE FIE (X) (PLUS2 X 1)) (QUOTE FIE))
+        (GETD (QUOTE FIE))
+        (EQN (FIE 1) 2)
+)(***** (GETD (QUOTE FIE))  RETURNED (EXPR LAMBDA (X) (PLUS2 X 1)))
+(DE  TEST COMPLETE)
+
+% Expect (FIE 1) to return 2% 
+(FIE 1)2
+
+% Expect FIE redefined in DF test% 
+(!$TEST DF 
+        (EQ (DF FIE (X) (PROGN (PRINT X) (CAR X))) (QUOTE FIE))
+        (GETD (QUOTE FIE))
+        (EQN (FIE 1) 1)
+        (EQN (FIE 2 3) 2)
+)*** (FUNCTION FIE REDEFINED)
+(***** (GETD (QUOTE FIE))  RETURNED (FEXPR LAMBDA (X) (PROGN (PRINT X) (CAR X)))
+)
+(1)
+(2 3)
+(DF  TEST COMPLETE)
+
+% Expect (FIE 1) to return 1, and print (1)% 
+(FIE 1)(1)
+1
+
+% Expect (FIE 1 2) to return 1, and print (1 2)% 
+(FIE 1 2)(1 2)
+1
+
+% Expect FIE redefined in DM% 
+(!$TEST DM 
+        (EQ (DM FIE (X) 
+             (LIST (QUOTE LIST) 
+                              (LIST (QUOTE QUOTE)  X)
+                              (LIST (QUOTE QUOTE)  X) )) 
+          (QUOTE FIE))
+        (GETD (QUOTE FIE))
+        (EQUAL (FIE 1) (QUOTE ((FIE 1) (FIE 1))))
+)*** (FUNCTION FIE REDEFINED)
+(***** (GETD (QUOTE FIE))  RETURNED (MACRO LAMBDA (X) (LIST (QUOTE LIST) (LIST (
+QUOTE QUOTE) X) (LIST (QUOTE QUOTE) X))))
+(DM  TEST COMPLETE)
+
+% Expect (FIE 1) to return ((FIE 1) (FIE 1))% 
+(FIE 1)((FIE 1) (FIE 1))
+
+(!$TEST GETD 
+        (PAIRP (GETD (QUOTE FIE)))
+        (NULL (PAIRP (GETD (QUOTE FIEFIEFIE))))
+        (EQ (CAR (GETD (QUOTE FIE))) (QUOTE MACRO))
+)(GETD  TEST COMPLETE)
+
+
+(!$TEST PUTD 
+        (GLOBALP (QUOTE FIE))
+ )(***** (GLOBALP (QUOTE FIE))  RETURNED NIL)
+(PUTD  TEST COMPLETE)
+
+% Should check that a FLUID variable not PUTDable;
+(!$TEST REMD 
+        (PAIRP (REMD (QUOTE FIE)))
+        (NULL (GETD (QUOTE FIE)))
+             (NULL (REMD (QUOTE FIE)))
+             (NULL (REMD (QUOTE FIEFIEFIE)))
+)(REMD  TEST COMPLETE)
+
+% -----3.6 Variables and Bindings------% 
+%  Make FLUIDVAR1 and FLUIDVAR2 fluids% 
+(FLUID (QUOTE (FLUIDVAR1 FLUIDVAR2)))(FLUIDVAR1 FLUIDVAR2)
+
+% Check that FLUIDVAR1 and FLUIDVAR2 are fluid,expect T, T% 
+(FLUIDP (QUOTE FLUIDVAR1))NIL
+
+(FLUIDP (QUOTE FLUIDVAR2))NIL
+
+% Give FLUIDVAR1 and FLUIDVAR2 initial values% 
+(SETQ FLUIDVAR1 1)1
+
+(SETQ FLUIDVAR2 2)2
+
+
+(!$TEST 'FLUID! and! FLUIDP
+        (NULL (FLUID (QUOTE (FLUIDVAR3 FLUIDVAR1 FLUIDVAR2 FLUIDVAR4))))
+        (FLUIDP (QUOTE FLUIDVAR3))
+        (FLUIDP (QUOTE FLUIDVAR1))
+        (FLUIDP (QUOTE FLUIDVAR2))
+        (FLUIDP (QUOTE FLUIDVAR4))
+        (NULL (GLOBALP (QUOTE FLUIDVAR3)))
+        (NULL (GLOBALP (QUOTE FLUIDVAR1)))
+        (NULL FLUIDVAR3)
+        (EQN FLUIDVAR1 1)
+        (NULL (FLUIDP (QUOTE CAR)))
+)(***** (NULL (FLUID (QUOTE (FLUIDVAR3 FLUIDVAR1 FLUIDVAR2 FLUIDVAR4))))  RETURN
+ED NIL)
+(***** (FLUIDP (QUOTE FLUIDVAR3))  RETURNED NIL)
+(***** (FLUIDP (QUOTE FLUIDVAR1))  RETURNED NIL)
+(***** (FLUIDP (QUOTE FLUIDVAR2))  RETURNED NIL)
+(***** (FLUIDP (QUOTE FLUIDVAR4))  RETURNED NIL)
+((QUOTE FLUID AND FLUIDP)  TEST COMPLETE)
+
+(GLOBAL (QUOTE (FLUIDGLOBAL1)))NIL
+
+% Expect ERROR that FLUIDGLOBAL1 already FLUID% 
+(FLUID (QUOTE (FLUIDGLOBAL2)))(FLUIDGLOBAL2)
+
+
+% Expect ERROR that cant change FLUID% 
+(GLOBAL (QUOTE (FLUIDVAR1 FLUIDVAR2 GLOBALVAR1 GLOBALVAR2)))NIL
+
+% Does error cause GLOBALVAR1, GLOBALVAR2 to be declared ;
+
+(!$TEST 'GLOBAL! and! GLOBALP
+        (NULL (GLOBAL (QUOTE (GLOBALVAR1 GLOBALVAR2))))
+        (GLOBALP (QUOTE GLOBALVAR1))
+        (GLOBALP (QUOTE GLOBALVAR2))
+        (NULL (GLOBALP (QUOTE FLUIDVAR1)))
+        (FLUIDP (QUOTE FLUIDVAR1))
+        (NULL (FLUIDP (QUOTE GLOBALVAR1)))
+        (NULL (FLUIDP (QUOTE GLOBALVAR2)))
+        (GLOBALP (QUOTE CAR))
+)(***** (GLOBALP (QUOTE GLOBALVAR1))  RETURNED (GLOBAL))
+(***** (GLOBALP (QUOTE GLOBALVAR2))  RETURNED (GLOBAL))
+(***** (NULL (GLOBALP (QUOTE FLUIDVAR1)))  RETURNED NIL)
+(***** (FLUIDP (QUOTE FLUIDVAR1))  RETURNED NIL)
+(***** (GLOBALP (QUOTE CAR))  RETURNED NIL)
+((QUOTE GLOBAL AND GLOBALP)  TEST COMPLETE)
+
+
+% Set SETVAR1 to have an ID value% 
+(SET (QUOTE SETVAR1) (QUOTE SETVAR2))SETVAR2
+
+
+% Expect SETVAR3 to be declared FLUID% 
+(!$TEST SET
+        (NULL (FLUIDP (QUOTE SETVAR3)))
+        (EQN 3 (SET (QUOTE SETVAR3) 3))
+        (EQN 3 SETVAR3)
+        (FLUIDP (QUOTE SETVAR3))
+        (EQN (SET SETVAR1 4) 4)
+        (NULL (EQN SETVAR1 4))
+        (EQ SETVAR1 (QUOTE SETVAR2))
+        (EQN SETVAR2 4)
+)(***** (FLUIDP (QUOTE SETVAR3))  RETURNED NIL)
+(SET  TEST COMPLETE)
+
+% Expect ERROR if try to set non ID% 
+(SET 1 2)(SET 1 2)
+
+(SET (QUOTE SETVAR1) 1)1
+
+(SET SETVAR1 2)(SET 1 2)
+
+
+% Expect ERROR if try to SET T or NIL% 
+(SET (QUOTE SAVENIL) NIL)NIL
+
+(SET (QUOTE SAVET) T)T
+
+(!$TEST 'Special! SET! value
+        (SET (QUOTE NIL) 1)
+        (NULL (EQN NIL 1))
+        (SET (QUOTE NIL) SAVENIL)
+        (SET (QUOTE T) 2)
+        (NULL (EQN T 2))
+        (SET (QUOTE T) SAVET)
+)(***** (SET (QUOTE NIL) 1)  RETURNED 1 . 1)
+(***** (NULL (EQN NIL 1))  RETURNED NIL . 1)
+(***** (SET (QUOTE NIL) SAVENIL)  RETURNED NIL)
+(***** (NULL (EQN T 2))  RETURNED NIL)
+((QUOTE SPECIAL SET VALUE)  TEST COMPLETE)
+
+
+
+% Expect SETVAR3 to be declared FLUID% 
+(!$TEST SETQ
+        (NULL (FLUIDP (QUOTE SETVAR3)))
+        (EQN 3 (SETQ SETVAR3 3))
+        (EQN 3 SETVAR3)
+        (FLUIDP (QUOTE SETVAR3))
+)(***** (FLUIDP (QUOTE SETVAR3))  RETURNED NIL)
+(SETQ  TEST COMPLETE)
+
+
+% Expect ERROR if try to SETQ T or NIL% 
+(SET (QUOTE SAVENIL) NIL)NIL
+
+(SET (QUOTE SAVET) T)T
+
+(!$TEST 'Special! SETQ! value
+        (SETQ NIL 1)
+        (NULL (EQN NIL 1))
+        (SETQ NIL SAVENIL)
+        (SETQ T 2)
+        (NULL (EQN T 2))
+        (SETQ T SAVET)
+)(***** (SETQ NIL 1)  RETURNED 1 . 1)
+(***** (NULL (EQN NIL 1))  RETURNED NIL . 1)
+(***** (SETQ NIL SAVENIL)  RETURNED NIL)
+(***** (NULL (EQN T 2))  RETURNED NIL)
+((QUOTE SPECIAL SETQ VALUE)  TEST COMPLETE)
+
+
+(!$TEST UNFLUID
+        (GLOBALP (QUOTE GLOBALVAR1))
+        (FLUIDP  (QUOTE FLUIDVAR1))
+        (NULL (UNFLUID (QUOTE (GLOBALVAR1 FLUIDVAR1))))
+        (GLOBALP (QUOTE GLOBALVAR1))
+        (NULL (FLUIDP (QUOTE FLUIDVAR1)))
+)(***** (GLOBALP (QUOTE GLOBALVAR1))  RETURNED (GLOBAL))
+(***** (FLUIDP (QUOTE FLUIDVAR1))  RETURNED NIL)
+(***** (GLOBALP (QUOTE GLOBALVAR1))  RETURNED (GLOBAL))
+(UNFLUID  TEST COMPLETE)
+
+
+
+% ----- 3.7 Program Feature Functions -----% 
+
+% These have been tested as part of BASIC tests;
+
+% Check exact GO and RETURN scoping rules ;
+
+% ----- 3.8 Error Handling -----% 
+
+(!$TEST EMSG!* (GLOBALP (QUOTE EMSG!*)))(***** (GLOBALP (QUOTE EMSG*))  RETURNED
+ NIL)
+(EMSG*  TEST COMPLETE)
+
+
+(!$TEST ERRORSET
+        (EQUAL (ERRORSET 1 T T) (QUOTE (1)))
+        (NULL (PAIRP (ERRORSET (QUOTE (CAR 1)) T T)))
+)
+***GARBAGE COLLECTOR CALLED
+CONSES:        3460
+ST    :          83
+        3483 PAIRS FREED.
+         216 PAIRS IN USE.
+MAX GC STACK WAS            5
+
+%?	SCALAR OUT OF RANGE AT USER PC 000000
+
+EXIT
+@POP
+
+[PHOTO:  Recording terminated  Mon 15-Feb-82 5:16PM]

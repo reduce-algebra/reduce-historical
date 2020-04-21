@@ -1,0 +1,19 @@
+<PSL>RLISP.EXE
+----------
+
+This is a version of RLISP built upon <PSL>PSL.EXE.
+TAKE <PSL>LOGICAL-NAMES.CMD, or put in LOGIN.CMD.
+Execute RLISP(); to get into improved top-loop.  It lacks some of the
+standard REDUCE/RLISP top loop features, essentially just XREAD/EVAL/PRINT,
+like Lisp READ/EVAL/PRINT.
+
+Use HELP(); or HELP(a,b,c); for information on topics a,b,c.
+        [Look at PH:*.HLP]
+
+Recall that file I/O needs " ...." around file names.
+
+Recall that the Rlisp Break commands need a ;  after commands.
+
+Use QUIT; to exit.
+Use SaveSystem "useful message"; to RECLAIM and exit to make smaller
+                                 .EXE to save.

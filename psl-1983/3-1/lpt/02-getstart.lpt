@@ -1,0 +1,475 @@
+PSL Manual                    7 February 1983               Getting Started
+section 2.0                                                        page 2.1
+
+                                 CHAPTER 2                                 CHAPTER 2                                 CHAPTER 2
+                         GETTING STARTED WITH PSL                         GETTING STARTED WITH PSL                         GETTING STARTED WITH PSL
+
+
+
+
+     2.1. Purpose of This Chapter.  .  .  .  .  .  .  .  .  .  .  .     2.1
+     2.2. Defining Logical Device Names for PSL .  .  .  .  .  .  .     2.1
+          2.2.1. DEC-20 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     2.2
+          2.2.2. VAX .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     2.2
+     2.3. Starting PSL  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     2.3
+          2.3.1. DEC-20 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     2.3
+          2.3.2. VAX .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     2.3
+     2.4. Running the PSL System .  .  .  .  .  .  .  .  .  .  .  .     2.4
+          2.4.1. Loading Optional Modules .  .  .  .  .  .  .  .  .     2.4
+          2.4.2. Notes on Running PSL and RLISP .  .  .  .  .  .  .     2.4
+          2.4.3. Transcript of a Short Session with PSL  .  .  .  .     2.5
+     2.5. Error and Warning Messages.  .  .  .  .  .  .  .  .  .  .     2.8
+     2.6. Compilation Versus Interpretation  .  .  .  .  .  .  .  .     2.8
+     2.7. Function Types.  .  .  .  .  .  .  .  .  .  .  .  .  .  .     2.9
+     2.8. Switches and Globals.  .  .  .  .  .  .  .  .  .  .  .  .    2.10
+     2.9. Reporting Errors and Misfeatures.  .  .  .  .  .  .  .  .    2.10
+
+
+
+
+2.1. Purpose of This Chapter2.1. Purpose of This Chapter2.1. Purpose of This Chapter
+
+  This  chapter is for beginning users of PSL on the DEC-20 and the VAX 750
+and 780 at Utah.  It also is meant to be a guide  to  those  familiar  with
+LISP,  and  particularly  STANDARD  LISP, who would like to use PSL as they
+read the manual.
+
+  It begins with descriptions of how  to  set  up  various  logical  device
+definitions  required by PSL and how to run PSL.  A number of miscellaneous
+hints and reminders are given in the remainder of the chapter.
+
+
+
+2.2. Defining Logical Device Names for PSL2.2. Defining Logical Device Names for PSL2.2. Defining Logical Device Names for PSL
+
+  When PSL is installed on your system, the person doing  the  installation
+has  the  option  of  using  a number of different directory structures and
+names, depending on local conventions and available space.  There are  also
+options to select a small system (without all source-code online) or a full
+system.    Also,  as  each  release  of  PSL  is  prepared,  we may find it
+convenient to change the names and number of sub-directories.  In order  to
+minimize  the  inconvenience,  an  attempt  has  been made to refer to such
+directories through some form of logical name  ("logical  device  name"  on
+DEC-20, shell-variable or link on VAX-UNIX, etc.).  In some cases these can
+be  used  as  if  they were directory names (DEC-20), and in some cases not
+(VAX).  These definitions are edited at installation time to reflect  localGetting Started               7 February 1983                    PSL Manual
+page 2.2                                                        section 2.2
+
+usage,   and   stored   in   a   file   whose   name   is   something  like
+"logical-names.xxx".  This file will be placed on an appropriate  directory
+(often  <PSL>  on  the DEC-20, ~psl on the VAX, etc.).  A message should be
+sent out by your installer to indicate where the file is, and its name.  It
+is suggested that a use of this file be placed in your LOGIN.CMD  ,  .cshrc
+or equivalent file.
+
+
+2.2.1. DEC-202.2.1. DEC-202.2.1. DEC-20
+
+  It  is  absolutely essential that TAKE <PSL>LOGICAL-NAMES.CMD be inserted
+in your LOGIN.CMD file, or executed at EXEC level before using PSL.  PSL is
+written  to  rely  on  these  logical  device  definitions  in   place   of
+"hard-coded"  directory names.  PSL also uses TOPS-20 search paths, so that
+for example, "PH:" is defined as the directory (or search  list)  on  which
+PSL  looks for help files, "PL:" is the directory (or search list) on which
+              Lap     Fasl              Lap     FaslPSL looks for Lap and Fasl files of the form "xxxx.b", etc.
+
+  The logical name "PSL:" is defined to be the directory on which  the  PSL
+executables reside.  Thus "PSL:PSL.EXE" should start PSL executing.
+
+  There   should   usually   be   a   PSL:BARE-PSL.EXE,   PSL:PSL.EXE   and
+PSL:RLISP.EXE.  BARE-PSL is the minimum system that is  constructed  during
+the  PSL  build sequence.  PSL and RLISP usually contain additional modules
+selected by the installer, felt to be most commonly used by your community.
+
+
+2.2.2. VAX2.2.2. VAX2.2.2. VAX
+
+  In the current version of UNIX (4.1) there is no  equivalent  of  logical
+device  definitions  that  can be used to access files on other directories
+from within PSL or many UNIX utilities.  We have defined  a  set  of  shell
+variables  ($  variables)  that  may be used outside of an executing PSL to
+refer to the appropriate directories, and a series of PSL global  variables
+for  use  inside  PSL  that  contain  the equivalent of search paths.  In a
+future release of PSL for the VAX, we may be able to look up such shell  or
+environment variables during the attempt to OPEN a file.
+
+  These  variables  are  defined  in  the  file "psl-names", usually on the
+directory "~psl"  (actually  /u/local/psl  at  UTAH).    Insert  a  "source
+~psl/psl-names"  or  equivalent  in  your  .cshrc  file.  Variables such as
+"$psl", "$pl", and "$pu" (on which many utility  sources  are  stored)  are
+defined.
+
+  There  should  usually be a "$psl/bare-psl", "$psl/psl" and "$psl/rlisp".
+Bare-psl is the minimum system that is constructed  during  the  PSL  build
+sequence.  PSL and RLISP usually contain additional modules selected by the
+installer, felt to be most commonly used by your community.PSL Manual                    7 February 1983               Getting Started
+section 2.3                                                        page 2.3
+
+2.3. Starting PSL2.3. Starting PSL2.3. Starting PSL
+
+
+2.3.1. DEC-202.3.1. DEC-202.3.1. DEC-20
+
+  After  defining the device names, type either PSL:RLISP or PSL:PSL to the
+at-sign prompt, @.  A welcome message indicates the nature  of  the  system
+running,  usually  with a date and version number.  This information may be
+useful in describing problems.  [Messages concerning  bugs  or  misfeatures
+should be directed to PSL-BUGS@UTAH-20; see Section 2.9.]
+
+  BARE-PSL.EXE  is a "bare" PSL using LISP (i.e. parenthesis) syntax.  This
+is a small core-image and is ideal for simple  LISP  execution.    It  also
+                       Fasl                       Faslincludes  a  resident  Fasl,  so  additional  modules  can  be  loaded.  In
+particular, the compiler is not normally part of PSL.EXE.
+
+  RLISP.EXE is PSL with additional modules  loaded,  corresponding  to  the
+most  common  system  run  at  Utah.  It contains the compiler and an RLISP
+parser.  For more information about RLISP see Chapter 3.
+
+  It is assumed by PSL and RLISP that file names be of the form  "*.sl"  or
+                                                            Fasl                                                            Fasl"*.lsp"  for LISP files, "*.red" for RLISP files, "*.b" for Fasl files, and
+            Lap            Lap"*.lap" for Lap files.
+
+
+2.3.2. VAX2.3.2. VAX2.3.2. VAX
+
+  The executable files are $psl/psl and $psl/rlisp.  Loadable  modules  are
+on $pl/*.b or $pl/*.lap.  Help files are on $ph/*.hlp.
+
+  $psl/rlisp  has the RLISP parser and compiler.  Additional modules can be
+                          Load                                       Error                          Load                                       Errorloaded from $pl using the Load function.  <Ctrl-C> causes a call to  Error,
+and  may  be  used to stop a runaway computation.  <Ctrl-Z> or the function
+QuitQuitQuit cause the process to be stopped, and control returned  to  the  shell;
+the  process  may  be continued.  A sequence of <Ctrl-D>'s (EOF) causes the
+process to be terminated.  This is to allow the use of I/O redirection from
+the shell.  
+
+  [??? Add Cntrl-B for BREAK loop call ???]  [??? Add Cntrl-B for BREAK loop call ???]  [??? Add Cntrl-B for BREAK loop call ???]
+
+  Unix 4.1 and 4.1a allow only 14 characters for file names,  and  case  is
+significant.    The  use  of  ".r"  instead of ".red" is recommended as the
+extension  for  RLISP  files  to  save  on  meaningful  characters;   other
+extensions are as on the DEC-20.Getting Started               7 February 1983                    PSL Manual
+page 2.4                                                        section 2.4
+
+2.4. Running the PSL System2.4. Running the PSL System2.4. Running the PSL System
+
+  The  following  sub-sections  collect  a few miscellaneous notes that are
+further expanded on elsewhere.  They are provided here simply  to  get  you
+started.
+
+
+2.4.1. Loading Optional Modules2.4.1. Loading Optional Modules2.4.1. Loading Optional Modules
+
+  Certain modules are not present in the "kernel" or "bare-psl" system, but
+can  be loaded as options.  Some of these optional modules will "auto-load"
+when first referenced; others may be explicitly  loaded  by  the  user,  or
+included  by the installer when building the "PSL" and "RLISP" core images.
+Optional modules can be loaded by executing
+
+   LOAD modulename;  % in RLISP syntax
+   or
+   (LOAD modulename) % in LISP syntax.
+
+  The global variable  OPTIONS!*  contains  a  list  of  modules  currently
+loaded;  it  does not mention those in the "bare-psl" kernel.  Do not reset
+this variable; it is used by LOAD to avoid loading already present modules.
+     RELOAD     RELOAD[See RELOAD in Chapter 18].
+
+
+2.4.2. Notes on Running PSL and RLISP2.4.2. Notes on Running PSL and RLISP2.4.2. Notes on Running PSL and RLISP
+
+
+          Help      Help          Help      Help   a. Use Help(); [(Help) in LISP] for general help or  an  indication
+                                      Help              Help                                      Help              Help      of  what help is available; use Help (a, b, c); [(Help a b c) in
+      LISP] for information on topics a, b, and  c. This  call  prints
+                                                               Help                                                               Help      files  from  the  PH:  (i.e. <PSL.HELP>) directory.  Try Help x;
+        Help        Help      [(Help x) in LISP] on:
+
+
+      ?               Exec            Mini            Step
+      Br              Find            MiniEditor      Strings
+      Break           Switches        MiniTrace       TopLoop
+      Bug             For             Package         Tr
+      Debug           Globals         PRLISP          Trace
+      Defstruct       GSort           PSL             UnBr
+      Edit            Help            RCREF           UnTr
+      EditF           JSYS            RLISP           Useful
+      Editor          Load            ShowSwitches    ZFiles
+      Emode           Manual          Slate           ZPEdit
+      EWindow
+
+
+        [??? Help() does not work in RLISP ???]        [??? Help() does not work in RLISP ???]        [??? Help() does not work in RLISP ???]
+
+   b. File I/O needs string-quotes (") around file names.  File  names
+      may use full TOPS-20 or UNIX conventions, including directories,PSL Manual                    7 February 1983               Getting Started
+section 2.4                                                        page 2.5
+
+      sub-directories, etc.
+
+                                             IN                                             IN      Input in RLISP mode is done using the 'IN "File-Name";' command.
+
+           Dskin           Dskin      Use (Dskin "File-Name") for input from LISP mode.
+
+      For information on similar I/O functions see Chapter 12.
+
+           Quit     Quit           Quit     Quit   c. Use  Quit;  [(Quit) in LISP] or <Ctrl-C> on the DEC-20 (<Ctrl-Z>
+      on the VAX) to exit.  <Ctrl-C> (<Ctrl-Z> on the VAX)  is  useful
+      for stopping run-away computations.  On the DEC-20, typing START
+      or  CONTINUE to the @ prompt from the EXEC usually restarts in a
+      reasonable way.
+
+
+2.4.3. Transcript of a Short Session with PSL2.4.3. Transcript of a Short Session with PSL2.4.3. Transcript of a Short Session with PSL
+
+  The following is a transcript of running PSL on the DEC-20.Getting Started               7 February 1983                    PSL Manual
+page 2.6                                                        section 2.4
+
+   @psl:psl
+   PSL 3.1, 11-Oct-82
+
+   1 Lisp> % Notice the numbered prompt.
+   1 Lisp> % Comments begin with "%" and do not change the prompt
+   1 Lisp> % number.
+   1 Lisp> (Setq Z '(1 2 3))  % Make an assignment for Z.
+   (1 2 3)
+   2 Lisp> (Cdr Z)            % Notice the change in prompt number.
+   (2 3)
+   3 Lisp> (De Count (L)      % Count counts the number or elements
+   3 Lisp>    (Cond ((Null L) 0)  % in a list L.
+   3 Lisp>          (T (Add1 (Count (Cdr L))))))
+   COUNT
+   4 Lisp> (Count Z)          % Call Count on Z.
+   3
+   5 Lisp> (Tr Count)  % Trace the recursive execution of "Count".
+   (COUNT)
+   6 Lisp>             % A call on "Count" now shows the value of
+   6 Lisp>             % "Count" and of its arguments each time
+   6 Lisp> (Count Z)   % it is called.
+   COUNT being entered
+      L:   (1 2 3)
+     COUNT (level 2) being entered
+        L: (2 3)
+       COUNT (level 3) being entered
+          L:       (3)
+         COUNT (level 4) being entered
+            L:     NIL
+         COUNT (level 4) = 0
+       COUNT (level 3) = 1
+     COUNT (level 2) = 2
+   COUNT = 3
+   3
+   7 Lisp> (De Factorial (X)
+   7 Lisp>    (Cond ((Eq 1)
+   7 Lisp>          (T (Times X (Factorial (Sub1 X))))))
+   FACTORIAL
+   8 Lisp> (Tr Factorial)
+   (FACTORIAL)
+   9 Lisp> (Factorial 4)     % Trace execution of "Factorial".
+   FACTORIAL being entered
+      X:   4
+     FACTORIAL (level 2) being entered
+        X: 3
+       FACTORIAL (level 3) being entered
+          X:       2                    % Notice values being returned.
+         FACTORIAL (level 4) being entered
+            X:     1
+         FACTORIAL (level 4) = 1
+       FACTORIAL (level 3) = 2
+     FACTORIAL (level 2) = 6PSL Manual                    7 February 1983               Getting Started
+section 2.4                                                        page 2.7
+
+   FACTORIAL = 24
+   24
+   10 Lisp> (Untr Count Factorial)
+   NIL
+   11 Lisp> (Count 'A)  % This generates an error causing the break
+                              % loop to be entered.
+   ***** An attempt was made to do CDR on `A', which is not a pair
+   Break loop
+   12 Lisp break>> ?
+   BREAK():{Error,return-value}
+   ----------------------------
+   This is a Read-Eval-Print loop, similar to the top level loop,
+   except that the following IDs at the top level cause functions to
+   be called rather than being evaluated:
+   ?        Print this message, listing active Break IDs
+   T        Print stack backtrace
+   Q        Exit break loop back to ErrorSet
+   A        Abort to top level, i.e. restart PSL
+   C        Return last value to the ContinuableError call
+   R        Reevaluate ErrorForm!* and return
+   M        Display ErrorForm!* as the "message"
+   E        Invoke a simple structure editor on ErrorForm!*
+                   (For more information do Help Editor.)
+   I        Show a trace of any interpreted functions
+
+   See the manual for details on the Backtrace, and how ErrorForm!* is
+   set.  The Break Loop attempts to use the same TopLoopRead!* etc, as
+   the calling top loop, just expanding the PromptString!*.
+   NIL
+   13 Lisp break>>          % Get a Trace-Back of the
+   13 Lisp break>> I        % interpreted functions.
+   Backtrace, including interpreter functions, from top of stack:
+   LIST2 CDR COUNT ADD1 COND COUNT LIST2
+   NIL
+   14 Lisp break>> Q        % To exit the Break Loop.
+   15 Lisp>                 % Load in a file, showing its execution.
+   15 Lisp>                 % The file contains the following:
+   15 Lisp>                 % (Setq X (Cons 'A (Cons 'B Nil)))
+   15 Lisp>                 % (Count X)
+   15 Lisp>                 % (Reverse X)
+   15 Lisp> (Dskin "small-file.sl")
+   (A B)
+   2
+   (B A)
+   NIL
+   16 Lisp> (Quit)
+   @continue
+   "Continued"
+   17 Lisp> ^C
+   @start
+
+   18 Lisp> (Quit)Getting Started               7 February 1983                    PSL Manual
+page 2.8                                                        section 2.5
+
+2.5. Error and Warning Messages2.5. Error and Warning Messages2.5. Error and Warning Messages
+
+  Many  functions  detect and signal appropriate errors (see Chapter 14 for
+details); in many cases, an error message is printed.  The error conditions
+are given as part of a function's definition  in  the  manual.    An  error
+message  is  preceded  by  five stars (*); a warning message is preceded by
+three.  For example, most primitive  functions  check  the  type  of  their
+arguments  and  display  an error message if an argument is incorrect.  The
+type mismatch error mentions the function in which the error was  detected,
+gives the expected type, and prints the actual value passed.
+
+  Sometimes one sees a prompt of the form:  
+
+   Do you really want to redefine the system function `FOO'?
+
+This  means  you  have  tried  to define a function with the same name as a
+function used by the PSL system.  A  Y,  N,  YES,  NO,  or  B  response  is
+required.  B starts a break loop.  After quitting the break loop, answer Y,
+                                                    YesP                                                    YesPN,  Yes, or No to the query.  See the definition of YesP in Chapter 13.  An
+affirmative response is extremely dangerous and should be given only if you
+are a system expert.  Usually this means that your function must be given a
+different name.
+
+  A common warning message is 
+
+  *** Function "FOO" has been redefined
+
+If this occurs without  the  query  above,  you  are  redefining  your  own
+function.    This happens normally if you read a file, edit it, and read it
+in again.
+
+               ________  The switch !*USERMODE  controls  whether  redefinition  of  functions  is
+"dangerous".  When NIL, no query is generated.  User functions entered when
+  ________!*USERMODE  is  on  are  flagged  with  the  'USER  indicator, used by this
+                         ________mechanism.  The switch !*REDEFMSG, described in section 10.1.2, can be  set
+to  suppress  these  warning messages.  There is also a property 'LOSE that
+will prevent redefinition; the  new  definition  will  be  ignored,  and  a
+warning given.
+
+
+
+2.6. Compilation Versus Interpretation2.6. Compilation Versus Interpretation2.6. Compilation Versus Interpretation
+
+  PSL  uses  both  compiled  and interpreted code.  If compiled, a function
+usually executes faster and is smaller.  However, there are  some  semantic
+differences of which the user should be aware.  For example, some recursive
+functions  are made non-recursive, and certain functions are open-compiled.
+A call to an open-compiled function  is  replaced,  on  compilation,  by  a
+series  of online instructions instead of just being a reference to another
+function.  Functions compiled open may not do as much type checking.    The
+user may have to supply some declarations to control this behavior.PSL Manual                    7 February 1983               Getting Started
+section 2.6                                                        page 2.9
+
+  The exact semantic differences between compiled and interpreted functions
+are  more  fully  discussed in Chapter 18 and in the Portable LISP Compiler
+paper [Griss 81].  
+
+  [??? We intend to consider the modification of the LISP semantics so as  [??? We intend to consider the modification of the LISP semantics so as  [??? We intend to consider the modification of the LISP semantics so as
+  to ensure that these differences are minimized.  If a conflict  occurs,  to ensure that these differences are minimized.  If a conflict  occurs,  to ensure that these differences are minimized.  If a conflict  occurs,
+  we  will  restrict  the interpreter, rather than extending (and slowing  we  will  restrict  the interpreter, rather than extending (and slowing  we  will  restrict  the interpreter, rather than extending (and slowing
+  down) the capabilities of the compiled code. ???]  down) the capabilities of the compiled code. ???]  down) the capabilities of the compiled code. ???]
+
+  We indicate on the function definition line if it is  typically  compiled
+OPEN;  this  information helps in debugging code that uses these functions.
+These functions do not appear in backtraces and cannot be redefined, traced
+or broken in compiled code.
+
+  [??? Should we  make  open-compiled  functions  totally  un-redefinable  [??? Should we  make  open-compiled  functions  totally  un-redefinable  [??? Should we  make  open-compiled  functions  totally  un-redefinable
+  without  special action, even for interpreted code.  Consistency!  E.g.  without  special action, even for interpreted code.  Consistency!  E.g.  without  special action, even for interpreted code.  Consistency!  E.g.
+  flag 'COND LOSE. ???]  flag 'COND LOSE. ???]  flag 'COND LOSE. ???]
+
+
+
+2.7. Function Types2.7. Function Types2.7. Function Types
+
+  Eval                                                               NoEval  Eval                                                               NoEval  Eval-type functions are those called with evaluated  arguments.    NoEval
+                                                      Spread                                                      Spreadfunctions  are  called  with  unevaluated arguments.  Spread-type functions
+have their arguments passed  in  a  one-to-one  correspondence  with  their
+                     NoSpread                     NoSpreadformal  parameters.  NoSpread functions receive their arguments as a single
+____list.
+
+  There are four function types implemented in PSL:
+
+
+____________expr         Eval  Spreadexpr         Eval  Spreadexpr      An Eval, Spread function, with a maximum of  15  arguments.    In
+          referring  to  the  formal parameters we mean their values.  Each
+          function of this type should always be called with  the  expected
+          number  of  parameters,  as indicated in the function definition.
+          Future versions of PSL will check this consistency.
+
+_______________fexpr       NoEval  NoSpreadfexpr       NoEval  NoSpreadfexpr     A NoEval, NoSpread function.  There is no limit on the number  of
+          arguments.    In  referring  to the formal parameters we mean the
+          unevaluated arguments, collected as a single List, and passed  as
+          a single formal parameter to the function body.
+
+_______________nexpr         Eval   NoSpreadnexpr         Eval   NoSpreadnexpr     An  Eval,  NoSpread function.  Each call on this kind of function
+          may present a different number of arguments, which are evaluated,
+          collected into a list, and passed in to the function  body  as  a
+          single formal parameter.
+
+_____          __________          __________          _____macro          macromacro          macromacro     The  macro  is  a  function  which creates a new S-expression for
+          subsequent evaluation or compilation.  There is no limit  to  the
+                                   _____                                   _____                                   _____                                   macro                                   macro          number  of  arguments  a macro may have.  The descriptions of the
+          Eval     Expand          Eval     Expand          Eval and Expand functions in Chapter 11 provide precise details.Getting Started               7 February 1983                    PSL Manual
+page 2.10                                                       section 2.8
+
+2.8. Switches and Globals2.8. Switches and Globals2.8. Switches and Globals
+
+  Generally, switch names begin with !* and global names end with !*, where
+"!"    is an escape character.  One can set a switch !*xxx to T by using On
+xxx; in RLISP [(on xxx) in LISP]; one can set it to NIL by using  Off  xxx;
+in  RLISP [(off xxx) in LISP].  For example) !*ECHO, !*PVAL and !*PECHO are
+switches that control Input  Echo,  Value  Echo  and  Parse  Echo.    These
+switches are described more fully in Chapters 12 and 13.
+
+  For  more  information,  type "HELP SWITCHES;" or "HELP GLOBALS;", or see
+Section 6.7.
+
+
+
+2.9. Reporting Errors and Misfeatures2.9. Reporting Errors and Misfeatures2.9. Reporting Errors and Misfeatures
+
+  Send bug MAIL to PSL-BUGS@UTAH-20.  The message will be distributed to  a
+list  of users concerned with bugs and maintenance, and a copy will be kept
+in <PSL>BUGS-MISSFEATURES.TXT at UTAH-20.
+
+
+ Bug Bug    _________                                         ___ __ ____  ____(Bug ): undefined                                         DEC-20 only, expr
+
+                  Bug                  Bug     The function Bug(); can be called from within  PSL:RLISP.    This
+     starts  MAIL (actually MM) in a lower fork, with the To: line set
+     up to Griss.  Simply type the subject of the complaint, and  then
+     the message.
+
+     After typing message about a bug or a misfeature end finally with
+     a <Ctrl-Z>.
+
+     <Ctrl-N> aborts the message.
+
+  [??? needs switches ???]  [??? needs switches ???]  [??? needs switches ???]

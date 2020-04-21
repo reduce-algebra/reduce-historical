@@ -1,0 +1,2 @@
+CompileTime load(If!-System, Syslisp);
+in "build.red"$

@@ -1,0 +1,152 @@
+ 
+ZFILES contains 2 packages --
+    (1) YFILES -- useful functions for accessing files.
+    (2) YTOPCOM -- useful functions for compiling files. 
+ 
+%%%%  YFILES -- BASIC FILE ACCESSING UTILITIES
+File descriptor is a canonical FILE name, gets converted to file
+string:
+
+FILE or (FILE) -> "FILE.LSP"
+(FILE.EXT)     -> "File.Ext"
+(DIR FILE)     -> "<Dir>File.LSP"
+(DIR FILE EXT) -> "<dir>File.Ext"
+"xxx"          -> "xxx"
+
+---------------------------------------------------------------
+
+FORM-FILE       ( FILE:DSCR ): filename                 EXPR
+GRABBER         ( SELECTION FILE:DSCR ): NIL            EXPR
+DUMPER          ( FILE:DSCR ): NIL                      EXPR
+DUMPFNS-DE      ( SELECTION FILE:DSCR ): NIL            EXPR
+DUMP-REMAINING  ( SELECTION:list DUMPED:list ): NIL     EXPR
+FCOPY           ( IN:DSCR OUT:DSCR filedscrs ):boolean  EXPR
+REFPRINT-FOR-GRAB-CTL( #X: any ):NIL                    EXPR
+
+G:CREFON      Switched on by cross reference program CREF:FILE
+G:JUST:FNS    Save only fn names in variable whose name is the first
+              field of filename if T, O/W save all exprs in that variable
+G:FILES       List of files read into LISP
+G:SHOW:TRACE  Turns backtrace in ERRORSET on if T
+G:SHOW:ERRORS Prints ERRORSET error messages if T
+
+
+ 
+GRAB( <file description> )                  MACRO
+    ===> (GRABBER NIL '<file-dscr>)
+    Reads in entire file, whose system name is created using
+    conventions described in FORM-FILE.  See ZMACROS.
+ 
+GRABFNS( <ids> . <file description> )       MACRO
+    ===> (GRABBER IDS <file-dscr>)
+    Like GRAB, but only reads in specified ids.  See ZMACROS.
+ 
+FORM-FILE( FILE:DSCR ): filename              EXPR
+    ---------
+    Takes a file dscr, possibly NIL, and returns a file name
+    corresponding to that dscr and suitable as an argument to OPEN.
+    F:OLD:FILE is set to this file name for future reference.
+    Meanwhile, F:FILE:ID is set to a lisp identifier, and the file
+    name is put on the OPEN:FILE:NAME property of that identifier.
+    The identifier can be used to hold info about the file.
+    E.g. its value may be a list of objects read from the file.
+
+    NB:  FORM-FILE is at the lowest level of machine-independant code.
+    MAKE-OPEN-FILE-NAME is a system dependant routine that creates
+    file names specifically tailored to the version of SLISP in use.
+
+ 
+GRABBER( SELECTION:id-list FILE:DSCR ):T            EXPR
+    -------
+    Opens the specified file, applies GRAB-EVAL-CTL to each
+    expression on it, and then closes it.  Returns T.
+    See GRAB-EVAL-CTL for important side effects.
+ 
+GRAB-EVAL-CTL( #SELECTION EXPR#READ FILE#ID )       EXPR
+    -------------
+    Examines each expression read from file, and determines whether
+    to EVAL that expression.  Also decides whether to append the
+    expression, or an id taken from it, or nothing at all, to the
+    value of the file id poined at by FILE#ID.
+    The file id is stored for use as an argument to DUMP or COMPILE,
+    for example.
+    Note: G:JUSTFNS suppresses the storage of comments from the file.
+          When reading LAP files, no list of fns is made.
+ 
+DUMPER( FILE:DSCR : file-dscr ): NIL       EXPR
+    ------
+    Dumps file onto disk.  Filename as in GRABBER.
+    Prettyprints the defined functions, set variables, and evaluated
+    expressions which are members of the value of the variable filename.
+    (For DEC versions:
+     If IBASE neq 10, puts (SETQ IBASE current:base) at head of file.)
+ 
+DUMPFNS-DE( FNS FILE:DSCR ): NIL            EXPR
+    ----------
+    Like DUMPER. Copies old file, putting new definitions for specified
+    functions/variables.
+    E.g.: (DUMPFNS-DE '(A B) '(FOO)) will first copy verbatim all the
+    expressions on FOO.LSP which do not define A or B.
+    Then the core definitions of A and B are dumped onto the file.
+ 
+DUMP-REMAINING( SELECTION:list DUMPED:list )         EXPR
+    --------------
+    Taken out of DUMPFNS for ease of reading.
+    Dumps those properties of items in selection which have not
+    already been dumped.
+ 
+FCOPY( IN:DSCR filename, OUT:DSCR filename ):boolean  EXPR
+    -----
+    Reformats file using the prettyprinter.  Useful for removing
+    angle brackets or for tightening up function format.
+    Returns T on normal exit, NIL if error reading file. 
+ 
+FCOPY-SQ ( IN:DSCR filename, OUT:DSCR filename ):boolean  EXPR
+    -----
+    Reformats file using the compacting printer.  Letterizes
+    and reports via '<big>' message long strings.
+    Returns T on normal exit, NIL if error reading file. 
+ 
+ YTOPCOM -- Compiler Control functions
+
+(DF COMPILE-FILE (FILE:NAME)
+(DF COMPILE-IN-CORE (FILE:NAME)
+
+
+ 
+Commonly used globals.  Declared in this file so each individual
+    file doesn't have to declare them.  
+ "Other globals/fluids
+ "This flag is checked by COMPILE-FILE.
+ 
+PPLAP( MODE CODE )                          EXPR
+    -----
+   Prints the lap code in some appropriate format.
+   Currently uses PRIN1SQ (PRIN1, Safe, use apostrophe to Quote
+   non-numeric expressions).
+ 
+COMPILE-FILE( FILE:DSCR )                   FEXPR
+    ------------
+    Reads the given file, and creates a corresponding LAP file.
+    Each expression on the original file is mapped into an expression
+    on the LAP file.
+    Comments map into NIL.
+    Function definitions map into the corresponding LAP code.
+    These definitions are compiled, but NOT evaluated -- hence the
+    functions will not be loaded into this core image by this routine.
+    All other expressions are evaluated in an errorset then copied verbatim.
+    EXCEPTION:  UNFLUID is evalutated, but converted into a comment
+        when printed, to avoid confusing loader.
+
+ 
+COMPILE-IN-CORE( FILE:DSCR ):NIL              FEXPR
+    ---------------
+   Compiles all EXPRS and FEXPRS on a file and loads compiled code into
+   core.  Creates a file FILE:NAME.cpl which is a compilation log
+   consisting of the names of functions compiled and the space used in
+   their loading.
+ 
+GCMSG( X:boolean ):any              EXPR
+    -----
+    Pre-defined in both SLISP and new IBM intpreter, so this cde shouln't
+    do anything.  GCMSG turns the garbage collection msgs on or off.

@@ -1,0 +1,20 @@
+The function GRAPH-TO-TREE copies  an arbitrary s-expression,  removing
+cirularity.  It does  NOT show non-circular  shared structure.   Places
+where a substructure  is EQ  to one of  its ancestors  are replaced  by
+non-interned id's of  the form  <n> where n  is a  small integer.   The
+parent is replaced by a two element list of the form (<n>: u) where the
+n's match,  and u  is the  (de-circularized) structure.   This is  most
+useful in adapting any printer for use with circular structures.
+
+The function  CPRINT,  also defined  in  the module  GRAPH-TO-TREE,  is
+simply (PRETTYPRINT (GRAPH-TO-TREE X)).
+
+Note that GRAPH-TO-TREE is very embryonic.  It is MUCH more inefficient
+than it needs to  be, heavily consing.   A better implementation  would
+use a stack (vector) instead of lists to hold intermediate  expressions
+for comparison, and would not copy non-circular structure.  In addition
+facilities should be added for optionally showing shared structure, for
+performing the inverse operation,  and for also  elliding long or  deep
+structures.  Finally, the  output representation was  chosen at  random
+and can probably be improved,  or at least brought  in line with CL  or
+some other standard.

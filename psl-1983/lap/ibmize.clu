@@ -1,0 +1,184 @@
+%
+% IBMIZE -- Extract underline and boldface info. from a
+% 	    lineprinter file (and convert for the IBM)
+%
+% Control chararacters handled: TAB, NL, FF, CR
+% Other control characters assumed to be printing.
+% Tab stops assumed every 8 columns.
+
+% 9/14/82 Added handling of empty lines at end of page.
+%   Somewhat ugly change.
+
+% The pgstream represents the state of output.  Pgline
+% is the current line within the page, beginning at 1.
+% Emptycount keeps track of saved up lines with no visible
+% contents.  These will be output if a nonempty line arrives
+% before end of page.
+pgstream = record[pgline: int, s: stream, emptycount: int]
+
+ac = array[char]
+
+% Line with possible underscore and/or boldface
+u_b_line = record[line: array[char],
+   underscore: array[bool],
+   bold: array[bool]]
+
+LINE_LENGTH = 150	% maximum printing length of output line
+
+main = proc ()
+	sin: stream := get_io("read", "Input file: ", "lpt")
+	    except others: return end
+	sout: stream := get_io("write", "Output file: ", "ibm")
+	    except others: return end
+	process_file(sin, pgstream${s: sout, pgline: 1, emptycount: 0})
+	stream$close(sin)
+	stream$close(sout)
+	end main
+
+% process_file(sin: stream, lout: pgstream)
+% Reads from sin until end of file, process each line to make
+% overstriking work, and keeps track of the position on the current
+% page, inserting form feeds as it deems necessary.
+process_file = proc (sin: stream, lout: pgstream)
+   oline: u_b_line :=
+      u_b_line${line: ac$fill(0, LINE_LENGTH, ' '),
+	 underscore: array[bool]$fill(0, LINE_LENGTH, false),
+	 bold: array[bool]$fill(0, LINE_LENGTH, false)}
+   sout: stream := lout.s
+   while true do
+      process_line(sin, lout, oline)
+   end except others: end
+   %% stream$putc(sout,'\p')
+end process_file
+
+process_line = proc (sin: stream, lout: pgstream, oline: u_b_line)
+   signals (done)
+
+   sout: stream := lout.s
+   line: string := get_line(sin)
+   except others: signal done end
+   
+   %% Insert FF if needed.
+   %% if lout.pgline > 60 cand ~ char$equal(string$fetch(line,1),'\p')
+   %%   then
+   %%     stream$putc (sout, '\p')
+   %%     lout.pgline := 1
+   %%     lout.emptycount := 0
+   %%     end
+   
+   for i: int in int$from_to(0,LINE_LENGTH - 1) do
+      oline.line[i] := ' '
+      oline.underscore[i] := false
+      oline.bold[i] := false
+   end
+   col: int := 0
+
+   for c: char in string$chars (line) do
+
+      %% Special handling for non-printing chars and '_'
+
+      if c = ' ' then col := col + 1
+      elseif c = '\r' then col := 0
+      elseif c = '\n' then lout.pgline := lout.pgline + 1
+      elseif c = '\b' then col := col - 1
+      elseif c = '\t' then col := col + 8 - (col // 8)
+      elseif c = '\p' then
+	 col := 0
+	 lout.pgline := 1
+      elseif c = '_' then
+	 oline.underscore[col] := true
+	 col := col + 1
+      else
+	 oc: char := oline.line[col]
+	 if oc = ' ' then
+	    oline.line[col] := c
+	 elseif oc = c then
+	    oline.bold[col] := true
+	 end
+	 col := col + 1
+      end
+   end
+   
+   emptyp: bool := true
+
+   for i: int in int$from_to(0,LINE_LENGTH - 1) do
+      if oline.line[i] ~= ' ' cor
+	 oline.underscore[i] then
+	 emptyp := false
+	 break;
+      end
+   end
+
+   if emptyp then
+      lout.emptycount := lout.emptycount + 1
+   else
+      %% Put out any saved-up empty lines first
+      for i:int in int$from_to(1,lout.emptycount) do
+	 stream$putc(sout,'\n')
+      end
+      lout.emptycount := 0
+      %% Print out everything involved in the line.
+      output_line(oline, sout)
+   end
+   
+   %% Print the formfeed that came with (terminating) the line.
+   if char$equal('\p',string$fetch(line,string$size(line))) then
+      stream$putc(sout,'\p')
+      %% Throw away any empty lines just preceding \p
+      lout.emptycount := 0
+   elseif ~emptyp then
+      stream$putc(sout,'\n')
+   end
+
+end process_line
+
+% output_line(oline, sout: stream)
+output_line = proc(oline: u_b_line, sout: stream)
+   high: int := line_high(oline)
+   for i: int in int$from_to (0, high) do
+      stream$putc(sout, oline.line[i])
+      if oline.underscore[i] then
+	 stream$putc(sout, '\b')
+	 stream$putc(sout, '_')
+      end
+   end
+   %% stream$putc (sout, '\n')
+end output_line
+
+% line_high (line: u_b_line) returns (int)
+% Returns the index in the line of the last printing character.
+% If none exists, returns the minimum index minus 1.
+line_high = proc(oline: u_b_line) returns (int)
+   for i: int in
+      int$from_to_by(ac$high(oline.line), ac$low(oline.line), -1)
+   do
+      if oline.line[i] ~= ' '
+	 cor oline.underscore[i]
+      then return(i) end
+   end
+   return(ac$low(oline.line) - 1)
+end line_high
+
+% get_line (sin: stream) returns (string) signals (end_of_file)
+% Reads from the stream characters through the first \n or \p.
+% If end of file is reached before any characters are entered,
+% end of file is signalled, otherwise not.
+% All characters read are returned.
+get_line = proc (sin: stream) returns (string) signals (end_of_file)
+   a: ac := ac$new ()
+   while true do
+      c: char := stream$getc_image (sin)
+      except others:
+	 if ac$size (a) = 0 then signal end_of_file end
+	 break
+      end
+      ac$addh (a, c)
+      if c = '\n' cor c = '\p' then break end
+   end
+   %%	if ac$top (a) = '\r' then ac$remh (a) end except when bounds: end
+   return (string$ac2s (a))
+end get_line
+%%% Defines: get_line line_high main output_line process_file process_line
+%%% Edited: 14 September 1982 10:41:36
+%%% Uses: get_io
+%%% Written: 14 September 1982 10:45:04

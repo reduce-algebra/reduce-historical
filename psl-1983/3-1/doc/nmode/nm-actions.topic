@@ -1,0 +1,14 @@
+.silent_index {Alter Display Format} idx 24-1
+.silent_index {Alter Existing Text} idx 24-1
+.silent_index {Change Mode} idx 24-1
+.silent_index {Escape} idx 24-1
+.silent_index {Inform} idx 24-1
+.silent_index {Insert Constant} idx 24-1
+.silent_index {Mark} idx 24-2
+.silent_index {Move Data} idx 24-2
+.silent_index {Move Point} idx 24-2
+.silent_index {Preserve} idx 24-2
+.silent_index {Remove} idx 24-2
+.silent_index {Select} idx 24-2
+.silent_index {Set Global Variable} idx 24-2
+.silent_index {Subsequent Command Modifier} idx 24-2

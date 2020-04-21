@@ -1,0 +1,6 @@
+pascal
+s:PL20.rel
+S:PL20.lst
+S:PL20.PAS/debug
+load S:PL20.REL
+save S:PL20.EXE

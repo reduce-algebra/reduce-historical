@@ -1,0 +1,141 @@
+16-Aug-82 10:32:47-PDT,430;000000000000
+Date: 16 Aug 1982 1032-PDT
+From: Cris Perdue <Perdue>
+Subject: PSL project distribution list
+To: PSL-Project: ;
+
+There is now a PSL project distribution list, <apptech.dist>psl-project..
+Mail to this list is also sent to <hp-psl.misc>project-mail.txt.
+I personally have a logical device definition "dist:" that refers
+to both <apptech.dist> and <distribution>, thus:
+define dist: <apptech.dist>, <distribution>
+-------
+16-Aug-82 12:11:29-PDT,661;000000000000
+Date: 16 Aug 1982 1211-PDT
+From: Cris Perdue <Perdue>
+Subject: PSL.EXE
+To: PSL-Project: ;
+
+The file PSL.EXE has been moved from <unsupported> to <psl>.
+<unsupported> contains a small file named psl.exe which runs
+<psl>psl.exe.
+
+This was done for a couple of reasons:  members of the group
+without access to <unsupported> (part of sys:) will be able to
+install a new PSL;  also this means that one can either just
+run "PSL" or follow the PSL manual's advice and run psl:psl
+with equal results.
+
+Probably PSL should really be on <HP-PSL>, but I got extra space
+from Tim for PSL on <PSL>, so let's leave things be for a couple
+of weeks.
+-------
+16-Aug-82 12:13:05-PDT,197;000000000000
+Date: 16 Aug 1982 1213-PDT
+From: Cris Perdue <Perdue>
+Subject: PSL.EXE
+To: PSL-Project: ;
+
+The arrangements with psl.exe described in the previous note apply
+on both HULK and THOR.
+-------
+16-Aug-82 12:15:50-PDT,963;000000000000
+Date: 15 Aug 1982 13:31:10-PDT
+From: Griss@UTAH-20 at HP-Speech
+Via: utah-cs
+Date: 14 Aug 1982 1936-MDT
+From: Martin.Griss <Griss at UTAH-20>
+Subject: Imminent Departure
+To: psl-users at UTAH-20
+cc: griss at UTAH-20
+Remailed-date: 16 Aug 1982 1215-PDT
+Remailed-from: Cris Perdue <Perdue>
+Remailed-to: PSL-Project: ;
+
+Eric and I leave for LISP82 tomorrow ~10:30am; Eric returns
+Wednesday evening, with a plan of packing and leaving for Palo Alto over
+the weekend. I return Thursday evening, and will be packing over the
+weekend, with a paln of leaving Thursday.
+
+
+Please exercise the various systems, and discuss problems with Steve Lowder.
+Eric will be able to give a small amount of final advice ~end of the week,
+and I will have a few more days. After that, Steve will be in charge
+of local maintenance. We will not update system until we get established
+at HP, early September, and get reasonable network access to Utah.
+
+M
+-------
+
+30-Aug-82 16:37:52-PDT,655;000000000000
+Date: 30 Aug 1982 1637-PDT
+From: Cris Perdue <Perdue>
+Subject: PSL distribution lists
+To: PSL-Project: ;
+
+Three PSL-related mail distribution lists are now on <APPTECH.DIST>.
+Some of them were previously on <HP-PSL>.  They are
+PSL-USERS.
+PSL-PROJECT.
+PSL-NEWS.
+The news distribution automatically includes all users.
+
+Mail to PSL is automatically distributed according to <HP-PSL>PSL-BUGS.DIST.
+This is not intended for general use as a distribution list, and
+also is assumed by the mail transport system to be in <HP-PSL>,
+so leave it there.  Anyone wishing to receive a copy of PSL bug
+reports may put him/herself on the list.
+-------
+14-Sep-82 13:54:08-PDT,299;000000000000
+Date: 14 Sep 1982 1353-PDT
+From: Eric Benson <BENSON>
+Subject: PSL users meeting
+To: PSL-Users: ;, PSL-Project: ;
+
+We will have a meeting at 1:30 PM in the conference room by Ira's office
+to discuss changes to be made to the current PSL system in anticipation
+of a general release.
+-------
+14-Sep-82 13:58:55-PDT,190;000000000000
+Date: 14 Sep 1982 1358-PDT
+From: Eric Benson <BENSON>
+Subject: PSL users meeting
+To: PSL-Users: ;
+cc: PSL-Project: ;
+
+Whoops, that meeting is tomorrow! (Wednesday the 15th).
+-------
+16-Sep-82 12:17:46-PDT,1407;000000000000
+Date: 16 Sep 1982 1217-PDT
+From: Cris Perdue <Perdue>
+Subject: PSL disk space on SS:
+To: kennard
+cc: PSL-Project: ;
+
+It appears that SS: is ready to receive the PSL files, though Tim
+has not sent me personally a message saying so.  Files will be
+organized somewhat differently on SS: than they are now on PS:.
+There will be no <HP-PSL> or any of its subdirectories.  There
+will be <PSL> and subdirectories.  Please allocate it 50
+subdirectories and 20,000 pages of space.  This family of
+directories is intended to include space for Alan Snyder's PSL
+editor, Nancy K's mailer program, and "Visicalc" files.
+
+There will be a <PSL-DISTRIBUTION> directory to contain a
+complete snapshot of PSL as distributed to other sites.  Please
+allocate it 30 subdirectories and 8,000 pages.
+
+We are requesting a system logical name definition for PSL (PSL:)
+to be defined as SS:<PSL>, like PASCAL, SAIL, and other
+subsystems have.
+
+The mailer forwards mail to PSL through a distribution list file
+currently defined to be <PSL>PSL-BUGS.DIST.  Please change this
+forwarding to go through PSL:PSL-BUGS.DIST (assumes the existence
+of the system logical name PSL:).
+
+SYS:PSL.EXE currently causes <PSL>PSL.EXE to be executed.  Please
+change SYS:PSL.EXE to execute PSL:PSL.EXE.  There is also a file
+named SYS:NPSL.EXE.  Please replace it with a file that causes
+PSL:NPSL.EXE to be run.
+-------

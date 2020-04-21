@@ -1,0 +1,27 @@
+;; Independent compilation a program for the 20
+;; MAIN module and data_segement, do last
+; MIC MAIN modulename
+;    modulename=symboltablename
+@define DSK:, DSK:, P20:, PV:, PI:
+@delete 'A.mac
+@delete D'A.mac
+;avoid obnoixous ^Q halts...
+@terminal length 0
+@s:DEC20-CROSS.EXE
+off break;  % avoid obnoxios breaks
+InputSymFile!* := "'A.sym"$
+OutputSymFile!* := "'A.sym"$
+GlobalDataFileName!* := "20-test-global-data.red"$
+ON PCMAC, PGWD$     % see macro expansion
+  !*MAIN := ''T;
+  ModName!*:='' 'A;
+ASMOUT "'A"$
+off StandAlone$     % Should emit SYMFNC inits
+IN "'A.red"$
+off pcmac,pgwd;     % Suppress echo before INIT
+ASMEnd$
+quit$
+@terminal length 24
+@macro
+*'A.rel='A.mac
+*D'A.rel=D'A.mac

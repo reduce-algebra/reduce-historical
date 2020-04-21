@@ -1,0 +1,27 @@
+;; Independant compilation of a  PSL  program 
+;
+; MIC FRESH modulename
+;
+; Initialize for new sequence of builds
+;
+@delete 'a.SYM
+@copy pc:bare-psl.sym 'A.sym
+@define DSK:, DSK:, PT:, P20:, PI:
+;avoid obnoixous ^Q halts...
+@terminal length 0
+@reset dec20-cross
+@s:DEC20-cross.exe
+off break;  %kill obnoxious break loops
+off USERMODE ;
+InputSymFile!* := "'A.sym"$
+OutputSymFile!* := "'A.sym"$
+GlobalDataFileName!* := "20-test-global-data.red"$
+ON PCMAC, PGWD$     % see macro expansion
+  !*MAIN := ''NIL;
+  ModName!*:='''A;
+ASMOUT "FRESH"$
+ASMEnd$
+quit$
+@terminal length 24
+@delete Fresh.mac
+@delete DFresh.mac

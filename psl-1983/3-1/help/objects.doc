@@ -1,0 +1,530 @@
+                       The OBJECTS Module
+                           Cris Perdue
+                           Alan Snyder
+                             11/22/82
+                  -----------------------------
+
+                          INTRODUCTION
+                          ------------
+
+The OBJECTS module provides simple support for object-oriented
+programming in PSL.  It is based on the "flavors" facility of the
+LISP machine, which is the source of its terminology.  The LISP
+Machine Manual contains a much longer introduction to the idea of
+object oriented programming, generic operations, and the flavors
+facility in particular.  This discussion goes over the basics of
+using flavored objects once briefly to give you an idea of what
+is involved, then goes into details.
+
+A datatype is known as a flavor (don't ask).  The definition of a
+flavor can be thought of in two parts: the DEFFLAVOR form
+("flavor definition"), plus a set of DEFMETHOD forms ("method
+definitions") for operating on objects of that flavor.
+
+With the objects package the programmer completely controls what
+operations are to be done on objects of each flavor, so this is a
+true object-oriented programming facility.  Also, all operations
+on flavored objects are automatically "generic" operations.  This
+means that any programs you write that USE flavored objects have
+an extra degree of built-in generality.
+
+What does it mean to say that operations on flavored objects are
+generic?  This means that the operations can be done on an object
+of any flavor, just so long as the operations are defined for
+that flavor of object.  The same operation can be defined for
+many flavors, and whenever the operation is invoked, what is
+actually done will depend on the flavor of the object it is being
+done to.
+
+We may wish to write a scanner that reads a sequence of
+characters out of some object and processes them.  It does not
+need to assume that the characters are coming from a file, or
+even from an I/O channel.
+
+Suppose the scanner gets a character by invoking the
+GET-CHARACTER operation.  In this case any object of a flavor
+with a GET-CHARACTER operation can be passed to the scanner, and
+the GET-CHARACTER operation defined for that object's flavor will
+be done to fetch the character.  This means that the scanner can
+get characters from a string, or from a text editor's buffer, or
+from any object at all that provides a GET-CHARACTER operation.
+The scanner is automatically general.
+
+DEFFLAVOR
+
+A flavor definition looks like:
+
+(defflavor flavor-name (var1 var2 ...) () option1 option2 ...)
+
+Example:
+
+(defflavor complex-number
+  (real-part
+   (imaginary-part 0.0))
+  ()
+  gettable-instance-variables
+  initable-instance-variables
+ )
+
+A flavor definition specifies the fields, components, or in our
+terminology, the "instance variables" that each object of that
+flavor is to have.  The mention of the instance variable
+imaginary-part indicated that by default the imaginary part of a
+complex number will be initialized to 0.0. There is no default
+initialization for the real-part.
+
+Instance variables may be strictly part of the implementation of
+a flavor, totally invisible to users.  Typically though, some of
+the instance variables are directly visible in some way to the
+user of the object.  The flavor definition may specify
+"initable-instance-variables", "gettable-instance-variables", and
+"settable-instance-variables".  None, some of, or all of the
+instance variables may be specified in each option.
+
+CREATING OBJECTS
+
+The function MAKE-INSTANCE provides a convenient way to create
+objects of any flavor.  The flavor of the object to be created
+and the initializations to be done are given as parameters in a
+way that is fully independent of the internal representation of
+the object.
+
+METHODS
+
+The function "=>", whose name is intended to suggest the sending
+of a message to an object, is usually used to invoke a method.
+
+Examples:
+
+(=> my-object zap)
+(=> thing1 set-location 2.0 3.4)
+
+The first "argument" to => is the object being operated on:
+my-object and thing1 in the examples.  The second "argument" is
+the name of the method to be invoked: zap and set-location.  The
+method name IS NOT EVALUATED.  Any further arguments become
+arguments to the method.  (There is a function SEND which is just
+like => except that the method name argument is evaluated just
+like everything else.)
+
+Once an object is created, all operations on it are performed by
+"methods" defined for objects of its flavor.  The flavor
+definition itself also defines some methods.  For each "gettable"
+instance variable, a method of the same name is defined which
+returns the current value of that instance variable.  For
+"settable" instance variables a method named "set-<variable
+name>" is defined.  Given a new value for the instance variable,
+the method sets the instance variable to have that value.
+
+SANCTITY OF OBJECTS
+
+Most LISPs and PSL in particular leave open the possibility for
+the user to perform illicit operations on LISP objects.  Objects
+defined by the objects package are represented as ordinary LISP
+objects (vectors at present), so in a sense it is quite easy to
+do illicit operations on them: just operate directly on its
+representation (do vector operations).
+
+On the other hand, there are major practical pitfalls in doing
+this.  The representation of a flavor of objects is generated
+automatically, and there is no guarantee that a particular flavor
+definition will result in a particular representation of the
+objects.  There is also no guarantee that the representation of a
+flavor will remain the same over time.  It is likely that at some
+point vectors will no longer even be used as the representation.
+
+In addition, using the objects package is quite convenient, so
+the temptation to operate on the underlying representation is
+reduced.  For debugging, one can even define a couple of extra
+methods "on the fly" if need be.
+ 
+                      REFERENCE INFORMATION
+                      ---------------------
+
+
+LOADING THE MODULE
+
+NOTE: THIS FILE DEFINES BOTH MACROS AND ORDINARY LISP FUNCTIONS.
+IT MUST BE LOADED BEFORE ANY OF THESE FUNCTIONS ARE USED.  The
+recommended way of doing this is to put the expression:
+(BothTimes (load objects)) at the beginning of your source file.
+This will cause the package to be loaded at both compile and load
+time.
+
+
+DEFFLAVOR - Define a new flavor of Object
+  
+The form is:
+
+(defflavor <name> <instance-variables> <mixin-flavors> <options>)
+
+Examples:
+
+(defflavor complex-number (real-part imaginary-part) ()
+   gettable-instance-variables
+   initable-instance-variables
+   )
+
+(defflavor complex-number ((real-part 0.0)
+			   (imaginary-part 0.0)
+			   )
+   ()
+   gettable-instance-variables
+   (settable-instance-variables real-part)
+   )
+
+The <instance-variables> form a list.  Each member of the list is
+either a symbol (id) or a list of 2 elements.  The 2-element list
+form consists of a symbol and a default initialization form.
+
+Note: Do not use names like "IF" or "WHILE" for instance
+variables: they are translated freely within method bodies (see
+DEFMETHOD).  The translation process is not very smart about
+which occurrences of the symbol for an instance variable are
+actually uses of the variable, though it does understand the
+nature of QUOTE.
+
+The <mixin-flavors> list must be empty.  In the LISP machine
+flavors facility, this may be a list of names of other flavors.
+
+Recognized options are:
+
+ (GETTABLE-INSTANCE-VARIABLES var1 var2 ...)
+ (SETTABLE-INSTANCE-VARIABLES var1 var2 ...) 
+ (INITABLE-INSTANCE-VARIABLES var1 var2 ...)
+
+ GETTABLE-INSTANCE-VARIABLES  [make all instance variables GETTABLE]
+ SETTABLE-INSTANCE-VARIABLES  [make all instance variables SETTABLE]
+ INITABLE-INSTANCE-VARIABLES  [make all instance variables INITABLE]
+
+An empty list of variables is taken as meaning all variables
+rather than none, so (GETTABLE-INSTANCE-VARIABLES) is equivalent
+to GETTABLE-INSTANCE-VARIABLES.
+
+For each gettable instance variable a method of the same name is
+generated to access the instance variable.  If instance variable
+LOCATION is gettable, one can invoke (=> <object> LOCATION).
+
+For each settable instance variable a method with the name
+SET-<name> is generated.  If instance variable LOCATION is
+settable, one can invoke (=> <object> SET-LOCATION <expression>).
+Settable instance variables are always also gettable and initable
+by implication.  If this feature is not desired, define a method
+such as SET-LOCATION directly rather than declaring the instance
+variable to be settable.
+
+Initable instance variables may be initialized via options to
+MAKE-INSTANCE or INSTANTIATE-FLAVOR.  See below.
+
+
+DEFMETHOD - Define a method on an existing flavor.
+  
+The form is:
+
+(defmethod (<flavor-name> <method-name>) (<arg> <arg> . . . )
+  <expression>
+  <expression>
+  . . .
+  )
+
+The <flavor-name>, the <method-name>, and each <arg> are all
+identifiers.  There may be zero or more <arg>s.
+
+Examples:
+
+(defmethod (complex-number real-part) ()
+  real-part)
+
+(defmethod (complex-number set-real-part) (new-real-part)
+  (setf real-part new-real-part))
+
+The body of a method can refer to any instance variable of the
+flavor by using the name just like an ordinary variable.  They
+can set them using SETF.  All occurrences of instance variables
+(except within vectors or quoted lists) are translated to an
+invocation of the form (IGETV SELF n).
+
+The body of a method can also freely use SELF much as though it
+were another instance variable.  SELF is bound to the object that
+the method applies to.  SELF may not be setq'ed or setf'ed.
+
+Example using SELF:
+
+(defmethod (toaster plug-into) (socket)
+  (setf plugged-into socket)
+  (=> socket assert-as-plugged-in self))
+
+
+MAKE-INSTANCE - Create a new instance of a flavor.
+  
+Examples:
+
+(make-instance 'complex-number)
+(make-instance 'complex-number 'real-part 0.0 'imaginary-part 1.0)
+
+MAKE-INSTANCE takes as arguments a flavor name and an optional
+sequence of initializations, consisting of alternating pairs of
+instance variable names and corresponding initial values.  Note
+that all the arguments are evaluated.
+
+Initialization of a newly made object happens as follows:
+
+Each instance variable with initialization specified in the call
+to make-instance is initialized to the value given.  Any instance
+variables not initialized in this way, but having default
+initializations specified in the flavor definition are
+initialized by the default initialization specified there.  All
+other instance variables are initialized to the symbol *UNBOUND*.
+
+If a method named INIT is defined for this flavor of object, that
+method is invoked automatically after the initializations just
+discussed.  The INIT method is passed as its one argument a list
+of alternating variable names and initial values.  This list is
+the result of evaluating the initializations given to
+MAKE-INSTANCE.  For example, if we call:
+
+(make-instance 'complex-number 'real-part (sin 30)
+				'imaginary-part (cos 30))
+
+then the argument to the INIT method (if any) would be
+
+(real-part .5 imaginary-part .866).
+
+The INIT method may do anything desired to set up the desired
+initial state of the object.
+
+At present, this value passed to the INIT method is of virtually
+no use to the INIT method since the values have been stored into
+the instance variables already.  In the future, though, the
+objects package may be extended to permit keywords other than
+names of instance variables to be in the initialization part of
+calls to make-instance.  If this is done, INIT methods will be
+able to use the information by scanning the argument.
+
+
+INSTANTIATE-FLAVOR
+  
+This is the same as MAKE-INSTANCE, except that the initialization
+list is provided as a single (required) argument.
+
+Example:
+
+(instantiate-flavor 'complex-number
+		    (list 'real-part (sin 30) 'imaginary-part (cos 30)))
+
+                      OPERATING ON OBJECTS
+                      --------------------
+
+Operations on an object are done by the methods of the flavor of
+the object.  We say that a method is invoked, or we may say that
+a message is sent to the object.  The notation suggests the
+sending of messages.  In this metaphor, the name of the method to
+use is part of the message sent to the object, and the arguments
+of the method are the rest of the message.  There are several
+approaches to invoking a method:
+
+=> - Convenient form for sending a message
+  
+Examples:
+
+(=> r real-part)
+
+(=> r set-real-part 1.0)
+
+The message name is not quoted.  Arguments to the method are
+supplied as arguments to =>.  In these examples, r is the object,
+real-part and set-real-part are the methods, and 1.0 is the
+argument to the set-real-part method.
+
+SEND - Send a Message (Evaluated Message Name)
+  
+Examples:
+
+(send r 'real-part)
+
+(send r 'set-real-part 1.0)
+
+The meanings of these two examples are the same as the meanings
+of the previous two.  Only the syntax is different: the message
+name is quoted.
+
+
+FANCY FORMS OF SEND
+
+SEND-IF-HANDLES - Conditionally Send a Message (Evaluated Message Name)
+  
+Examples:
+
+(send-if-handles r 'real-part)
+
+(send-if-handles r 'set-real-part 1.0)
+
+SEND-IF-HANDLES is like SEND, except that if the object defines no method
+to handle the message, no error is reported and NIL is returned.
+
+
+LEXPR-SEND - Send a Message (Explicit "Rest" Argument List)
+  
+Examples:
+
+(lexpr-send foo 'bar a b c list)
+
+The last argument to LEXPR-SEND is a list of the remaining arguments.
+
+
+LEXPR-SEND-IF-HANDLES 
+  
+This is the same as LEXPR-SEND, except that no error is reported
+if the object fails to handle the message.
+
+
+LEXPR-SEND-1 - Send a Message (Explicit Argument List)
+  
+Examples:
+
+(lexpr-send-1 r 'real-part nil)
+
+(lexpr-send-1 r 'set-real-part (list 1.0))
+
+Note that the message name is quoted and that the argument list
+is passed as a single argument to LEXPR-SEND-1.
+
+
+LEXPR-SEND-1-IF-HANDLES
+  
+This is the same as LEXPR-SEND-1, except that no error is reported
+if the object fails to handle the message.
+
+                  USEFUL FUNCTION(s) ON OBJECTS
+                  -----------------------------
+
+OBJECT-TYPE
+
+The OBJECT-TYPE function returns the type (an ID) of the
+specified object, or NIL, if the argument is not an object.  At
+present this function cannot be guaranteed to distinguish between
+objects created by the OBJECTS package and other LISP entities,
+but the only possible confusion is with vectors.
+
+                      DEBUGGING INFORMATION
+                      ---------------------
+
+Any object may be displayed symbolically by invoking the method
+DESCRIBE, e.g. (=> x describe).  This method prints the name of
+each instance variable and its value, using the ordinary LISP
+printing routines.  Flavored objects are liable to be complex and
+nested deeply or even circular.  This makes it often a good idea
+to set PRINLEVEL to a small integer before printing structures
+containing objects to control the amount of output.
+
+When printed by the standard LISP printing routines, "flavored
+objects" appear as vectors whose zeroth element is the name of
+the flavor.
+
+For each method defined, there is a corresponding LISP function
+named <flavor-name>$<method-name>.  Such function names show up
+in backtrace printouts.
+
+It is permissible to define new methods on the fly for debugging
+purposes.
+
+                      DECLARE and UNDECLARE
+                      ---------------------
+
+*** Read these warnings carefully! ***
+
+This facility can reduce the overhead of invoking methods on
+particular variables, but it should be used sparingly.  It is not
+well integrated with the rest of the language.  At some point a
+proper declaration facility is expected and then it will be
+possible to make declarations about objects, integers, vectors,
+etc., all in a uniform and clean way.
+
+The DECLARE macro allows you to declare that a specific symbol is
+bound to an object of a specific flavor.  This allows the flavors
+implementation to eliminate the run-time method lookup normally
+associated with sending a message to that variable, which can
+result in an appreciable improvement in execution speed.  This
+feature is motivated solely by efficiency considerations and
+should be used ONLY where the performance improvement is
+critical.
+
+Details: if you declare the variable X to be bound to an object
+of flavor FOO, then WITHIN THE CONTEXT OF THE DECLARATION (see
+below), expressions of the form (=> X GORP ...)  or (SEND X 'GORP
+...)  will be replaced by function invocations of the form
+(FOO$GORP X ...).  Note that there is no check made that the
+flavor FOO actually contains a method GORP.  If it does not, then
+a run-time error "Invocation of undefined function FOO$GORP" will
+be reported.
+
+WARNING: The DECLARE feature is not presently well integrated
+with the compiler.  Currently, the DECLARE macro may be used only
+as a top-level form, like the PSL FLUID declaration.  It takes
+effect for all code evaluated or compiled henceforth.  Thus, if
+you should later compile a different file in the same compiler,
+the declaration will still be in effect!  THIS IS A DANGEROUS
+CROCK, SO BE CAREFUL!  To avoid problems, I recommend that
+DECLARE be used only for uniquely-named variables.  The effect of
+a DECLARE can be undone by an UNDECLARE, which also may be used
+only as a top-level form.  Therefore, it is good practice to
+bracket your code in the source file with a DECLARE and a
+corresponding UNDECLARE.
+
+Here are the syntactic details:
+
+(DECLARE FLAVOR-NAME VAR1 VAR2 ...)
+(UNDECLARE VAR1 VAR2 ...)
+
+*** Did you read the above warnings??? ***
+
+                   REPRESENTATION INFORMATION
+                   --------------------------
+
+(You don't need to know any of this to use this stuff.)
+
+A flavor-name is an ID.  It has the following properties:
+
+VARIABLE-NAMES	A list of the instance variables of the flavor, in
+			order of their location in the instance vector.
+			This property exists at compile time, dskin time, and
+			load time.
+
+INITABLE-VARIABLES	A list of the instance variables that have been
+			declared to be INITABLE.  This property exists at
+			dskin time and at load time.
+
+METHOD-TABLE		An association list mapping each method name (ID)
+			defined for the flavor to the corresponding function
+			name (ID) that implements the method.  This property
+			exists at dskin time and at load time.
+
+INSTANCE-VECTOR-SIZE	An integer that specifies the number of elements
+			in the vector that represents an instance of this
+			flavor.  This property exists at dskin time and at
+			load time.  It is used by MAKE-INSTANCE.
+
+The function that implements a method has a name of the form
+FLAVOR$METHOD.  Each such function ID has the following properties:
+
+SOURCE-CODE		A list of the form (LAMBDA (SELF ...) ...) which is
+			the untransformed source code for the method.
+			This property exists at compile time and dskin time.
+
+
+Implementation Note:
+
+A tricky aspect of the code that implements the objects package
+is making sure that the right things happen at the right time.
+When a source file is read and evaluated (using DSKIN), then
+everything must happen at once.  However, when a source file is
+compiled to produce a FASL file, then some actions must be
+performed at compile-time, whereas other actions are supposed to
+occur when the FASL file is loaded.  Actions to occur at compile
+time are performed by macros; actions to occur at load time are
+performed by the forms returned by macros.
+
+Another goal of the implementation is to avoid consing whenever
+possible during method invocation.  The current scheme prefers to
+compile into (APPLY HANDLER (LIST args...)), for which the PSL
+compiler will produce code that performs no consing.

@@ -1,0 +1,246 @@
+,MOD
+- R 44X (11 April 1983) <PSL.NMODE-DOC>NM-CUSTOMIZATION.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+          201/NMODE Manual (Simple Customization)                               Page 22-1
+
+
+          202/22.  Simple Customization
+
+            201/In this chapter we describe simple ways of customizing NMODE.
+
+            NMODE is designed to be customizable; each user can rearrange things to
+          suit his taste.   Simple customizations are primarily of two types: moving
+          functions from one character to another, and setting variables which functions
+          refer to so as to direct their actions.  Beyond this, extensions can involve
+          redefining existing functions, or writing entirely new functions and creating
+          sharable libraries of them.
+
+          202/22.1  Init Files
+
+          201/This section explains how to customize NMODE by redefining the effect of
+          input keystrokes.  NMODE is customized by executing Lisp forms.   These
+          forms may be executed directly within NMODE (using Lisp-E), or may be
+          stored in an INIT file, which is read by NMODE when it first starts up.  The
+          name of the INIT file read by NMODE is "NMODE.INIT" in the user's home
+          directory.
+
+          There are three concepts that must be understood to customize NMODE:
+          Commands, Functions, and Modes.
+
+          1) Commands.  The effect of given keystroke or sequence of keystrokes in
+          NMODE is based on a mapping between "commands" and "functions".  A
+          "command" may be either a single "extended character" or a sequence of
+          characters.   An extended  character  is  a  9-bit  character  with  distinct
+          "Control" and "Meta" bits.  Thus "C-M-A" is a single "extended character",
+          even though on many terminals you have to use two keystrokes to enter it.
+          Extended characters are specified using the macro X-CHAR, for example:
+
+            (x-char A)           the letter "A" (upper case)
+            (x-char C-F)         Control-F
+            (x-char C-M-Z)      Control-Meta-Z
+            (x-char CR)         Carriage-Return
+            (x-char TAB)                Tab
+            (x-char BACKSPACE)        Backspace
+            (x-char NEWLINE)    Newline
+            (x-char RUBOUT)    Rubout
+            (x-char C-M-RUBOUT)       Control-Meta-Rubout
+
+          (The  macros  described  in  this  section are defined in the load module
+          EXTENDED-CHAR.)  It is important to note that on most terminals, some Ascii
+          control characters are mapped to extended "Control" characters and some
+          aren't.  Those that aren't are: Backspace, CR, Newline, Tab, and Escape.
+          Even if you type "CTRL-I" on the keyboard, you will get "Tab" and not
+          "Control-I".  The remaining Ascii control characters are mapped to extended
+          "Control"  characters,  thus  typing  "CTRL-A"  on  the  keyboard  gives
+          "Control-A".
+
+          As mentioned above, a command can be a sequence of characters.  There are
+          two forms: Prefix commands and Extended commands.
+          201/Page 22-2                                          NMODE Manual (Init Files)
+
+
+          Prefix commands: A prefix command consists of two characters, the first of
+          which is a defined "prefix character".  In NMODE, there are 3 predefined
+          prefix characters: C-X, ESC, and C-].  Prefix commands are specified using
+          the X-CHARS macro, for example:
+
+            (x-chars C-X C-F)
+            (x-chars ESC A)
+            (x-chars C-] E)
+
+          Extended commands: An extended command consists of the character M-X and
+          a string.  Extended commands are defined using the M-X macro, for example:
+
+
+            (M-X "Lisp Mode")
+            (M-X "Revert File")
+
+          The case of the letters in the string is irrelevant, except to specify how the
+          command name will be displayed when "completion" is used by the user.  By
+          convention, the first letter of each word in an extended command name is
+          capitalized.
+
+          2) Functions.  NMODE commands are implemented by PSL functions.   By
+          convention, most (but not all) PSL functions that implement NMODE commands
+          have     names     ending     with     "-COMMAND",     for     example,
+          203/move-forward-character-command201/.
+
+          An NMODE command function should take no arguments.  The function can
+          perform its task using a large number of existing support functions; see
+          PN:BUFFER.SL  and  PN:MOVE-COMMANDS.SL  for  examples.   A command
+          function can determine the command argument (given by C-U) by inspecting
+          global variables:
+
+            nmode-command-argument: the numeric value (default: 1)
+            nmode-command-argument-given: T if the user specified an argument
+            nmode-command-number-given: T if the user typed digits in the argument
+
+          See   the   files   PN:MOVE-COMMANDS.SL,  PN:LISP-COMMANDS.SL,  and
+          PN:COMMANDS.SL for many examples of NMODE command functions.
+
+          3) Modes.  The mapping between commands and functions is dependent on the
+          current "mode".  Examples of existing modes are "Text Mode", which is the
+          basic mode for text editing, "Lisp Mode", which is an extension of "Text
+          Mode" for editing and executing Lisp code, and "Dired Mode", which is a
+          specialized mode for the Directory Editor Subsystem.
+
+          A mode is defined by a list of Lisp forms which are evaluated to determine
+          the state of a Dispatch Table.  The Dispatch Table is what is actually used to
+          map from commands to functions.  Every time the user selects a new buffer,
+          the Dispatch Table is cleared and the Lisp forms defining the mode for the
+          new buffer are evaluated to fill the Dispatch Table.  The forms are evaluated
+          in reverse order, so that the first form is evaluated last.   Thus, any
+          command  definitions  made  by one form supersede those made by forms
+          appearing after it in the list.
+          201/NMODE Manual (Init Files)                                          Page 22-3
+
+
+          Two   functions   are   commonly   invoked   by   mode-defining   forms:
+          203/nmode-establish-mode  201/and  203/nmode-define-commands201/.    203/nmode-establish-mode
+          201/takes one argument, a list of mode defining forms, and evaluates those forms.
+          Thus, 203/nmode-establish-mode 201/can be used to define one mode in terms of (as
+          an extension of or a modification to) another mode.
+
+          203/nmode-define-commands 201/takes one argument, a list of pairs, where each pair
+          consists of a COMMAND and a FUNCTION.  This form of list is called a
+          "command list".  Command lists are not used directly to map from commands
+          to functions.  Instead, 203/nmode-define-commands 201/reads the command list it is
+          given and for each COMMAND-FUNCTION pair in the command list (in order),
+          it  alters  the  Dispatch  Table  to  map  the  specified  COMMAND  to  the
+          corresponding FUNCTION.
+
+          Note that as a convenience, whenever you define an "upper case" command,
+          the corresponding "lower case" command is also defined to map to the same
+          function.  Thus, if you define C-M-A, you automatically define C-M-a to map
+          to the same function.  If you want the lower case command to map to a
+          different function, you must define the lower case command "after" defining
+          the upper case command.
+
+          The usual technique for modifying one or more existing modes is to modify
+          one  of  the  command  lists  given  to  203/nmode-define-commands201/.    The  file
+          PN:MODE-DEFS.SL contains the definition of most predefined NMODE command
+          lists, as well as the definition of most predefined modes.  To modify a mode
+          or modes, you must alter one or more command lists by adding (or perhaps
+          removing) entries.  Command lists are manipulated using two functions:
+
+            (add-to-command-list list-name command func)
+            (remove-from-command-list list-name command)
+
+          Here are some examples:
+
+          (add-to-command-list
+           'read-only-text-command-list (x-char M-@) 'set-mark-command)
+
+            [The above form makes M-@ set the mark.]
+
+          (add-to-command-list
+           'read-only-terminal-command-list (x-chars ESC Y) 'print-buffer-names-command)
+
+            [The above form makes Esc-Y print a list of all buffer names.  Esc-Y is
+             sent by HP264X terminals when the "Display Functions" key is hit.]
+
+          Note that these functions change only the command lists, not the Dispatch
+          Table which is actually used to map from commands to functions.  To cause
+          the Dispatch Table to be updated to reflect any changes in the command lists,
+          you must invoke the function 203/nmode-establish-current-mode201/.
+          201/Page 22-4                                          NMODE Manual (Variables)
+
+
+          202/22.2  Variables
+
+            201/Since the init file consists of a series of PSL forms, it can contain simple
+          assignment statements which set up global variables in NMODE.  A variable is
+          a name which is associated with a value.   NMODE uses many variables
+          internally, and has others whose purpose is to be set by the user for
+          customization.  If you want to set a variable a particular way each time you
+          use NMODE, you can use your init file to do so.  Global variables may also
+          be set automatically by major modes.
+
+            Two examples of global variables are *outwindow and nmode-default-mode.
+          Nmode-default-mode is the mode used for most newly created buffers. It is
+          normally set to text-mode, but might be set to lisp-interface-mode by a user
+          who expects to be editing programs most of the time.  The other variable
+          controls the automatic pop up of the output window.  If *outwindow is T, the
+          output buffer will automatically appear if it is not already displayed when
+          output (i.e. from a lisp calculation) occurs.
+
+          Another example of such a variable is the Fill Column variable, which
+          specifies the position of the right margin (in characters from the left margin)
+          to be used by the fill and justify commands.
+
+            To set a variable, include in the init file a line containing
+
+          (setq <variable_name> <variable_value>).
+
+          This is just an assignment statement in PSL.  To adjust the fill column to 60,
+          for instance, include a line:
+
+          (setq fill-column 60).
+
+          202/22.3  Minor Modes
+
+            201/Since init files can execute arbitrary PSL forms, they can run the same
+          functions that one can call from the terminal by appropriate commands.  In
+          particular they can turn major or minor modes on or off.
+
+            Minor modes are options which you can use or not.  For example, Auto Fill
+          mode is a minor mode in which Spaces break lines between words as you
+          type.  All the minor modes are independent of each other and of the selected
+          major mode.  Most minor modes say in the mode line when they are on; for
+          example, "Fill" in the mode line means that Auto Fill mode is on.
+
+            Minor modes are controlled by a global variable: nmode-minor-modes.  This
+          is a list of currently active minor modes.  Rather than directly setting this
+          list, it is generally preferable to use some existing functions to turn the
+          modes on and off, since they correctly handle some side effects.  Minor modes
+          can be added to this list with 203/activate-minor-mode 201/and removed from it with
+          203/deactivate-minor-mode201/.    For example, auto fill mode can be turned on when
+          NMODE is started by including
+
+          (activate-minor-mode auto-fill-mode)
+          201/NMODE Manual (Minor Modes)                                       Page 22-5
+
+
+          in the init file.
+
+            Each minor mode is associated with a function that can be used to turn it
+          on or off.  The function turns the mode on if it was off and off if it was on.
+          This is known as 202/toggling201/.  All the minor mode functions are suitable for
+          connecting to single or double character commands if you want to enter and
+          exit a minor mode frequently.
+
+            Auto Fill mode allows you to type text endlessly without worrying about the
+          width of your screen.   Line separators are be inserted where needed to
+          prevent lines from becoming too long.  A variable called fill-column sets the
+          maximum number of columns allowed in a line.  See Section 13.4 [Filling],
+          page 4.

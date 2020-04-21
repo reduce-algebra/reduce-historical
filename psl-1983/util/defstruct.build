@@ -1,0 +1,5 @@
+CompileTime <<
+load Defstruct;
+off UserMode;
+>>;
+in "defstruct.red"$

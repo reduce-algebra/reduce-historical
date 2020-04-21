@@ -1,0 +1,66 @@
+18-Nov-82 11:14:38-MST,2694;000000000001
+Mail-From: CARR created at 18-Nov-82 11:11:12
+Date: 18 Nov 1982 1111-MST
+From: Harold Carr <CARR at UTAH-20>
+Subject: psl mode for emacs
+To: galway at UTAH-20
+cc: carter at UTAH-20, kessler at UTAH-20, psi.krOHNFELDT at UTAH-20,
+    uscg at UTAH-20
+
+On our version of Gosling's emacs we use
+a modified electric-lisp-mode along with some other functions that Jed
+wrote. Here are the main things that I like:
+
+paren-pause	Gets bound to ')'. It flashes corresponding '(' either by
+                temporarily moving the cursor up to the '(' and pausing, then
+                returning, or if the matching '(' is off the current window
+                then show the matching line in the mini-buffer.
+                It also fixes the indentation of the ')' if it is on a line
+                by itself to match the column of the corresponding '('.
+                Complains if there is no match.
+
+nl-indent 	Gets bound to linefeed. Inserts new line and properly indents
+                the next line. A simple "proper indent" is that if there is an
+                open unmatched '(' then the next line should be indented 4 from
+                the unmatched '('.
+
+re-indent-line  Unbound function to repair indentation of current line.
+
+indent-lisp-function
+		Unbound function to fix up the indentation of entire lisp
+                function from (dX to ).
+
+electric-lisp-semi
+                This function is bound to ';'. It takes you to the nth column
+                when pressed so you can start a comment. We unbind this one.
+                I like to deal personally with every ';' (or '%').
+
+forward-sexpr	Bound to ESC ')'.
+backward-sexpr  Bound to ESC '('.
+
+Its nice to have an abbrev table for lisp.
+
+lisp-comment-mode
+ 		Bound to ESC 'c'. Asks for a function name. After carriage
+                return it does this:
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+; <function-name>
+;
+; <leaves-cursor-here>
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Now as you type its in "text mode", when it gets near the end of the line it
+automatically starts a new line, inserts ';' and a space. Any time you press
+newline it does the same. When you enter carriage-return the cursor is moved
+to the line below the box and you're back in lisp-mode. 
+
+You can move your cursor back into a previously built box and enter
+^U, ESC 'c'. This will kill-to-end of line and put you back into the
+"text-mode" described above.
+
+There are some others, but these are the useful ones. If you would like
+the mlisp files for these functions, let me know.    Harold.
+-------

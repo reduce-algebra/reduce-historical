@@ -1,0 +1,22 @@
+TopLoop(TopLoopRead!*, TopLoopPrint!*, TopLoopEval!*, TopLoopName!*,
+----------------------------------------------------------------
+		       WelcomeBanner):NIL
+                       ------------------
+
+This function is called to establish a new TopLoop (currently for
+Standard LISP, RLISP, and BREAK).
+
+It prints the WelcomeBanner, and then invokes a "READ-EVAL-PRINT" loop,
+using the given functions. TopLoop provides a standard History and
+timing mechanism, retaining on a list (HistoryList!*) the input
+and output as a list of pairs.
+
+TopLoop Function         Purpose
+(HIST)                   Display full history.
+(HIST n)                 Display history from n to present.
+(HIST -n)		 Display last n entries.
+(HIST n m)               Display history from n to m.
+(INP n)                  Return N'th input at this level.
+(REDO n)                 Revaluate N'th input.
+(ANS n)                  Return N'th result.
+(SETQ !*Time T)          Causes evaluation time to be printed for each command.

@@ -1,0 +1,837 @@
+PSL Manual                    7 February 1983                   Identifiers
+section 6.0                                                        page 6.1
+
+                                 CHAPTER 6                                 CHAPTER 6                                 CHAPTER 6
+                                IDENTIFIERS                                IDENTIFIERS                                IDENTIFIERS
+
+
+
+
+     6.1. Introduction  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     6.1
+     6.2. Fields of Ids .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     6.2
+     6.3. Identifiers and the Id-Hash-Table  .  .  .  .  .  .  .  .     6.2
+          6.3.1. Identifier Functions  .  .  .  .  .  .  .  .  .  .     6.3
+          6.3.2. Find.  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     6.4
+     6.4. Property List Functions.  .  .  .  .  .  .  .  .  .  .  .     6.5
+          6.4.1. Functions for Flagging Ids  .  .  .  .  .  .  .  .     6.6
+          6.4.2. Direct Access to the Property Cell.  .  .  .  .  .     6.7
+     6.5. Value Cell Functions.  .  .  .  .  .  .  .  .  .  .  .  .     6.7
+     6.6. Package System Functions  .  .  .  .  .  .  .  .  .  .  .    6.10
+     6.7. System Global Variables, Switches and Other "Hooks"  .  .    6.13
+          6.7.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .    6.13
+          6.7.2. Setting Switches.  .  .  .  .  .  .  .  .  .  .  .    6.14
+          6.7.3. Special Global Variables .  .  .  .  .  .  .  .  .    6.15
+          6.7.4. Special Put Indicators.  .  .  .  .  .  .  .  .  .    6.15
+          6.7.5. Special Flag Indicators  .  .  .  .  .  .  .  .  .    6.16
+          6.7.6. Displaying Information About Globals .  .  .  .  .    6.16
+
+
+
+
+6.1. Introduction6.1. Introduction6.1. Introduction
+
+                                   __________       __        __________  In  PSL  variables  are  called  identifiers  or  ids.   An identifier is
+implemented as a tagged data object (described in Chapter 4)  containing  a
+                                                     __ _____pointer  or  offset into a five item structure - the id space.  One item in
+this  structure  is  called  the  print  name,  which   is   the   external
+                      __representation of the id.
+
+                             __ ____ _____  The  interpreter  uses  an id hash table to get from the print name of an
+__________                     __ _____       __  _____            __  ____identifier to its entry in the id space.  The id  space  and  the  id  hash
+_____table are described below.
+
+  Sometimes  there  is  a  need  for  more  than one name space when one is
+building a large system.  For  example,  one  may  wish  to  allow  several
+programmers  to  each  produce  a  part of a system without having to worry
+about name conflicts.  PSL provides a  package  system  for  this  purpose,
+                                  __ ____ _____giving the user a tree-structured id hash table.Identifiers                   7 February 1983                    PSL Manual
+page 6.2                                                        section 6.2
+
+6.2. Fields of Ids6.2. Fields of Ids6.2. Fields of Ids
+
+      __        ____         ____            ____  An  id  is an item with an info field; the info field is an offset into a
+        __ _____                                                     ____special id space consisting of structures of 5 fields.  The fields  (items)
+are:
+
+
+_____ ____                                ______print-name     The print name points at a string of characters which is the
+                                                __________               external  representation  of the identifier.  The syntax for
+               __________               identifiers  is  described  in  Section  12.5   on   reading
+               functions.
+________ ____property-cell  One  may want to associate various flags and properties with
+                  __________               an identifier.  These can be stored on a  property-list  for
+                   __               an  id,  flags  by  name  and  properties by an (indicator .
+                                                     __               value) pair.  The property cell of an id contains a  pointer
+               to  this  list.   Access is by means of functions defined in
+               Section 6.4.
+_____ ____                      __________value-cell     The value of the identifier or a pointer to the value in the
+               heap is stored in this field.  If no value exists, this cell
+                                   __________               contains an unbound identifier indicator.  These  cells  can
+               be accessed by functions defined in this chapter.
+                                                  _____                                                  _____                                                  _____                                                  macro________ ____                        ________     macrofunction-cell  An  id  may  have  a  function  or macro associated with it.
+                                         PutD   GetD        RemD                                         PutD   GetD        RemD               Access is by means of the PutD,  GetD,  and  RemD  functions
+               defined in Section 10.1.2.
+_______ ____package-cell   PSL permits the use of a multiple package facility (multiple
+               __  ____ _____               id  hash table).  The package cell refers to the appropriate
+               __ ____ _____               id hash table.
+
+
+
+6.3. Identifiers and the Id hash table6.3. Identifiers and the Id hash table6.3. Identifiers and the Id hash table
+
+                                                          __________  The method used by PSL to retrieve information about an identifier  makes
+             __ ____ _____use  of  the id hash table (corresponding to the Oblist, or Object list, in
+                                                           __________some versions of LISP).  A hash function is applied to the identifier  name
+                          __ ____ _____giving  a position in the id hash table.  The contents of the hash table at
+                                      __ _____             __________that point contain an offset into the id space.  For a new identifier,  the
+                            __ _____next  free  position in the id space is found and a pointer to it is placed
+in the hash table entry.
+
+                            __  The process of putting an id into the hash  table  is  called  interning.
+                                                         __This  is  done  automatically by the LISP reader, so any id typed in at the
+terminal is interned.  Interning can also be done by the  programmer  using
+              Intern              Intern              ______       __      __the  function Intern to convert a string to an id.  An id may have an entry
+       __ _____in the id space without being interned.  In fact it  is  possible  to  have
+         __several  ids  with  the  same  print name, one interned and the others not.
+                                                                   __(The use of the package system allows one to have several interned ids with
+the same print name.)
+
+                                            __   _____  Note  that  when  one  starts  PSL,  the  id   space   already   contains
+                     __approximately  2000  ids.    These include all of the ASCII characters, the
+functions and globals described in this manual, plus system  functions  andPSL Manual                    7 February 1983                   Identifiers
+section 6.3                                                        page 6.3
+
+globals.    If  a  user  uses  any  of these names for his own functions or
+globals, there can be a conflict.  This is  another  reason  for  having  a
+package  system.    A warning message appears if a user tries to redefine a
+system function.
+
+   ? Do you really want to redefine the system function 'name? (Y or N)
+
+If the user answers "Y", his definition replaces  the  current  definition.
+                                                    ________(See  Chapter  10 for a description of the switch !*USERMODE which controls
+the printing of this message.)
+
+                                        __ ____ _____  Basic PSL currently provides a single id hash table.   PSL  provides  all
+the  "hooks"  to permit a package system to be loaded as an option; certain
+functions are redefined in this process.  If the package system is  loaded,
+                    __ ____ _____a  tree-structured  id hash table can be created in which each level can be
+                        __ ____ _____            __      ______thought of as a smaller id hash table.  If a new id  or  string  is  to  be
+interned,  it  is  searched  for in the tree according to a specified rule.
+For more information see Section 6.6.
+
+                            __  Information on converting ids to other types  can  be  found  in  Chapter
+12 and Section 4.3.
+
+
+6.3.1. Identifier Functions6.3.1. Identifier Functions6.3.1. Identifier Functions
+
+                                    __________          __ ____ _____  The following functions deal with identifiers and the id hash table.
+
+
+ GenSym GenSym    __                                                          ____(GenSym ): id                                                          expr
+
+                 __________     Creates  an identifier which is not interned on the id hash table
+                          Eq                          Eq                        __     and consequently not Eq to anything else.  The id is derived from
+     a string of the form "G0000", which is incremented upon each call
+        GenSym        GenSym     to GenSym.
+
+       [??? Is this interned or recorded on the NIL package ???]       [??? Is this interned or recorded on the NIL package ???]       [??? Is this interned or recorded on the NIL package ???]
+
+       [??? Can we change the GenSym string ???]       [??? Can we change the GenSym string ???]       [??? Can we change the GenSym string ???]
+
+
+ InternGenSym InternGenSym    __                                                    ____(InternGenSym ): id                                                    expr
+
+                GenSym                GenSym                         __     Similar to GenSym but returns an interned id.
+
+
+ StringGenSym StringGenSym    ______                                                ____(StringGenSym ): string                                                expr
+
+                GenSym                GenSym                  ______     Similar to GenSym but  returns  a  string  of  the  form  "L0000"
+                   __     instead of an id.Identifiers                   7 February 1983                    PSL Manual
+page 6.4                                                        section 6.3
+
+ RemOb RemOb _ __   _ __                                                     ____(RemOb U:id): U:id                                                     expr
+
+        _     If U is present on the current package search path it is removed.
+                             _     This  does  not  affect U having properties, flags, functions and
+                _     the like.  U is returned.
+
+
+ InternP InternP _  __ ______    _______                                       ____(InternP U:{id,string}): boolean                                       expr
+
+                  _     Returns T if U is interned in the current search path.
+
+
+ MapObl MapObl _____ ________   _________                                     ____(MapObl FNAME:function): Undefined                                     expr
+
+     MapObl     MapObl                  _____         __     MapObl applies function FNAME to each id interned in the  current
+     hash table.
+
+
+6.3.2. Find6.3.2. Find6.3.2. Find
+
+                          ______    __                              __ ____  These  functions take a string or id as an argument, and scan the id hash
+_____                      __table to collect a list of ids with prefix or suffix matching the argument.
+This is a loadable option (LOAD FIND).
+
+
+ FindPrefix FindPrefix ___  __  ______    __ ____                                 ____(FindPrefix KEY:{id, string}): id-list                                 expr
+
+                   __ ____ _____         __                       ___     Scans current id hash table for all ids whose prefix matches KEY.
+     Returns all the identifiers found  as  an  alphabetically  sorted
+     list.
+
+
+ FindSuffix FindSuffix ___  __  ______    __ ____                                 ____(FindSuffix KEY:{id, string}): id-list                                 expr
+
+                   __ ____ _____         __                       ___     Scans current id hash table for all ids whose suffix matches KEY.
+     Returns  all  the  identifiers  found as an alphabetically sorted
+     list.
+
+   (Setq X (FindPrefix '!*)  % Finds all identifiers starting with *
+
+   (Setq Y (FindSuffix "STRING")) % Finds all identifiers ending with S
+
+
+
+6.4. Property List Functions6.4. Property List Functions6.4. Property List Functions
+
+                          __________                       ____        ____  The property cell of an identifier points to a "property list".  The list
+                                __is used to quickly associate an id name  with  a  set  of  entities;  those
+                                                    __entities  are called "flags" if their use gives the id a boolean value, and
+                    __"properties" if the id is to have an arbitrary attribute (an indicator with
+a property).PSL Manual                    7 February 1983                   Identifiers
+section 6.4                                                        page 6.5
+
+ Put Put _ __ ___ __ ____ ___   ___                                        ____(Put U:id IND:id PROP:any): any                                        expr
+
+                     ___                       ____     The  indicator  IND  with  the  property  PROP  is  placed on the
+                                                     Put              ____        __ _                       Put     property list of the id U.  If the  action  of  Put  occurs,  the
+                ____                             _     ___         __     value  of  PROP  is returned.  If either of U and IND are not ids
+     the type mismatch error occurs and no property is placed.  
+
+        (Put 'Jim 'Height 68)
+
+     The above returns 68 and places (Height .  68)  on  the  property
+                 __     list of the id Jim.
+
+
+ Get Get _ __ ___ __   ___                                                 ____(Get U:id IND:id): any                                                 expr
+
+                                                          ___     Returns  the  property  associated  with  indicator  IND from the
+              ____    _      _                           ___     property list of U.  If U does not have  indicator  IND,  NIL  is
+                                     Get                           Get                                     Get                           Get     returned.    (In  older  LISPs, Get could access functions.)  Get
+                    _           __     returns NIL if U is not an id.
+
+
+         (Get 'Jim 'Height) returns 68
+
+
+ DefList DefList _ ____ ___ __   ____                                          ____(DefList U:list IND:id): list                                          expr
+
+     _     U is a  list  in  which  each  element  is  a  two-element  list:
+      __ __ ____ ___            __      _                     ___     (ID:ID PROP:ANY).    Each  id  in  U  has  the indicator IND with
+                                                        Put                                                        Put     property PROP placed on its property list by  the  Put  function.
+                     DefList                     DefList        ____     The  value  of  DefList  is  a list of the first elements of each
+                             Put  DefList                             Put  DefList     two-element list.  Like Put, DefList may not be  used  to  define
+     functions.  
+
+        (DE DEFLIST (U IND)
+              (COND ((NULL U) NIL)
+                    (T (CONS(PROGN(PUT (CAAR U) IND (CADAR U))
+                                  (CAAR U))
+                            (DEFLIST (CDR U) IND)))))
+
+
+ RemProp RemProp _ __ ___ __   ___                                             ____(RemProp U:id IND:id): any                                             expr
+
+                                         ___                   ____     Removes the property with indicator IND from the property list of
+     _     U.    Returns  the  removed  property or NIL if there was no such
+     indicator.
+
+
+ RemPropL RemPropL _ __ ____ ___ __   ___                                       ____(RemPropL U:id-list IND:id): NIL                                       expr
+
+                     ___          __     _     Remove property IND from all ids in U.Identifiers                   7 February 1983                    PSL Manual
+page 6.6                                                        section 6.4
+
+6.4.1. Functions for Flagging Ids6.4.1. Functions for Flagging Ids6.4.1. Functions for Flagging Ids
+
+                                                                    __  In some LISPs, flags and indicators may clash.  In PSL, flags are ids and
+               ____properties are pairs on the prop-list, so no clash occurs.
+
+
+ Flag Flag _ __ ____ _ __   ___                                             ____(Flag U:id-list V:id): NIL                                             expr
+
+     Flag                                                      Flag     Flag               __    _      _                         Flag     Flag  flags  each  id in U with V; that is, the effect of Flag is
+                              FlagP                   __ _    _  FlagP                              _     that for each id X in U, FlagP(X, V) has the value T.  Both V and
+                         _         __________     all the elements of U must be identifiers or  the  type  mismatch
+                            Flag                            Flag          __ _     error  occurs.   After Flagging, the id V appears on the property
+                  __      _     list of each id X in U.    However,  flags  cannot  be  accessed,
+     placed  on,  or removed from property lists using normal property
+                    Get  Put      RemProp                    Get  Put      RemProp     list functions Get, Put, and RemProp.   Note  that  if  an  error
+                                Flag                                Flag                   __     _     occurs during execution of Flag, then some of the ids on U may be
+                    _     flagged  with  V,  and  others  may  not be.  The statement below
+     causes the flag "Lose" to be placed on the property lists of  the
+     __     ids X and Y.
+
+        (Flag '(X Y) 'Lose)
+
+
+ FlagP FlagP _ __ _ __   _______                                             ____(FlagP U:id V:id): boolean                                             expr
+
+                     _                       _     Returns  T  if  U has been flagged with V; otherwise returns NIL.
+                           _    _           __     Returns NIL if either U or V is not an id.
+
+
+ RemFlag RemFlag _ __ ____ _ __   ___                                          ____(RemFlag U:id-list V:id): NIL                                          expr
+
+                      _                   ____     Removes the flag V from the property list of each member  of  the
+     ____ _        _                         _         __     list U.  Both V and all the elements of U must be ids or the type
+     mismatch error occurs.
+
+
+ Flag1 Flag1 _ __ _ ___   _________                                          ____(Flag1 U:id V:any): Undefined                                          expr
+
+               _                         __ _     Puts flag V on the property list of id U.
+
+
+ RemFlag1 RemFlag1 _ __ _ ___   _________                                       ____(RemFlag1 U:id V:any): Undefined                                       expr
+
+                      _                           __ _     Removes the flag V from the property list of id U.
+
+  [??? Make Flag1 and RemFlag1 return single value. ???]  [??? Make Flag1 and RemFlag1 return single value. ???]  [??? Make Flag1 and RemFlag1 return single value. ???]PSL Manual                    7 February 1983                   Identifiers
+section 6.4                                                        page 6.7
+
+6.4.2. Direct Access to the Property Cell6.4.2. Direct Access to the Property Cell6.4.2. Direct Access to the Property Cell
+
+  Use  of the following functions can destroy the integrity of the property
+____list.  Since PSL uses properties at a low level, care should  be  taken  in
+the use of these functions.
+
+
+ Prop Prop _ __   ___                                                       ____(Prop U:id): any                                                       expr
+
+                          ____    _     Returns the property list of U.
+
+
+ SetProp SetProp _ __ _ ___   _ ___                                            ____(SetProp U:id L:any): L:any                                            expr
+
+                _                 ____    _     Store item L as the property list of U.
+
+
+
+6.5. Value Cell Functions6.5. Value Cell Functions6.5. Value Cell Functions
+
+                                                          Eval                                                          Eval  The  contents of the value cell are usually accessed by Eval (Chapter 11)
+   ValueCell                        Set    SetQ   ValueCell                        Set    SetQor ValueCell (below) and changed by Set or SetQ.
+
+
+ Set Set ___ __ _____ ___   ___                                            ____(Set EXP:id VALUE:any): any                                            expr
+
+     ___            __________     EXP must be an identifier or a type mismatch error occurs.    The
+                Set                Set     effect  of Set is replacement of the item bound to the identifier
+        _____     by VALUE.  If the identifier is not a LOCAL variable or  has  not
+     been declared GLOBAL, it is automatically declared FLUID with the
+     resulting warning message:  
+
+     *** EXP declared FLUID 
+
+     ___     EXP must not evaluate to T or NIL or an error occurs:
+
+     ***** Cannot change T or NIL 
+
+
+ SetQ SetQ ________ __ _____ ___   ___                                     _____(SetQ VARIABLE:id VALUE:any): any                                     fexpr
+
+                                           ________     The  value  of the current binding of VARIABLE is replaced by the
+              _____     value of VALUE.
+
+        (SETQ X 1)
+
+     is equivalent to 
+
+        (SET 'X 1)
+
+     SetQ     SetQ     SetQ  now  conforms  to  the  Common  LISP   standard,   allowing
+     sequential assignment: Identifiers                   7 February 1983                    PSL Manual
+page 6.8                                                        section 6.5
+
+         (SETQ A 1 B 2)
+            ==> (SETQ A 1)
+                (SETQ B 2)
+
+
+ DeSetQ DeSetQ _ ___ _ ___   _ ___                                           _____(DeSetQ U:any V:any): V:any                                           macro
+
+                                                                DeSetQ                                                                DeSetQ     This  is  a function in "USEFUL" (Load USEFUL; in RLISP).  DeSetQ
+                        SetQ                        SetQ     is a destructuring SetQ.  That is, the first argument is a  piece
+                                                         SetQ        ____                 ____          __            SetQ     of list structure whose atoms are all ids.  Each is SetQ'd to the
+     corresponding part of the second argument.  For instance 
+
+        (DeSetQ (a (b) . c) '((1) (2) (3) 4))
+
+     SetQ     SetQ     SetQ's a to (1), b to 2, and c to ((3) 4).
+
+
+ PSetQ PSetQ  ________ __ _____ ___    _________                            _____(PSetQ [VARIABLE:id VALUE:any]): Undefined                            macro
+
+     Part of the USEFUL package (LOAD USEFUL).  
+
+        (PSETQ VAR1 VAL1 VAR2 VAL2 ...  VARn VALn)
+
+     SetQ     SetQ     SetQ's  the  VAR's to the corresponding VAL's.  The VAL's are all
+     evaluated before any assignments are made.  That is,  this  is  a
+              SetQ              SetQ     parallel SetQ.
+
+
+ SetF SetF  ___ ____ ___ ___    ___ ___                                    _____(SetF [LHS:form RHS:any]): RHS:any                                    macro
+
+                                   SetF   SetF                                   SetF   SetF     There  are  two  versions  of SetF.  SetF is redefined on loading
+                                                         SetF     SetF                                                         SetF     SetF     USEFUL.  The description below is for the resident  SetF.    SetF
+     provides  a  method  for  assigning  values  to  expressions more
+                         __     general than simple ids.  For example:
+
+        (SETF (CAR X) 2)
+            ==> CAR X := 2;
+
+     is equivalent to 
+
+        (RPLACA X 2)
+
+                 SetF                 SetF     In general, SetF has the form
+
+        (SetF LHS RHS)
+
+              ___                                               ___     in which LHS is the "left hand side" to be assigned to and RHS is
+                                             ___     evaluated to the value to be assigned.  LHS can  be  one  of  the
+     following:
+
+
+                               SetQ     __                        SetQ     id                        SetQ  is  used to assign a value to thePSL Manual                    7 February 1983                   Identifiers
+section 6.5                                                        page 6.9
+
+                               __                               id.
+      Eval                     Set                         SetQ      Eval                     Set                         SetQ     (Eval expression)         Set  is  used  instead  of  SetQ.    In
+                                              Eval                                              Eval                               effect,  the  "Eval"  cancels  out  the
+                                Quote                                Quote                               "Quote" which would normally be used.
+      Value                                           Eval      Value                                           Eval     (Value expression)        Is treated the same as Eval.
+      Car                      RplacA      Car ____                 RplacA     (Car pair)                RplacA  is  used  to store into the Car
+                               "field".
+      Cdr                      RplacD      Cdr ____                 RplacD     (Cdr pair)                RplacD is used to store  into  the  Cdr
+                               "field".
+      GetV                     PutV      GetV ______              PutV     (GetV vector)             PutV   is   used   to  store  into  the
+                               appropriate location.
+      Indx                     SetIndx      Indx                     SetIndx     (Indx "indexable object") SetIndx  is  used  to  store  into  the
+                               object.
+      Sub                      SetSub      Sub ______               SetSub     (Sub vector)              SetSub   is  used  to  store  into  the
+                               appropriate subrange of the vector.
+
+
+                              Car           Cdr          SetF                      ___     Car ____      Cdr  ____    SetF     Note that if the LHS is (Car pair) or (Cdr  pair),  SetF  returns
+                                                      SetF      RplacA                                         ___          SetF      RplacA     the  modified  pair  instead of the RHS, because SetF uses RplacA
+         RplacD         RplacD     and RplacD in these cases.
+
+                                              SetF        Caar   Cadr                                              SetF        Caar   Cadr     Loading USEFUL brings in declarations to SetF about  Caar,  Cadr,
+          Cddddr          Cddddr     ...  Cddddr.    This  is  rather  handy with constructor/selector
+                                                               Cadadr                                                               Cadadr     macros.  For instance, if FOO is a selector which maps to Cadadr,
+     
+
+        (SETF (FOO X) Y)
+
+     works; that is, it maps to something which does a 
+
+        (RPLACA (CDADR X) Y)
+
+     and then returns X. 
+
+
+ PSetF PSetF  ___ ____ ___ ___    _________                                 _____(PSetF [LHS:form RHS:any]): Undefined                                 macro
+
+                                                PSetF         SetF                                                PSetF         SetF     Part of the USEFUL package (LOAD USEFUL).  PSetF does a  SetF  in
+                                                           ___     parallel: i.e. it evaluates all the right hand sides (RHS) before
+                                           ___     assigning any to the left hand sides (LHS).
+
+
+ MakeUnBound MakeUnBound _ __   _________                                          ____(MakeUnBound U:id): Undefined                                          expr
+
+           _               __     Make  U  an  unbound  id by storing a "magic" number in the value
+     cell.
+
+
+ ValueCell ValueCell _ __   ___                                                  ____(ValueCell U:id): any                                                  expr
+
+                                         __      _     Safe access to the value cell of an id.  If U is not an id a type
+                                     _     mismatch error is signalled; if U is an unbound id, an unbound idIdentifiers                   7 February 1983                    PSL Manual
+page 6.10                                                       section 6.5
+
+                                                                  _     error  is  signalled.    Otherwise  the  current  value  of  U is
+                              Value     LispVar                              Value     LispVar     returned.  [See also the Value and LispVar  functions,  described
+     in Chapter 20, for more direct access].
+
+
+ UnBoundP UnBoundP _ __   _______                                               ____(UnBoundP U:id): boolean                                               expr
+
+                   _     Tests whether U has no value.
+
+  [???  Define  and  describe  General Property LISTs or hash-tables. See  [???  Define  and  describe  General Property LISTs or hash-tables. See  [???  Define  and  describe  General Property LISTs or hash-tables. See
+  Hcons. ???]  Hcons. ???]  Hcons. ???]
+
+
+
+6.6. Package System Functions6.6. Package System Functions6.6. Package System Functions
+
+  To get the package system (Load Package).  An example of the use of  this
+system is at the end of this section.
+
+  The  character  "\"  is  normally  reserved  in the basic Read-Table (see
+Chapter 12) to make up multi-part names of the form  "PackageName\LocalId".
+If the package system is loaded, the Intern process starts searching a path
+in  a  linked  structure from "PackageName", itself an id accessible in the
+"CurrentPackage".  The print-name is still "LocalId",  but  the  additional
+                                                        Prin1     Prin2                                                        Prin1     Prin2package  field  in  each  id  records  "PackageName".   Prin1 and Prin2 are
+modified to access this field in loading the package system.  The  root  of
+the  tree  is the GLOBAL package, indicated by \.  If the package system is
+loaded, the basic id hash table is made into the GLOBAL package.  Thus  \ID
+is guaranteed in the root (in fact the pre-existing id hash table).
+
+  [???  Explain further or at least more clearly. ???]  [???  Explain further or at least more clearly. ???]  [???  Explain further or at least more clearly. ???]
+
+  The following fluid variables are managed by the package system.
+
+
+                   __________                                        ______\CURRENTPACKAGE!* [Initially: Global]                                global
+
+     This   is   the   start   of   the   search  path  if  interning.
+     \CurrentPackage!*     \CurrentPackage!*     \CurrentPackage!* is rebound in the token scanner on encountering
+     a "\".
+
+
+                 __________                                          ______\PACKAGENAMES!* [Initially: (Global)]                                global
+
+     List of ALL package names currently created.
+
+  Our current package model uses a  set  of  general  path  functions  that
+access  functions  specific  to  each level of the id hash table tree to do
+various things: "Localxxxx(s)" and "Pathxxxx(s)" in which "xxxx" is one  of
+          InternP, Intern, RemOb, MapObl          InternP, Intern, RemOb, MapOblthe  set (InternP, Intern, RemOb, MapObl).  By storing different functions,
+each package may have a different structure and associated functions.   The
+                                           ______current implementation of a package uses a vectorPSL Manual                    7 February 1983                   Identifiers
+section 6.6                                                       page 6.11
+
+[Name Father GetFn PutFn RemFn MapFn]
+
+
+                                                       __stored under the indicator 'Package on the PackageName id.
+
+  A  simple  bucket  id hash table can also be used for experiments, or the
+user can build his own.  As far as possible, each function  checks  that  a
+legal package is given before performing the operation.  
+
+  [??? Should we have a package Tag ???]  [??? Should we have a package Tag ???]  [??? Should we have a package Tag ???]
+
+  The following functions should be used.  
+
+
+ \CreatePackage \CreatePackage ____ __ _____________ __   __                          ____(\CreatePackage NAME:id FATHERPACKAGE:id): id                          expr
+
+     This  creates  a  convenient  size  id  hash table, generates the
+     functions to manage it  for  this  package,  and  links  the  new
+                       _____________     package  to  the  FATHERPACKAGE so that path searches for ids are
+     required.
+
+
+ \SetPackage \SetPackage ____ __   __                                              ____(\SetPackage NAME:id): id                                              expr
+
+                                     ______     Selects another package such as GLOBAL\.
+
+
+ \PathInternP \PathInternP _  __ ______    _______                                  ____(\PathInternP S:{id string}): boolean                                  expr
+
+                                              _     Searches from CurrentPackage!* to see if S is interned.
+
+
+ \PathIntern \PathIntern _  __ ______    __                                        ____(\PathIntern S:{id string}): id                                        expr
+
+                          __     Look up or insert an id.
+
+
+ \PathRemob \PathRemob _  __ ______    __                                         ____(\PathRemob S:{id string}): id                                         expr
+
+     Remobs, puts in NIL package.
+
+
+ \PathMapObl \PathMapObl _ ________   ___                                          ____(\PathMapObl F:function): NIL                                          expr
+
+             _        __     Applies F to ALL ids in path.
+
+
+ \LocalInternP \LocalInternP _  __ ______    _______                                 ____(\LocalInternP S:{id string}): boolean                                 expr
+
+     Searches in CURRENTPACKAGE!*.Identifiers                   7 February 1983                    PSL Manual
+page 6.12                                                       section 6.6
+
+ \LocalIntern \LocalIntern _  __ ______    __                                       ____(\LocalIntern S:{id string}): id                                       expr
+
+                                                     __     Look  up  or insert in CURRENTPACKAGE!* (forces ids uninterned in
+     CURRENTPACKAGE!* into CURRENTPACKAGE!*) .
+
+
+ \LocalRemob \LocalRemob _  __ ______    __                                        ____(\LocalRemob S:{id string}): id                                        expr
+
+     Remobs, puts in NIL package.
+
+
+ \LocalMapObl \LocalMapObl _ ________   ___                                         ____(\LocalMapObl F:function): NIL                                         expr
+
+             _        __     Applies F to ALL ids in (CurrentPackage!*).
+
+                 ______  Note that if a string is used, it CANNOT include the \.  Also, since most
+__ids are "RAISED" on input, be careful.
+
+                           \PathIntern                           \PathIntern  Current intern, etc. are \PathIntern, etc.
+
+  Several restrictions are placed on the use  of  packages  when  compiled.
+Since  it  is a loaded module and not integrated with the basic PSL system,
+all ids in the compiled package are Interned in  Global\  before  they  are
+defined.    This  requires  a  slightly  more  complex  loading  system for
+packages.  Names and function ids which conflict with names in Global\  (or
+other  packages  in  the path) must be forced into the id hash table of the
+desired package.  The  package  is  compiled  WITHOUT  the  package  module
+loaded.
+
+  In  addition,  if a function call must be issued for a function which has
+been redefined in the package the function name  must  be  changed.    When
+                                     Fasl                                     FaslPACKAGE  has  been  integrated  with Fasl and PSL, it will be sufficient to
+prefix the  function  name  with  the  package  name  (e.g.  Global\Print).
+Currently, one must actually change the function name (e.g. Global!.Print).
+
+  Other problems in the package system include:
+
+
+   a. Single  character  identifiers  are  handled specially (i.e. not
+      interned) and therefore may not be used in any packages  without
+      doing an explicit intern
+
+   b. By leaving the the package identifier and '\' off the identifier
+      will  place  it  in  the  Global\ package instead of the current
+      package
+
+   c. If an identifier is  installed  in  the  Global\  package,  then
+      reference  to it with another package identifier will return the
+      Global\ value instead of issuing an error
+
+
+                                                                      Print                                                                      Print  As an example, a small package which redefines the system function  PrintPSL Manual                    7 February 1983                   Identifiers
+section 6.6                                                       page 6.13
+
+is shown.  The assumed file name is PrintPack.SL.
+
+   (De GetFieldFn (Relation Field)
+             (Slotdescslotfn
+                (Cdr (Assoc Field
+                        (Dsdescslotalist Getdefstruct Relation)))))
+
+     (Df Print (Args)
+        (Prog (Fields)
+           (Setq Fields (Get (Car Args) 'Fields))
+           (Foreach Elem In (Eval (Car Args)) Do
+              (Cons
+                  Global!.Print
+                  (Foreach Field In Fields Collect
+                     (Apply (GetFieldFn
+                                  (Car Args) Field) ('List Elem)))))
+           (Return (Car Args))))
+
+  This  package  would  be  compiled as follows (immediately after entering
+PSL):
+
+   (Faslout "PrintPackage")
+   (Dskin "PrintPack.SL"$)
+   (Faslend)
+   (Quit)
+
+  This package would be loaded as follows (immediately after entering PSL):
+
+   (Load '(Defstruct Package))
+         (CopyD 'Global!.Print Print)
+         (Progn (\CreatePackage 'PrintPack 'Global)
+                (\SetPAckage 'PrintPack)
+                (LocalIntern 'Print))
+         (Faslin "PrintPack.B")
+
+
+
+6.7. System Global Variables, Switches and Other "Hooks"6.7. System Global Variables, Switches and Other "Hooks"6.7. System Global Variables, Switches and Other "Hooks"
+
+
+6.7.1. Introduction6.7.1. Introduction6.7.1. Introduction
+
+  A number of global variables provide global control of the  LISP  system,
+or  implement  values  which  are  constant  throughout execution.  Certain
+options are controlled by switches, with T or NIL properties (e.g.  ECHOing
+as  a  file is read in); others require a value, such as an integer for the
+current output base.  PSL has the convention  (following  the  REDUCE/RLISP
+convention) of using a "!*" in the name of the variable: !*XXXXX for GLOBAL
+variables  expecting  a  T/NIL  value  (called "switches"), and XXXXX!* for
+other GLOBALs.  Chapter 26 is an index of  switches  and  global  variables
+used in PSL.Identifiers                   7 February 1983                    PSL Manual
+page 6.14                                                       section 6.7
+
+  [??? These should all be FLUIDs, so that ANY one of these variables may  [??? These should all be FLUIDs, so that ANY one of these variables may  [??? These should all be FLUIDs, so that ANY one of these variables may
+  be rebound, as appropriate ???]  be rebound, as appropriate ???]  be rebound, as appropriate ???]
+
+
+6.7.2. Setting Switches6.7.2. Setting Switches6.7.2. Setting Switches
+
+  Strictly  speaking, XXXX is a switch and !*XXXX is a corresponding global
+variable that assumes the T/NIL value; both  are  loosely  referred  to  as
+switches elsewhere in the manual.
+
+       On      Off       On      Off  The  On  and Off functions are used to change the values of the variables
+associated with switches.  Some switches contain an s-expression  on  their
+                                          1
+property lists under the indicator 'SIMPFG .  The s-expression has the form
+     Cond     Condof a Cond list:
+
+
+((T (action-for-ON)) (NIL (action-for-OFF)))
+
+
+                                                  On     Off                                                  On     OffIf  the  'SIMPFG  indicator  is present, then the On and Off functions also
+evaluate the appropriate action in the s-expression.
+
+
+ On On  _ __    ____                                                     _____(On [U:id]): None                                                     macro
+
+              _     For each U, the associated !*U variable is set to T.   If  a  "(T
+                                                GET                                                GET  _     (action-for-ON))"  clause  is  found  by  (GET  U  'SIMPFG),  the
+     "action" is EVAL'ed.
+
+
+ Off Off  _ __    ____                                                    _____(Off [U:id]): None                                                    macro
+
+              _     For each U, the associated !*U variable is set  to  NIL.    If  a
+                                                   GET                                                   GET _     "(NIL  (action-for-OFF)"  clause is found by (GET U 'SIMPFG), the
+     "action" is EVAL'ed.
+
+   (On Comp Ord Usermode)
+
+  will set !*Comp, !*Ord, and !*Usermode to T.
+
+  Note that 
+
+
+
+
+_______________
+
+  1
+   The name SIMPFG comes  from  its  introduction  in  the  REDUCE  algebra
+system,   where   it   was  used  as  a  "simp  flag"  to  specify  various
+simplifications to be performed as various switches were turned on or off.PSL Manual                    7 February 1983                   Identifiers
+section 6.7                                                       page 6.15
+
+   (Get 'Cref 'Simpfg)
+
+returns 
+
+   ((T (Crefon)) (Nil (Crefoff)))
+
+         ____                          ____Setting  CREF  on  will  result  in  !*CREF being set to T and the function
+CrefonCrefonCrefon being evaluated.
+
+
+6.7.3. Special Global Variables6.7.3. Special Global Variables6.7.3. Special Global Variables
+
+
+     __________                                                      ______NIL [Initially: NIL]                                                 global
+
+     NIL is a special GLOBAL variable.  It  is  protected  from  being
+                 Set    SetQ                 Set    SetQ     modified by Set or SetQ.
+
+
+   __________                                                        ______T [Initially: T]                                                     global
+
+     T  is  a  special  GLOBAL  variable.   It is protected from being
+                 Set    SetQ                 Set    SetQ     modified by Set or SetQ.
+
+
+6.7.4. Special Put Indicators6.7.4. Special Put Indicators6.7.4. Special Put Indicators
+
+                                                            __  Some  actions  search  the  property  list  of  relevant  ids  for  these
+indicators:
+
+
+                   __'HELPFUNCTION  An  id,  a  function  to  be executed to give help about the
+               topic; ideally for a complex topic,  a  clever  function  is
+               used.
+
+'HELPSTRING    A help string, kept in core for important or short topics.
+
+'HELPFILE      The  most common case, the name of a file to print; later we
+               hope to load this file into an EMODE buffer for perusal in a
+               window.
+
+'SWITCHINFO    A  string  describing  the  purpose  of  the   SWITCH,   see
+               ShowSwitches               ShowSwitches               ShowSwitches below.
+
+'GLOBALINFO    A   string   describing  the  purpose  of  the  GLOBAL,  see
+               ShowGlobals               ShowGlobals               ShowGlobals below.
+
+                                                       __'BREAKFUNCTION Associates a function to be run with an Id  typed  at  Break
+               Loop, see Chapter 14.
+
+'TYPE          PSL uses the property TYPE to indicate whether a function is
+               a FEXPR, MACRO, or NEXPR; if no property is present, EXPR isIdentifiers                   7 February 1983                    PSL Manual
+page 6.16                                                       section 6.7
+
+               assumed.
+
+'VARTYPE       PSL  uses  the  property  VARTYPE  to  indicate  whether  an
+               __________               identifier is of type GLOBAL or FLUID.
+
+'!*LAMBDALINK  The interpreter also looks under '!*LAMBDALINK for a  Lambda
+               expression, if a procedure is not compiled.
+
+
+6.7.5. Special Flag Indicators6.7.5. Special Flag Indicators6.7.5. Special Flag Indicators
+
+
+                   __'EVAL     If  the  id  is  flagged  EVAL,  the RLISP top-loop evaluates and
+                                              On Defn                                  __          On Defn          outputs any expression (id ...)  in On Defn (!*DEFN := T) mode.
+
+                 __'IGNORE   If the id is flagged IGNORE, the  RLISP  top-loop  evaluates  but
+                                                      On Defn                                          __          On Defn          does NOT output any expression (id ...)  in On Defn (!*DEFN := T)
+          mode.
+
+                                                                  PutD                 __                                               PutD'LOSE     If  an id has the 'LOSE flag, it will not be defined by PutD when
+          it is read in.
+
+'USER     'USER is put on all functions  defined  when  in  !*USERMODE,  to
+          distinguish them from "system" functions.  See Chapter 10.
+
+
+                         LoadTime     CompileTime                         LoadTime     CompileTime  See also the functions LoadTime and CompileTime in Chapter 18.
+
+  [??? Mention Parser properties ???]  [??? Mention Parser properties ???]  [??? Mention Parser properties ???]
+
+
+6.7.6. Displaying Information About Globals6.7.6. Displaying Information About Globals6.7.6. Displaying Information About Globals
+
+       Help       Help  The  Help  function  has two options, (HELP SWITCHES) and (HELP GLOBALS),
+which should display the current state of a variety of switches and globals
+respectively.  These calls have the same  effect  as  using  the  functions
+below, using an initial table of Switches and Globals.
+
+                  ShowSwitches                  ShowSwitches  The  function  (ShowSwitches  switch-list)  may  be  used to print names,
+current settings and purpose of some switches.  Use NIL as the  switch-list
+                                                  ShowSwitches                                                  ShowSwitchesto  get  information on ALL switches of interest; ShowSwitches in this case
+       MapObl       MapObldoes a MapObl (Section 6.3.1) looking for 'SwitchInfo property.
+
+              ShowGlobals              ShowGlobals  Similarly, (ShowGlobals global-list) may be used to print  names,  values
+and  purposes  of  important  GLOBALs.   Again, NIL used as the global-list
+       ShowGlobals         MapObl       ShowGlobals         MapOblcauses ShowGlobals to do a MapObl looking for a 'GlobalInfo  property;  the
+result is some information about all globals of interest.

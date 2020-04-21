@@ -1,0 +1,25 @@
+PSL Spectral Tests,  DEC-20 test system,  No-Date-Yet
+---------------------------------------------------------------
+*** Dummy RECLAIM: 9772 Items used, 140228 Items left.
+EmptyTest 10000		18
+SlowEmptyTest 10000	187
+Cdr1Test 100		521
+Cdr2Test 100		365
+CddrTest 100		268
+ListOnlyCdrTest1	1764
+ListOnlyCddrTest1	3207
+ListOnlyCdrTest2	2708
+ListOnlyCddrTest2	4127
+ReverseTest 10		458
+*** Dummy RECLAIM: 46868 Items used, 103132 Items left.
+MyReverse1Test 10	463
+*** Dummy RECLAIM: 83532 Items used, 66468 Items left.
+MyReverse2Test 10	447
+*** Dummy RECLAIM: 120196 Items used, 29804 Items left.
+LengthTest 100		554
+ArithmeticTest 10000	644
+EvalTest 10000		2680
+tak 18 12 6		477
+gtak 18 12 6		1378
+gtsta g0		1133
+gtsta g1		1196

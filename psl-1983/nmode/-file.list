@@ -1,0 +1,53 @@
+NMODE Source Files Summary - 15 February 1983
+-------------------------------------------------------------------------------
+AUTOFILL.SL - auto fill mode
+BROWSER.SL - browser object definition
+BROWSER-SUPPORT.SL - general support functions for browsers
+BUFFER-BROWSER.SL - the buffer browser (C-X C-B)
+BUFFER-IO.SL - support for PSL I/O to and from text buffers
+BUFFER-POSITION.SL - type representing (line,char) pairs
+BUFFER-WINDOW.SL - abstract data type mapping text buffer to virtual screen
+BUFFER.SL - auxiliary functions for operating on the current buffer
+BUFFERS.SL - functions managing set of existing buffers
+CASE-COMMANDS.SL - commands for changing the case of text
+COMMAND-INPUT.SL - functions for command input
+COMMANDS.SL - miscellaneous editor commands
+DEFUN-COMMANDS.SL - editor commands related to top-level definitions in code
+DIRED.SL - directory edit subsystem
+DISPATCH.SL - command dispatch table manager
+DOC.SL - online documentation facility
+EXTENDED-INPUT.SL - functions for reading extended characters
+FILEIO.SL - functions for I/O to and from files
+INCR.SL - incremental search command
+INDENT-COMMANDS.SL - editor commands relating to indentation
+KILL-COMMANDS.SL - editor commands relating to killing text
+LISP-COMMANDS.SL - miscellaneous editor commands relating to lisp code
+LISP-INDENTING.SL - commands and functions for indenting lisp code
+LISP-INTERFACE.SL - interaction between NMODE and Lisp (including MAIN)
+LISP-PARSER.SL - basic parser for Lisp code
+M-X.SL - the M-X command reader
+M-XCMD.SL - miscellaneous extended commands
+MODE-DEFS.SL - definitions of standard modes
+MODES.SL - mode definition functions
+MOVE-COMMANDS.SL - editor commands relating to cursor motion
+NMODE-20.SL - system dependent functions for Dec-20
+NMODE-9836.SL - system dependent functions for HP9836
+NMODE-ATTRIBUTES.SL - macros for constructing parsing attributes
+NMODE-BREAK.SL - NMODE's break handler
+NMODE-INIT.SL - initialization code
+NMODE-PARSING.SL - primitive functions for parsing source code
+PROMPTING.SL - string input and basic prompt line functions
+QUERY-REPLACE.SL - query-replace subsystem
+READER.SL - NMODE command reader
+REC.SL - recursive editing functions
+SCREEN-LAYOUT.SL - functions managing overall NMODE screen layout
+SEARCH.SL. - searching functions
+SET-TERMINAL-20.SL - Dec-20 terminal driver selection
+SET-TERMINAL-9836.SL - HP9836 terminal driver selection
+SOFTKEYS.SL - NMode softkeys (Esc-/)
+STRUCTURE-FUNCTIONS.SL - functions for moving about structured text
+TERMINAL-INPUT.SL - terminal input functions, including prompted input
+TEXT-BUFFER.SL - text buffer abstract data type
+TEXT-COMMANDS.SL - sentence, paragraph, and formatting stuff
+WINDOW.SL - auxiliary functions for manipulating the current window
+WINDOW-LABEL.SL - manages label area of a window

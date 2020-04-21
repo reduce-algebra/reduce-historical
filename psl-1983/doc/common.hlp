@@ -1,0 +1,215 @@
+This file is an appendix to the 29 July (Colander) Edition of the
+Common Lisp Reference Manual.  Certain chapters have not been implemented
+at all, but those that are largely available have only the exceptions
+described.
+
+
+Chapter 5.
+DEFUN
+	DECLARE is legal but does nothing.  No implicit BLOCK. DOC-STRING
+	not put on property list.
+DEFSELECT
+	Not defined.
+DEFCONST
+	Conflicting PSL definition.  Probably not final Common Lisp def.
+	anyway. (Latest report is that it will be named DEFCONSTANT).
+
+Chapter 6.
+TYPEP, SUBTYPEP
+	Not defined.
+RATIONALP
+	Not defined (No rationals).
+COMPLEXP
+	Not defined (No complex numbers).
+VECTORP
+	Only true of (vector t)
+ARRAYP
+	True of vectors currently.  No arrays yet.
+CLOSUREP
+	Not defined (no closures).
+EQUALP
+	No FUZZ optional argument.  Same as EQUAL.
+
+Chapter 7.
+CLOSURE
+	Not defined (No closures).
+SWAPF, EXCHF
+	Not defined.
+FLET, LABELS, MACROLET
+	Not defined (No local function definition).
+CASE
+	Incompatible PSL definition.
+TYPECASE
+	Not defined.
+BLOCK
+	Not defined.
+RETURN
+	Restricted placement.
+RETURN-FROM
+	Not defined.
+Section 7.8.3 Mapping.
+	The MAP functions in Standard Lisp take a single list as the first
+	argument and the function as the second argument.  This is highly
+	incompatible with Common Lisp.  The means of dealing with this has
+	not been determined yet.
+PROG
+	No initializations.
+PROG*
+	Currently the same as PROG, since no initializations.
+GO
+	Restricted placement.
+Section 7.9 Multiple Values
+	Multiple values do not exist in PSL.
+CATCH
+	Incompatible PSL definition.  *CATCH follows this definition, with
+	a single FORM.
+CATCH-ALL, UNWIND-ALL, UNWIND-PROTECT
+	Not defined.
+
+Chapter 8.
+DEFMACRO
+	The PSL version has destructuring but not keywords.
+
+Chapter 9.
+DECLARE, LOCALLY, THE
+	Currently defined as macros which do nothing.
+
+Chapter 10.
+	The current PSL implementation of property lists uses an a-list
+	instead of the Common Lisp specification of alternating indicators
+	and values.
+GETPR
+	No optional DEFAULT value.
+GETF, PUTF, REMF
+	Not defined.
+GET-PROPERTIES, MAP-PROPERTIES
+	Not defined.
+COPYSYMBOL
+	Not defined.
+GENSYM
+	No optional argument.
+GENTEMP
+	Not defined.
+SYMBOL-PACKAGE
+	Not defined.
+
+Chapter 11.
+	A very simple package system is implemented in PSL which is
+	not compatible with this specification and is not fully integrated.
+	Functions other than those below are not defined.
+INTERN, REMOB, INTERNEDP
+	No optional package.
+
+Chapter 12.
+	Complex numbers and ratios are not implemented in PSL.  The
+	functions which are defined from this chapter are listed below.
+	Others may be defined in the MATHLIB module.
+ZEROP, PLUSP, MINUSP, ODDP, EVENP
+	Return NIL instead of error for non-numeric arguments.
+=, <=, >=, etc.
+	Two arguments only.
+MAX, MIN
+	Defined as described.
++, -, *, /
+	Defined as described.
+INCF, DECF
+	Defined as described.
+EXPT
+	POWER must be an integer.
+ABS
+	Defined as described (no complex numbers, though).
+FLOAT
+	No optional OTHER.
+MOD
+	Two arguments required, must be integers.
+LOGIOR, LOGXOR, LOGAND, LOGNOT, ASH
+	Defined as described.
+
+Chapter 13.
+	The CHARS module defines these functions, with the following
+	exceptions.
+MAKE-CHAR
+	Not defined.
+DIGIT-WEIGHT
+	Not defined.
+CHAR-NAME, NAME-CHAR
+	Not defined.
+
+Chapter 14.
+	Many of the sequence functions are defined in PSL for lists only
+	(e.g. LENGTH), and many use keyword arguments, which are not
+	implemented.  The following are defined:
+ELT, SETELT
+	Defined as described.
+SUBSEQ
+	END argument is required, not optional.
+COPYSEQ, CATENATE
+	Defined as described.
+
+Chapter 15.
+LIST-LENGTH
+	No optional LIMIT.
+NTH
+	Incompatible PSL definition.
+MAKE-LIST
+	Not defined.
+APPEND, NCONC
+	Takes only 2 arguments.
+PUSHNEW
+	Not defined.
+BUTLAST, NBUTLAST
+	No optional N (uses default value 1).
+SETNTH
+	Not defined.
+SUBST, NSUBST
+	EQUAL is used, not EQL.
+SUBSTQ, NSUBSTQ
+	Not defined.
+NSUBLIS
+	Not defined.
+Section 15.5 Using Lists as Sets
+	Most of these functions require keywords.  This section has not
+	been implemented yet.
+Section 15.6 Association Lists.
+	Not implemented yet.
+Section 15.7 Hash Tables
+	Not yet implemented.
+
+Chapter 16.
+	Arrays do not yet exist in PSL.
+
+Chapter 17.
+	The string functions are obtained by LOADing the STRINGS module.
+CHAR
+	Conflicting PSL definition.  Not defined.
+STRING=, STRING-EQUAL, etc.
+	2 arguments only.  No keyword arguments.
+MAKE-STRING
+	FILL-CHARACTER is required.
+STRING-UPCASE, STRING-DOWNCASE, STRING-CAPITALIZE
+	No keyword arguments.
+STRING
+	Conflicting PSL definition.  Called STRINGIFY in the STRINGS pkg.
+
+Chapter 18. Structures.
+	We are currently using a version of DEFSTRUCT close to this,
+	obtained by LOADing NSTRUCT.  This isn't documented and has some
+	bugs, but it uses the same code as the LispM DEFSTRUCT.
+
+Chapter 19. The Evaluator.
+	This chapter is incomplete.
+
+Chapter 20. Streams.
+	Streams are not yet implemented in PSL in this fashion.
+
+Chapter 21. Input and Output.
+	Not yet implemented.
+
+Chapter 22. File System Interface.
+	Not yet implemented.
+
+Chapter 23. Errors.
+	Not yet implemented.
+
+Chapter 24. The Compiler.
+	Not yet implemented.

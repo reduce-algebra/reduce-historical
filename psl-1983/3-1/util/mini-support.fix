@@ -1,0 +1,46 @@
+FLUID '(PromptString!* !*Break);
+
+%   Error-print is called when the major loop returns a NIL. 
+ 
+SYMBOLIC PROCEDURE ERROR!-PRINT; 
+  <<PRIN2 "ERROR in grammar, current token is "; 
+    PRIN2 !#TOK!#; PRIN2 " and stack is "; 
+    PRIN2 !#STACK!#; TERPRI() >>; 
+ 
+% The following errs out if its argument is NIL
+
+SYMBOLIC PROCEDURE FAIL!-NOT U;
+IF U then T
+ else begin scalar Promptstring!*;
+       PRIN2T "FAIL-NOT called in a concatenation";
+       ERROR!-PRINT();
+       PromptString!*:="Mini-Error>";
+       U:=ContinuableERROR(997,"Failure scanning a concatenation",'(QUOTE T));
+       IF U AND SCAN!-TERM() THEN RETURN T;
+       return begin scalar !*Break;
+           return Error(997, "Could not Recover from FAIL-NOT");
+       end;
+      end;
+
+%   Invoke starts execution of a previously defined grammar. 
+
+SYMBOLIC PROCEDURE INVOKE U; 
+ BEGIN SCALAR X,PromptString!*;
+    PromptString!*:=Concat(Id2String U,">");
+    !#IDTYPE!# := 0;
+    !#NUMTYPE!# := 2;
+    !#STRTYPE!# := 1;
+    FLAG (GET (U, 'KEYS), 'KEY); 
+    DIPBLD (GET (U, 'DIPS)); 
+    !#RTNOW!# := GET (U, 'RTS); 
+    !#GTNOW!# := GET (U, 'GTS); 
+    !#DIP!# := !#KEY!# := !#RT!# := !#GT!# := !#GENLABLIST!# := NIL; 
+ L: !#STACK!# := NIL; 
+    NEXT!-TOK(); 
+    X := APPLY (U, NIL); 
+    IF NULL X THEN 
+    << ERROR!-PRINT(); 
+       IF SCAN!-TERM() THEN <<PRIN2 ("Resuming scan"); TERPRI(); GOTO L>> >>; 
+    REMFLAG (GET (U, 'KEYS), 'KEY) 
+ END; 
+

@@ -1,0 +1,53 @@
+TR-10                                                            March 1981
+
+
+
+
+
+
+
+
+                  THE PORTABLE STANDARD LISP USERS MANUAL                  THE PORTABLE STANDARD LISP USERS MANUAL                  THE PORTABLE STANDARD LISP USERS MANUAL
+
+
+                                    BY                                    BY                                    BY
+                    THE UTAH SYMBOLIC COMPUTATION GROUP                    THE UTAH SYMBOLIC COMPUTATION GROUP                    THE UTAH SYMBOLIC COMPUTATION GROUP
+
+
+
+                      Department of Computer Science
+                            University of Utah
+                        Salt Lake City, Utah 84112
+
+
+
+                       Version 3.1: 7 February 1983
+
+
+
+
+
+
+
+
+                                 ABSTRACT                                 ABSTRACT                                 ABSTRACT
+
+
+This  manual  describes  the  primitive  data  structures,  facilities  and
+functions present in the Portable Standard LISP (PSL) system.  It describes
+the implementation details and functions of interest to a  PSL  programmer.
+Except  for  a  small  number  of hand-coded routines for I/O and efficient
+function  calling,  PSL  is   written   entirely   in   itself,   using   a
+machine-oriented  mode  of  PSL, called SYSLISP, to perform word, byte, and
+efficient integer and string operations.  PSL is compiled  by  an  enhanced
+version  of  the  Portable LISP Compiler, and currently runs on the DEC-20,
+VAX, and MC68000.
+
+
+
+
+  Copyright (c) 1982   W. Galway, M. L. Griss, B. Morrison, and B. Othmer
+
+
+Work supported in part by  the  National  Science  Foundation  under  Grant
+Numbers MCS80-07034 and MCS82-04247.

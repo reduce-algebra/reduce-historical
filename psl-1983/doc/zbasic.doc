@@ -1,0 +1,602 @@
+ 
+ZBASIC contains 6 packages --
+    (1) YLSTS -- useful functions for lists.
+    (2) YNUMS -- useful functions for numbers.
+    (3) YSTRS -- useful functions for strings.
+    (4) YIO   -- useful functions for user io.
+    (5) YCNTRL -- useful functions for program control.
+    (6) YRARE -- functions we use now, but may eliminate.  
+ 
+ YLSTS -- BASIC LIST UTILITIES
+
+CCAR    ( X:any ):any
+CCDR    ( X:any ):any
+LAST    ( X:list ):any
+NTH-CDR ( L:list N:number ):list
+NTH-ELT ( L:list N:number ):elt of list
+NTH-TAIL( L:list N:number ):list
+TAIL-P  ( X:list Y:list ):extra-boolean
+NCONS   ( X:any ): (CONS X NIL)
+KWOTE   ( X:any ): '<eval of #X>
+MKQUOTE ( X:any ): '<eval of #X>
+RPLACW  ( X:list Y:list ):list
+DREMOVE ( X:any L:list ):list
+REMOVE  ( X:any L:list ):list
+DSUBST  ( X:any Y:any Z:list ):list
+LSUBST  ( NEW:list OLD:list X:any ):list
+COPY    ( X:list ):list
+TCONC   ( P:list X:any ): tconc-ptr
+LCONC   ( P:list X:list ):list
+CVSET   ( X:list ):set
+ENTER   ( ELT:element SET:list ):set
+ABSTRACT( FN:function L:list ):list
+EACH    ( L:list FN:function ):extra-boolean
+SOME    ( L:list FN:function ):extra-boolean
+INTERSECTION  ( SET1:list SET2:list ):extra-boolean
+SETDIFFERENCE ( SET1:list SET2:list ):extra-boolean
+SUBSET  ( SET1:any SET2:list ):extra boolean
+UNION   ( X:list Y:list ):list
+SEQUAL  ( X:list Y:list ):extra boolean
+MAP2C   ( X:list Y:list FN:function ):NIL
+MAP2    ( X:list Y:list FN:function ):NIL
+ATSOC   ( ALST:list, KEY:atom ):any
+
+ 
+CCAR( X:any ):any
+    ----
+    Careful Car.  Returns car of x if x is a list, else NIL.
+ 
+CCDR( X:any ):any
+    ----
+    Careful Cdr.  Returns cdr of x if x is a list, else NIL.
+ 
+LAST( X:list ):any
+    ----
+    Returns the last cell in X.
+    E.g.  (LAST '(A B C)) = (C),  (LAST '(A B . C)) = C.
+ 
+NTH-CDR( L:list N:number ):list
+    -------
+    Returns the nth cdr of list--0 is the list, 1 the cdr ...
+ 
+NTH-ELT( L:list N:number ):list
+    -------
+    Returns the nth elt of list--1 is the car, 2 the cadr ...
+ 
+NTH-TAIL( L:list N:number ):list
+    -------
+    Returns the nth tail of list--1 is the list, 2 the cdr ...
+ 
+TAIL-P( X:list Y:list ):extra-boolean
+    ------
+    If X is a non-nil tail of Y (X eq cdr Y or cddr Y or...), return X.
+    Renamed to avoid a conflict with TAILP in compiler
+  NCONS( X:any ): (CONS X NIL)
+     -----
+     Returns (CONS X NIL) 
+ 
+  KWOTE( X:any ): '<eval of #X>
+    MKQUOTE( X:any ): '<eval of #X>
+    -------
+    Returns the quoted value of its argument. 
+ 
+RPLACW( X:list Y:list ):list
+    ------
+    Destructively replace the Whole list X by Y.
+ 
+DREMOVE( X:any L:list ):list
+    -------
+    Remove destructively all equal occurrances of X from L.
+ 
+REMOVE( X:any  L:list ):list
+    ------
+    Return copy of L with all equal occurrences of X removed.
+ 
+COPY( X:list ):list
+    ----
+    Make a copy of X--EQUAL but not EQ (except for atoms).
+ 
+DSUBST( X:any Y:any Z:list ):list
+    ------
+    Destructively substitute copies(??) of X for Y in Z.
+ 
+LSUBST( NEW:list OLD:list X:any ):list
+    ------
+    Substitute elts of NEW (splicing) for the element old in X
+ 
+TCONC( P:list X:any ): tconc-ptr
+    -----
+    Pointer consists of (CONS LIST (LAST LIST)).
+    Returns (and alters) pointer consisting of (CONS LIST1 (LAST LIST1)),
+    where LIST1 = (NCONC1 LIST X).
+    Avoids searching down the list as nconc1 does, by pointing at last elt
+    of list for nconc1.
+    To use, setq ptr to (NCONS NIL), tconc elts, return car of ptr.
+ 
+LCONC( P:list X:list ):list
+    -----
+    Same as TCONC, but NCONCs instead of NCONC1s.
+ 
+CVSET( X:list ):list
+    --------------------
+    Converts list to set, i.e., removes redundant elements.
+ 
+ENTER( ELT:element SET:list ):list
+    -----
+    Returns (ELT . SET) if ELT is not member of SET, else SET.
+ 
+ABSTRACT( FN:function L:list ):list
+    --------
+    Returns list of elts of list satisfying FN.
+ 
+EACH( L:list FN:function ):extra boolean
+    ----
+    Returns L if each elt satisfies FN, else NIL.
+ 
+SOME( L:list FN:function ):extra boolean
+     ----
+    Returns the first tail of the list whose CAR satisfies function.
+ 
+INTERSECTION( #SET1:list #SET2:list ):extra boolean
+     ------------
+     Returns list of elts in SET1 which are also members of SET2 
+ 
+SETDIFFERENCE( #SET1:list #SET2:list ):extra boolean
+     -------------
+     Returns all elts of SET1 not members of SET2.
+ 
+SUBSET( #SET1:any #SET2:list ):extra boolean
+    ------
+    Returns SET1 if each element of SET1 is a member of SET2.
+ 
+UNION( X:list Y:list ):list
+     -----
+     Returns the union of lists X, Y
+ 
+SEQUAL( X:list Y:list ):extra boolean
+     ------
+     Returns X if X and Y are set-equal: same length and X subset of Y.
+ 
+MAP2( X:list Y:list FN:function ):NIL
+    ------
+    Applies FN (of two arguments) to successive paired tails of X and Y.
+ 
+MAP2C( X:list Y:list FN:function ):NIL
+    ------
+    Applies FN (of two arguments) to successive paired elts of X and Y.
+ 
+ATSOC( ALST:list, KEY:atom ):any
+    -----
+    Like ASSOC, except uses an EQ check.  Returns first element of
+    ALST whose CAR is KEY.
+ 
+ YNUMS -- BASIC NUMBER UTILITIES
+
+ADD1    ( number ):number                       EXPR
+SUB1    ( number ):number                       EXPR
+ZEROP   ( any ):boolean                         EXPR
+MINUSP  ( number ):boolean                      EXPR
+PLUSP   ( number ):boolean                      EXPR
+POSITIVE( X:any ):extra-boolean                 EXPR
+NEGATIVE( X:any ):extra-boolean                 EXPR
+NUMERAL ( X:number/digit/any ):boolean          EXPR
+GREAT1  ( X:number Y:number ):extra-boolean     EXPR
+LESS1   ( X:number Y:number ):extra-boolean     EXPR
+GEQ     ( X:number Y:number ):extra-boolean     EXPR
+LEQ     ( X:number Y:number ):extra-boolean     EXPR
+ODD     ( X:integer ):boolean                   EXPR
+SIGMA   ( L:list FN:function ):integer          EXPR
+RAND16  ( ):integer                             EXPR
+IRAND   ( N:integer ):integer                   EXPR
+
+ 
+The DEC compiler may optimize calls to PLUS2, DIFFERENCE, EQUAL,
+    LESSP, etc. by converting them to calls to ADD1, SUB1, ZEROP,
+    MINUSP, etc.  This will create circular defintions in the
+    conditional defintions, about which the compiler will complain.
+    Such complaints can be ignored.
+ 
+ADD1( number ):number                        EXPR
+    ----
+    Note: DEC compiler optimizes (PLUS2 N 1) into (ADD1 N). 
+ 
+SUB1( number ):number                        EXPR
+    ----
+    Note: DEC compiler optimizes (DIFFERENCE N 1) into (SUB1 N). 
+ 
+ZEROP( X:any ):boolean                       EXPR
+    -----
+    Returns non-nil iff X equals 0.
+ 
+MINUSP( N:number ):boolean                   EXPR
+    ------
+    Returns non-nil iff N is less than 0.
+ 
+PLUSP( N:number ):boolean                    EXPR
+    -----
+    Returns non-nil iff N is greater than 0.
+ 
+ODD( X:integer ):boolean                     EXPR
+    ---
+    Returns T if x is odd, else NIL.
+    WARNING: EVENP is used by REDUCE to test if a list has even
+    length.  ODD and EVENP are thus highly distinct.
+ 
+POSITIVE( X:any ):boolean                   EXPR
+    --------
+    Returns non-nil iff X is a positive number.
+ 
+NEGATIVE( X:any ):boolean                   EXPR
+    --------
+    Returns non-nil iff X is a negative number.
+ 
+NUMERAL( X:any ): boolean                   EXPR
+    -------
+    Returns true for both numbers and digits.  Some dialects
+    had been treating the digits as numbers, and this fn is
+    included as a replacement for NUMBERP where NUMBERP might
+    really be checking for digits.
+    N.B.:  Digits are characters and thus ID's
+ 
+GREAT1( X:number Y:number ):extra-boolean   EXPR
+    ------
+    Returns X if it is strictly greater than Y, else NIL.
+    GREATERP is simpler if only T/NIL is needed.
+ 
+LESS1( X:number Y:number ):extra-boolean    EXPR
+    -----
+    Returns X if it is strictly less than Y, else NIL
+    LESSP is simpler if only T/NIL is needed.
+ 
+GEQ( X:number Y:number ):extra-boolean      EXPR
+    ---
+    Returns X if it is greater than or equal to Y, else NIL.
+ 
+LEQ( X:number Y:number ):extra-boolean      EXPR
+    ---
+    Returns X if it is less than or equal to Y, else NIL.
+ 
+SIGMA( L:list, FN:function ):integer        EXPR
+    -----
+    Returns sum of results of applying FN to each elt of LST.
+ 
+RAND16( ):integer                           EXPR
+    IRAND ( N:integer ):integer                 EXPR
+    ------
+    Linear-congruential random-number generator.  To avoid dependence
+    upon the big number package, we are forced to use 16-bit numbers,
+    which means the generator will cycle after only 2^16.
+    The randomness obtained should be sufficient for selecting choices
+    in VOCAL, but not for monte-carlo experiments and other sensitive
+    stuff.
+ decimal 14933 = octal 35125, decimal 21749 = octal 52365 
+ 
+Returns a new 16-bit unsigned random integer.  Leftmost bits are
+    most random so you shouldn't use REMAINDER to scale this to range
+ 
+Scale new random number to range 0 to N-1 with approximately equal
+    probability.  Uses times/quotient instead of remainder to make best
+    use of high-order bits which are most random
+ 
+ YSTRS --  BASIC STRING UTILITIES
+
+EXPLODEC ( X:any ):char-list                      EXPR
+EXPLODE2 ( X:any ):char-list                      EXPR
+FLATSIZE ( X:str ):integer                        EXPR
+FLATSIZE2( X:str ):integer                        EXPR
+NTHCHAR  ( X:str N:number ):char-id               EXPR
+ICOMPRESS( LST:lst ):<interned id>                EXPR
+SUBSTR   ( STR:str START:num LENGTH:num ):string  EXPR
+CAT-DE   ( L: list of strings ):string            EXPR
+CAT-ID-DE( L: list of strings ):<uninterned id>   EXPR
+SSEXPR   ( S: string ):<interned id>              EXPR
+
+ 
+EXPLODE2( X:any ):char-list                 EXPR
+    EXPLODEC( X:any ):char-list                 EXPR
+    --------
+    List of characters which would appear in PRIN2 of X.  If either
+    is built into the interpreter, we will use that defintion for both.
+    Otherwise, the definition below should work, but inefficiently.
+    Note that this definition does not support vectors and lists.
+    (The DEC and IBM interpreters support EXPLODE and EXPLODE2 by using
+     the same internal algorithm that is used for PRIN1 (PRIN2), but put
+     the chars generated into a list instead of printing them.
+     Thus, they work on arbitrary s-expressions.) 
+ If either EXPLODEC or EXPLODE2 is defined, the CDE does nothing.
+ 
+Note: According to the STANDARD LISP REPORT, EXPLODE and EXPLODE2
+    are only defined for atoms.  If your interpreter does not support
+    extended EXPLODE and EXPLODE2, then change the second CDE's below
+    for FLATSIZE and FLATSIZE2 to get recursive versions of them.
+ 
+ FLATSIZE( X:any ):integer                  EXPR
+     --------
+     Number of chars in a PRIN1 of X.
+     Also equals length of list created by EXPLODE of X,
+     assuming that EXPLODE extends to arbitrary s-expressions.
+     DEC and IBM interpreters use the same internal algorithm that
+     is used for PRIN1, but count chars instead of printing them. 
+ 
+If your EXPLODE only works for atoms, comment out the above
+    CDE and turn the CDE below into DE.
+ 
+ FLATSIZE2( X:any ):integer                 EXPR
+     ---------
+     Number of chars in a PRIN2 of X.
+     Also equals length of list created by EXPLODE2 of X,
+     assuming that EXPLODE2 extends to arbitrary s-expressions.
+     DEC and IBM interpreters use the same internal algorithm that
+     is used for PRIN2, but count chars instead of printing them. 
+  FLATSIZE will often suffice for FLATSIZE2 
+ 
+If your EXPLODE2 only works for atoms, comment out the CDE above
+    and turn the CDE below into DE.
+ 
+ NTHCHAR( X:any, N:number ):character-id      EXPR
+     -------
+     Returns nth character of EXPLODE2 of X.
+ 
+ICOMPRESS( LST:list ):interned atom           EXPR
+    ---------
+    Returns INTERN'ed atom made by COMPRESS.
+ 
+SUBSTR( STR:string START:number LENGTH:number ):string  EXPR
+    ------
+    Returns a substring of the given LENGTH beginning with the
+    character at location START in the string.
+    NB: The first location of the string is 0.
+        If START or LENGTH is negative, 0 is assumed.
+        If the length given would exceed the end of the string, the
+        subtring returned quietly goes to end of string, no error.
+ 
+CAT-DE( L: list of expressions ):string        EXPR
+    -------
+    Returns a string made from the concatenation of the prin2 names
+    of the expressions in the list.  Usually called via CAT macro.
+ 
+CAT-ID-DE( L: list of any ):uninterned id     EXPR
+    -------
+    Returns an id made from the concatenation of the prin2 names
+    of the expressions in the list.  Usually called via CAT-ID macro.
+ 
+SSEXPR( S: string ): id                        EXPR
+    ------
+    Returns ID `read' from string.  Not very robust.
+ 
+YIO -- simple I/O utilities.  All EXPR's.
+
+CONFIRM       (#QUEST: string ):boolean
+EATEOL        ():NIL
+TTY-DE        (#L: list ):NIL
+TTY-TX-DE     (#L: list ):NIL
+TTY-XT-DE     (#L: list ):NIL
+TTY-TT-DE     (#L: list ):NIL
+TTY-ELT       (#X: elt ):NIL
+PRINA         (#X: any ):NIL
+PRIN1SQ       (#X: any ):NIL
+PRIN2SQ       (#X: any ):NIL
+PRINCS        (#X: single-char-id ):NIL
+--queue-code--
+SEND          ():NIL
+SEND-1        (#EE)
+ENQUEUE       (#FN #ARG)
+Q-PRIN1       (#E: any ):NIL
+Q-PRINT       (#E: any ):NIL
+Q-PRIN2       (#E: any ):NIL
+Q-TERPRI      ()
+ONEARG-TERPRI (#E: any ):NIL
+Q-TYO         (#N: ascii-code ):NIL
+Q-PRINC       (#C: single-char-id ):NIL
+* Q-TTY-DE      (#CMDS: list ):NIL
+* Q-TTY-XT-DE   (#CMDS: list ):NIL
+* Q-TTY-TX-DE   (#CMDS: list ):NIL
+* Q-TTY-TT-DE   (#CMDS: list ):NIL
+
+ DE CONFIRM (!#QUEST) (PROG (!#ANS) LP0 (TTY!-XT !#QUEST) LP1 (SEND) (
+SETQ !#ANS (CAR (EXPLODEC (READ)))) (COND ((EQ !#ANS (QUOTE Y)) (PROGN (
+EATEOL) (RETURN T))) ((EQ !#ANS (QUOTE N)) (PROGN (EATEOL) (RETURN NIL))) ((
+EQ !#ANS (QUOTE !?)) (GO LP0)) (T (TTY!-XT Please type Y, N or ?.)) (GO 
+LP1)))
+ 
+Eat (discard) text until $EOL$ or <ESC> seen.
+    <ESC> meaningful only on PDP-10 systems.
+    $EOL$ meaningful only on correctly-implemented Standard-LISP systems. 
+ An idea whose time has not yet come... 
+ DE TTY!-DE (EOLS!#BEFORE !#L EOLS!#AFTER) (PROG (OLD!#CHAN) (SETQ 
+OLD!#CHAN (WRS NIL)) LP1 (COND ((ONEP EOLS!#BEFORE) (TTY!-ELT !$EOL!$)) ((
+ZEROP EOLS!#BEFORE) NIL) (T (PROGN (TTY!-ELT !$EOL!$) (SETQ EOLS!#BEFORE (
+SUB1 EOLS!#BEFORE)) (GO LP1)))) (MAPC !#L (FUNCTION TTY!-ELT)) LP1 (COND ((
+ONEP EOLS!#AFTER) (TTY!-ELT !$EOL!$)) ((ZEROP EOLS!#AFTER) NIL) (T (PROGN (
+TTY!-ELT !$EOL!$) (SETQ EOLS!#AFTER (SUB1 EOLS!#AFTER)) (GO LP2)))) (WRS 
+OLD!#CHAN)))
+ So, for now at least, ... 
+ 
+PRINA( X:any ): any
+    -----
+    Prin2s expression, after TERPRIing if it is too big for line, or spacing
+    if it is not at the beginning of a line.  Returns the value of X.
+    Except for the space, this is just PRIN2 in the IBM interpreter.
+ 
+CHRCT (): <number>
+     -----
+  CHaRacter CounT left in line.
+  Also a CDE in YPP.LSP -- built into IMSSS DEC interpreter.
+ 
+BINARY (#X: boolean): old-value
+     ------
+     Stub for non-IMSSS interpreters.
+     In IMSSS interpreter, will put terminal into binary mode or
+     take it out, according to argument, and return old value.
+ 
+PRIN1SQ (#X: any)
+     -------
+  PRIN1, Safe, use apostrophe for Quoted expressions.
+  This is essentially a PRIN1 which tries not to exceed the right margin.
+  It exceeds it only in those cases where the pname of a single atom
+  exceeds the entire linelength.  In such cases, <big> is printed at the
+  terminal as a warning.
+  (QUOTE xxx) structures are printed in 'xxx form to save space.
+  Again, this is a little superfluous for the IBM interpreter.
+
+ 
+PRIN2SQ (#X: any)
+    -------
+  PRIN2, Safe, use apostrophe for Quoted expressions.
+  Just like PRIN1SQ, but uses PRIN2 as a basis.
+
+ 
+PRINCS (#X: single-character-atom)
+    -------
+  PRINC Safe.  Does a PRINC, but first worries about right margin.
+
+ 
+1980 Jul 24 -- New Queued-I/O routines.
+To interface other code to this new I/O method, the following changes
+must be made in other code:
+ PRIN2 --> TTY
+ TERPRI --> $EOL$ inside a TTY, which causes Q-TERPRI to be called
+ TYO --> Q-TYO
+ PRIN1, PRINT -- These are used only for debugging.  Do a (SEND) just
+        before starting to print things in realtime, or use Q-PRIN1 etc.
+ TTY -- Ok, expands into TTY-DE which calls Q-PRIN2 and Q-TERPRI.
+ SAY -- I don't know what to do with this crock.  It seems to be
+        a poor substitute for TTY.  If so it can be changed to TTY
+        with the arguments fixed to be correct.  <!GRAM>LPARSE.LSP
+
+ 
+When *BATCHOUT is NIL, output is done in realtime and *BATCHQUEUE
+    remains NIL.  When *BATCHOUT is true, output is queued and SEND
+    executes&dequeues it later.
+ Initialize *BATCHQUEUE for TCONC operations.
+ Initialize *BATCHMAX and *BATCHCNT 
+  These call PRIN2, so they would cause double-enqueuing. 
+ DE Q!-TTY!-DE (!#CMDS) (COND BATCHOUT (ENQUEUE (QUOTE TTY!-DE) !#CMDS)) (
+1 (TTY!-DE !#CMDS))))
+ DE Q!-TTY!-XT!-DE (!#CMDS) (COND BATCHOUT (ENQUEUE (QUOTE TTY!-XT!-DE) 
+!#CMDS)) (1 (TTY!-XT!-DE !#CMDS))))
+ DE Q!-TTY!-TX!-DE (!#CMDS) (COND BATCHOUT (ENQUEUE (QUOTE TTY!-TX!-DE) 
+!#CMDS)) (1 (TTY!-TX!-DE !#CMDS))))
+ DE Q!-TTY!-TT!-DE (!#CMDS) (COND BATCHOUT (ENQUEUE (QUOTE TTY!-TT!-DE) 
+!#CMDS)) (1 (TTY!-TT!-DE !#CMDS))))
+ 
+ YCNTRL -- ROUTINES INVOLVED WITH PROGRAM CONTROL STRUCTURES
+
+CATCH     ( EXP:s-expression LABELS:id or idlist ):any    EXPR
+THROW     ( VALU:any LABEL:id ): error label              EXPR
+ERRSET-DE ( #EXP #LBL ):any                               EXPR
+APPLY#    ( ARG1: function ARG2: argument:list ):any      EXPR
+BOUND     ( X:any ):boolean                               EXPR
+MKPROG    ( VARS:id-lst BODY:exp ):prog                   EXPR
+BUG-STOP  (): any                                         EXPR
+
+ 
+CATCH( EXP:s-expression LABELS:id or idlist ): any  EXPR
+    -----
+    For use with throw.  If no THROW occurs in expression, then
+    returns value of expression.  If thrown label is MEMQ or EQ to
+    labels, then returns thrown value.  OW, thrown label is passed
+    up higher.  Expression should be quoted, as in ERRORSET.
+ 
+THROW( VALU:any LABEL:id ): error label             EXPR
+    -----
+    Throws value with label up to enclosing CATCH having label.
+    If there is no such CATCH, causes error.
+ 
+ERRSET-DE ( EXP LBL ):any                     EXPR
+    Named errset.  If error matches label, then acts like errorset.
+    Otherwise propagates error upward.
+    Matching:  Every label stops errors NIL, $EOF$.
+               Label 'ERRORX stops any error.
+               Other labels stop errors whose first arg is EQ to them.
+    Usually called via ERRSET macro.
+ 
+APPLY#(ARG1: function ARG2: argument:list): any     EXPR
+    ------
+    Like APPLY, but can use fexpr and macro functions.
+ 
+BOUND( X:any ): boolean                             EXPR
+    -----
+    Returns T if X is a bound id.
+ 
+MKPROG( VARS:id-lst BODY:exp )       EXPR
+    ------
+    Makes a prog around the body, binding the vars.
+ 
+BUGSTOP ():NIL                       EXPR
+    -------
+    Enter a read/eval/print loop, exit when OK is seen.
+ 
+ YRARE -- ROUTINES WHICH ARE USED, BUT OF DUBIOUS USEFULNESS
+                ?? DELETE THESE ??
+
+LOADV   ( V:vector FN:function ):vector         EXPR
+AMONG   ( ALST KEY ITEM )                       EXPR
+INSERT  ( ITEM ALST KEY )                       EXPR
+DCONS   ( X:any Y:list ):list                   EXPR
+SUBLIST ( X:list P1:integer P2:integer ):list   EXPR
+SUBLIST1( Y )                                   EXPR
+LDIFF   ( X:list Y:list ):list          EXPR  used in editor/copy in ZEDIT
+MAPCAR# ( L:list FN:function ):any              EXPR
+MAP#    ( L:list FN:function ):any              EXPR
+INITIALP( X:list Y:list ):boolean               EXPR
+SUBLISTP( X:list Y:list ):list                  EXPR
+INITQ   ( X:any Y:list R:fn ):boolean           EXPR
+
+
+ 
+LOADV( V:vector FN:function ):vector        EXPR
+    -----
+    Loads vector with values.  Function should be 1-place numerical.
+    V[I] _ FN( I ).
+    If value of function is 'novalue, then doesn't change value. ??
+ 
+AMONG(ALST:association-list KEY:atom ITEM:atom):boolean     EXPR
+    -----
+    Tests if item is found under key in association list.
+    Uses EQUAL tests.
+ 
+INSERT (ITEM:item ALST:association:list KEY:any):association list
+    ------
+    EXPR (destructive operation on ALST)
+    Inserts item in association list under key  or if key not present
+    adds (KEY ITEM) to the ALST.
+ 
+DCONS( X:any Y:list ):list                          EXPR
+    -----
+    Destructively cons x to list.
+ 
+SUBLIST( X:list P1:integer P2:integer ):list        EXPR
+    -------
+    Returns sublist from p1 to p2 positions, negatives counting from end.
+    I.e., (SUBLIST '(A B C D E) 2 -2) = (B C D)
+ 
+LDIFF( X:list Y:list ):list                         EXPR
+    -----
+    If X is a tail of Y, returns the list difference of X and Y,
+    a list of the elements of Y preceeding X.
+ 
+MAPCAR#( L:list FN:function ):any                   EXPR
+    -------
+    Extends mapcar to work on general s-expressions as well as lists.
+    The return is of same form, i.e.
+                (MAPCAR# 'ATOM '(A B C . D)) = (T T T . T)
+    Also, if for any member of list the variable SPLICE is set to
+    true by function, then for that member the return from the
+    function is spliced into the return.
+ 
+MAP#( L:list FN:function ):any                      EXPR
+    ----
+    Extends map to work on general s-expressions as well as lists.
+ 
+INITIALP( X:list Y:list ):boolean           EXPR
+    --------
+    Returns T if X is EQUAL to some ldiff of Y.
+ 
+SUBLISTP( X:list Y:list ):list              EXPR
+    --------
+    Returns a tail of Y (or T) if X is a sublist of Y.
+ 
+INITQ( X:any Y:list R:fn ):boolean          EXPR
+    -----
+    Returns T if x is an initial portion of Y under the relation R.

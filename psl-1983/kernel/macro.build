@@ -1,0 +1,22 @@
+%
+% MACRO.BUILD - Files of macros defined in the interpreter
+% 
+% Author:      Eric Benson
+%              Symbolic Computation Group
+%              Computer Science Dept.
+%              University of Utah
+% Date:        19 May 1982
+% Copyright (c) 1982 University of Utah
+%
+
+%  <PSL.KERNEL>MACRO.BUILD.2,  2-Feb-83 15:36:40, Edit by PERDUE
+%  Removed char.red.  It is now pnk:char-macro.red
+
+PathIn "eval-when.red"$			% control evaluation time
+PathIn "cont-error.red"$		% macro for ContinuableError
+PathIn "lisp-macros.red"$		% Various macros for readability
+PathIn "onoff.red"$			% (on xxx yyy) and (off xxx yyy)
+PathIn "define-smacro.red"$
+PathIn "defconst.red"$
+PathIn "string-gensym.red"$
+PathIn "loop-macros.red"$		% Various macros for readability

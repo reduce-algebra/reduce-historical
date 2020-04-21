@@ -1,0 +1,220 @@
+Description of columns:
+	E - Existing PSL function
+		* means the function needs no change, X means it requires
+		an extension
+	C - Name conflicts with existing PSL function
+	O - Uses &optional and/or &rest arguments
+	N - Same as a PSL function with this name
+	S - Simple to implement
+		* means it should be easy to implement (given
+		optional arguments and the feature mentioned in column F),
+		U means it's in the USEFUL package,
+		C means it's in the COMMON package, though perhaps as a macro
+		when it should be a function
+	D - Difficult to implement
+		A hard feature or large effort is required to add it, such
+		as multiple values
+	F - Feature needed
+		A feature which does not currently exist in PSL is needed
+
+Comments appear on the line FOLLOWING the function name.
+
+		E	C	O	N	S	D	F
+typep				*		*
+subtypep					*
+null		*
+symbolp					idp
+atom		*
+consp					pairp
+listp						*
+numberp		*
+integerp				fixp
+rationalp					*		rationals
+floatp		*
+complexp					*		complex #s
+characterp					*
+stringp		*
+vectorp		X
+	true for all vector types
+arrayp						*		arrays
+functionp					*
+subrp					codep
+closurep					*		closures
+eq		*
+eql					eqn
+equal		*
+equalp				*		*
+not		*
+and		*
+or		*
+quote		*
+function	X
+	must return a lexical closure for a lambda
+closure							*	closures
+symeval					valuecell
+fsymeval					*
+boundp						C
+fboundp						C
+macro-p						C
+special-form-p					*
+setq		*
+psetq						U
+set		*
+fset						*
+makunbound					*
+fmakunbound				remd
+setf						U
+swapf						*
+exchf						*
+apply		*
+funcall				*		U
+funcall*			*		C
+progn		*
+prog1						U
+prog2		X
+let						U
+let*						U
+progv						*
+flet							*	local functions
+labels							*	local functions
+macrolet						*	local functions
+cond		*
+if						U
+when						U
+unless						U
+case			*
+	PSL case is much less general, using only #s
+typecase						*	type classes
+block							*	block tags
+return		X
+	no restriction on placement
+return-from						*	block tags
+do						UX
+	takes an optional block tag
+do*						UX
+	takes an optional block tag
+dolist						*
+dotimes						*
+mapcar		X		*
+	takes more than one list
+maplist		X		*
+	takes more than one list
+mapc		X		*
+	takes more than one list, returns first list as value
+mapl				*		*
+mapcan		X		*
+	takes more than one list
+mapcon		X		*
+	takes more than one list
+prog		X
+	variable initialization and optional block tag
+prog*						*
+go		X
+	no restriction on placement
+values				*			*	multiple values
+values-list						*		"
+multiple-value-list					*		"
+mvcall							*		"
+mvprog1							*		"
+multiple-value-bind					*		"
+multiple-value						*		"
+catch			*			*
+catch-all					*
+unwind-all					*
+unwind-protect					*
+throw		*
+macro						*
+defmacro					UX
+	should parse &keywords
+displace					*
+macroexpand					*
+macroexpand-1					*
+declare							*
+	requires some hair in the compiler to use declarations
+
+	property lists must be represented as alternating indicator/value
+
+getpr				*	get
+	has optional "instead-of-nil" value
+putpr					put
+rempr					remprop
+plist					prop
+getf				*		*
+	has optional "instead-of-nil" value
+putf						*
+remf						*
+get-properties					*
+map-properties					*
+get-pname				id2string
+samepnamep					*
+make-symbol				newid
+copysymbol			*		*
+gensym		X		*
+	optional counter or prefix
+gentemp				*		*
+symbol-package					*		packages
+
+make-package			*		*		packages
+package						*		   "
+package-name					*		   "
+begin-package					*		   "
+end-package					*		   "
+intern		X		*				   "
+	takes optional package name
+remob		X		*				   "
+	takes optional package name
+internedp			*	internp			   "
+	takes optional package name
+externalp			*		*		   "
+export				*		*		   "
+unexport			*		*		   "
+import				*		*		   "
+shadow				*		*		   "
+use				*		*		   "
+provide						*		   "
+require				*		*		   "
+package-use-conflicts		*		*
+do-symbols					*		pkgs, blk tags
+do-external-symbols				*		pkgs, blk tags
+do-internal-symbols				*		pkgs, blk tags
+do-all-symbols					*		pkgs, blk tags
+
+zerop		X
+	true for complex zero
+plusp						*
+minusp		*
+oddp						*
+evenp						*
+=				*		*
+/=				*		*
+<				*		*
+>				*		*
+<=				*		*
+>=				*		*
+max		*
+	should be function, not macro
+min		*
+	should be function, not macro
+fuzzy=				*		*
+fuzziness					*
++				*		*
+-				*		*
+*				*		*
+/				*		*
+1+					add1
+1-					sub1
+	1+ and 1- can't be scanned as IDs with the current PSL scanner
+incf						U
+decf						U
+conjugate					*		complex #s
+gcd				*		*		cplx, rationals
+lcm				*		*		cplx, rationals
+
+....exponetial, logarithmic and trigonometric functions
+
+float		X		*
+	takes optional "other" floating point #, supposed to use that type
+rational					*		rationals
+rationalize			*		*		rationals
+numerator					*		rationals
+denominator					*		rationals

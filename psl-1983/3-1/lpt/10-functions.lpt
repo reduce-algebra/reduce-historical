@@ -1,0 +1,562 @@
+PSL Manual                    7 February 1983           Function Definition
+section 10.0                                                      page 10.1
+
+                                CHAPTER 10                                CHAPTER 10                                CHAPTER 10
+                      FUNCTION DEFINITION AND BINDING                      FUNCTION DEFINITION AND BINDING                      FUNCTION DEFINITION AND BINDING
+
+
+
+
+     10.1. Function Definition in PSL  .  .  .  .  .  .  .  .  .  .    10.1
+          10.1.1. Notes on Code Pointers  .  .  .  .  .  .  .  .  .    10.1
+          10.1.2. Functions Useful in Function Definition.  .  .  .    10.2
+          10.1.3. Function Definition in LISP Syntax  .  .  .  .  .    10.4
+          10.1.4. Function Definition in RLISP Syntax .  .  .  .  .    10.6
+          10.1.5. Low Level Function Definition Primitives  .  .  .    10.6
+          10.1.6. Function Type Predicates.  .  .  .  .  .  .  .  .    10.7
+     10.2. Variables and Bindings.  .  .  .  .  .  .  .  .  .  .  .    10.8
+          10.2.1. Binding Type Declaration.  .  .  .  .  .  .  .  .    10.8
+          10.2.2. Binding Type Predicates .  .  .  .  .  .  .  .  .    10.9
+     10.3. User Binding Functions.  .  .  .  .  .  .  .  .  .  .  .   10.10
+          10.3.1. Funargs, Closures and Environments  .  .  .  .  .   10.10
+
+
+
+
+10.1. Function Definition in PSL10.1. Function Definition in PSL10.1. Function Definition in PSL
+
+  Functions  in PSL are GLOBAL entities.  To avoid function-variable naming
+clashes, the Standard LISP Report required that no variable have  the  same
+name  as  a  function.    There is no conflict in PSL, as separate function
+cells  and  value  cells  are  used.    A  warning  message  is  given  for
+compatibility.    The  first major section in this chapter describes how to
+define new functions; the second describes the binding of variables in PSL.
+The final  section  presents  binding  functions  useful  in  building  new
+interpreter functions.
+
+
+10.1.1. Notes on Code Pointers10.1.1. Notes on Code Pointers10.1.1. Notes on Code Pointers
+
+                                             Print     ____ _______                            Print  A  code-pointer  may  be  displayed by the Print functions or expanded by
+ExplodeExplodeExplode.  The  value  appears  in  the  convention  of  the  implementation
+(#<Code:a  nnnn>,  where  a is the number of arguments of the function, and
+                                                               ____ _______nnnn is the function's entry point, on the DEC-20 and VAX).  A code-pointer
+                      Compress                      Compressmay not be created by Compress.    (See  Chapter  12  for  descriptions  of
+Explode       CompressExplode       Compress           ____ _______Explode  and  Compress.)    The  code-pointer  associated  with  a compiled
+                             GetD                             GetDfunction may be retrieved by GetD and  is  valid  as  long  as  PSL  is  in
+execution  (on  the  DEC-20  and  VAX,  compiled  code is not relocated, so
+                                                                      PutD____ _______                     ____ _______                         PutDcode-pointers do not change).  A code-pointer may  be  stored  using  PutD,
+Put   SetQPut   SetQPut,  SetQ and the like or by being bound to a variable.  It may be checked
+                   Eq                   Eq                                          ____ _______for equivalence by Eq.  The value may be checked for being  a  code-pointer
+       CodeP       CodePby the CodeP function.Function Definition           7 February 1983                    PSL Manual
+page 10.2                                                      section 10.1
+
+10.1.2. Functions Useful in Function Definition10.1.2. Functions Useful in Function Definition10.1.2. Functions Useful in Function Definition
+
+            __  In  PSL,  ids  have  a  function cell that usually contains an executable
+instruction which either JUMPs directly to the entry point  of  a  compiled
+function   or  executes  a  CALL  to  an  auxiliary  routine  that  handles
+interpreted functions, undefined functions, or other special services (such
+                                                                   ________as auto-loading functions, etc).  The  user  can  pass  anonymous  function
+                           ____ _______objects around either as a code-pointer, which is a tagged object referring
+                                      ______to  a  compiled  code  block,  or  a  lambda  expression,  representing  an
+interpreted function.
+
+
+ PutD PutD _____ __ ____ _____ ____  ______ ____ _______    __              ____(PutD FNAME:id TYPE:ftype BODY:{lambda,code-pointer}): id              expr
+
+                                  _____          ____         ____     Creates a function with name FNAME and type TYPE,  with  BODY  as
+                                              PutD                                              PutD     the function definition.  If successful, PutD returns the name of
+     the defined function.
+
+                         ____ _______     If  the  body  is a code-pointer or is compiled (i.e. !*COMP=T as
+     the function was defined), a special instruction to jump  to  the
+     start  of  the  code  is placed in the function cell.  If it is a
+     ______     lambda, the lambda expression is saved on the property list under
+     the indicator !*LAMBDALINK and a call to an interpreter  function
+      LambdaLink      LambdaLink     (LambdaLink) is placed in the function cell.
+
+          ____                              ____    _____     The  TYPE  is recorded on the property list of FNAME if it is not
+        ____        ____        ____        expr        expr     an expr.
+
+       [??? We need to add code to check that the the arglist has no       [??? We need to add code to check that the the arglist has no       [??? We need to add code to check that the the arglist has no
+       more than 15 arguments for exprs, 1 argument for  fexprs  and       more than 15 arguments for exprs, 1 argument for  fexprs  and       more than 15 arguments for exprs, 1 argument for  fexprs  and
+       macros,  and ??? for nexprs.  Declaration mechanisms to avoid       macros,  and ??? for nexprs.  Declaration mechanisms to avoid       macros,  and ??? for nexprs.  Declaration mechanisms to avoid
+       overhead also need to be available.  (In fact  are  available       overhead also need to be available.  (In fact  are  available       overhead also need to be available.  (In fact  are  available
+       for  the  compiler,  although still poorly documented.)  When       for  the  compiler,  although still poorly documented.)  When       for  the  compiler,  although still poorly documented.)  When
+       should we expand macros? ???]       should we expand macros? ???]       should we expand macros? ???]
+
+                 PutD           GetD                 PutD    _____  GetD           ____            _____     After using PutD on FNAME, GetD returns a pair of the the FNAME's
+      ____   ____     (TYPE . BODY).
+
+         GlobalP         GlobalP     The GlobalP predicate returns  T  if  queried  with  the  defined
+                                       _____     function's name.  If the function FNAME has already been declared
+     as a GLOBAL or FLUID variable the warning:
+
+     *** FNAME is a non-local variable
+
+                                                              _____     occurs,  but  the  function  is  defined.    If function FNAME is
+     already defined, a warning message appears:  
+
+     *** Function FNAME has been redefined
+
+     ____     Note:  All function types may be compiled.
+
+  The following switches are useful when defining functions.PSL Manual                    7 February 1983           Function Definition
+section 10.1                                                      page 10.3
+
+            __________                                               ______!*REDEFMSG [Initially: T]                                            switch
+
+     If !*REDEFMSG is not NIL, the message 
+
+     *** Function `FOO' has been redefined
+
+     is printed whenever a function is redefined.
+
+
+            __________                                               ______!*USERMODE [Initially: T]                                            switch
+
+     Controls  action  on  redefinition  of a function.  All functions
+     defined if !*USERMODE is T are flagged USER.  Functions which are
+     flagged USER can be redefined freely.  If an attempt is  made  to
+     redefine a function which is not flagged USER, the query 
+
+        Do you really want to redefine the system function `FOO'?
+
+     is  made, requiring a Y, N, YES, NO, or B response.  B starts the
+     break loop, so that one can change  the  setting  of  !*USERMODE.
+     After  exiting  the break loop, one must answer Y, Yes, N, or No.
+         YesP         YesP     See YesP in Chapter 13.  If !*UserMode is NIL, all functions  can
+     be redefined freely, and all functions defined have the USER flag
+     removed.    This  provides some protection from redefining system
+     functions.
+
+
+        __________                                                   ______!*COMP [Initially: NIL]                                              switch
+
+                                                   PutD                                                   PutD     The value of !*COMP controls whether or  not  PutD  compiles  the
+     function  defined in its arguments before defining it.  If !*COMP
+     is NIL the function is defined as a lambda expression.  If !*COMP
+     is non-NIL, the function is first compiled.  Compilation produces
+     certain changes in the semantics of functions, particularly FLUID
+     type access.
+
+
+ GetD GetD _ ___    ___  ____                                               ____(GetD U:any): {NIL, pair}                                              expr
+
+        _     If U is not the name of a defined function, NIL is returned.   If
+     _                                                            ____     U     is     a     defined     function     then     the     pair
+       ____  _____  _____  _____       ____  _____  _____  _____       ____  _____  _____  _____       expr, fexpr, macro, nexpr       expr, fexpr, macro, nexpr     ____ _______  ______     ({expr, fexpr, macro, nexpr} . {code-pointer, lambda})         is
+     returned.
+
+
+ CopyD CopyD ___ __ ___ __   ___ __                                          ____(CopyD NEW:id OLD:id): NEW:id                                          expr
+
+                                    ___                    ___     The function body and type for NEW become the same as OLD.  If no
+                           ___     definition exists for OLD an error:
+
+     ***** OLD has no definition in COPYDFunction Definition           7 February 1983                    PSL Manual
+page 10.4                                                      section 10.1
+
+                ___     is given.  NEW is returned.
+
+
+ RemD RemD _ __    ___  ____                                                ____(RemD U:id): {NIL, pair}                                               expr
+
+                                  _     Removes  the  function named U from the set of defined functions.
+                                                          GetD                                    ____                  GetD     Returns the (ftype . function) pair or NIL, as does  GetD.    The
+     ________                   _     function type attribute of U is removed from the property list of
+     _     U.
+
+
+10.1.3. Function Definition in LISP Syntax10.1.3. Function Definition in LISP Syntax10.1.3. Function Definition in LISP Syntax
+
+                  De  Df  Dn  Dm      Ds                  De  Df  Dn  Dm      Ds  The  functions  De, Df, Dn, Dm, and Ds are most commonly used in the LISP
+syntax form of PSL.  They are difficult to use from RLISP as there is not a
+convenient way to represent the argument list.  The functions are  compiled
+if the compiler is loaded and the GLOBAL !*COMP is T. 
+
+
+ De De _____ __ ______ __ ____  __ ____    __                            _____(De FNAME:id PARAMS:id-list [FN:form]): id                            macro
+
+                                               ____                                               ____                                               ____                                               expr                                _____          expr       ____  __     Defines the function named FNAME, of type expr.  The forms FN are
+     made  into  a  lambda  expression  with the formal parameter list
+                     1
+     ______     PARAMS, and this  is used as the body of the function.
+
+     Previous definitions of the function are lost.  The name  of  the
+                       _____     defined function, FNAME, is returned.
+
+
+ Df Df _____ __ _____ __ ____ __ ___   __                                _____(Df FNAME:id PARAM:id-list FN:any): id                                macro
+
+                                                  _____                                                  _____                                                  _____                                                  fexpr                                   _____          fexpr       ____  __     Defines  the  function  named FNAME, of type fexpr.  The forms FN
+     are made into a lambda expression with the formal parameter  list
+     ______     PARAMS, and this is used as the body of the function.
+
+     Previous  definitions  of the function are lost.  The name of the
+                       _____     defined function, FNAME, is returned.
+
+
+ Dn Dn _____ __ _____ __ ____ __ ___   __                                _____(Dn FNAME:id PARAM:id-list FN:any): id                                macro
+
+                                               _____                                               _____                                               _____                                               nexpr                                _____          nexpr         ____   __     Defines the function named FNAME, of type nexpr.   The  forms  FN
+     are  made into a lambda expression with the formal parameter list
+     ______     PARAMS, and this is used as the body of the function.
+
+
+_______________
+
+  1
+   Or the compiled code pointer for the lambda expression if  the  compiler
+is on.PSL Manual                    7 February 1983           Function Definition
+section 10.1                                                      page 10.5
+
+     Previous  definitions  of the function are lost.  The name of the
+                       _____     defined function, FNAME, is returned.
+
+
+ Dm Dm _____ __ _____ __ ____ __ ___   __                                _____(Dm MNAME:id PARAM:id-list FN:any): id                                macro
+
+                                               _____                                               _____                                               _____                                               macro                                _____          macro         ____   __     Defines the function named FNAME, of type macro.   The  forms  FN
+     are  made into a lambda expression with the formal parameter list
+     ______     PARAMS, and this is used as the body of the function.
+
+     Previous definitions of the function are lost.  The name  of  the
+                       _____     defined function, FNAME, is returned.
+
+
+ Ds Ds _____ __ _____ __ ____ __ ___   __                                _____(Ds SNAME:id PARAM:id-list FN:any): id                                macro
+
+                   ______            _______                   ______            _______                   ______            _______                   smacro            Smacros                   smacro  _____     Smacros     Defines  the  smacro  SNAME.    Smacros  are actually a syntactic
+                                     _____                                     _____                                     _____                                     macro                                     macro     notation for a special class of macros,  those  that  essentially
+     treat  the  macro's  argument  as  a  list  of  arguments  to  be
+     substituted into the body of the expression and then expanded  in
+                                                              _____                                                              _____                                                              _____                                                              macro                                                              macro     line,  rather  than using the computational power of the macro to
+                                                        defmacro                                                        defmacro     customize code. Thus they are a special  case  of  defmacro.  See
+     also the BackQuote facility.
+
+     For example:
+
+        Lisp syntax:
+        To make a substitution macro for
+        FIRST ->CAR we could say
+
+        (DM FIRST(X)
+            (LIST 'CAR (CADR X)))
+
+        Instead the following is clearer
+
+        (DS FIRST(X)
+             (CAR X))
+
+
+10.1.4. Function Definition in RLISP Syntax10.1.4. Function Definition in RLISP Syntax10.1.4. Function Definition in RLISP Syntax
+
+  [???  THIS  IS  NOT  SUFFICIENT  DOCUMENTATION!   Either move it all to  [???  THIS  IS  NOT  SUFFICIENT  DOCUMENTATION!   Either move it all to  [???  THIS  IS  NOT  SUFFICIENT  DOCUMENTATION!   Either move it all to
+  chapter 3 or do a better job here. ???]  chapter 3 or do a better job here. ???]  chapter 3 or do a better job here. ???]
+
+  In RLISP syntax, procedures are defined by using the Procedure construct,
+as discussed in Chapter 3.
+
+   mode type PROCEDURE name(args);
+      body;
+
+where mode is SYSLISP or LISP or SYMBOLIC and defaults to  LISP,  and  type
+defaults to EXPR.Function Definition           7 February 1983                    PSL Manual
+page 10.6                                                      section 10.1
+
+10.1.5. Low Level Function Definition Primitives10.1.5. Low Level Function Definition Primitives10.1.5. Low Level Function Definition Primitives
+
+                                                     PutD     GetD                                                     PutD     GetD  The  following  functions  are  used especially by PutD and GetD, defined
+                                Eval     Apply                                Eval     Applyabove in Section 10.1.2, and by Eval and Apply, defined in Chapter 11.
+
+
+ FUnBoundP FUnBoundP _ __   _______                                              ____(FUnBoundP U:id): boolean                                              expr
+
+                                                ________            _     Tests whether there is a definition in the function  cell  of  U;
+     returns NIL if so, T if not.
+
+     Note:    Undefined  functions  actually  call a special function,
+     UndefinedFunction                  Error      FUnBoundP     UndefinedFunction                  Error      FUnBoundP     UndefinedFunction,  that  invokes  Error.     FUnBoundP   defines
+                              UndefinedFunction                              UndefinedFunction     "unbound" to mean "calls UndefinedFunction".
+
+
+ FLambdaLinkP FLambdaLinkP _ __   _______                                           ____(FLambdaLinkP U:id): boolean                                           expr
+
+                     _     Tests  whether  U is an interpreted function; return T if so, NIL
+     if not. This is done by checking for the special code-address  of
+         lambdaLink         lambdaLink     the lambdaLink function, which calls the interpreter.
+
+
+ FCodeP FCodeP _ __   _______                                                 ____(FCodeP U:id): boolean                                                 expr
+
+                     _     Tests  whether  U is a compiled function; returns T if so, NIL if
+     not.
+
+
+ MakeFUnBound MakeFUnBound _ __   ___                                               ____(MakeFUnBound U:id): NIL                                               expr
+
+           _     Makes U an undefined function by planting a special  call  to  an
+                     UndefinedFunction                     UndefinedFunction         ________         _     error function, UndefinedFunction, in the function cell of U.
+
+
+ MakeFLambdaLink MakeFLambdaLink _ __   ___                                            ____(MakeFLambdaLink U:id): NIL                                            expr
+
+            _     Makes  U an interpreted function by planting a special call to an
+                                      lambdaLink                                      lambdaLink     interpreter  support  function  (lambdaLink)  function   in   the
+     ________         _     function cell of U.}
+
+
+ MakeFCode MakeFCode _ __ _ ____ _______   ___                                   ____(MakeFCode U:id C:code-pointer): NIL                                   expr
+
+            _     Makes  U  a  compiled  function by planting a special JUMP to the
+                                  _     code-address associated with C.
+
+
+ GetFCodePointer GetFCodePointer _ __   ____ _______                                   ____(GetFCodePointer U:id): code-pointer                                   expr
+
+              ____ _______     _     Gets the code-pointer for U.PSL Manual                    7 February 1983           Function Definition
+section 10.1                                                      page 10.7
+
+ Code!-Number!-Of!-Arguments Code!-Number!-Of!-Arguments _ ____ _______    ___ _______             ____(Code!-Number!-Of!-Arguments C:code-pointer): {NIL,integer}            expr
+
+     Some  compiled  functions  have  the  argument number they expect
+                                                _     stored in association with the codepointer C.  This  integer,  or
+     NIL is returned.  
+
+                                   _____               ____                                   _____               ____                                   _____               ____       [??? Should be extended for nexprs and declared exprs. ???]       [??? Should be extended for nexprs and declared exprs. ???]       [??? Should be extended for nexprs and declared exprs. ???]
+
+
+10.1.6. Function Type Predicates10.1.6. Function Type Predicates10.1.6. Function Type Predicates
+
+  See Section 2.7 for a discussion of the function types available in PSL.
+
+
+ ExprP ExprP _ ___   _______                                                 ____(ExprP U:any): boolean                                                 expr
+
+                                                                  ____                                                                  ____                                                                  ____                                                                  expr               _         ____ _______  ______             __      expr     Test  if  U  is  a  code-pointer, lambda form, or an id with expr
+     definition.
+
+
+ FExprP FExprP _ ___   _______                                                ____(FExprP U:any): boolean                                                expr
+
+                             _____                             _____                             _____                             fexpr             _       __      fexpr     Test if U is an id with fexpr definition.
+
+
+ NExprP NExprP _ ___   _______                                                ____(NExprP U:any): boolean                                                expr
+
+                             _____                             _____                             _____                             nexpr             _       __      nexpr     Test if U is an id with nexpr definition.
+
+
+ MacroP MacroP _ ___   _______                                                ____(MacroP U:any): boolean                                                expr
+
+                             _____                             _____                             _____                             macro             _       __      macro     Test if U is an id with macro definition.
+
+
+
+10.2. Variables and Bindings10.2. Variables and Bindings10.2. Variables and Bindings
+
+                       __  Variables in PSL are ids, and associated values are usually stored in and
+                                           __retrieved from the  value  cell  of  this  id.    If  variables  appear  as
+                                          Prog                                          Progparameters  in  lambda  expressions or in Prog's, the contents of the value
+cell are saved on a binding stack.  A new value or NIL  is  stored  in  the
+                                                                       Prog                                                                       Progvalue  cell  and the computation proceeds.  On exit from the lambda or Prog
+the old value is restored.  This is called the "shallow binding"  model  of
+LISP.  It is chosen to permit compiled code to do binding efficiently.  For
+even  more  efficiency,  compiled code may eliminate the variable names and
+simply keep values in registers or a stack.  The scope of a variable is the
+range over which the variable  has  a  defined  value.    There  are  three
+different binding mechanisms in PSL.
+
+
+LOCAL BINDING  Only  compiled  functions  bind  variables  locally.   LocalFunction Definition           7 February 1983                    PSL Manual
+page 10.8                                                      section 10.2
+
+               variables  occur  as formal parameters in lambda expressions
+                                         Prog                                         Prog               and as LOCAL variables in Prog's.  The binding occurs  as  a
+                                                             Prog                                                             Prog               lambda  expression  is  evaluated  or  as  a  Prog  form  is
+               executed.  The scope of a local variable is the body of  the
+               function in which it is defined.
+
+FLUID BINDING  FLUID  variables are GLOBAL in scope but may occur as formal
+                               Prog                               Prog               parameters  or  Prog  form  variables.      In   interpreted
+               functions,  all  formal  parameters  and LOCAL variables are
+               considered to have FLUID  binding  until  changed  to  LOCAL
+               binding  by  compilation.    A  variable can be treated as a
+               FLUID only by declaration.  If FLUID variables are  used  as
+               parameters or LOCALs they are rebound in such a way that the
+               previous  binding  may be restored.  All references to FLUID
+               variables are to the currently active binding.    Access  to
+               the values is by name, going to the value cell.
+
+GLOBAL BINDING GLOBAL  variables  may  never  be rebound.  Access is to the
+               value bound to the variable.  The scope of a GLOBAL variable
+               is universal.  Variables declared GLOBAL may not  appear  as
+                                                       Prog                                                       Prog               parameters  in lambda expressions or as Prog form variables.
+               A variable must be declared GLOBAL prior to  its  use  as  a
+               GLOBAL  variable  since  the  default  type  for  undeclared
+               variables is FLUID.  Note that the interpreter does not stop
+               one from rebinding a global variable.    The  compiler  will
+               issue a warning in this situation.
+
+
+10.2.1. Binding Type Declaration10.2.1. Binding Type Declaration10.2.1. Binding Type Declaration
+
+
+ Fluid Fluid ______ __ ____   ___                                            ____(Fluid IDLIST:id-list): NIL                                            expr
+
+          __      ______                                       __     The  ids  in IDLIST are declared as FLUID type variables (ids not
+                                                                ______     previously declared are initialized to NIL).  Variables in IDLIST
+     already declared FLUID are ignored.  Changing a  variable's  type
+     from GLOBAL to FLUID is not permissible and results in the error:
+     
+
+     ***** ID cannot be changed to FLUID 
+
+
+ Global Global ______ __ ____   ___                                           ____(Global IDLIST:id-list): NIL                                           expr
+
+          __      ______                                            __     The  ids  of IDLIST are declared GLOBAL type variables.  If an id
+     has not been previously  declared,  it  is  initialized  to  NIL.
+     Variables  already  declared  GLOBAL  are  ignored.    Changing a
+     variable's type from FLUID  to  GLOBAL  is  not  permissible  and
+     results in the error:  
+
+     ***** ID cannot be changed to GLOBAL PSL Manual                    7 February 1983           Function Definition
+section 10.2                                                      page 10.9
+
+ UnFluid UnFluid ______ __ ____   ___                                          ____(UnFluid IDLIST:id-list): NIL                                          expr
+
+                         ______     The  variables  in  IDLIST  which  have  been  declared  as FLUID
+     variables are no longer considered as FLUID  variables.    Others
+     are  ignored.    This  affects  only  compiled functions, as free
+     variables in interpreted functions are  automatically  considered
+     FLUID (see [Griss 81]).
+
+
+10.2.2. Binding Type Predicates10.2.2. Binding Type Predicates10.2.2. Binding Type Predicates
+
+
+ FluidP FluidP _ ___   _______                                                ____(FluidP U:any): boolean                                                expr
+
+         _     If  U  is  FLUID (by declaration only), T is returned; otherwise,
+     NIL is returned.
+
+
+ GlobalP GlobalP _ ___   _______                                               ____(GlobalP U:any): boolean                                               expr
+
+        _     If U has been declared  GLOBAL  or  is  the  name  of  a  defined
+     function, T is returned; else NIL is returned.
+
+
+ UnBoundP UnBoundP _ __   _______                                               ____(UnBoundP U:id): boolean                                               expr
+
+                   _     Tests whether U has no value.
+
+
+
+10.3. User Binding Functions10.3. User Binding Functions10.3. User Binding Functions
+
+  The  following  functions  are  available  to build one's own interpreter
+functions that use the built-in FLUID binding mechanism, and interact  well
+with the automatic unbinding that takes place during Throw and Error calls.
+
+
+  [??? Are these correct when Environments are managed correctly ???]  [??? Are these correct when Environments are managed correctly ???]  [??? Are these correct when Environments are managed correctly ???]
+
+
+ UnBindN UnBindN _ _______   _________                                         ____(UnBindN N:integer): Undefined                                         expr
+
+                                                      Prog                                                      Prog     Used in user-defined interpreter functions (like Prog) to restore
+                                   _     previous bindings to the last N values bound.
+
+
+ LBind1 LBind1 ______ __ ___________ ___   _________                          ____(LBind1 IDNAME:id VALUETOBIND:any): Undefined                          expr
+
+                                                             ______     Support  for LAMBDA-like binding.  The current value of IDNAME is
+                                                 ___________     saved on the binding stack; the  value  of  VALUETOBIND  is  then
+              ______     bound to IDNAME.Function Definition           7 February 1983                    PSL Manual
+page 10.10                                                     section 10.3
+
+ PBind1 PBind1 ______ __   _________                                          ____(PBind1 IDNAME:id): Undefined                                          expr
+
+                  Prog                  Prog                ______     Support  for Prog.  Binds NIL to IDNAME after saving value on the
+                                 LBind1                                 LBind1 ______     binding stack.  Essentially LBind1(IDNAME, NIL)
+
+
+10.3.1. Funargs, Closures and Environments10.3.1. Funargs, Closures and Environments10.3.1. Funargs, Closures and Environments
+
+  [??? Not yet connected to V3 ???]  [??? Not yet connected to V3 ???]  [??? Not yet connected to V3 ???]
+
+  We have an  experimental  implementation  of  Baker's  re-rooting  funarg
+scheme [Baker  78],  in  which we always re-root upon binding; this permits
+efficient use of a GLOBAL  value  cell  in  the  compiler.    We  are  also
+considering  implementing  a  restricted  FUNARG or CLOSURE mechanism.  The
+implementation we have does not work with the current version of PSL.
+
+  This currently uses a module (ALTBIND)  to  redefine  the  fluid  binding
+                                                     _ ____mechanism of PSL to be functionally equivalent to an a-list binding scheme.
+However,  it  retains  the principal advantage of the usual shallow binding
+scheme: variable lookup is extremely cheap -- just look in  a  value  cell.
+Typical  LISP  programs currently run about 8% slower if using ALTBIND than
+with the initial shallow binding mechanism.  It is expected  that  this  8%
+difference  will  go  away  presently.    This mechanism will also probably
+become a standard part of PSL, rather than an add on module.
+
+  To use ALTBIND simply do "load  altbind;"  ["(load  altbind)"  in  LISP].
+Existing  code,  both  interpreted and compiled, should then commence using
+the new binding mechanism.
+
+  The following functions are of most interest to the user:
+
+
+ Closure Closure _ ____   ____                                                _____(Closure U:form): form                                                macro
+
+                         Function                         Function     This is similar to  Function,  but  returns  a  function  closure
+                                                      Function                                                      Function     including  environment  information,  similar to Function in LISP
+             Function*                           Eval       Apply             Function*                           Eval       Apply     1.5 and Function* in LISP 1.6 and MACLISP.  Eval  and  Apply  are
+     redefined  to handle closures correctly.  Currently only closures
+        ____        ____        ____        expr        expr     of exprs are supported.
+
+
+ EvalInEnvironment EvalInEnvironment _ ____ ___ ___ _______   ___                        ____(EvalInEnvironment F:form ENV:env-pointer): any                        expr
+
+
+ ApplyInEnvironment ApplyInEnvironment __ ________ ____ ____ ____ ___ ___ _______   ___   ____(ApplyInEnvironment FN:function ARGS:form-list ENV:env-pointer): any   expr
+
+                    Eval     Apply                    Eval     Apply     These are like Eval and Apply, but take an extra, last  argument,
+     and  environment  pointer.    They  perform  their  work  in this
+     environment instead of the current one.
+
+  The following functions should be used with care:PSL Manual                    7 February 1983           Function Definition
+section 10.3                                                     page 10.11
+
+ CaptureEnvironment CaptureEnvironment    ___ _______                                     ____(CaptureEnvironment ): env-pointer                                     expr
+
+     Save  the  current  bindings  to be restored at some later point.
+                                           CaptureEnvironment                                           CaptureEnvironment     This is best used inside a closure.   CaptureEnvironment  returns
+                                                                  ____     an  environment pointer.  This object is normally a circular list
+     structure, and so should  not  be  printed.    The  same  warning
+     applies  to  closures, which contain environment pointers.  It is
+     hoped that environment pointers will be made a new LISP data type
+     soon,  and  will  be  made  to  print   safely,   relaxing   this
+     restriction.
+
+  [???  add true envpointer ???]  [???  add true envpointer ???]  [???  add true envpointer ???]
+
+
+ RestoreEnvironment RestoreEnvironment ___ ___ _______   _________                        ____(RestoreEnvironment PTR:env-pointer): Undefined                        expr
+
+     Restore   old   bindings  to  what  they  were  in  the  captured
+                  ___     environment, PTR.
+
+
+ ClearBindings ClearBindings    _________                                            ____(ClearBindings ): Undefined                                            expr
+
+     Restore bindings to top level, i.e strip the entire stack.
+
+  For    a     demonstration     of     closures,     do     (in     RLISP)
+`in "PU:altbind-tests.red";'.
+
+  [??? Give a practical example ???]  [??? Give a practical example ???]  [??? Give a practical example ???]

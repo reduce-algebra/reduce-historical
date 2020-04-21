@@ -1,0 +1,47 @@
+ZFILES.HLP                              2 Jan, 1982/MLG
+==========
+This is a loadable option (Load ZFiles).
+File package of IMSSS series, contains 2 packages --
+    (1) YFILES -- useful functions for accessing files.
+    (2) YTOPCOM -- useful functions for compiling files. 
+
+
+See PD:ZFILES.DOC and PU:ZFILES.LSP for more info
+
+%%%% YFILES -- BASIC FILE ACCESSING UTILITIES 
+
+An IMSSS File descriptor is a
+canonical FILE name, gets converted to file string:
+
+FILE or (FILE) -> "FILE.LSP"
+(FILE.EXT)     -> "File.Ext"
+(DIR FILE)     -> "<Dir>File.LSP"
+(DIR FILE EXT) -> "<dir>File.Ext"
+"xxx"          -> "xxx"
+
+---------------------------------------------------------------
+
+FORM-FILE       ( FILE:DSCR ): filename                 EXPR
+GRABBER         ( SELECTION FILE:DSCR ): NIL            EXPR
+DUMPER          ( FILE:DSCR ): NIL                      EXPR
+DUMPFNS-DE      ( SELECTION FILE:DSCR ): NIL            EXPR
+DUMP-REMAINING  ( SELECTION:list DUMPED:list ): NIL     EXPR
+FCOPY           ( IN:DSCR OUT:DSCR filedscrs ):boolean  EXPR
+REFPRINT-FOR-GRAB-CTL( #X: any ):NIL                    EXPR
+
+G:CREFON      Switched on by cross reference program CREF:FILE
+G:JUST:FNS    Save only fn names in variable whose name is the first
+              field of filename if T, O/W save all exprs in that variable
+G:FILES       List of files read into LISP
+G:SHOW:TRACE  Turns backtrace in ERRORSET on if T
+G:SHOW:ERRORS Prints ERRORSET error messages if T
+
+%%%%  YTOPCOM -- Compiler Control functions
+
+
+ 
+PPLAP( MODE CODE )                          EXPR
+ 
+COMPILE-FILE( FILE:DSCR )                   FEXPR
+COMPILE-IN-CORE( FILE:DSCR ):NIL              FEXPR
+GCMSG( X:boolean ):any              EXPR

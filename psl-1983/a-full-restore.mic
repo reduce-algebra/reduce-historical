@@ -1,0 +1,24 @@
+@DUMPER
+*tape 'a
+*account system-default
+*restore dsk*:<*>*.*.* PSL:*.*.*
+*restore dsk*:<*>*.*.* PSL:*.*.* 
+*restore dsk*:<*>*.*.* PC:*.*.*
+*restore dsk*:<*>*.*.* P20C:*.*.*  
+*restore dsk*:<*>*.*.* PD:*.*.*
+*restore dsk*:<*>*.*.* PND:*.*.*
+*restore dsk*:<*>*.*.* PE:*.*.*
+*restore dsk*:<*>*.*.* PG:*.*.* 
+*restore dsk*:<*>*.*.* ph:*.*.*
+*restore dsk*:<*>*.*.* pk:*.*.*
+*restore dsk*:<*>*.*.* p20K:*.*.*
+*restore dsk*:<*>*.*.* pl:*.*.*
+*restore dsk*:<*>*.*.* plpt:*.*.*
+*restore dsk*:<*>*.*.* pn:*.*.*
+*restore dsk*:<*>*.*.* pnk:*.*.*
+*restore dsk*:<*>*.*.* pT:*.*.*
+*restore dsk*:<*>*.*.* p20T:*.*.*
+*restore dsk*:<*>*.*.* pu:*.*.*
+*restore dsk*:<*>*.*.* p20u:*.*.*
+*restore dsk*:<*>*.*.* pw:*.*.*
+

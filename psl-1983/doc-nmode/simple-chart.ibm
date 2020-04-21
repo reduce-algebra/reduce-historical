@@ -1,0 +1,114 @@
+,MOD
+- R 44X (11 February 1983) <PSL.NMODE-DOC>SIMPLE-CHART.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+
+
+
+
+
+                            202/Simplified 9836 NMODE Command Summary
+
+                                         201/10 February 1983
+
+
+
+          202/Information
+
+          201/Show Function on Key              M-?
+          List Matching Commands            <help>
+
+          202/Files
+
+          201/Find File                           C-X C-F
+          Save File                           C-X C-S
+
+          202/Buffers
+
+          201/Select Buffer                       C-X B
+          List Buffers                        C-X C-B
+          Go to Buffer Start                 M-<  (or)  <clr-end>
+          Go to Buffer End                   M->  (or)  Shift-<clr-end>
+          Kill Buffer                         C-X K
+
+          202/Characters
+
+          201/Move Forward Character            C-F  (or)  <right-arrow>
+          Move Backward Character          C-B  (or)  <left-arrow>
+          Forward Delete Character           C-D  (or)  <del-chr>
+          Backward Delete Character         Rubout
+          Quote Character                    C-Q
+
+          202/Lines
+
+          201/Move to Next Line                  C-N  (or)  <down-arrow>
+          Move to Previous Line              C-P  (or)  <up-arrow>
+          Goto Start of Line                  C-A
+          Goto End of Line                   C-E
+          Kill Line                           C-K  (or)  <del-ln>
+          Insert Blank Line                  C-O  (or)  <ins-ln>
+
+          202/Killing and Unkilling Text
+
+          201/Kill Line                           C-K  (or)  <del-ln>
+          Yank Killed Text                   C-Y
+          Yank Previous Kill                 M-Y
+
+
+
+
+
+          202/String Search
+
+          201/Foward Search                     C-S
+          Reverse Search                     C-R
+
+          202/String Replacement
+
+          201/Query Replace                      M-%
+          Replace String                     C-%
+
+          202/Indentation
+
+          201/Indent Line                        Tab
+          Indent New Line                    Newline
+
+          202/Text Filling and Justification
+
+          201/Fill Paragraph                      M-Q
+          Fill Comment                       M-Z
+          Auto Fill Mode (toggle)             M-X Auto Fill Mode
+
+          202/Modes
+
+          201/Enter Lisp Mode                    M-X Lisp Mode
+          Enter Text Mode                   M-X Text Mode
+
+          202/Lisp Execution
+
+          201/Execute Form                       C-] E
+          Execute Defun                      C-] D
+          Quit from Break Loop              C-] Q
+          Backtrace from Break Loop         C-] B
+          Retry from Break Loop             C-] R
+
+          202/Screen Management
+
+          201/Redisplay Screen                   C-L
+          Scroll to Next Screenful            C-V  (or)  <recall>
+          Scroll to Previous Screenful        M-V  (or)  Shift-<recall>
+
+          202/Windows
+
+          201/Two Windows                       C-X 2
+          One Window                        C-X 1
+          Go to Other Window                C-X O

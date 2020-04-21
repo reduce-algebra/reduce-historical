@@ -1,0 +1,1315 @@
+
+% {DSK}GEV.PSL;3  6-APR-83 16:26:08 
+
+
+
+
+
+(FLUID '(GLNATOM RESULT Y))
+
+(GLOBAL '(GEVACTIVEFLG GEVEDITCHAIN GEVEDITFLG GEVLASTITEMNUMBER GEVMENUWINDOW 
+		       GEVMENUWINDOWHEIGHT GEVMOUSEAREA GEVSHORTCHARS 
+		       GEVWINDOW GEVWINDOWY))
+
+
+% GEV Structure Inspector 
+
+
+
+
+
+
+% The following files are required: VECTOR GEVAUX WINDOW 
+
+
+
+
+
+(GLISPGLOBALS
+(GEVACTIVEFLG BOOLEAN)
+
+(GEVEDITCHAIN EDITCHAIN)
+
+(GEVEDITFLG BOOLEAN)
+
+(GEVLASTITEMNUMBER INTEGER)
+
+(GEVMENUWINDOW WINDOW)
+
+(GEVMENUWINDOWHEIGHT INTEGER)
+
+(GEVMOUSEAREA MOUSESTATE)
+
+(GEVSHORTCHARS INTEGER)
+
+(GEVWINDOW WINDOW)
+
+(GEVWINDOWY INTEGER)
+
+)
+
+
+
+(GLISPCONSTANTS
+(GEVMOUSEBUTTON 4 INTEGER)
+(GEVNAMECHARS 11 INTEGER)
+(GEVVALUECHARS 27 INTEGER)
+(GEVNAMEPOS (GEVNUMBERPOS + (IF GEVNUMBERCHARS > 0 THEN (GEVNUMBERCHARS + 1)
+				*WINDOWCHARWIDTH ELSE 0)) INTEGER)
+(GEVTILDEPOS (GEVNAMEPOS + (GEVNAMECHARS+1)
+			 *WINDOWCHARWIDTH) INTEGER)
+(GEVVALUEPOS (GEVTILDEPOS + 2*WINDOWCHARWIDTH) INTEGER)
+)
+
+
+
+(GLISPOBJECTS
+
+
+(EDITCHAIN (LISTOF EDITFRAME)
+PROP    ((TOPFRAME ((CAR self)))
+	 (TOPITEM ((CAR TOPFRAME:PREVS)))))
+
+
+(EDITFRAME (LIST (PREVS (LISTOF GSEITEM))
+		 (SUBITEMS (LISTOF GSEITEM))
+		 (PROPS (LISTOF GSEITEM))))
+
+
+(GSEITEM (LIST (NAME ATOM)
+	       (VALUE ANYTHING)
+	       (TYPE ANYTHING)
+	       (SHORTVALUE ATOM)
+	       (NODETYPE ATOM)
+	       (SUBVALUES (LISTOF GSEITEM))
+	       (NAMEPOS VECTOR)
+	       (VALUEPOS VECTOR))
+PROP    ((NAMEAREA ((VIRTUAL REGION WITH START = NAMEPOS WIDTH = 
+			     WINDOWCHARWIDTH* (NCHARS NAME)
+			     HEIGHT = WINDOWLINEYSPACING)))
+	 (VALUEAREA ((VIRTUAL REGION WITH START = VALUEPOS WIDTH = 
+			      WINDOWCHARWIDTH* (NCHARS NAME)
+			      HEIGHT = WINDOWLINEYSPACING)))))
+
+
+(MOUSESTATE (LIST (AREA REGION)
+		  (ITEM GSEITEM)
+		  (FLAG BOOLEAN)
+		  (GROUP INTEGER)))
+
+)
+
+
+
+% GSN  9-FEB-83 11:40 
+% GLISP Edit Value function. Edit VAL according to structure 
+%   description STR. 
+(DF GEV (ARGS)
+(GEVA (CAR ARGS)
+      (EVAL (CAR ARGS))
+      (AND (CDR ARGS)
+	   (COND ((OR (NOT (ATOM (CADR ARGS)))
+		      (NOT (UNBOUNDP (CADR ARGS))))
+		  (EVAL (CADR ARGS)))
+		 (T (CADR ARGS))))))
+
+
+% edited: 15-MAR-83 10:40 
+% GLISP Edit Value function. Edit VAL according to structure 
+%   description STR. 
+(DG GEVA (VAR VAL STR)
+(PROG (GLNATOM TMP HEADER)
+      (GEVENTER)
+      (COND ((OR (NOT (NOT (UNBOUNDP 'GEVWINDOW)))
+		 (NULL GEVWINDOW))
+	     (GEVINITEDITWINDOW)))
+      (IF GEVMENUWINDOW THEN (SEND GEVMENUWINDOW OPEN))
+      (SEND GEVWINDOW OPEN)
+      (GEVACTIVEFLG_T)
+      (GEVEDITFLG_NIL)
+      (GLNATOM_0)
+      (GEVSHORTCHARS_GEVVALUECHARS)
+      (IF VAR IS A LIST AND (CAR VAR)
+	  ='QUOTE THEN VAR_ (CONCAT "'" (GEVSTRINGIFY (CADR VAR))))
+      (IF ~STR THEN (IF VAL IS ATOMIC AND (GET VAL 'GLSTRUCTURE)
+			THEN STR_'GLTYPE ELSEIF (GEVGLISPP)
+			THEN STR_ (GLCLASS VAL)))
+      (HEADER_ (A GSEITEM WITH NAME = VAR VALUE = VAL TYPE = STR))
+      (GEVEDITCHAIN_ (LIST (LIST (LIST HEADER)
+				 NIL NIL)))
+      (GEVREFILLWINDOW)
+      (GEVMOUSELOOP)
+      (GEVEXIT)))
+
+
+% GSN  2-MAR-83 14:06 
+(DG GEVCOMMANDFN (COMMANDWORD:ATOM)
+(PROG (PL SUBPL PROPNAME VAL PROPNAMES TOPITEM)
+      (CASE COMMANDWORD OF (EDIT (GEVEDIT))
+	    (QUIT (IF GEVMOUSEAREA THEN (SEND GEVWINDOW INVERTAREA 
+					      GEVMOUSEAREA:AREA)
+		      (GEVMOUSEAREA_NIL)
+		      ELSE
+		      (GEVQUIT)))
+	    (POP (GEVPOP T 1))
+	    (PROGRAM (GEVPROGRAM))
+	    ((PROP ADJ ISA MSG)
+	     (TOPITEM_GEVEDITCHAIN:TOPITEM)
+	     (GEVCOMMANDPROP TOPITEM COMMANDWORD NIL))
+	    ELSE
+	    (ERROR 0 NIL))))
+
+
+% GSN 25-MAR-83 10:14 
+(DG GEVCOMMANDPROP (ITEM:GSEITEM COMMANDWORD:ATOM PROPNAME:ATOM)
+(PROG (VAL PROPNAMES FLG)
+      (IF PROPNAME THEN FLG_T)
+      (IF ITEM:TYPE IS ATOMIC THEN (PROPNAMES_ (GEVCOMMANDPROPNAMES ITEM:TYPE 
+							       COMMANDWORD 
+						     GEVEDITCHAIN:TOPFRAME)))
+      (IF ITEM:TYPE IS ATOMIC OR COMMANDWORD='PROP THEN
+	  (IF COMMANDWORD='PROP THEN (IF (CDR PROPNAMES)
+					 THEN PROPNAMES+_'All)
+	      PROPNAMES+_'self)
+	  (IF ~PROPNAMES (RETURN NIL))
+	  (IF ~PROPNAME (PROPNAME _ (SEND (A MENU WITH ITEMS = PROPNAMES)
+					  SELECT)))
+	  (IF ~PROPNAME (RETURN NIL)
+	      ELSEIF PROPNAME='self THEN (PRIN1 PROPNAME)
+	      (PRINC " = ")
+	      (PRINT ITEM:VALUE)
+	      ELSEIF COMMANDWORD='PROP AND PROPNAME='All THEN
+	      (FOR X IN (OR (CDDR PROPNAMES)
+			    (CDR PROPNAMES))
+		   DO
+		   (GEVDOPROP ITEM X COMMANDWORD FLG))
+	      ELSE
+	      (GEVDOPROP ITEM PROPNAME COMMANDWORD FLG))
+	  (IF COMMANDWORD='MSG THEN (GEVREFILLWINDOW)
+	      (GEVEDITFLG_T)))))
+
+
+% edited: 22-DEC-82 11:09 
+% Get all property names of properties of type PROPTYPE for OBJ. 
+%   Properties are filtered to remove system properties and those 
+%   which are already displayed. 
+(DG GEVCOMMANDPROPNAMES (OBJ:GLTYPE PROPTYPE:ATOM TOPFRAME:EDITFRAME)
+(PROG (RESULT TYPE)
+      (RESULT _ (FOR P IN (CASE PROPTYPE OF (PROP OBJ:PROPS)
+				(ADJ OBJ:ADJS)
+				(ISA OBJ:ISAS)
+				(MSG OBJ:MSGS))
+		     WHEN ~ (PROPTYPE~='MSG AND
+					    (THE PROP OF TOPFRAME WITH NAME =
+						 (CAR P)))
+		     AND ~ (PROPTYPE='PROP AND (MEMQ (CAR P)
+						     '(SHORTVALUE DISPLAYPROPS)
+						     ))
+		     AND ~ (PROPTYPE='MSG
+		       AND
+		       (CADR P)
+		       IS ATOMIC AND (~ (GETDDD (CADR P))
+					OR
+					(LENGTH (CADR (GETDDD (CADR P))))
+					>1))
+		     COLLECT P:NAME))
+      (FOR S IN OBJ:SUPERS DO (RESULT _ (NCONC RESULT (GEVCOMMANDPROPNAMES
+						 S PROPTYPE TOPFRAME))))
+      (RETURN RESULT)))
+
+
+% GSN  2-MAR-83 10:42 
+% Compile a property whose name is PROPNAME and whose property type 
+%   (ADJ, ISA, PROP, MSG) is PROPTYPE for the object type STR. 
+(DG GEVCOMPPROP (STR:GLTYPE PROPNAME:ATOM PROPTYPE:ATOM)
+(PROG (PROPENT)
+      (IF ~ (MEMQ PROPTYPE '(ADJ ISA PROP MSG))
+	  (RETURN 'GEVERROR))
+      
+% If the property is implemented by a named function, return the 
+%   function name. 
+
+      (IF (PROPENT_ (GEVGETPROP STR PROPNAME PROPTYPE))
+	  AND
+	  (CADR PROPENT)
+	  IS ATOMIC THEN (RETURN (CADR PROPENT)))
+      
+% Compile code for this property and save it. First be sure the GLISP 
+%   compiler is loaded. 
+
+      (RETURN (COND ((GEVGLISPP)
+		     (GLCOMPPROP STR PROPNAME PROPTYPE)
+		     OR
+		     'GEVERROR)
+		    (T (ERROR 0 (LIST 
+			   "GLISP compiler must be loaded for PROPs which"
+				      
+		       "are not specified with function name equivalents."
+				      STR PROPTYPE PROPNAME)))))))
+
+
+% edited:  4-NOV-82 16:08 
+% Get a flattened list of names and types from a given structure 
+%   description. 
+(DG GEVDATANAMES (OBJ:GLTYPE FILTER:ATOM)
+(PROG (RESULT)
+      (GEVDATANAMESB OBJ:STRDES FILTER)
+      (RETURN (REVERSIP RESULT))))
+
+
+% GSN  4-FEB-83 17:39 
+% Get a flattened list of names and types from a given structure 
+%   description. 
+(DG GEVDATANAMESB (STR:ANYTHING FILTER:ATOM)
+(GLOBAL RESULT)(PROG (TMP)
+		     (IF STR IS ATOMIC THEN (RETURN NIL)
+			 ELSE
+			 (CASE (CAR STR)
+			       OF
+			       (CONS (GEVDATANAMESB (CADR STR)
+						    FILTER)
+				     (GEVDATANAMESB (CADDR STR)
+						    FILTER))
+			       ((ALIST PROPLIST LIST)
+				(FOR X IN (CDR STR)
+				     DO
+				     (GEVDATANAMESB X FILTER)))
+			       (RECORD (FOR X IN (CDDR STR)
+					    DO
+					    (GEVDATANAMESB X FILTER)))
+			       (ATOM (GEVDATANAMESB (CADR STR)
+						    FILTER)
+				     (GEVDATANAMESB (CADDR STR)
+						    FILTER))
+			       (BINDING (GEVDATANAMESB (CADR STR)
+						       FILTER))
+			       (LISTOF (RETURN NIL))
+			       ELSE
+			       (IF (GEVFILTER (CADR STR)
+					      FILTER)
+				   THEN
+				   (RESULT +_ (LIST (CAR STR)
+						    (CADR STR))))
+			       (GEVDATANAMESB (CADR STR)
+					      FILTER)))))
+
+
+% GSN 25-MAR-83 09:48 
+% Display a newly added property in the window. 
+(DG GEVDISPLAYNEWPROP NIL
+(PROG (Y NEWONE:GSEITEM)
+      (Y_GEVWINDOWY)
+      (NEWONE_ (CAR (LASTPAIR GEVEDITCHAIN:TOPFRAME:PROPS)))
+      (GEVPPS NEWONE 0 GEVWINDOW)
+      (GEVWINDOWY_Y)))
+
+
+% GSN  4-FEB-83 16:58 
+% Add the property PROPNAME of type COMMANDWORD to the display for 
+%   ITEM. 
+(DG GEVDOPROP (ITEM:GSEITEM PROPNAME:ATOM COMMANDWORD:ATOM FLG:BOOLEAN)
+(PROG (VAL)
+      (VAL_ (GEVEXPROP ITEM:VALUE ITEM:TYPE PROPNAME COMMANDWORD NIL))
+      (GEVEDITCHAIN:TOPFRAME:PROPS_+ (A GSEITEM WITH NAME = PROPNAME TYPE =
+					(GEVPROPTYPE ITEM:TYPE PROPNAME 
+						     COMMANDWORD)
+					VALUE = VAL NODETYPE = COMMANDWORD))
+      (IF ~FLG THEN (GEVDISPLAYNEWPROP))))
+
+
+% GSN 25-MAR-83 09:48 
+% Edit the currently displayed item. 
+(DG GEVEDIT NIL
+(PROG (CHANGEDFLG GEVTOPITEM)
+      (GEVTOPITEM_GEVEDITCHAIN:TOPITEM)
+      (IF GEVTOPITEM:TYPE IS ATOMIC AND (GEVEXPROP GEVTOPITEM:VALUE 
+						   GEVTOPITEM:TYPE
+						   'EDIT
+						   'MSG
+						   NIL)
+	  ~='GEVERROR THEN CHANGEDFLG_T ELSEIF GEVTOPITEM:VALUE IS A LIST THEN
+	  (EDITV GEVTOPITEM:VALUE)
+	  (CHANGEDFLG_T)
+	  ELSE
+	  (RETURN NIL))
+      (IF CHANGEDFLG THEN (SEND GEVWINDOW OPEN)
+	  (GEVREFILLWINDOW))
+      (GEVEDITFLG_CHANGEDFLG)))
+
+
+% GSN 25-MAR-83 09:49 
+% Execute a property whose name is PROPNAME and whose property type 
+%   (ADJ, ISA, PROP, MSG) is PROPTYPE on the object OBJ whose type is 
+%   STR. 
+(DG GEVEXPROP (OBJ STR PROPNAME:ATOM PROPTYPE:ATOM ARGS)
+(PROG (FN)
+      (IF ~ (MEMQ PROPTYPE '(ADJ ISA PROP MSG))
+	  OR
+	  (ARGS AND PROPTYPE~='MSG)
+	  (RETURN 'GEVERROR))
+      (IF (FN_ (GEVCOMPPROP STR PROPNAME PROPTYPE))
+	  ='GEVERROR THEN (RETURN FN)
+	  ELSE
+	  (RETURN (GEVAPPLY FN (CONS OBJ ARGS))))))
+
+
+% edited: 15-MAR-83 12:40 
+% Fill the GEV editor window with the item which is at the top of 
+%   GEVEDITCHAIN. 
+(DG GEVFILLWINDOW NIL
+(PROG (Y TOP)
+      (SEND GEVWINDOW CLEAR)
+      
+% Compute an initial Y value for printing titles in the window. 
+
+      (Y_GEVWINDOW:HEIGHT - WINDOWLINEYSPACING)
+      
+% Print the titles from the edit chain first. 
+
+      (GEVLASTITEMNUMBER _ 0)
+      (TOP_GEVEDITCHAIN:TOPFRAME)
+      (FOR X IN (REVERSE TOP:PREVS)
+	   DO
+	   (GEVPPS X 0 GEVWINDOW))
+      (GEVHORIZLINE GEVWINDOW)
+      (FOR X IN TOP:SUBITEMS DO (GEVPPS X 0 GEVWINDOW))
+      (GEVHORIZLINE GEVWINDOW)
+      (FOR X IN TOP:PROPS DO (GEVPPS X 0 GEVWINDOW))
+      (GEVWINDOWY_Y)))
+
+
+% GSN 21-JAN-83 10:24 
+% Filter types according to a specified FILTER. 
+(DG GEVFILTER (TYPE FILTER)
+(TYPE_ (GEVXTRTYPE TYPE))(CASE FILTER OF
+			       (NUMBER ~ (MEMQ TYPE
+					       '(ATOM STRING BOOLEAN ANYTHING))
+				       AND ~ ((PAIRP TYPE)
+					AND
+					(CAR TYPE)
+					='LISTOF))
+			       (LIST (PAIRP TYPE)
+				     AND
+				     (CAR TYPE)
+				     ='LISTOF)
+			       ELSE T))
+
+
+% edited: 14-OCT-82 11:32 
+(DG GEVFINDITEMPOS (POS:VECTOR ITEM:GSEITEM N:INTEGER)
+(RESULT MOUSESTATE)
+% Test whether ITEM contains the mouse position POS. The result is NIL 
+%   if not found, else a list of the sub-item and a flag which is NIL 
+%   if the NAME part is identified, T if the VALUE part is identified. 
+(OR (GEVPOSTEST POS ITEM:NAMEPOS ITEM:NAME ITEM NIL N)
+    (GEVPOSTEST POS ITEM:VALUEPOS ITEM:SHORTVALUE ITEM T N)
+    ((ITEM:NODETYPE='STRUCTURE OR ITEM:NODETYPE='SUBTREE OR 
+			       ITEM:NODETYPE='LISTOF)
+     AND
+     (GEVFINDLISTPOS POS ITEM:SUBVALUES N))))
+
+
+% edited: 13-OCT-82 12:03 
+(DG GEVFINDLISTPOS (POS:VECTOR ITEMS: (LISTOF GSEITEM)
+			       N)
+(RESULT MOUSESTATE)
+% Find some ITEM corresponding to the mouse position POS. 
+(IF ITEMS THEN (GEVFINDITEMPOS POS (CAR ITEMS)
+			       N)
+    OR
+    (GEVFINDLISTPOS POS (CDR ITEMS)
+		    N)))
+
+
+% edited: 13-OCT-82 12:06 
+(DG GEVFINDPOS (POS:VECTOR FRAME:EDITFRAME)
+(RESULT MOUSESTATE)
+% Find the sub-item of FRAME corresponding to the mouse position POS. 
+%   The result is NIL if not found, else a list of the sub-item and a 
+%   flag which is NIL if the NAME part is identified, T if the VALUE 
+%   part is identified. 
+(PROG (TMP N ITEMS: (LISTOF GSEITEM))
+      (N_0)
+      (WHILE FRAME AND ~TMP DO (N_+1)
+	     ITEMS-_FRAME
+	     (TMP_ (GEVFINDLISTPOS POS ITEMS N)))
+      (RETURN TMP)))
+
+
+% edited: 22-DEC-82 14:53 
+% Get all names of properties and stored data from a GLISP object 
+%   type. 
+(DG GEVGETNAMES (OBJ:GLTYPE FILTER:ATOM)
+(PROG (DATANAMES PROPNAMES)
+      (SETQ DATANAMES (GEVDATANAMES OBJ FILTER))
+      (SETQ PROPNAMES (GEVPROPNAMES OBJ 'PROP
+				    FILTER))
+      (RETURN (NCONC DATANAMES PROPNAMES))))
+
+
+% GSN  4-FEB-83 16:59 
+% Retrieve a GLISP property whose name is PROPNAME and whose property 
+%   type (ADJ, ISA, PROP, MSG) is PROPTYPE for the object type STR. 
+(DG GEVGETPROP (STR PROPNAME:ATOM PROPTYPE:ATOM)
+(PROG (PL SUBPL PROPENT)
+      (IF ~ (MEMQ PROPTYPE '(ADJ ISA PROP MSG))
+	  (ERROR 0 NIL))
+      (RETURN (AND (PL_ (GET STR 'GLSTRUCTURE))
+		   (SUBPL_ (LISTGET (CDR PL)
+				    PROPTYPE))
+		   (PROPENT_ (ASSOC PROPNAME SUBPL))))))
+
+
+% edited: 11-NOV-82 15:53 
+(DE GEVGLISPP NIL
+(NOT (UNBOUNDP 'GLBASICTYPES)))
+
+
+% edited:  6-APR-83 15:54 
+(DG GEVHORIZLINE (W:WINDOW)
+(GLOBAL Y:INTEGER)
+% Draw a horizontal line across window W at Y and decrease Y. 
+(SEND W DRAWLINE (A VECTOR WITH X = W:LEFTMARGIN Y = Y+WINDOWLINEYSPACING / 2)
+      (A VECTOR WITH X = W:RIGHTMARGIN Y = Y+WINDOWLINEYSPACING / 2))(
+  Y_-WINDOWLINEYSPACING))
+
+
+% edited: 11-MAR-83 16:03 
+(DE GEVINIT NIL
+(SETQ GLNATOM 0)(COND ((NOT (NOT (UNBOUNDP 'GLLISPDIALECT)))
+		       (SETQ GLLISPDIALECT 'INTERLISP)))(SETQ GEVWINDOW NIL))
+
+
+% GSN 25-MAR-83 10:14 
+% Respond to an event which selects an item. GROUP gives the group in 
+%   which the item occurs. 1 = edit path. FLAG is T if the type of the 
+%   item is selected, NIL if the value is selected. 
+(DG GEVITEMEVENTFN (ITEM:GSEITEM GROUP:INTEGER FLAG:BOOLEAN)
+(PROG (TMP TOP N)
+      (IF FLAG THEN (IF GROUP=1 THEN (TMP_GEVEDITCHAIN:TOPFRAME:PREVS)
+			(N_0)
+			(WHILE TMP AND (TOP-_TMP)
+			       <>ITEM DO N_+1)
+			(GEVPOP NIL N)
+			ELSE
+			(GEVPUSH ITEM))
+	  ELSE
+	  (PRIN1 ITEM:NAME)
+	  (PRINC " is ")
+	  (PRIN1 ITEM:TYPE)
+	  (TERPRI))))
+
+
+% GSN  2-MAR-83 16:14 
+% Bound the length of VAL to NCHARS. 
+(DG GEVLENGTHBOUND (VAL NCHARS)
+(COND ((GREATERP (FlatSize2 VAL)
+		 NCHARS)
+       ((SUBSTRING VAL 1 (SUB1 NCHARS))
+	+ "-"))
+      (T VAL)))
+
+
+% edited:  6-APR-83 16:01 
+% Make a function to perform OPERATION on set SETNAME from INPUTTYPE 
+%   following PATH to get to the data. 
+(DG GEVMAKENEWFN (OPERATION:ATOM INPUTTYPE:ATOM SET: (LIST (NAME ATOM)
+							   (TYPE GLTYPE))
+				 PATH:
+				 (LISTOF (LIST (NAME ATOM)
+					       (TYPE GLTYPE))))
+(PROG
+  (LASTPATH VIEWSPEC)
+  (SETQ LASTPATH (CAR (LASTPAIR PATH)))
+  (RETURN
+    (LIST
+      (LIST 'GLAMBDA
+	    (LIST (MKATOM (CONCAT "GEVNEWFNTOP:" INPUTTYPE:PNAME)))
+	    (LIST 'PROG
+		  (CONS 'GEVNEWFNVALUE
+			(CASE OPERATION OF (COLLECT '(GEVNEWFNRESULT))
+			      ((MAXIMUM MINIMUM)
+			       '(GEVNEWFNTESTVAL GEVNEWFNINSTANCE))
+			      (TOTAL '((GEVNEWFNSUM 0)))
+			      (AVERAGE '((GEVNEWFNSUM 0.0)
+					 (GEVNEWFNCOUNT 0)))
+			      ELSE
+			      (ERROR 0 NIL)))
+		  (NCONC (LIST 'FOR
+			       'GEVNEWFNLOOPVAR
+			       'IN
+			       (MKATOM (CONCAT "GEVNEWFNTOP:" SET:NAME:PNAME))
+			       'DO
+			       (LIST 'GEVNEWFNVALUE
+				     '_
+				     (PROGN (VIEWSPEC _ (LIST 'GEVNEWFNLOOPVAR)
+						      )
+					    (FOR X IN PATH DO
+						 (VIEWSPEC +_ 'OF)
+						 (VIEWSPEC +_ X:NAME)
+						 (VIEWSPEC +_ 'THE))
+					    VIEWSPEC)))
+			 (COPY (CASE OPERATION OF
+				     (COLLECT '((GEVNEWFNRESULT +_ 
+							     GEVNEWFNVALUE)))
+				     (MAXIMUM '((IF ~ GEVNEWFNINSTANCE
+						      OR GEVNEWFNVALUE > 
+							 GEVNEWFNTESTVAL
+						    THEN (GEVNEWFNTESTVAL
+							   _ GEVNEWFNVALUE)
+							 (GEVNEWFNINSTANCE
+							   _ GEVNEWFNLOOPVAR)))
+					      )
+				     (MINIMUM '((IF ~ GEVNEWFNINSTANCE
+						      OR GEVNEWFNVALUE
+							 < GEVNEWFNTESTVAL
+						    THEN (GEVNEWFNTESTVAL
+							   _ GEVNEWFNVALUE)
+							 (GEVNEWFNINSTANCE
+							   _ GEVNEWFNLOOPVAR)))
+					      )
+				     (AVERAGE '((GEVNEWFNSUM _+
+							     GEVNEWFNVALUE)
+						(GEVNEWFNCOUNT _+
+							       1)))
+				     (TOTAL '((GEVNEWFNSUM _+
+							   GEVNEWFNVALUE))))))
+		  (LIST 'RETURN
+			(CASE OPERATION OF (COLLECT '(DREVERSE GEVNEWFNRESULT))
+			      ((MAXIMUM MINIMUM)
+			       '(LIST GEVNEWFNTESTVAL GEVNEWFNINSTANCE))
+			      (AVERAGE '(QUOTIENT GEVNEWFNSUM (FLOAT 
+							     GEVNEWFNCOUNT)))
+			      (TOTAL 'GEVNEWFNSUM)))))
+      (CASE OPERATION OF (COLLECT (LIST 'LISTOF
+					(CADR LASTPATH)))
+	    ((MAXIMUM MINIMUM)
+	     (LIST 'LIST
+		   (COPY LASTPATH)
+		   (LIST 'WINNER
+			 (CADR SET:TYPE))))
+	    (AVERAGE 'REAL)
+	    (TOTAL (CADR LASTPATH)))))))
+
+
+% edited:  8-OCT-82 10:43 
+(DG GEVMATCH (STR VAL FLG)
+(RESULT (LISTOF GSEITEM))
+% Match a structure description, STR, and a value VAL which matches 
+%   that description, to form a structure editor tree structure. 
+(PROG (RESULT)
+      (GEVMATCHB STR VAL NIL FLG)
+      (RETURN (REVERSIP RESULT))))
+
+
+% edited:  8-OCT-82 10:01 
+% Make a single item which matches structure STR and value VAL. 
+(DG GEVMATCHA (STR VAL FLG)
+(PROG (RES)
+      (RES_ (GEVMATCH STR VAL FLG))
+      (IF ~ (CDR RES)
+	  THEN
+	  (RETURN (CAR RES))
+	  ELSE
+	  (RETURN (A GSEITEM WITH VALUE = VAL TYPE = STR SUBVALUES = RES 
+		     NODETYPE = 'SUBTREE)))))
+
+
+% edited:  7-OCT-82 16:38 
+% Match an ATOM structure to a given value. 
+(DG GEVMATCHATOM (STR VAL NAME)
+(PROG (L STRB TMP)
+      (IF VAL IS NOT ATOMIC OR VAL IS NULL THEN (RETURN NIL))
+      (STRB_ (CADR STR))
+      (IF (CAR STRB)
+	  ~='PROPLIST THEN (RETURN NIL))
+      (L_ (CDR STRB))
+      (FOR X IN L DO (IF TMP_ (GET VAL (CAR X))
+			 THEN
+			 (GEVMATCHB X TMP NIL NIL)))))
+
+
+% edited:  7-OCT-82 16:57 
+% Match an ALIST structure to a given value. 
+(DG GEVMATCHALIST (STR VAL NAME)
+(PROG (L TMP)
+      (L_ (CDR STR))
+      (FOR X IN L DO (IF TMP_ (ASSOC (CAR X)
+				     VAL)
+			 THEN
+			 (GEVMATCHB X (CDR TMP)
+				    NIL NIL)))))
+
+
+% edited: 22-DEC-82 15:26 
+% Match a structure description, STR, and a value VAL which matches 
+%   that description, to form a structure editor tree structure. If 
+%   FLG is set, the match will descend inside an atomic type name. 
+%   Results are added to the free variable RESULT. 
+(DG GEVMATCHB (STR: (LISTOF ANYTHING)
+		    VAL NAME:ATOM FLG:BOOLEAN)
+(GLOBAL RESULT)(PROG (X Y STRB XSTR TOP TMP)
+		     (XSTR_ (GEVXTRTYPE STR))
+		     (IF STR IS ATOMIC THEN
+			 (IF FLG AND (STRB _ (CAR (GET STR 'GLSTRUCTURE)))
+			     THEN
+			     (RESULT +_
+				     (A GSEITEM WITH NAME = NAME VALUE = VAL 
+					SUBVALUES = (GEVMATCH STRB VAL NIL)
+					TYPE = STR NODETYPE = 'STRUCTURE))
+			     ELSE
+			     (RESULT +_
+				     (A GSEITEM WITH NAME = NAME VALUE = VAL 
+					TYPE = STR)))
+			 (RETURN NIL)
+			 ELSE
+			 (CASE (CAR STR)
+			       OF
+			       (CONS (GEVMATCHB (CADR STR)
+						(CAR VAL)
+						NIL NIL)
+				     (GEVMATCHB (CADDR STR)
+						(CDR VAL)
+						NIL NIL))
+			       (LIST (FOR X IN (CDR STR)
+					  DO
+					  (IF VAL (GEVMATCHB X (CAR VAL)
+							     NIL NIL)
+					      (VAL_ (CDR VAL)))))
+			       (ATOM (GEVMATCHATOM STR VAL NAME))
+			       (ALIST (GEVMATCHALIST STR VAL NAME))
+			       (PROPLIST (GEVMATCHPROPLIST STR VAL NAME))
+			       (LISTOF (GEVMATCHLISTOF STR VAL NAME))
+			       (RECORD (GEVMATCHRECORD STR VAL NAME))
+			       ((OBJECT ATOMOBJECT LISTOBJECT)
+				(GEVMATCHOBJECT STR VAL NAME))
+			       ELSE
+			       (IF NAME THEN (TMP _ (GEVMATCH STR VAL NIL))
+				   (TOP_ (CAR TMP))
+				   (RESULT +_
+					   (IF ~ (CDR TMP)
+					       AND ~TOP:NAME THEN (
+						 TOP:NAME_NAME)
+					       TOP ELSE
+					       (A GSEITEM WITH NAME = NAME 
+						  VALUE = VAL SUBVALUES = TMP 
+						  TYPE = XSTR NODETYPE =
+						  'SUBTREE)))
+				   ELSEIF
+				   (STRB _ (GEVXTRTYPE (CADR STR)))
+				   IS ATOMIC THEN (GEVMATCHB STRB VAL
+							     (CAR STR)
+							     NIL)
+				   ELSEIF
+				   (TMP_ (GEVMATCH (CADR STR)
+						   VAL NIL))
+				   THEN
+				   (TOP_ (CAR TMP))
+				   (RESULT +_
+					   (IF ~ (CDR TMP)
+					       AND ~TOP:NAME THEN
+					       (TOP:NAME_ (CAR STR))
+					       TOP ELSE
+					       (A GSEITEM WITH NAME =
+						  (CAR STR)
+						  VALUE = VAL SUBVALUES = TMP 
+						  TYPE = (CADR STR)
+						  NODETYPE = 'SUBTREE)))
+				   ELSE
+				   (PRINT "GEVMATCHB Failed"))))))
+
+
+% edited:  8-OCT-82 10:15 
+% Match a LISTOF structure. 
+(DG GEVMATCHLISTOF (STR VAL NAME)
+(GLOBAL RESULT)(RESULT+_ (A GSEITEM WITH NAME = NAME VALUE = VAL TYPE = STR)))
+
+
+% edited: 22-DEC-82 10:04 
+% Match the OBJECT structures. 
+(DG GEVMATCHOBJECT (STR VAL NAME)
+(GLOBAL RESULT)(PROG (OBJECTTYPE TMP)
+		     (SETQ OBJECTTYPE (CAR STR))
+		     (RESULT _+ (A GSEITEM WITH NAME = 'CLASS
+				   VALUE = (CASE OBJECTTYPE OF ((OBJECT 
+								LISTOBJECT)
+						  (TMP-_VAL))
+						 (ATOMOBJECT
+						   (GET VAL 'CLASS)))
+				   TYPE = 'GLTYPE))
+		     (FOR X IN (CDR STR)
+			  DO
+			  (CASE OBJECTTYPE OF ((OBJECT LISTOBJECT)
+				 (IF VAL (GEVMATCHB X (TMP-_VAL)
+						    NIL NIL)))
+				(ATOMOBJECT (IF TMP_ (GET VAL (CAR X))
+						THEN
+						(GEVMATCHB X TMP NIL NIL)))))))
+
+
+% edited: 24-NOV-82 16:31 
+% Match an PROPLIST structure to a given value. 
+(DG GEVMATCHPROPLIST (STR VAL NAME)
+(PROG (L TMP)
+      (L_ (CDR STR))
+      (FOR X IN L DO (IF TMP_ (LISTGET VAL (CAR X))
+			 THEN
+			 (GEVMATCHB X TMP NIL NIL)))))
+
+
+% edited: 11-MAR-83 16:31 
+% Match a RECORD structure. 
+(DG GEVMATCHRECORD (STR VAL NAME)
+(PROG (STRNAME FIELDS N)
+      (IF (CADR STR)
+	  IS ATOMIC THEN STRNAME_ (CADR STR)
+	  FIELDS_
+	  (CDDR STR)
+	  ELSE FIELDS_ (CDR STR))
+      (N_0)
+      (FOR X IN FIELDS DO (N_+1)
+	   (GEVMATCHB X (GetV VAL N)
+		      (CAR X)
+		      NIL))))
+
+
+% GSN  2-MAR-83 17:33 
+% Pop up from the current item to the previous one. If FLG is set, 
+%   popping continues through extended LISTOF elements. 
+(DG GEVPOP (FLG:BOOLEAN N:INTEGER)
+(PROG (TMP TOP:GSEITEM TMPITEM)
+      (IF N<1 (RETURN NIL))
+      LP
+      (TMP-_GEVEDITCHAIN)
+      (IF ~GEVEDITCHAIN THEN (RETURN (GEVQUIT)))
+      (TOP_ (CAAAR GEVEDITCHAIN))
+      
+% Test for repeated LISTOF elements. 
+
+      (TMPITEM_ (CAR TMP:PREVS))
+      (IF FLG AND TMPITEM:NODETYPE='FORWARD THEN (GO LP))
+      (IF (N_-1)
+	  >0 THEN (GO LP))
+      (IF TOP:TYPE IS A LIST AND (CAR TOP:TYPE)
+	  ='LISTOF AND ~ (CDR TOP:VALUE)
+	  THEN
+	  (GO LP))
+      (IF GEVEDITFLG AND ~ (MEMBER TMPITEM:SHORTVALUE '("(...)" "---"))
+	  THEN
+	  (GEVREFILLWINDOW)
+	  ELSE GEVEDITFLG_NIL (GEVFILLWINDOW))))
+
+
+% edited: 11-MAR-83 15:06 
+(DG GEVPOSTEST (POS:VECTOR TPOS:VECTOR NAME:STRING ITEM:GSEITEM FLG N:INTEGER)
+(RESULT MOUSESTATE)
+% Test whether TPOS contains the mouse position POS. The result is NIL 
+%   if not found, else a list of the sub-item and a flag which is NIL 
+%   if the NAME part is identified, T if the VALUE part is identified. 
+(IF POS:Y>=TPOS:Y AND POS:Y<=TPOS:Y+WINDOWLINEYSPACING AND POS:X>=TPOS:X AND 
+    POS:X<TPOS:X+GEVNAMECHARS*WINDOWCHARWIDTH THEN
+    (A MOUSESTATE WITH AREA =
+       (A REGION WITH START =
+	  (A VECTOR WITH X = TPOS:X Y = TPOS:Y - 1)
+	  SIZE = (A VECTOR WITH X = WINDOWCHARWIDTH*NAME:LENGTH Y = 
+		    WINDOWLINEYSPACING))
+       ITEM = ITEM FLAG = FLG GROUP = N)))
+
+
+% edited: 15-MAR-83 12:38 
+(DG GEVPPS (ITEM:GSEITEM COL:INTEGER WINDOW:WINDOW)
+(GLOBAL Y:INTEGER)
+% Pretty-print a structure defined by ITEM in the window WINDOW, 
+%   beginning ar horizontal column COL and vertical position Y. The 
+%   positions in ITEM are modified to match the positions in the 
+%   window. 
+(PROG (NAMEX TOP)
+      
+% Make sure there is room in window. 
+
+      (IF Y<0 THEN (RETURN NIL))
+      (IF GEVNUMBERCHARS>0 THEN (GEVLASTITEMNUMBER _+ 1)
+	  (SEND WINDOW PRINTAT (GEVSTRINGIFY GEVLASTITEMNUMBER)
+		(A VECTOR WITH X = GEVNUMBERPOS Y = Y)))
+      
+% Position in window for slot name. 
+
+      (NAMEX _ GEVNAMEPOS + COL*WINDOWCHARWIDTH)
+      (ITEM:NAMEPOS:X_NAMEX)
+      (ITEM:NAMEPOS:Y_Y)
+      (IF ITEM:NODETYPE='FULLVALUE THEN
+	  (SEND WINDOW PRINTAT "(expanded)"
+		(A VECTOR WITH X = NAMEX Y = Y))
+	  ELSEIF ITEM:NAME THEN
+	  (IF ITEM:NAME IS NUMERIC THEN
+	      (SEND WINDOW PRINTAT "#"
+		    (A VECTOR WITH X = NAMEX Y = Y))
+	      (NAMEX_+WINDOWCHARWIDTH))
+	  (SEND WINDOW PRINTAT (GEVLENGTHBOUND ITEM:NAME GEVNAMECHARS)
+		(A VECTOR WITH X = NAMEX Y = Y)))
+      
+% See if there is a value to print for this name. 
+
+      (IF ~ITEM:NODETYPE OR (MEMQ ITEM:NODETYPE
+				  '(FORWARD BACKUP PROP ADJ MSG ISA))
+	  THEN
+	  (ITEM:VALUEPOS:X_GEVVALUEPOS)
+	  (ITEM:VALUEPOS:Y_Y)
+	  (SEND WINDOW PRINTAT (ITEM:SHORTVALUE OR
+						(ITEM:SHORTVALUE
+						  _
+						  (GEVSHORTVALUE ITEM:VALUE 
+								 ITEM:TYPE
+								 (GEVSHORTCHARS
+								   - COL))))
+		(A VECTOR WITH X = GEVVALUEPOS Y = Y))
+	  (IF ~ (EQ ITEM:SHORTVALUE ITEM:VALUE)
+	      THEN
+	      (SEND WINDOW PRINTAT "~"
+		    (A VECTOR WITH X = GEVTILDEPOS Y = Y)))
+	  (Y_-WINDOWLINEYSPACING)
+	  ELSEIF ITEM:NODETYPE='FULLVALUE THEN (Y_-WINDOWLINEYSPACING)
+	  (SEND WINDOW PRETTYPRINTAT ITEM:VALUE
+		(A VECTOR WITH X = WINDOWCHARWIDTH Y = Y))
+	  (Y_WINDOW:YPOSITION - WINDOWLINEYSPACING)
+	  ELSEIF ITEM:NODETYPE='DISPLAY THEN (GEVEXPROP ITEM:VALUE ITEM:TYPE
+							'GEVDISPLAY
+							'MSG
+							(LIST WINDOW Y))
+	  ELSE
+	  
+% This is a subtree 
+
+	  (Y_-WINDOWLINEYSPACING)
+	  (FOR VSUB IN ITEM:SUBVALUES DO (GEVPPS VSUB COL+2 WINDOW)))))
+
+
+% edited:  6-APR-83 16:03 
+% Write an interactive program involving the current item. 
+(DG GEVPROGRAM NIL
+(PROG (TOPITEM COMMAND SET PATH DONE NEXT TYPE NEWFN RESULT LAST ABORTFLG)
+      (TOPITEM_GEVEDITCHAIN:TOPITEM)
+      (IF (COMMAND_ (SEND (A MENU WITH ITEMS =
+			     '(Quit COLLECT TOTAL AVERAGE MAXIMUM MINIMUM))
+			  SELECT))
+	  ='Quit OR ~ COMMAND THEN (RETURN NIL))
+      (IF (SET_ (GEVPROPMENU TOPITEM:TYPE 'LIST
+			     NIL))
+	  ='Quit OR SET='Pop OR ~SET THEN (RETURN NIL))
+      (PATH_ (LIST SET (LIST TOPITEM:NAME TOPITEM:TYPE)))
+      (NEXT_SET)
+      (TYPE_ (CADADR SET))
+      (WHILE ~DONE AND ~ABORTFLG DO (NEXT_ (GEVPROPMENU TYPE
+							(COMMAND~='COLLECT
+							  AND
+							  'NUMBER)
+							COMMAND='COLLECT))
+	     (IF NEXT IS ATOMIC THEN
+		 (CASE NEXT OF ((NIL Quit)
+			(ABORTFLG_T))
+		       (Pop (IF ~ (CDDR PATH)
+				THEN
+				(ABORTFLG_T)
+				ELSE
+				(NEXT-_PATH)
+				(NEXT_ (CAR PATH))
+				(TYPE_ (CADR NEXT))
+				(IF TYPE IS A LIST THEN TYPE_ (CADR TYPE))
+				(LAST_ (CAR NEXT))))
+		       (Done (DONE_T)))
+		 ELSE
+		 (PATH+_NEXT)
+		 (TYPE_ (CADR NEXT))
+		 (LAST_ (CAR NEXT)))
+	     (IF (MEMQ TYPE '(ATOM INTEGER STRING REAL BOOLEAN NIL))
+		 DONE_T))
+      (IF ABORTFLG (RETURN NIL))
+      (PATH_ (REVERSIP PATH))
+      (NEWFN_ (GEVMAKENEWFN COMMAND TOPITEM:TYPE SET (CDDR PATH)))
+      (GEVPUTD 'GEVNEWFN
+	       (CAR NEWFN))
+      (RESULT_ (GEVNEWFN TOPITEM:VALUE))
+      
+% Print result as well as displaying it. 
+
+      (PRIN1 COMMAND)
+      (SPACES 1)
+      (FOR X IN (CDDR PATH)
+	   DO
+	   (PRIN1 (CAR X))
+	   (SPACES 1))
+      (PRINC "OF ")
+      (PRIN1 (CAAR PATH))
+      (SPACES 1)
+      (PRIN1 (CAADR PATH))
+      (PRINC " = ")
+      (PRINT RESULT)
+      (GEVEDITCHAIN:TOPFRAME:PROPS_+ (A GSEITEM WITH NAME =
+					(CONCAT (GEVSTRINGIFY COMMAND)
+						(CONCAT " " (GEVSTRINGIFY
+							  LAST)))
+					TYPE = (CADR NEWFN)
+					VALUE = RESULT NODETYPE =
+					'MSG))
+      (GEVDISPLAYNEWPROP)))
+
+
+% GSN 21-JAN-83 10:32 
+% Make a menu to get properties of object OBJ with filter FILTER. FLG 
+%   is T if it is okay to stop before reaching a basic type. 
+(DG GEVPROPMENU (OBJ:GLTYPE FILTER:ATOM FLG:BOOLEAN)
+(PROG (PROPS SEL PNAMES MENU)
+      (PROPS_ (GEVGETNAMES OBJ FILTER))
+      (IF ~PROPS THEN (RETURN NIL)
+	  ELSE
+	  (PNAMES_ (MAPCAR PROPS (FUNCTION CAR)))
+	  (SEL_ (SEND (A MENU WITH ITEMS =
+			 (CONS 'Quit
+			       (CONS 'Pop
+				     (IF FLG THEN (CONS 'Done
+							PNAMES)
+					 ELSE PNAMES))))
+		      SELECT))
+	  (RETURN (CASE SEL OF ((Quit Pop Done NIL)
+			 SEL)
+			ELSE
+			(ASSOC SEL PROPS))))))
+
+
+% GSN  4-FEB-83 17:01 
+% Get all property names and types of properties of type PROPTYPE for 
+%   OBJ when they satisfy FILTER. 
+(DG GEVPROPNAMES (OBJ:GLTYPE PROPTYPE:ATOM FILTER:ATOM)
+(PROG (RESULT TYPE)
+      (RESULT _ (FOR P IN (CASE PROPTYPE OF (PROP OBJ:PROPS)
+				(ADJ OBJ:ADJS)
+				(ISA OBJ:ISAS)
+				(MSG OBJ:MSGS))
+		     WHEN
+		     (TYPE_ (GEVPROPTYPES OBJ P:NAME 'PROP))
+		     AND
+		     (GEVFILTER TYPE FILTER)
+		     COLLECT
+		     (LIST P:NAME TYPE)))
+      (FOR S IN OBJ:SUPERS DO (RESULT _ (NCONC RESULT (GEVPROPNAMES S PROPTYPE 
+								    FILTER))))
+      (RETURN RESULT)))
+
+
+% GSN  4-FEB-83 17:02 
+% Find the type of a computed property. 
+(DG GEVPROPTYPE (STR:ATOM PROPNAME:ATOM PROPTYPE:ATOM)
+(PROG (PL SUBPL PROPENT TMP)
+      (IF STR IS NOT ATOMIC THEN (RETURN NIL)
+	  ELSEIF
+	  (PROPENT_ (GEVGETPROP STR PROPNAME PROPTYPE))
+	  AND
+	  (TMP_ (LISTGET (CDDR PROPENT)
+			 'RESULT))
+	  THEN
+	  (RETURN TMP)
+	  ELSEIF PROPENT AND (CADR PROPENT)
+	  IS ATOMIC AND (TMP_ (GET (CADR PROPENT)
+				   'GLRESULTTYPE))
+	  THEN
+	  (RETURN TMP)
+	  ELSEIF
+	  (AND (PL_ (GET STR 'GLPROPFNS))
+	       (SUBPL_ (ASSOC PROPTYPE PL))
+	       (PROPENT_ (ASSOC PROPNAME (CDR SUBPL)))
+	       (TMP_ (CADDR PROPENT)))
+	  THEN
+	  (RETURN TMP)
+	  ELSEIF PROPTYPE='ADJ THEN (RETURN 'BOOLEAN))))
+
+
+% edited:  4-NOV-82 15:39 
+(DE GEVPROPTYPES (OBJ NAME TYPE)
+(OR (GEVPROPTYPE OBJ NAME TYPE)
+    (AND (GEVCOMPPROP OBJ NAME TYPE)
+	 (GEVPROPTYPE OBJ NAME TYPE))))
+
+
+% GSN  2-MAR-83 17:32 
+% Push down to look at an item referenced from the current item. 
+(DG GEVPUSH (ITEM:GSEITEM)
+(PROG (NEWITEMS TOPITEM LSTITEM:GSEITEM)
+      (IF ITEM:NODETYPE='BACKUP THEN (GEVPOP NIL 1)
+	  (RETURN NIL))
+      (TOPITEM_GEVEDITCHAIN:TOPITEM)
+      (IF ITEM:NODETYPE='FORWARD THEN (NEWITEMS_ (GEVPUSHLISTOF ITEM T))
+	  ELSEIF ITEM:TYPE IS ATOMIC AND ~ (GET ITEM:TYPE 'GLSTRUCTURE)
+	  THEN
+	  (CASE ITEM:TYPE OF
+		((ATOM NUMBER REAL INTEGER STRING ANYTHING)
+		 (IF ITEM:VALUE=ITEM:SHORTVALUE THEN (RETURN NIL)
+		     ELSE
+		     (NEWITEMS_ (LIST (A GSEITEM WITH NAME = ITEM:NAME VALUE = 
+					 ITEM:VALUE SHORTVALUE = 
+					 ITEM:SHORTVALUE TYPE = ITEM:TYPE 
+					 NODETYPE = 'FULLVALUE)))))
+		ELSE
+		(RETURN NIL))
+	  ELSEIF ITEM:TYPE IS A LIST AND (CAR ITEM:TYPE)
+	  ='LISTOF THEN (NEWITEMS_ (GEVPUSHLISTOF ITEM NIL)))
+      (GEVEDITCHAIN+_ (AN EDITFRAME WITH PREVS = (CONS ITEM 
+					       GEVEDITCHAIN:TOPFRAME:PREVS)
+			  SUBITEMS = NEWITEMS))
+      
+% Do another PUSH automatically for a list of only one item. 
+
+      (GEVREFILLWINDOW)
+      (IF ITEM:TYPE IS A LIST AND (CAR ITEM:TYPE)
+	  ='LISTOF AND ~ (CDR ITEM:VALUE)
+	  THEN
+	  (LSTITEM_ (CAADAR GEVEDITCHAIN))
+	  (GEVPUSH (CAR LSTITEM:SUBVALUES))
+	  (RETURN NIL))))
+
+
+% edited:  6-APR-83 16:04 
+% Push into a datum of type LISTOF, expanding it into the individual 
+%   elements. If FLG is set, ITEM is a FORWARD item to be continued. 
+(DG GEVPUSHLISTOF (ITEM:GSEITEM FLG:BOOLEAN)
+(PROG (ITEMTYPE TOPFRAME N:INTEGER NROOM LST VALS: (LISTOF ANYTHING) TMP)
+
+      
+% Compute the vertical room available in the window. 
+
+      (IF ~ITEM:VALUE (RETURN NIL))
+      (TOPFRAME_GEVEDITCHAIN:TOPFRAME)
+      (NROOM _ GEVWINDOW:HEIGHT / WINDOWLINEYSPACING - 4 - (LENGTH 
+							    TOPFRAME:PREVS))
+      
+% If there was a previous display of this list, insert an ellipsis 
+%   header. 
+
+      (IF FLG THEN (LST+_ (A GSEITEM WITH SHORTVALUE = "(..." NODETYPE =
+			     'BACKUP))
+	  (N_ITEM:NAME)
+	  (ITEMTYPE_ITEM:TYPE)
+	  (NROOM_-1)
+	  (VALS_ITEM:SUBVALUES)
+	  ELSE
+	  (N_1)
+	  (ITEMTYPE_ (CADR ITEM:TYPE))
+	  (VALS_ITEM:VALUE))
+      
+% Now make entries for each value on the list. 
+
+      (WHILE VALS AND (NROOM>1 OR (NROOM=1 AND ~ (CDR VALS)))
+	     DO
+	     (LST+_ (A GSEITEM WITH VALUE = (TMP-_VALS)
+		       TYPE = ITEMTYPE NAME = N))
+	     (NROOM_-1)
+	     (N_+1))
+      (IF VALS THEN (LST+_ (A GSEITEM WITH SHORTVALUE = "...)" NODETYPE =
+			      'FORWARD
+			      TYPE = ITEMTYPE NAME = N SUBVALUES = VALS)))
+      (RETURN (LIST (A GSEITEM WITH NAME = "expanded" TYPE = ITEMTYPE NODETYPE 
+		       = 'LISTOF
+		       SUBVALUES = (REVERSIP LST))))))
+
+
+% edited: 14-MAR-83 16:46 
+(DG GEVQUIT NIL
+(SETQ GEVACTIVEFLG NIL)(SEND GEVWINDOW CLOSE)(IF GEVMENUWINDOW THEN
+						 (SEND GEVMENUWINDOW CLOSE)))
+
+
+% edited: 19-OCT-82 10:23 
+% Recompute property values for the item. 
+(DG GEVREDOPROPS (TOP:EDITFRAME)
+(PROG (ITEM L)
+      (ITEM_ (CAR TOP:PREVS))
+      (IF ~TOP:PROPS AND (L_ (GEVEXPROP ITEM:VALUE ITEM:TYPE 'DISPLAYPROPS
+					'PROP
+					NIL))
+	  ~='GEVERROR THEN (IF L IS ATOMIC THEN (GEVCOMMANDPROP ITEM
+								'PROP
+								'All)
+			       ELSEIF L IS A LIST THEN
+			       (FOR X IN L (GEVCOMMANDPROP ITEM 'PROP
+							   X)))
+	  ELSE
+	  (FOR X IN TOP:PROPS WHEN X:NODETYPE~='MSG DO
+	       (X:VALUE _ (GEVEXPROP ITEM:VALUE ITEM:TYPE X:NAME X:NODETYPE 
+				     NIL))
+	       (X:SHORTVALUE _ NIL)))))
+
+
+% edited: 14-OCT-82 12:46 
+% Re-expand the top item of GEVEDITCHAIN, which may have been changed 
+%   due to editing. 
+(DG GEVREFILLWINDOW NIL
+(PROG (TOP TOPITEM SUBS TOPSUB)
+      (TOP_GEVEDITCHAIN:TOPFRAME)
+      (TOPITEM_GEVEDITCHAIN:TOPITEM)
+      (TOPSUB_ (CAR TOP:SUBITEMS))
+      (IF ~TOPSUB OR (TOPSUB:NODETYPE~='FULLVALUE AND TOPSUB:NODETYPE~='LISTOF)
+	  THEN
+	  (IF (GEVGETPROP TOPITEM:TYPE 'GEVDISPLAY
+			  'MSG)
+	      THEN
+	      (TOP:SUBITEMS_ (LIST (A GSEITEM WITH VALUE = TOPITEM:VALUE TYPE 
+				      = TOPITEM:TYPE NODETYPE = 'DISPLAY)))
+	      ELSE
+	      (SUBS_ (GEVMATCH TOPITEM:TYPE TOPITEM:VALUE T))
+	      (TOPSUB_ (CAR SUBS))
+	      (TOP:SUBITEMS_ (IF ~ (CDR SUBS)
+				 AND TOPSUB:NODETYPE='STRUCTURE AND 
+				 TOPSUB:VALUE=TOPITEM:VALUE AND 
+				 TOPSUB:TYPE=TOPITEM:TYPE THEN 
+				 TOPSUB:SUBVALUES ELSE SUBS))))
+      (GEVREDOPROPS TOP)
+      (GEVFILLWINDOW)))
+
+
+% edited:  6-APR-83 16:05 
+(DE GEVSHORTATOMVAL (ATM NCHARS)
+(COND ((NUMBERP ATM)
+       (COND ((GREATERP (FlatSize2 ATM)
+			NCHARS)
+	      (GEVSHORTSTRINGVAL (GEVSTRINGIFY ATM)
+				 NCHARS))
+	     (T ATM)))
+      ((GREATERP (FlatSize2 ATM)
+		 NCHARS)
+       (CONCAT (SUBSTRING ATM 1 (SUB1 NCHARS))
+	       "-"))
+      (T ATM)))
+
+
+% GSN  4-APR-83 16:23 
+% Compute a short value for printing a CONS of two items. 
+(DG GEVSHORTCONSVAL (VAL STR NCHARS:INTEGER)
+(PROG (NLEFT RES TMP NC)
+      (RES +_ "(")
+      (NLEFT _ NCHARS - 5)
+      (TMP_ (GEVSHORTVALUE (CAR VAL)
+			   (CADR STR)
+			   NLEFT - 3))
+      (NC_ (FlatSize2 TMP))
+      (IF NC>NLEFT - 3 THEN TMP_ "---" NC_3)
+      (RES+_ (GEVSTRINGIFY TMP))
+      (RES +_ " . ")
+      (NLEFT_-NC)
+      (TMP_ (GEVSHORTVALUE (CDR VAL)
+			   (CADDR STR)
+			   NLEFT))
+      (NC_ (FlatSize2 TMP))
+      (IF NC>NLEFT THEN TMP_ "---" NC_3)
+      (RES+_ (GEVSTRINGIFY TMP))
+      (RES+_ ")")
+      (RETURN (GEVCONCAT (REVERSIP RES)))))
+
+
+% GSN  4-APR-83 16:24 
+% Compute a short value for printing a list of items. 
+(DG GEVSHORTLISTVAL (VAL STR NCHARS:INTEGER)
+(PROG (NLEFT RES TMP QUIT NC NCI REST RSTR)
+      (RES +_ "(")
+      (REST_4)
+      (NLEFT _ NCHARS - 2)
+      (RSTR_ (CDR STR))
+      (WHILE VAL AND ~QUIT AND (NCI_ (IF (CDR VAL)
+					 THEN NLEFT - REST ELSE NLEFT))
+	     >2 DO (TMP_ (GEVSHORTVALUE (CAR VAL)
+					(IF (CAR STR)
+					    ='LISTOF THEN (CADR STR)
+					    ELSEIF
+					    (CAR STR)
+					    ='LIST THEN (CAR RSTR))
+					NCI))
+	     (QUIT _ (MEMBER TMP '(GEVERROR "(...)" "---" "???")))
+	     (NC_ (FlatSize2 TMP))
+	     (IF NC>NCI AND (CDR RES)
+		 THEN QUIT_T ELSE (IF NC>NCI THEN TMP_ "---" NC_3 QUIT_T)
+		 (RES+_ (GEVSTRINGIFY TMP))
+		 (NLEFT_-NC)
+		 (VAL_ (CDR VAL))
+		 (RSTR_ (CDR RSTR))
+		 (IF VAL THEN (RES+_ " ")
+		     (NLEFT_-1))))
+      (IF VAL THEN (RES+_ "..."))
+      (RES+_ ")")
+      (RETURN (GEVCONCAT (REVERSIP RES)))))
+
+
+% edited: 12-OCT-82 12:14 
+% Compute the short value of a string VAL. The result is a string 
+%   which can be printed within NCHARS. 
+(DE GEVSHORTSTRINGVAL (VAL NCHARS)
+(COND ((STRINGP VAL)
+       (GEVLENGTHBOUND VAL NCHARS))
+      (T "???")))
+
+
+% edited: 11-MAR-83 15:34 
+% Compute the short value of a given value VAL whose type is STR. The 
+%   result is an atom, string, or list structure which can be printed 
+%   within NCHARS. 
+(DE GEVSHORTVALUE (VAL STR NCHARS)
+(PROG (TMP)
+      (SETQ STR (GEVXTRTYPE STR))
+      (RETURN (COND ((AND (ATOM STR)
+			  (MEMQ STR '(ATOM INTEGER REAL)))
+		     (GEVSHORTATOMVAL VAL NCHARS))
+		    ((EQ STR 'STRING)
+		     (GEVSHORTSTRINGVAL VAL NCHARS))
+		    ((AND (ATOM STR)
+			  (NE (SETQ TMP (GEVEXPROP VAL STR 'SHORTVALUE
+						   'PROP
+						   NIL))
+			      'GEVERROR))
+		     (GEVLENGTHBOUND TMP NCHARS))
+		    ((OR (ATOM VAL)
+			 (NUMBERP VAL))
+		     (GEVSHORTATOMVAL VAL NCHARS))
+		    ((STRINGP VAL)
+		     (GEVSHORTSTRINGVAL VAL NCHARS))
+		    ((PAIRP STR)
+		     (CASEQ (CAR STR)
+			    ((LISTOF LIST)
+			     (COND ((PAIRP VAL)
+				    (GEVSHORTLISTVAL VAL STR NCHARS))
+				   (T "???")))
+			    (CONS (COND ((PAIRP VAL)
+					 (GEVSHORTCONSVAL VAL STR NCHARS))
+					(T "???")))
+			    (T "---")))
+		    ((PAIRP VAL)
+		     (GEVSHORTLISTVAL VAL '(LISTOF ANYTHING)
+				      NCHARS))
+		    (T "---")))))
+
+
+% edited: 21-OCT-82 11:17 
+% Extract an atomic type name from a type spec which may be either 
+%   <type> or (A <type>) . 
+(DE GEVXTRTYPE (TYPE)
+(COND ((ATOM TYPE)
+       TYPE)
+      ((NOT (PAIRP TYPE))
+       NIL)
+      ((AND (MEMQ (CAR TYPE)
+		  '(A AN a an An TRANSPARENT))
+	    (CDR TYPE)
+	    (ATOM (CADR TYPE)))
+       (CADR TYPE))
+      ((MEMQ (CAR TYPE)
+	     GEVTYPENAMES)
+       TYPE)
+      ((AND (NOT (UNBOUNDP GLUSERSTRNAMES))
+	    (ASSOC (CAR TYPE)
+		   GLUSERSTRNAMES))
+       TYPE)
+      ((AND (ATOM (CAR TYPE))
+	    (CDR TYPE))
+       (GEVXTRTYPE (CADR TYPE)))
+      (T (ERROR 0 (LIST 'GEVXTRTYPE
+			(LIST TYPE "is an illegal type specification.")))
+	 NIL)))
+
+(SETQ GEVTYPENAMES '(CONS LIST RECORD LISTOF ALIST ATOM OBJECT LISTOBJECT 
+			  ATOMOBJECT))

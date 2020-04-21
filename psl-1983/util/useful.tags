@@ -1,0 +1,134 @@
+PS:<PSL.UTIL>BACKQUOTE.SL.0
+00410,PSL
+(dm backquote (u) (backquote-form (cadr u)))686
+(de backquote-form (u)712
+(de backquote-vector (u)1392
+(de backquote-list (u)2074
+(de backquote-constantp (u)3251
+(de backquote-constant-value (x)3387
+(dm quoted-list (u) (mkquote (cdr u)))3712
+(dm list* (u) (expand (cdr u) 'cons))3755
+(dm quoted-list* (u)3779
+(dm unquote (u) (ContinuableError4175
+
+PS:<PSL.UTIL>READ-MACROS.SL.0
+00493,PSL
+(de backquote-read-macro (channel qt)659
+(de unquote-read-macro (channel qt)756
+(de unquotel-read-macro (channel qt)852
+(de unquoted-read-macro (channel qt)949
+(de function-read-macro (channel qt)1899
+(de eval-read-macro (channel qt)1988
+(de if-system-read-macro (channel qt)2184
+(de if-not-system-read-macro (channel qt)2462
+(de single-char-read-macro (channel qt)3571
+(de char-read-macro (channel qt)3961
+(de DoChar (u)4028
+
+PS:<PSL.UTIL>DESTRUCTURE.SL.0
+00297,PSL
+(de destructure-form (target path)324
+(de flatten (U)671
+(de defmacro-1 (U)1055
+(de macro-displace (u v)1450
+(dm defmacro (u) (defmacro-1 u))1626
+(dm defmacro-displace (u)1656
+(dm defmacro-no-displace (u)1742
+(defmacro desetq (U V)1916
+
+PS:<PSL.UTIL>COND-MACROS.SL.0
+00215,PSL
+(defmacro if (predicate then . else)327
+(defmacro xor (u v) 448
+(defmacro when (p . c) `(cond (,p . ,c)))713
+(defmacro unless (p . c) `(cond ((not ,p) . ,c)))766
+
+PS:<PSL.UTIL>BIND-MACROS.SL.0
+00179,PSL
+(defmacro prog1 (first . body)315
+(defmacro let (specs . body)444
+(defmacro let* (specs . body)910
+(de let*1 (specs body)1097
+
+PS:<PSL.UTIL>SET-MACROS.SL.0
+00808,PSL
+(defmacro setf u808
+(de setf1 (u)1002
+(de setf2 (lhs rhs)1182
+(de expand-setf (lhs rhs)1513
+(de expand-pnth-setf (lhs rhs)3934
+(de flag-setf (nam flg val)4408
+(de getd-setf (trgt src)4520
+(de list-setf (lhs rhs)4918
+(de cons-setf (lhs rhs)5149
+(de vector-setf (lhs rhs)5478
+(defmacro push (item stack) `(setf ,stack (cons ,item ,stack)))5826
+(defmacro pop (stack . rst)5857
+(defmacro adjoin-to (e s) `(setf ,s (adjoin ,e ,s)))6016
+(defmacro adjoinq-to (e s) `(setf ,s (adjoinq ,e ,s)))6074
+(defmacro incr (var . rst)6104
+(defmacro decr (var . rst)6193
+(defmacro clear L6286
+(defmacro psetq rst6387
+(defmacro psetf rst6797
+(defmacro defswitch (nam var . acts)7128
+       (de ,nam () (let ((,nam ,var)) ,read-act) ,var)7401
+
+PS:<PSL.UTIL>ITER-MACROS.SL.0
+00254,PSL
+(defmacro do (iterators result . body)316
+(defmacro do* (iterators result . body)1011
+(defmacro do-loop (iterators prologue result . body)1717
+(defmacro do-loop* (iterators prologue result . body)2443
+
+PS:<PSL.UTIL>FOR-MACRO.SL.0
+01041,PSL
+(dm for (U) (for-build-loop (cdr U) 'do-loop 'let))593
+(defmacro for* U613
+(de for-build-loop (U loop-fn let-fn)693
+(de process-for-clause (clause)2490
+(de for-in-function (clause)2881
+(de for-on-function (clause)3390
+(de for-from-function (clause)3564
+(de for-for-function (clause) (tconc for-vars* clause))4661
+(de for-with-function (clause) 4696
+(de for-initially-function (clause)4800
+(de for-finally-function (clause)4905
+(de for-do-function (clause)5005
+(de for-collect-function (clause)5107
+(de for-conc-function (clause)5558
+(de for-join-function (clause)6024
+(de for-intersection-function (clause)7168
+(de for-intersectionq-function (clause)7606
+(de for-always-function (clause)8849
+(de for-never-function (clause)9007
+(de for-thereis-function (clause)9159
+(de for-returns-function (clause)9345
+(de for-while-function (clause)9455
+(de for-until-function (clause)9553
+(de for-when-function (clause)9649
+(de for-unless-function (clause)9751
+
+PS:<PSL.UTIL>MISC-MACROS.SL.0
+00489,PSL
+(defmacro funcall u `(apply ,(car u) (list ,@(cdr u))))323
+(defmacro eqfirst (u v) `(eqcar ,u ,v))392
+(defmacro bldid (s . args) `(intern (bldmsg ,s ,@args)))452
+(defmacro nary-concat u (expand u 'concat))499
+(de stub-print (name arg-names actual-args)817
+(defmacro circular-list L1001
+(defmacro nothing U nil) % Nary no-op returning nil; args not evaluated.1189
+(defmacro make-list (N . rst)1222
+(de make-list-1 (N init)1304
+
+PS:<PSL.UTIL>MACROEXPAND.SL.0
+00308,PSL
+(defmacro macroexpand (form . macros)318
+(de macroexpand1 (U L)419
+(de macroexpand2 (U L)624
+(de macroexpand-cond (U L)1296
+(de macroexpand-prog (U L)1421
+(de macroexpand-random (U L)1528
+(de macroexpand-setq (U L)1627
+(de macroexpand-loop ()1989
+

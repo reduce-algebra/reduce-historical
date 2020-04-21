@@ -1,0 +1,14 @@
+%
+% DEBG.BUILD - Minor debugging tools in the interpreter
+% 
+% Author:      Eric Benson
+%              Symbolic Computation Group
+%              Computer Science Dept.
+%              University of Utah
+% Date:        19 May 1982
+% Copyright (c) 1982 University of Utah
+%
+
+PathIn "mini-trace.red"$		% simple function tracing
+PathIn "mini-editor.red"$
+PathIn "backtrace.red"$			% Stack backtrace

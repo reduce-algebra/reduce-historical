@@ -1,0 +1,152 @@
+(glispobjects
+
+
+(circle (list (start vector) (radius real) (color atom))
+   prop ((pi (3.14159265))
+	 (diameter (2*radius))
+	 (circumference (pi*diameter))
+	 (area (pi*radius^2)))
+   adj  ((big (area>100))
+ 	 (small (area<80)))
+   msg  ((grow (area_+100))
+	 (shrink (area_area/2))
+	 (standard (area_100))) )
+
+(student (atom (proplist (name string)
+			 (sex atom)
+			 (major atom)
+			 (grades (listof integer))))
+   prop ((average student-average)
+	 (grade-average student-grade-average))
+   adj  ((male (sex='male))
+	 (female (sex='female))
+	 (winner (average>=95))
+	 (loser (average<60)))
+   isa  ((winner (self is winner))))
+
+(student-group (listof student)
+   prop ((n-students length)
+	 (average student-group-average)))
+
+(class (atom (proplist (department atom)
+		       (number integer)
+		       (instructor string)
+		       (students student-group)))
+   prop ((n-students (students:n-students))
+	 (men ((those students who are male)) result student-group)
+	 (women ((those students who are female)) result student-group)
+	 (winners ((those students who are winner)) result student-group)
+	 (losers ((those students who are loser)) result student-group)
+	 (class-average (students:average))))
+
+)
+
+
+(dg student-average (s:student)
+  (prog ((sum 0.0)(n 0.0))
+    (for g in grades do n _+ 1.0 sum_+g)
+    (return sum/n) ))
+
+(dg student-grade-average (s:student)
+  (prog ((av s:average))
+    (return (if av >= 90.0 then 'a
+		elseif av >= 80.0 then 'b
+		elseif av >= 70.0 then 'c
+		elseif av >= 60.0 then 'd
+		else 'f))))
+
+
+(dg student-group-average (sg:student-group)
+  (prog ((sum 0.0)(n 0.0))
+    (for s in sg do sum_+s:average n _+ 1.0)
+    (return sum/n) ))
+
+(dg test1 (c:class)
+  (for s in c:students (prin1 s:name)
+                       (prin2 '! )
+		       (prin1 s:grade-average) (terpri)))
+
+(dg test2 (c:class)
+  (for s in c:winners (prin1 s:name)
+                      (prin2 '! )
+		      (prin1 s:average) (terpri)))
+
+(dg test3 (c:class)
+  c:men:average)
+
+(dg test4 (c:class)
+  (for s in c:women when s is winner
+                       (prin1 s:name)
+                       (prin2 '! )
+		       (prin1 s:average) (terpri)))
+
+(dg test5 (c:class)
+  (for s in c:women*c:winners
+                       (prin1 s:name)
+                       (prin2 '! )
+		       (prin1 s:average) (terpri)))
+
+
+(setq class1 (a class with instructor = "G. Novak" department = 'cs
+     number = 102 students = (list
+   (a student with name = "John Doe" sex = 'male major = 'cs
+       grades = '(99 98 97 93))
+   (a student with name = "Fred Failure" sex = 'male major = 'cs
+       grades = '(52 54 43 27))
+   (a student with name = "Mary Star" sex = 'female major = 'cs
+       grades = '(100 100 99 98))
+   (a student with name = "Doris Dummy" sex = 'female major = 'cs
+       grades = '(73 52 46 28))
+   (a student with name = "Jane Average" sex = 'female major = 'cs
+       grades = '(75 82 87 78))
+   (a student with name = "Lois Lane" sex = 'female major = 'cs
+       grades = '(98 95 97 96)) )))
+
+
+
+
+
+
+(glispobjects
+
+(physical-object anything
+  prop ((density (mass/volume))))
+
+(sphere anything
+  prop ((volume ((4.0 / 3.0) * 3.1415926 * radius ^ 3))))
+
+(planet (listobject (mass real)(radius real))
+  supers (physical-object sphere))
+
+(ordinary-object anything
+  prop ((mass (weight / 9.88)))
+  supers (physical-object))
+
+(parallelepiped anything
+  prop ((volume (length*width*height))))
+
+(brick (object (length real)(width real)(height real)(weight real))
+  supers (ordinary-object parallelepiped))
+
+(bowling-ball (atomobject (type atom)(weight real))
+  prop ((radius ((if type='adult then 0.1 else 0.07))))
+  supers (ordinary-object sphere))
+
+)
+
+(dg dplanet (p:planet) density)
+
+(dg dbrick (b:brick) density)
+
+(dg dbb (b:bowling-ball) density)
+
+
+(setq earth (a planet with mass = 5.98e24 radius = 6.37e6))
+
+(setq brick1 (a brick with weight = 20.0 width = 0.06 height = 0.04
+                length = 0.16))
+
+(setq bb1 (a bowling-ball with type = 'adult weight = 60.0))
+
+
+

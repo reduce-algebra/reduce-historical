@@ -1,0 +1,15 @@
+%
+% PROP.BUILD - Files with functions for property lists and function definition
+% 
+% Author:      Eric Benson
+%              Symbolic Computation Group
+%              Computer Science Dept.
+%              University of Utah
+% Date:        19 May 1982
+% Copyright (c) 1982 University of Utah
+%
+
+PathIn "function-primitives.red"$	% used by PutD, GetD and Eval
+PathIn "property-list.red"$		% PUT and FLAG and friends
+PathIn "fluid-global.red"$		% variable declarations
+PathIn "putd-getd.red"$			% function defining functions

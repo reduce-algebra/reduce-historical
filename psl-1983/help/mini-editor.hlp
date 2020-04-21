@@ -1,0 +1,55 @@
+PSL Structure Editor
+-------------------
+Based on the BBN-Lisp editor, circa 1968, and its descendants.
+This editor can be entered from inside the break loop or by calling
+the functin Edit on a structure to be edited.  For information on
+other editors do (Help Editor).
+
+Looking Commands:
+
+P 	 Print the current level.   The printout replace all sublevels deeper
+         than 'plevel' by ***.  'plevel' is initialized to 3.
+
+PL n 	 Change 'plevel' to n.
+
+'Stroll around in the structure' 	 commands
+
+n (>0)	 sets the new current level to the n-th element in the
+         present current level (Walk down to the n-th sub-expression).
+
+-n (n>0) sets the current level to the n-th cdr in the present current
+         level.
+
+UP 	 go up to the level you were in just before
+
+T 	 go to the top of the original expression
+
+F s 	 Find the first occurence of s .  Test is performed by equal.
+         After executing, current level is set to the first level s was
+         a member in.
+
+Structure changing commands:
+	(Notice, that all these commands are parenthesis expressions.)
+
+(n)	Delete the n-th element (in the current level)
+
+(n S ...S )	Replace the n-th element by S ...S .
+    1    n
+
+(-n S ...S )	Insert before the n-th element the elements S ...S .
+     1    n
+
+(R S  S )	Replace all occurence (in the tree you are placed at)
+    1   n	of S  by S  (Equal test).
+
+
+Others:
+
+
+B		Enter a break loop.
+
+OK		Leave the editor. 
+
+HELP		Print this text.
+
+E               Eval and print the next expression.

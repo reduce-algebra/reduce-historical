@@ -1,0 +1,15 @@
+	radix 10
+	extern SYMNAM
+	extern SYMVAL
+	extern SYMFNC
+	extern SYMPRP
+	extern L0001
+	extern L0002
+	extern L0003
+	extern L1256
+	extern L1825
+L2011:	block 1601
+	intern L2011
+L2012:	L2011+0
+	intern L2012
+	end

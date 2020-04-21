@@ -1,0 +1,5 @@
+(faslout "process")
+(dskin "process.sl")
+(dskin "wait.sl")
+(faslend)
+

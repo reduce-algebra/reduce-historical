@@ -1,0 +1,111 @@
+,MOD
+- R 44X (11 April 1983) <PSL.NMODE-DOC>NM-BUFFERS.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+          201/NMODE Manual (Using Multiple Buffers)                             Page 16-1
+
+
+          202/16.  Using Multiple Buffers
+
+            201/When we speak of "the buffer", which contains the text you are editing, we
+          have given the impression that there is only one.  In fact, there may be
+          many of them, each with its own body of text.  At any time only one buffer
+          can be 202/selected 201/and available for editing, but it isn't hard to switch to a
+          different one.  Each buffer individually remembers which file it is visiting,
+          what modes are in effect, and whether there are any changes that need
+          saving.
+
+                  C-X B     Select or create a buffer.
+                  C-M-L      Select previous buffer.
+                  C-X C-F   Visit a file in its own buffer.
+                  C-X C-B   List the existing buffers.
+                  C-X K     Kill a buffer.
+
+            Each buffer in NMODE has a single name, which normally doesn't change.
+          A buffer's name can be any length.  The name of the currently selected
+          buffer, and the name of the file visited in it, are visible in the mode line
+          when you are at top level.  A newly started NMODE has only one buffer,
+          named "Main".
+
+          202/16.1  Creating and Selecting Buffers
+
+            201/To create a new buffer, you need only think of a name for it (say, "FOO")
+          and then do C-X B FOO<CR>, which is the command C-X B (Select Buffer)
+          followed by the name.  This makes a new, empty buffer and selects it for
+          editing.  The new buffer is not visiting any file, so if you try to save it you
+          will be asked for the filename to use.  Each buffer has its own major mode;
+          the new buffer's major mode is taken  from  the  value  of  the  variable
+          nmode-default-mode.  Normally nmode-default-mode is text mode.
+
+            To return to buffer FOO later after having switched to another, the same
+          command C-X B FOO<CR> is used, since C-X B can tell whether a buffer
+          named FOO exists already or not.  It does not matter whether you use upper
+          case or lower case in typing the name of a buffer.  C-X B Main<CR> reselects
+          the buffer Main that NMODE started out with.  Just C-X B<CR> reselects the
+          previous buffer.
+
+            One   can   also   return   to   the   previous   buffer   with   C-M-L
+          (203/select-previous-buffer-command201/).  This will select the previous buffer, if
+          possible.  Otherwise, it will select the MAIN buffer.
+
+            You can also read a file into its own newly created buffer, all with one
+          command: C-X C-F (203/find-file-command201/), followed by the filename.  The name
+          of the file (within its directory) becomes the buffer name.  C-F stands for
+          "Find", because if the specified file already resides in a buffer in your
+          NMODE, that buffer is reselected.  So you need not remember whether you
+          have brought the file in already or not.  A buffer created by C-X C-F can
+          be reselected later with C-X B or C-X C-F, whichever you find more
+          convenient.  Nonexistent files can be created with C-X C-F just as they can
+          be with C-X C-V.  See Section 15.1 [Visiting], page 1.
+          201/Page 16-2                             NMODE Manual (Using Existing Buffers)
+
+
+          202/16.2  Using Existing Buffers
+
+            201/To  get  a  list  of  all  the  buffers  that  exist,  do  C-X  C-B
+          (203/buffer-browser-command201/).  Each buffer's name, size, and visited filenames
+          are printed.   A star at the beginning of a line indicates a buffer which
+          contains changes that have not been saved.
+
+            If several buffers have stars, you should save some of them with M-X Save
+          All Files (203/save-all-files-command201/).  This finds all the buffers that need
+          saving and asks about each one individually.  Saving the buffers this way is
+          much easier and more efficient than selecting each one and typing C-X C-S.
+
+            M-X Rename Buffer<CR><new name><CR> (203/rename-buffer-command201/) changes
+          the name of the currently selected buffer.  If <new name> is the null string,
+          a truncated version of the filename of the visited file is used as the new name
+          of the buffer.
+
+            The commands C-X A (203/append-to-buffer-command201/) and M-X Insert Buffer
+          (203/insert-buffer-command201/) can be used to copy text from one buffer to another.
+          See Section 11.3 [Copying], page 4.
+
+          202/16.3  Killing Buffers
+
+            201/After you use an NMODE for a while, it may fill up with buffers which you
+          no longer need.  Eventually you can reach a point where trying to create any
+          more results in running out of memory space.  So whenever it is convenient
+          you should do M-X Kill Some Buffers, (203/kill-some-buffers-command201/) which asks
+          about each buffer individually.  You can say Y or N to kill it or not.  Or
+          you can say Control-R to take a look at it first.  This gives you a recursive
+          editing level in which you can move around and look at things.  When you
+          have seen enough to make up your mind, exit the recursive editing level with
+          a y or n to kill or save the buffer.  If you say to kill a buffer that needs
+          saving, you will be asked whether it should be saved.
+
+            You   can   kill   the   buffer   FOO   by   doing   C-X   K   FOO<CR>
+          (203/kill-buffer-command201/).  If the buffer being killed has been modified since it
+          was last saved, NMODE will ask you to confirm your command to kill it.  You
+          can kill the selected buffer, a common thing to do if you use C-X C-F, by
+          doing C-X K<CR>.  If you kill the selected buffer, in any way, NMODE will
+          move you to another buffer.

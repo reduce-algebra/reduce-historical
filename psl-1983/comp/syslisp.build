@@ -1,0 +1,14 @@
+CompileTime <<
+load if!-system, syslisp; % Assume still there, else load source
+off UserMode;
+>>;
+in "syslisp-syntax.red"$
+in "wdeclare.red"$
+CompileTime if_system(PDP10, <<
+in "P20C:DEC20-DATA-MACHINE.RED"$
+>>)$
+CompileTime if_system(VAX, <<
+in "vax/vax-data-machine.red"$
+>>)$
+in "data-machine.red"$
+RemProp('Syslisp, 'SimpFg);		% so ON SYSLISP doesn't try to load

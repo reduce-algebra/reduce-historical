@@ -1,0 +1,88 @@
+RCREF                                      MLG, 6 Jan 1982
+-----
+RCREF is a loadbale option (Load RCREF).  RCREF is a Standard LISP
+program for processing a set of Standard LISP function definitions to
+produce:
+
+1) A "Summary" showing:
+
+       a) A list of files processed
+       b) A list of "entry points" (functions which are  not
+          called or are called only by themselves)
+       c) A list of undefined  functions  (functions  called
+          but not defined in this set of functions)
+       d) A list of variables that were used non-locally but
+          not declared GLOBAL or FLUID before there use
+       e) A list of variables that were declared GLOBAL but used
+	  as FLUIDs i.e. bound in a function
+       f) A list of FLUID variables that were not bound in a function
+	  so that one might consider declaring them GLOBALs
+       g) A list of all GLOBAL variables present
+       h) A list of all FLUID variables present
+       i) A list of all functions present
+
+2) A "global variable usage" table, showing for each non-local variable:
+
+       a) Functions in which it is used as a declared  FLUID
+          or GLOBAL
+       b) Functions in which it is  used  but  not  declared
+          before
+       c) Functions in which it is bound
+       d) Functions i which it is changed by SETQ
+
+3) A "function usage" table showing for each function:
+
+       a) Where it is defined
+       b) Functions which call this function
+       c) Functions called by it
+       d) Non-local variables used
+
+    The output is alphabetized on the first seven characters of  each
+function name.
+
+    RCREF will also check that functions are called with the  correct
+number of arguments.
+
+
+RESTRICTIONS:
+    Algebraic procedures in  REDUCE  are  treated  as  if  they  were
+symbolic,  so that algebraic constructs will actually appear as calls
+to symbolic functions, such as AEVAL.
+
+   Syslisp procedures are not correctly analyzed.
+
+USAGE:
+    RCREF should be used in in PSL:RLISP To make file FILE.CRF
+that is crossreference listing for files FILE1.EX1 and  FILE2.EX2  do
+the following in RLISP:
+
+@PSL:RLISP
+LOAD RCREF;
+
+OUT "file.crf";             [% later, CREFOUT ..."]
+ON CREF;
+IN "file1.ex1","file2.ex2";
+OFF CREF;
+SHUT "file.crf";	    [ later CREFEND]
+
+    To process more files, more IN statements may be added,
+or the IN statement changed to include more files.
+
+
+OPTIONS:
+
+If the flag CREFSUMMARY is ON (or !*CREFSUMMARY is true in LISP),
+then only the summary (see 1 abowe) is produced.
+
+Functions with the flag NOLIST will not be examined or output.
+Initially, all Standard LISP functions are so flagged.  (In fact,
+they are kept on a list NOLIST!*, so if you wish to see references
+to ALL functions, then CREF should be first loaded with the
+command LOAD RCREF, and this variable then set to NIL).
+
+It should also be remembered that in REDUCE (RLISP) any  macros  with
+the flag EXPAND or, if FORCE is on, without the flag NOEXPAND will be
+expanded  before  the  definition  is  seen  by  the  cross-reference
+program,  so  this  flag  can also be used to select those macros you
+require expanded and those not.
+

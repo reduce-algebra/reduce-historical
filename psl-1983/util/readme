@@ -1,0 +1,13 @@
+The files in this directory constitute the most recent version of the
+Portable Standard LISP Manual.  Each file is a separate chapter, and
+is preceded by its chapter number; e.g. 03-RLISP.LPT is the third
+chapter and discusses RLISP.  Some other information is available in
+the files with no chapter number and in PD:*.DOC.
+
+To read these files in Emacs, use the Library available in uem:
+called Clean-files; there is a function called Clean LPT File
+which can put an lpt file into emacs-readbale form.
+That is, do:
+<Meta-X> Load Library$uem:Clean-Files
+<Meta-X> Clean LPT File$
+Please do not change the version on PLPT:!

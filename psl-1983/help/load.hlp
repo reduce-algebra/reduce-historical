@@ -1,0 +1,17 @@
+Loading LAP files
+-----------------
+
+FASL and LAP files for useful utilities are stored on <psl.lap>=PL:.
+
+(LapIN "full-filename")		will load a file from any directory
+(Load m1 m2 m3 ...)		will load files "PL:m1.B" (or .LAP) etc.
+				(mi's may be strings or ids)
+
+To build a FASL file xxx.b from a file yyy.red [in RLISP], do:
+FaslOut "xxx";
+in "yyy.red";
+FaslEnd;
+
+To use the resulting file xxx.b, one can use the function FaslIn:
+FaslIn "xxx.b";
+Load xxx; uses the FaslIn function.

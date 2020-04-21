@@ -1,0 +1,44 @@
+The Utah Package System (UPS)
+----------------------------
+
+A preliminary multi-name space capability is available for testing.
+This is a loadable option (Load Package).
+
+Syntactically, an id now becomes a multipart name, "PACKAGE\localId" which
+directs the INTERN part of token scanning to start searching a PATH in a
+linked Oblist structure from PACKAGE, itself an id accessible in the
+"CurrentPackage".  The Print name is still "localId", but an additional
+field in each id, the Package Cell, records PACKAGE.  A modified Prin1 and
+Prin2 access this field.  The Root of the tree is GLOBAL, indicated by \.
+Thus \ID is guaranteed in the root (in fact the existing Oblist).
+
+PAKAGE.RED defines the following Fluids:
+        \CurrentPackage!*		 %. Start of Search Path
+        \PackageNames!*                  %. List of ALL package names
+
+\CurrentPackage!* is rebound in the Token Scanner on encountering a "\".
+
+The following functions should be used:
+
+  \CreatePackage(Name,FatherPackage) which creates a convenient size
+                                     hashtable
+        
+  \PackageP(name)
+
+  \SetPackage(name)
+
+  \PathInternP({id, string})       Searchs from CurrentPackage!*
+  \PathIntern({id, string})        Lookup or insert  
+  \PathRemob({id, string})         Remobs, puts in NIL package
+  \PathMapObl(function)            Applies to ALL ids in path
+
+  \LocalInternP({id, string})       Searchs in CurrentPackage!*
+  \LocalIntern({id, string})        Lookup or insert  in CurrentPackage!*
+  \LocalRemob({id, string})         Remobs, puts in NIL package
+  \LocalMapObl(function)            Applies to ALL ids in CurrentPackage!*
+
+Note that if a string is used, it CANNOT include the \.  Also, since most
+id's are "RAISED" on input, be careful.
+
+Current INTERN etc are \PathIntern, etc.
+

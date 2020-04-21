@@ -1,0 +1,45 @@
+
+LINK FROM GRISS, TTY 141
+
+[DO: Execution of PS:<PSL.20-COMP>DEC20-CMAC.CTL.2 started at 22-Aug-82 09:28:39]
+
+ TOPS-20 Command processor 5(712)
+ End of <GRISS>COMAND.CMD.10
+@; Rebuild the CMAC module
+term page 0
+@def PL: dsK:, Plap:
+@psl:rlisp
+PSL 3.0 Rlisp, 19-Aug-82
+[1] load build;
+NIL
+[2] build "DEC20-CMAC";
+FASLOUT: IN files; or type in expressions
+When all done execute FASLEND;
+CompileTime <<
+on EolInStringOK;
+macro procedure !* U;
+    NIL;
+flag('(TagNumber InumP), 'lose);
+>>;
+imports '(dec20-comp);
+in "pc:tags.red"$
+in "dec20-cmac.sl"$
+*** Function `BITMASK' has been redefined
+BITMASK
+*** Function `BIT' has been redefined
+BIT EXPANDBIT
+*** `INUMP' has not been defined, because it is flagged LOSE
+*** `TAGNUMBER' has not been defined, because it is flagged LOSE
+IMMEDIATEP MEMORYP NEGATIVEIMMEDIATEP EIGHTEENP NONINDIRECTP 
+FAKEREGISTERNUMBERP !*FOREIGNLINK
+*** Init code length is 184
+*** Garbage collection starting
+*** GC 3: time 3082 ms
+*** 70801 recovered, 774 stable, 28425 active, 70801 free
+*** Garbage collection starting
+*** GC 4: time 4127 ms
+*** 18114 recovered, 29161 stable, 52724 active, 18115 free
+!*!*FASL!*!*INITCODE!*!*NIL
+[3] quit;
+@
+[DO: Execution finished at 22-Aug-82 09:31:16]

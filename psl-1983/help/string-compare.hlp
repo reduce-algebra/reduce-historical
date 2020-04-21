@@ -1,0 +1,13 @@
+STRING-COMPARE         R. M. Carter
+--------------
+Augments STRINGS with some nice comparison operators to Left Justify
+Strings, padded with "!*!*FillCharacter!*!*", currently '!  ;
+
+
+procedure mystring!< (s1,s2);
+procedure mystring!> (s1,s2);
+procedure mystring!<!= (s1,s2);
+procedure mystring!>!= (s1,s2);
+procedure mystring!<!> (s1,s2);
+
+

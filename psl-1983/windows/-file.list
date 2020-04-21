@@ -1,0 +1,8 @@
+Window Package Source Files Summary - 8 October 1982
+-------------------------------------------------------------------------------
+DISPLAY-CHAR.SL - type representing chars on display screen (with enhancements)
+HP2648A.SL - terminal handler for HP2648A family
+PHYSICAL-SCREEN.SL - physical screen abstract data type
+SHARED-PHYSICAL-SCREEN.SL - shared physical screen: handles overlapping screens
+VIRTUAL-SCREEN.SL - virtual screen abstract data type
+VT52X.SL - terminal handler for 9836 extended VT52 emulator

@@ -1,0 +1,57 @@
+PSL 3.1 times in ms, taken at HP Computer Research Center, 5 Dec 1982
+---------------------------------------------------------------------
+
+	      DEC-20  VAX-780   HP9836	
+
+Empty    	 20	 34	  70	
+SlowEmpty     	284	612	1930
+Cdr1     	531    1632	2660
+Cdr2     	385    1241	1120
+Cddr     	304	986	 850
+ListOnlyCdr1   1806    5695	6700
+ListOnlyCddr1  3703   11832    10090
+ListOnlyCdr2   2804    8806    15960
+ListOnlyCddr2  4599   14875    19270
+Reverse     	273	646	1480
+MyReverse1  	270	629	1470
+MyReverse2     	253	680	1310
+Length     	567    1632	3080
+Arithmetic 	605	833	6560
+Eval           1901    5865    17650
+tak(18,12,6)	446	697	2770
+gtak(18,12,6)  1882    4029    13130
+gtsta g0	727    2363	5810
+gtsta g1	789    2397	5980
+
+
+
+PSL 3.0 Times in ms taken at Utah and RAND, July-Aug 1982 or earlier
+--------------------------------------------------------------------
+
+
+                 PSL	 PSL     PSL    FRANZ   APOLLO   APOLLO
+TEST              20	 750     780   OPUS 38   8 Mhz   10 Mhz
+               
+Empty             25	  68       0      391      105       56
+SlowEmpty        344	1139     663     3587     2330     1289
+Cdr1             576	2023    1632     3791     3281     1886
+Cdr2             367	1581    1224     1326     1449      648
+Cddr             293	1275    1071      867     1068      851
+ListOnlyCdr1    1754	9367    7208     6902     8658     4975
+ListOnlyCddr1   3487   15232   12410     9027    12761     7734
+ListOnlyCdr2    2864   12206    9418    21590    19611    11159
+ListOnlyCddr2   4644   18003   15164    24106    23696    13933
+Reverse          335    1037     748      663     3102     1806
+MyReverse1       269	1071     697      867     3094     1826
+MyReverse2       249	1020     629      697     2746      984
+Length           585	2142    1700     4811     3847     2203
+Arithmetic       589	1887     867     7667     3007     1852
+Eval            1857	9384    5083    10098    15759     9509
+tak(18,12,6)     442	1292     765     1887     2644     1627
+gtak(18,12,6)   1902	7344    4267    18479    15140     8433
+gtsta g0         829	4675    2533    13617     7720     4284
+gtsta g1         890	4709    2465    25143     7888     4371
+
+[The initial HP9836 times are uniformly between those of the small 8Mz and
+ large 10Mz Apollo, Wicat was slightly slower]
+

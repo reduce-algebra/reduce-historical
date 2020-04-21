@@ -1,0 +1,59 @@
+HCONS -   Hashing (unique) CONS and associated utilities.
+
+The Hcons function creates unique dotted pairs.  In other words, Hcons(A,B)
+eq Hcons(C,D) if and only if A eq C and B eq D.  This allows very rapid
+tests for equality between structures, at the cost of expending more time
+in creating the structures.  The use of Hcons may also save space in cases
+where lists share a large amount of common substructure, since only one
+copy of the substructure is stored.
+
+The system works by keeping a hash table of all pairs that have been
+created by Hcons.  (So the space advantage of sharing substructure may be
+offset by the space consumed by table entries.)  This hash table allows the
+system to store property lists for pairs--in the same way that Lisp has
+property lists for identifiers.
+
+Pairs created by Hcons SHOULD NOT be modified with RPLACA and RPLACD.
+Doing so will make the pair hash table inconsistent, as well as being very
+likely to modify structure shared with something that you don't wish to
+change.  Also note that large numbers may be equal without being eq, so the
+Hcons of two large numbers may not be eq to the Hcons of two other numbers
+that appear to be the same.  (Similar warnings hold for strings and
+vectors.)
+
+The following "user" functions are provided by HCONS:
+
+Hcons([U:any]): pair                                                   macro
+       - ---    ----                                                   -----
+The Hcons macro takes one or more arguments and returns their "hashed cons"
+(right associatively).  Two arguments corresponds to a call of Cons.
+
+Hlist([U:any]): list                                                   nexpr
+       - ---    ----                                                   -----
+Hlist is the "Hcons version" of the List function.
+
+Hcopy(U:any): any                                                      macro
+      - ---   ---                                                      -----
+Hcopy is the Hcons version of the copy function.  Note that Hcopy serves a
+very different purpose than copy--which is usually used to copy a structure
+so that destructive changes can be made to the copy without changing the
+original.  Hcopy, on the other hand, will only actually copy those parts of
+the structure which haven't already been "consed together" by Hcons.
+
+Happend (U:list, V:list): list                                       expr
+         - ----  - ----   ----                                       ----
+Hcons version of append.
+
+Hreverse (U:list): list                                              expr
+          - ----   ----                                              ----
+Hcons version of reverse.
+
+The following two functions can be used to "get" and "put" properties for
+pairs or identifiers.  The pairs for these functions must be created by
+Hcons.  These functions are known to the Setf macro.
+
+extended-put (U:id-or-pair, IND:id, PROP:any): any                   expr
+              - ----------  --- --  ---- ---   ---                   ----
+
+extended-get (U:id-or-pair, IND:any): any                            expr
+              - ----------  --- ---   ---                            ----

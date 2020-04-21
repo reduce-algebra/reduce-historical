@@ -1,0 +1,130 @@
+10-Dec-82 20:56:02-MST,2372;000000000011
+Mail-from: ARPANET site RAND-RELAY rcvd at 10-Dec-82 2054-MST
+Date: 10 Dec 1982 0733-PST
+From: GRISS at HP-HULK
+Subject: Glossary
+To: jw-peterson at UTAH-20, Lowder at UTAH-20,
+    utah-cs!lowder at HP-VENUS, GRISS@at@HP-labs, GRISS@RAND-RELAY@HP-labs
+Via:  HP-Labs; 10 Dec 82 19:43-PDT
+
+Some Terminology:
+-----------------
+
+ALM - Abstract LISP machine, ie, the CMACRO level, as emitted
+      by compiler; the abstract architecture it repesents;
+      LAP-like code that is essentially portable.
+
+
+TLM - Target LISP machine; opcodes and registers in terms of target
+      machine; LAP form that directly machine specific for resident
+      LAP on target PSL; sometime assembly-code on target machine
+      during bootstrap.
+   
+
+CROSS-COMPILER - Built on HOST RLISP, includes tables etc. to
+      compile PSL source files (.SL and .RED) into TLM assembly code
+      for target machine. Only needed when bootstrapping the PSL
+      kernel (BARE-PSL) and the boot step for the resident compiler
+      on the target (build of BIG-PSL)
+
+BARE-PSL - The executable PSL on the target machine that most people
+      expect to run. On all machines to date includes a complete
+      interpreter, and FASLIN, so that  oher modules can be
+      "loaded". This is the basic system that a stable environment
+      keeps around. In a stable environment, RLISP.B, COMPILER.B etc
+      can be loaded. Some stable environmenst may load commonly
+      use modules, and core-save and announce this saved image
+      as the standard PSL or RLISP, which does give some confusion.
+	
+      [It should NOT normally include RLISP, though I imagine RLISP 
+       may have been built in "for convenience"; which causes
+       confusion]
+
+BIG-PSL (or FULL-PSL) - This is a step required in bootstrapping.
+     After BARE=PSL seems to run well (and cant FASL yet, since no .B
+     files should really exist), additional files (RLISP and COMP)
+     are included in a cross compile; these augment the kernel to
+     give a system capable of building .B files. 
+
+     [I repeat, this is not the desired way of maintaining a PSL with 
+      RLISP and COMPILER, but is a bootstrap step for COMPILER.B.
+      The desired maintenance model is to keep a BARE-PSL around
+      and LOAD RLISP, COMPILER, etc. and then core-save if space permits]
+
+-------
+
+
+11-Dec-82 20:56:20-MST,3002;000000000011
+Mail-from: ARPANET site RAND-RELAY rcvd at 11-Dec-82 2055-MST
+Date: 11 Dec 1982 0757-PST
+From: GRISS.HP-HULK at Rand-Relay
+Subject: New Gloaasry
+To: jw-peterson at Utah-20
+Via:  HP-Labs; 11 Dec 82 19:37-PDT
+
+@section(GLOSSARY - Some Common Terminology)
+
+The following terms are defined and used in the body of the
+IMPLEMENTATION Guide (and the Maintenance Guide? as well). We collect
+a concise definition here:
+
+@begin(description)
+
+ALM@\Abstract LISP machine, ie, the CMACRO level, as emitted
+by compiler; the abstract architecture it repesents;
+LAP-like code that is essentially portable.
+
+
+TLM@\Target LISP machine; opcodes and registers in terms of target
+machine; LAP-like form that is machine specific for resident LAP on
+target PSL; some times used to refer to assembly-code on target
+machine during bootstrap.
+  
+
+CROSS-COMPILER@\Built on HOST RLISP, includes tables etc. to
+compile PSL source files (.SL and .RED) into TLM assembly code
+for target machine. Only needed when bootstrapping the PSL
+kernel (BARE-PSL) and the boot step for the resident compiler
+on the target (build of BIG-PSL)
+
+Executable BARE-PSL@\The executable PSL kernel on the target machine
+produced by the first stage kernel bootstrap.  On all machines to date
+includes a complete interpreter, and FASLIN, so that oher modules can
+be "loaded" and often a core-save. This is the basic system that a
+stable environment keeps around as well as a "executable PSL". In a
+stable environment, RLISP.B, COMPILER.B etc can be loaded.  This
+should NOT normally include RLISP, though I imagine RLISP may have
+been built in "for convenience"; which causes confusion.
+
+Executable PSL@\Some stable environments may load commonly used
+modules into "executable BARE-PSL", and core-save and announce this
+saved image as the standard PSL. (Some people confuse this with
+"bare-PSL").
+
+Executable RLISP@\In most stable environments, RLISP.B and COMPILER.B
+are loaded into executable PSL and core-saved.
+
+Executable BIG-PSL@\This is a target executable system required in
+bootstrapping.  After BARE-PSL seems to run well (but of course can
+not FASL yet, since no .B files should really exist), additional
+modules (RLISP and COMP) are included in a cross compile; these
+augment the kernel to give a system capable of building .B files. This
+is used to build RLISP.B, COMPILER.B, FASLOUT.B, LAP.B etc., which can
+then be used with the executable BARE-PSL. This is not kept around to
+maintaining a stable PSL with RLISP and COMPILER, but is only a
+bootstrap step to build COMPILER.B.  BIG-PSL is built when going to a
+new version.  The stable maintenance model is to keep a BARE-PSL
+around and LOAD RLISP, COMPILER, etc. and then core-save if space
+permits.
+@end(description)
+
+
+
+----
+My suggestion is to APE HP very closely . It is PORT from 20 to 68000, and
+works. The HP system now runs well, maybe even better than Apollo. We must
+be doing something right...
+
+-------
+
+

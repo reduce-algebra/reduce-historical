@@ -1,0 +1,58 @@
+	search monsym
+	radix 10
+	extern SYMNAM
+	extern SYMVAL
+	extern SYMFNC
+	extern SYMPRP
+	extern L0001
+	extern L0002
+	extern ARG1
+	extern ARG2
+	extern ARG3
+	extern ARG4
+	extern ARG5
+	extern ARG6
+	extern ARG7
+	extern ARG8
+	extern ARG9
+	extern ARG10
+	extern ARG11
+	extern ARG12
+	extern ARG13
+	extern ARG14
+	extern ARG15
+; (!*ENTRY INIT EXPR 0)
+INIT:	intern INIT
+	SETZM 1
+	JRST INIT20
+; (!*ENTRY GETC EXPR 0)
+GETC:	intern GETC
+	SETZM 1
+	JRST GETC20
+; (!*ENTRY TIMC EXPR 0)
+TIMC:	intern TIMC
+	SETZM 1
+	JRST TIMC20
+; (!*ENTRY PUTC EXPR 1)
+PUTC:	intern PUTC
+	JRST PUTC20
+; (!*ENTRY QUIT EXPR 0)
+QUIT:	intern QUIT
+	SETZM 1
+	JRST QUIT20
+; (!*ENTRY PUTINT EXPR 1)
+PUTINT:	intern PUTINT
+	JRST PUTI20
+; (!*ENTRY UNDEFINEDFUNCTION EXPR 1)
+L0003:	intern L0003
+	HRRZI 1,1
+	PUSHJ 15,ERR20
+; (!*ENTRY FLAG EXPR 2)
+FLAG:	intern FLAG
+	HRRZI 1,2
+	PUSHJ 15,ERR20
+; (!*ENTRY !*WTIMES32 EXPR 2)
+L0004:	intern L0004
+	IMUL 1,2
+	POPJ 15,0
+	end

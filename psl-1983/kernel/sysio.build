@@ -1,0 +1,13 @@
+%
+% SYSIO.BUILD - Files for system-dependent input and output
+% 
+% Author:      Eric Benson
+%              Symbolic Computation Group
+%              Computer Science Dept.
+%              University of Utah
+% Date:        19 May 1982
+% Copyright (c) 1982 University of Utah
+%
+
+PathIn "system-io.red"$			% system dependent IO functions
+PathIn "scan-table.red"$		% change scan table for system

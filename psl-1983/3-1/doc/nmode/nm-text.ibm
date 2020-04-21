@@ -1,0 +1,313 @@
+,MOD
+- R 44X (11 April 1983) <PSL.NMODE-DOC>NM-TEXT.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+          201/NMODE Manual (Commands for English Text)                        Page 13-1
+
+
+          202/13.  Commands for English Text
+
+          201/NMODE enables you to manipulate words, sentences, or paragraphs of text.
+          In addition, there are commands to fill text, and convert case.
+            Editing files of text in a human language ought to be done using Text
+          mode.  Invoke M-X Text Mode to enter Text mode.  See Section 20.1 [Major
+          Modes], page 1.  M-X Text Mode (203/text-mode-command201/) causes Tab to run the
+          function 203/tab-to-tab-stop-command201/.  Automatic display of parenthesis matching
+          is turned off, which is what most people want.
+
+          202/13.1  Word Commands
+
+            201/NMODE has commands for moving over or  operating  on  words.    By
+          convention, they are all Meta- characters.
+
+                  M-F        Move Forward over a word.
+                  M-B        Move Backward over a word.
+                  M-D        Kill up to the end of a word.
+                  M-Backspace Kill back to the beginning of a word.
+                  M-@        Mark the end of the next word.
+                  M-T        Transpose two words;  drag a word forward or backward
+                              across other words.
+
+            Notice how these commands form a group that parallels the character based
+          commands C-F, C-B, C-D, C-T and Backspace.  M-@ is related to C-@.
+
+            The   commands   Meta-F   (203/move-forward-word-command201/)   and   Meta-B
+          (203/move-backward-word-command201/) move forward and  backward  over  words.
+          They are thus analogous to Control-F and Control-B, which move over single
+          characters.  Like their Control- equivalents, Meta-F and Meta-B move several
+          words  if given an argument.   Meta-F with a negative argument moves
+          backward like Meta-B, and Meta-B with a negative argument moves forward.
+          Forward motion stops right after the last letter of the word, while backward
+          motion stops right before the first letter.
+
+            It is easy to kill a word at a time.  Meta-D (203/kill-forward-word-command201/)
+          kills the word after point.  To be precise, it kills everything from point to
+          the place Meta-F would move to.  Thus, if point is in the middle of a word,
+          only the part after point is killed.  If some punctuation occurs between point
+          and the end of the next word it will be killed.  If you wish to kill only the
+          next word but not the punctuation, simply do Meta-F to get the end, and kill
+          the word backwards with Meta-Backspace.  Meta-D takes arguments just like
+          Meta-F.
+
+            Meta-Backspace (203/kill-backward-word-command201/) kills the word before point.
+          It kills everything from point back to where Meta-B would move to.  If point
+          is after the space in "FOO, BAR", then "FOO, " is killed.  If you wish to
+          kill just "FOO", then do a Meta-B and a Meta-D instead of a Meta-Backspace.
+
+            Meta-T (203/transpose-words201/) moves the cursor forward over a word, dragging
+          the word preceding or containing the cursor forward as well.  A numeric
+          argument serves as a repeat count.  Meta-T with a negative argument undoes
+          the effect of Meta-T with a positive argument; it drags the word behind the
+          201/Page 13-2                                    NMODE Manual (Word Commands)
+
+
+          cursor backward over a word.  An argument of zero, instead of doing
+          nothing, transposes the word at point (surrounding or adjacent to it) with
+          the word at mark.  In any case, the delimiter characters between the words
+          do not move.  For example, "FOO, BAR" transposes into "BAR, FOO" rather
+          than "BAR FOO,".
+
+            To operate on the next n words with an operation which applies between
+          point and mark, you can either set the mark at point and then move over the
+          words, or you can use the command Meta-@ (203/mark-word-command201/) which does
+          not move point, but sets the mark where Meta-F would move to.  It can be
+          given arguments just like Meta-F.
+
+          202/13.2  Sentence and Paragraph Commands
+
+            201/The NMODE commands for manipulating sentences and paragraphs are mostly
+          Meta- commands, so as to resemble the word-handling commands.
+
+                  M-A     Move back to the beginning of the sentence.
+                  M-E     Move forward to the end of the sentence.
+                  M-K     Kill forward to the end of the sentence.
+                  M-[     Move back to previous paragraph beginning.
+                  M-]     Move forward to next paragraph end.
+                  M-H     Put point and mark around this paragraph (around the
+                          following one, if between paragraphs).
+                  C-X Rubout  Kill back to the beginning of the sentence.
+
+
+          202/13.2.1  Sentences
+
+            201/The  commands  Meta-A  and  Meta-E  (203/backward-sentence-command  201/and
+          203/forward-sentence-command201/) move to the beginning and end of the current
+          sentence,  respectively.    They  were  chosen  to  resemble  Control-A and
+          Control-E, which move to the beginning and end of a line.  Unlike them,
+          Meta-A  and  Meta-E  if  repeated or given numeric arguments move over
+          successive sentences.  NMODE considers a sentence to end wherever there is
+          a ".", "?" or "!" followed by the end of a line or two spaces, with any
+          number of ")"'s, "]"'s, "'"'s, or '"' 's allowed in between.  Neither M-A nor
+          M-E moves past the line separator or spaces which delimit the sentence.
+
+            Just as C-A and C-E have a kill command, C-K, to go with them, so M-A
+          and M-E have a corresponding kill command M-K (203/kill-sentence-command201/)
+          which kills from point to the end of the sentence.  With minus one as an
+          argument it kills back to the beginning of the sentence.  Larger arguments
+          serve as a repeat count.
+
+            There is a special command, C-X Rubout (203/backward-kill-sentence-command201/)
+          for killing back to the beginning of a sentence, because this is useful when
+          you change your mind in the middle of composing text.  It also accepts
+          arguments, acting as C-U (minus argument given) M-K would.
+          201/NMODE Manual (Paragraphs)                                        Page 13-3
+
+
+          202/13.2.2  Paragraphs
+
+            201/Meta-[  (203/backward-paragraph-command201/)  moves  to  the  beginning  of  the
+          current or previous paragraph, while Meta-] (203/forward-paragraph-command201/)
+          moves to the end of the current or next paragraph.  Blank lines and text
+          justifier command lines (text mode only for these!)  separate paragraphs and
+          are not part of any paragraph.   Also, an indented line starts a new
+          paragraph. (text mode only!)
+
+          A text justifier command line is part of no paragraph in text mode.  A text
+          justifier command line is any line that begins with a period.
+
+            In major modes for programs (as opposed to Text mode), paragraphs are
+          determined only by blank lines.   This  makes  the  paragraph  commands
+          continue to be useful even though there are no paragraphs per se.
+
+            When there is a fill prefix, then paragraphs are delimited by all lines which
+          don't start with the fill prefix.  See Section 13.4 [Filling], page 4.
+
+            When you wish to operate on a paragraph, you can use the command Meta-H
+          (203/mark-paragraph-command201/) to set the region around it.  This command puts
+          point at the beginning and mark at the end of the paragraph point was in.
+          Before setting the new mark at the end, a mark is set at the old location of
+          point; this allows you to undo a mistaken Meta-H with two C-U C-@'s.  If
+          point is between paragraphs (in a run of blank lines, or at a boundary), the
+          paragraph following point is surrounded by point and mark.   Thus, for
+          example, Meta-H C-W kills the paragraph around or after point.
+
+          202/13.3  Indentation Commands for Text
+
+                  201/Tab        Indents "appropriately" in a mode-dependent fashion.
+                  M-Tab      Inserts a tab character.
+                  Linefeed    Is the same as Return followed by Tab.
+                  M-^        Undoes a Linefeed.  Merges two lines.
+                  M-M        Moves to the line's first nonblank character.
+                  M-I        Indent to tab stop.  In Text mode, Tab does this also.
+                  C-M-\      Indent several lines to same column.
+
+            The way to request indentation is with the Tab command.  Its precise effect
+          depends on the major mode.  In Text mode, it runs 203/tab-to-tab-stop-command201/,
+          which inserts a Tab character.  If you are not in Text mode, this function
+          can be found on M-I anyway.  You can also do this with M-Tab or C-Q Tab.
+
+            One also indent a group of lines to a known column by using C-M-\
+          (203/indent-region-command201/).  This must be given a command argument.  It will
+          then indent all the lines in the current region to the argument-the column.
+
+            For English text, usually only the first line of a paragraph should be
+          indented.  So, in Text mode, new lines created by Auto Fill mode are not
+          indented.  But sometimes you want to have an indented paragraph.  This can
+          be done by setting fill prefix to the desired indentation.
+
+            To undo a line-break, whether done manually or by Auto Fill, use Meta-^
+          201/Page 13-4                    NMODE Manual (Indentation Commands for Text)
+
+
+          (203/delete-indentation-command201/) to delete the indentation at the front of the
+          current line, and the line boundary as well.  They are replaced by a single
+          space, or by no space if before a ")" or after a "(", or at the beginning of a
+          line.  To delete just the indentation of a line, go to the beginning of the line
+          and use Meta-\ (203/delete-horizontal-space-command201/), which deletes all spaces
+          and tabs around the cursor.
+
+            To insert an indented line before the current line, do C-A, C-O, and then
+          Tab.  To make an indented line after the current line, use C-E Linefeed.
+
+            To  move  over  the  indentation  on  a  line,  do  Meta-M  or  C-M-M
+          (203/back-to-indentation-command201/).  These commands, given anywhere on a line,
+          position the cursor at the first nonblank character on the line.
+
+          202/13.4  Text Filling
+
+                  201/Space  in Auto Fill mode, breaks lines when appropriate.
+                  M-Q    Fill paragraph.
+                  M-G    Fill region (G is for Grind, by analogy with Lisp).
+                  M-S    Center a line.
+                  C-X =  Show current cursor position.
+
+            Auto Fill mode lets you type in text that is 202/filled 201/(broken up into lines that
+          fit in a specified width) as you go.  If you alter existing text and thus cause
+          it to cease to be properly filled, NMODE can fill it again if you ask.
+
+            Entering   Auto   Fill   mode   is   done   with   M-X    Auto    Fill
+          (203/auto-fill-mode-command201/).  From then on, lines are broken automatically at
+          spaces when they get longer than the desired width. To leave Auto Fill mode,
+          execute M-X Auto Fill again.  When Auto Fill mode is in effect, the word
+          "Fill" appears in the mode line.
+
+            When you finish a paragraph, you can type Space with an argument of
+          zero.  This doesn't insert any spaces, but it does move the last word of the
+          paragraph to a new line if it doesn't fit in the old line.  Return also moves
+          the last word, but it may create another blank line.
+
+            If you edit the middle of a paragraph, it may no longer be correctly filled.
+          To refill a paragraph, use the command Meta-Q (203/fill-paragraph-command201/).  It
+          causes the paragraph that point is inside, or the one after point if point is
+          between paragraphs, to be refilled.  All the line-breaks are removed, and
+          then new ones are inserted where necessary.
+
+            If you are not happy with Meta-Q's idea of where paragraphs start and end
+          (the same as Meta-H's.  See Section 13.2 [Paragraphs], page 2.), you can
+          use Meta-G (203/fill-region-command201/) which refills everything between point and
+          mark.  Sometimes, it is ok to fill a region of several paragraphs at once.
+          Meta-G recognizes a blank line or (in text mode) an indented line as starting
+          a paragraph and does not fill it in with the preceding line.  The purpose of
+          M-G  is to allow you to override NMODE's usual criteria for paragraph
+          boundaries.
+
+            Giving an argument to M-G or M-Q causes the text to be 202/justified 201/as well as
+          201/NMODE Manual (Text Filling)                                        Page 13-5
+
+
+          filled.  This means that extra spaces are inserted between the words so as to
+          make the right margin come out exactly even.  I do not recommend doing
+          this.   If someone else has uglified some text by justifying it, you can
+          unjustify it (remove the spaces) with M-G or M-Q without an argument.
+
+            The  command  Meta-S  (203/center-line-command201/)  centers  a  line  within  the
+          current line width.  With an argument, it centers several lines individually
+          and moves past them.  With a negative argument it centers lines above the
+          current one.
+
+            The maximum line width for filling is in the variable Fill-Column.  Both M-Q
+          and Auto Fill make sure that no line exceeds this width.  The easiest way to
+          set the variable is to use the command C-X F (203/set-fill-column-command201/),
+          which places the margin at the column point is on, or at the column specified
+          by a numeric argument.  The fill column is initially column 70.
+
+            To fill a paragraph in which each line starts with a special marker (which
+          might be a few spaces, giving an indented paragraph), use the 202/fill prefix
+          201/feature.  Move point to a spot right after the special marker and give the
+          command C-X Period (203/set-fill-prefix-command201/).  Then, filling the paragraph
+          will remove the marker from each line beforehand, perform the filling, and
+          put the marker back in on each line afterward.  Auto Fill when there is a fill
+          prefix inserts the fill prefix at the front of each new line.  Also, any line
+          which does not start with the fill prefix is considered to delimit a paragraph.
+          To turn off the fill prefix, do C-X Period with point at the front of a line.
+          The fill prefix is kept in the variable Fill-Prefix.
+
+            The command C-X = (203/what-cursor-position-command201/) can be used to find
+          out the column that the cursor is in, and other miscellaneous information
+          about point which is quick to compute.  It prints a line in the echo area that
+          looks like this:
+
+          X=2 Y=19 CH=10 line=428 (74 percent of 574 lines)
+
+          In this line, the X value is the column the cursor is in (zero at the left), the
+          Y value is the screen line that the cursor is in (zero at the top), the CH
+          value is the ascii value of the character after point and the other values show
+          how large the buffer is and where the current line is in it.
+
+          202/13.5  Case Conversion Commands
+
+            201/NMODE has commands for converting either a single word or any arbitrary
+          range of text to upper case or to lower case.
+
+                  M-L        Convert following word to lower case.
+                  M-U        Convert following word to upper case.
+                  M-C        Capitalize the following word.
+                  C-X C-L   Convert region to lower case.
+                  C-X C-U   Convert region to upper case.
+
+            The  word  conversion  commands  are  the  most  useful.     Meta-L
+          (203/lowercase-word-command201/) converts the word after  point  to  lower  case,
+          moving  past  it.    Thus,  successive  Meta-L's convert successive words.
+          201/Page 13-6                        NMODE Manual (Case Conversion Commands)
+
+
+          Meta-U  (203/uppercase-word-command201/)  converts to all capitals instead, while
+          Meta-C (203/uppercase-initial-command201/) puts the first letter of the word into
+          upper case and the rest into lower case.  All these commands convert several
+          words at once if given an argument.   They are especially convenient for
+          converting a large amount of text from all upper case to mixed case, because
+          you can move through the text using M-L, M-U or M-C on each word as
+          appropriate.
+
+            When given a negative argument, the word case conversion commands apply
+          to the appropriate number of words before point, but do not move point.
+          This is convenient when you have just typed a word in the wrong case.  You
+          can give the case conversion command and continue typing.
+
+            If a word case conversion command is given in the middle of a word, it
+          applies only to the part of the word which follows the cursor, treating it as a
+          whole word.
+
+            The    other    case    conversion    commands    are    C-X    C-U
+          (203/uppercase-region-command201/) and C-X C-L (203/lowercase-region-command201/), which
+          convert everything between point and mark to the specified case.  Point and
+          mark do not move.

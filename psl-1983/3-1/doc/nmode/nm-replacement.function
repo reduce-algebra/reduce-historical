@@ -1,0 +1,5 @@
+.silent_index {replace-string-command} idx 19-1
+.silent_index {query-replace-command} idx 19-1
+.silent_index {count-occurrences-command} idx 19-1
+.silent_index {delete-non-matching-lines-command} idx 19-1
+.silent_index {delete-matching-lines-command} idx 19-1

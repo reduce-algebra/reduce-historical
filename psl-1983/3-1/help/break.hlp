@@ -1,0 +1,20 @@
+BREAK():{Error,return-value}
+----------------------------
+This is a Read-Eval-Print loop, similar to the top level loop, except
+that the following IDs at the top level cause functions to be called
+rather than being evaluated:
+
+? 	 Print this message, listing active Break IDs
+T 	 Print stack backtrace
+Q 	 Exit break loop back to ErrorSet
+A	 Abort to top level, i.e. restart PSL
+C 	 Return last value to the ContinuableError call
+R        Reevaluate ErrorForm!* and return
+M      	 Display ErrorForm!* as the "message"
+E        Invoke a simple structure editor on ErrorForm!*
+		(For more information do Help Editor.)
+I	 Show a trace of any interpreted functions
+
+See the manual for details on the Backtrace, and how ErrorForm!* is
+set.  The Break Loop attempts to use the same TopLoopRead!* etc, as
+the calling top loop, just expanding the PromptString!*.

@@ -1,0 +1,76 @@
+The MINI translator writing system 
+---------------------------------- 
+
+MINI processes a BNF-like form into a set of LISP functions, one for each
+production, operating on a stack and token-stream.  They call each other,
+and a set of support routines and built-in recognizers.   MINI uses a stack;
+the user can access sub-trees on the stack, replacing them by other trees
+built from these sub-trees.   Primitive recognizers their recognized token
+on this stack.
+
+==================== Load mini by doing LOAD MINI; in RLISP.
+
+==================== The translator is defined by MINI 'rootname;
+
+MINI 'FOO;
+  FOO: ID '!- ID +(SUB #2 #1) .(PRINT #1) ;
+FIN
+
+defines a complete one rule translator, which recognizes two identifiers
+separated by a minus sign (each ID pushes the recognized identifier onto
+the stack).  The +() expression replaces the top 2 elements on the stack
+(#2 pops the first ID pushed onto the stack, while #1 pops the other) with
+a LISP statement.  The .() expression POPs and prints it.
+
+	See also <griss.mini> for demo0.MIN to demo3.MIN
+
+============Run the Grammer by calling INVOKE 'FOO; % i.e. the rootname
+
+============Built In Recognizers: ID, NUM, STR, ANYTOKEN
+
+============Brief list of the operators
+'	Used to designate a terminal symbol (i.e. 'WHILE, 'DO, '!=)
+Identifier	Specifies a nonterminal
+( )	Used for grouping (i.e. (FOO BAR) requires rule FOO to parse
+	followed immediately by BAR)
+< >	Optional parse, if it fails then continue (i.e. <FOO> tries
+	to parse FOO)
+/	Optional rules (i.e. FOO / BAR allows either FOO or BAR to
+	parse, with FOO tested first)
+
+STMT[ANYTOKEN]*	Parse any number of STMT separated by ANYTOKEN,
+	create a list and push onto the stack (i.e. ID[,]* will parse a
+	number of IDentifiers separated by commas, like in an argument
+	list)
+##n	Reference the nth stack location (n must be an integer)
+#n	Pop the nth stack location (n must be an integer)
++(STMT)	Push the unevaluated (STMT) onto the stack 
+.(SEXPR)	Evaluate the SEXPR and ignore the result
+=(SEXPR)	Evaluate the SEXPR and test if result non-NIL
++.(SEXPR)	Evaluate the SEXPR and push the result on the stack
+@ANYTOKEN	Specifies a statement terminator, used in the error
+		recovery mechanism to search for when an error occurs;
+	        like 'ANYTOKEN, but causes NEXT!-TOK to not scan ahead
+		so .(NEXT!-TOK) may be needed
+@@ANYTOKEN	Specifies a grammer terminator, used in the error
+		recovery mechanism to search for when an error occurs;
+	        like @ANYTOKEN; fatal exit in Error Recovery
+$integer        Generates a unique label
+
+================== Pattern MATCHER
+
+In addition to BNF -like rules that define procedures on 0 arguments (which
+scan tokens by calls on NEXT!-TOK() and operate on the stack, MINI also
+includes a simple TREE pattern matcher and syntax to define
+PatternProcedures that accept and return a single argument, trying a series
+of patterns until one succeeds.
+
+E.g.        template    ->  replacement
+   
+PATTERN = (PLUS2 &1 0) -> 0,
+          (PLUS2 &1 &1) -> (LIST 'TIMES2 2 &1),
+          &1            -> &1;
+
+defines a pattern with 3 rules.  &n is used to indicate a matched sub-tree
+in both the template and replacement.  A repeated &n as in the second rule
+requires EQUAL sub-trees.

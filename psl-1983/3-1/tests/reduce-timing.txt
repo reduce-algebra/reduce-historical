@@ -1,0 +1,53 @@
+ 6-Apr-83 12:04:55-MST,1641;000000000001
+Return-path: <@UTAH-CS:GRISS@HP-HULK>
+Received: from UTAH-CS by UTAH-20; Wed 6 Apr 83 12:03:19-MST
+Date:  6 Apr 1983 1049-PST
+From: GRISS@HP-HULK
+Subject: Latest REDUCE-TIMES.DOC
+Message-Id: <418503140.11433.hplabs@HP-VENUS>
+Received: by HP-VENUS via CHAOSNET; 6 Apr 1983 10:52:19-PST
+Received: by UTAH-CS.ARPA (3.320.5/3.7.6)
+	id AA16318; 6 Apr 83 12:00:03 MST (Wed)
+To: kessler@HP-VENUS, griss@HP-VENUS
+
+            Standard Reduce Test file, as of 6 April 1983
+
+    This is IN "RTEST:REDUCE.TST"; which echoes to the terminal.  MATR
+
+and HIPHYS modules autoload. Includes NBIG module. Need LISP ON GC;
+before IN of REDUCE.TST.
+		
+ System			     Heap    Run    GC time  #GC  Sys  Total Time  Date
+
+PSL 3.1 based:
+ DEC-20/60, Utah	       90K   24.4       7.0  3    ?      31.4   3/6/83	
+ Extended DEC-20/60, Utah     260K   25.9       1.0  1    ?      26.9   3/6/83
+ VAX-780, Unix 4.1, HP        400K   48.3       0    0  ~12     ~60     3/6/83
+ VAX-750, Unix 4.1a, Utah
+ VAX-750, Unix 4.1a, Rand                                       ~90
+ HP9836,  8Mhz MC68000, HP                                     ~120
+ Apollo,  8Mhz MC68000, Utah                                   ~175
+
+[We still need to include some SYSTEM or I/O time, on VAX it is quite high.
+ Ie, need TIMS() and TIMR() calls for load, paging, etc. 
+ What is equivalent on other machines?. 
+
+
+ Memory sizes
+	Utah 20/60
+	HP DEC-20/60            5.625 Mb (1.25M 36 bit words)
+	HP VAX-780              4.0 Mb
+	Utah Vax 750         
+	Rand Vax 750         
+	HP9836			4.5 Mb
+	Apollo			1   Mb
+
+LISP 1.6
+
+
+
+IBM Standard LISP
+
+-------
+
+

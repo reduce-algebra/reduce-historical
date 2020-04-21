@@ -1,0 +1,992 @@
+PSL Manual                    7 February 1983               Flow Of Control
+section 9.0                                                        page 9.1
+
+                                 CHAPTER 9                                 CHAPTER 9                                 CHAPTER 9
+                              FLOW OF CONTROL                              FLOW OF CONTROL                              FLOW OF CONTROL
+
+
+
+
+     9.1. Introduction  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     9.1
+     9.2. Conditionals  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     9.1
+          9.2.1. Conds and Ifs.  .  .  .  .  .  .  .  .  .  .  .  .     9.1
+          9.2.2. The Case Statement .  .  .  .  .  .  .  .  .  .  .     9.3
+     9.3. Sequencing Evaluation  .  .  .  .  .  .  .  .  .  .  .  .     9.4
+     9.4. Iteration  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     9.7
+          9.4.1. For .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     9.8
+          9.4.2. Mapping Functions  .  .  .  .  .  .  .  .  .  .  .    9.13
+          9.4.3. Do  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    9.16
+     9.5. Non-Local Exits  .  .  .  .  .  .  .  .  .  .  .  .  .  .    9.18
+
+
+
+
+9.1. Introduction9.1. Introduction9.1. Introduction
+
+  Most of the constructs presented in this Chapter have a special syntax in
+RLISP.    This  syntax  is  presented  along  with  the  definitions of the
+underlying functions.  Many  of  the  examples  are  presented  using  this
+special RLISP syntax as well as LISP.
+
+
+
+9.2. Conditionals9.2. Conditionals9.2. Conditionals
+
+
+9.2.1. Conds and Ifs9.2.1. Conds and Ifs9.2.1. Conds and Ifs
+
+
+ Cond Cond  _ ____ ____    ___                              ____ ________  _____(Cond [U:form-list]): any                              open-compiled, fexpr
+
+                          Cond                    If                          Cond                    If     The  LISP  function  Cond corresponds to the If statement of most
+                                                                    If                                                                    If     programming languages.  In RLISP this is simply the  familiar  If
+         Then     Else         Then     Else     ... Then ... Else construct.  For example:
+
+           _________      ______        IF predicate THEN action1
+              ______         ELSE action2
+
+                      _________ ______           ==> (COND (predicate action1)
+                        ______                     (T action2))
+
+     ______                        _________     Action1  is  evaluated if the predicate has a non-NIL evaluation;
+                                                Else                ______                          Else     otherwise, action2 is evaluated.  Dangling Elses are resolved  in
+                                                                 Then                                                                 Then     the ALGOL manner by pairing them with the nearest preceding Then.
+     For example:Flow Of Control               7 February 1983                    PSL Manual
+page 9.2                                                        section 9.2
+
+        IF F(X) THEN
+         IF G(Y) THEN PRINT(X)
+          ELSE PRINT(Y);
+
+     is equivalent to
+
+        IF F(X) THEN
+         << IF G(Y) THEN PRINT(X)
+             ELSE PRINT(Y) >>;
+
+     Note that if F(X) is NIL, nothing is printed.
+
+     Taken  simply  as a function, without RLISP syntax, the arguments
+        Cond        Cond     to Cond have the form:
+
+               _________ ______ ______        (COND (predicate action action ...)
+               _________ ______ ______              (predicate action action ...)
+              ...
+               _________ ______ ______              (predicate action action ...) )
+
+     The predicates are evaluated in the  order  of  their  appearance
+     until  a non-NIL value is encountered.  The corresponding actions
+     are evaluated and the value of the last becomes the value of  the
+     Cond                Else     Cond                Else     Cond.  The dangling Else example above is:
+
+        (COND ((F X) (COND ((G X) (PRINT X))
+                           ( T    (PRINT Y)) ) ))
+
+                                                           Go  Return                                                           Go  Return     The  actions  may  also contain the special functions Go, Return,
+     Exit      Next     Exit      Next     Exit, and Next, subject to the constraints on placement of  these
+                                                         Cond                                                         Cond     functions  given  in  Section 9.3.  In these cases, Cond does not
+     have a defined value, but rather an effect.  If no  predicate  is
+                           Cond                           Cond     non-NIL, the value of Cond is NIL.
+
+  The  following  MACROs  are defined in the USEFUL module for convenience,
+and are mostly used from LISP syntax:
+
+
+ If If _ ____ __ ____  _ ____    ___                                     _____(If E:form S0:form [S:form]): any                                     macro
+
+     If                                                        Cond     If                                                        Cond     If is a macro to simplify the writing of a common form of Cond in
+     which there are only two clauses and the antecedent of the second
+     is T. It cannot be used in RLISP syntax.  
+
+        (IF E S0 S1...Sn)
+
+                     __                                          _     The then-clause S0 is evaluated if and only  if  the  test  E  is
+                                             _     non-NIL,  otherwise  the  else-clauses  Si are evaluated, and the
+     last returned.  There may be no else-clauses.
+
+  Related macros for common COND forms are WHEN and UNLESS.  PSL Manual                    7 February 1983               Flow Of Control
+section 9.2                                                        page 9.3
+
+ When When _ ____  _ ____    ___                                           _____(When E:form [S:form]): any                                           macro
+
+        (WHEN E S1 S2 ... Sn)
+
+     evaluates  the  Si and returns the value of Sn if and only if the
+                                   When          _                        When     test E is non-NIL.  Otherwise When returns NIL.
+
+
+ Unless Unless _ ____  _ ____    ___                                         _____(Unless E:form [U:form]): any                                         macro
+
+        (UNLESS E S1 S2 ... Sn) 
+
+                                                   _     Evaluates the Si if and  only  if  the  test  E  is  NIL.  It  is
+     equivalent to 
+
+        (WHEN (NOT E) S1 S2 ... Sn)
+
+         And      Or         And      Or  While  And  and Or are primarily of interest as Boolean connectives, they
+are often used in LISP as conditionals.  For example, 
+
+   (AND (FOO) (BAR) (BAZ))
+
+has the same result as 
+
+   (COND ((FOO) (COND ((BAR) (BAZ)))))
+
+See Section 4.2.3.
+
+
+9.2.2. The Case Statement9.2.2. The Case Statement9.2.2. The Case Statement
+
+  PSL  provides  a  numeric  case  statement,  that   is   compiled   quite
+efficiently;  some effort is made to examine special cases (compact vs. non
+compact sets of cases, short vs. long sets of cases, etc.). It  has  mostly
+been  used  in  SYSLISP  mode, but can also be used from LISP mode provided
+that case-tags are numeric.    There  is  also  an  FEXPR,  CASE,  for  the
+interpreter.
+
+  The RLISP syntax is:
+
+
+Case-Statement ::= CASE expr OF case-list END
+
+Case-list      ::=  Case-expr [; Case-list ]
+
+Case-expr      ::=  Tag-expr : expr
+
+tag-expr       ::=  DEFAULT | OTHERWISE  |
+                    tag | tag, tag ... tag |
+                    tag TO tag
+
+Tag            ::=  Integer | Wconst-IntegerFlow Of Control               7 February 1983                    PSL Manual
+page 9.4                                                        section 9.2
+
+
+For example:
+
+        CASE i OF
+           1:       Print("First");
+           2,3:     Print("Second");
+           4 to 10: Print("Third");
+           Default: Print("Fourth");
+        END
+
+
+
+  The RLISP syntax parses into the following LISP form:  
+
+
+ Case Case _ ____  _ ____ ____    ___                       ____ ________  _____(Case I:form [U:case-list]): any                       open-compiled, fexpr
+
+     _                              _______     I  is  meant to evaluate to an integer, and is used as a selector
+                         _     amongst the various Us. Each case-list has  the  form  (case-expr
+     form) where case-expr has the form:
+
+        NIL              -> default case
+        (I1 I2 ... In)   -> where each Ik is an integer or
+        (RANGE low high)
+
+     The above example becomes:
+
+        (CASE i ((1)            (Print "First"))
+                ((2 3)          (Print "Second"))
+                (((Range 4 10)) (Print "Third"))
+                ( NIL           (Print "Fourth")))
+
+  [???  Perhaps  we  should  move  SELECTQ (and define a SELECT) from the  [???  Perhaps  we  should  move  SELECTQ (and define a SELECT) from the  [???  Perhaps  we  should  move  SELECTQ (and define a SELECT) from the
+  COMMON module to the basic system ???]  COMMON module to the basic system ???]  COMMON module to the basic system ???]
+
+  .
+
+
+
+9.3. Sequencing Evaluation9.3. Sequencing Evaluation9.3. Sequencing Evaluation
+
+  These  functions  provide  for  explicit  control  sequencing,  and   the
+definition of blocks altering the scope of local variables.
+
+
+ ProgN ProgN  _ ____    ___                                  ____ ________  _____(ProgN [U:form]): any                                  open-compiled, fexpr
+
+     _     U  is  a set of expressions which are executed sequentially.  The
+     value returned is the value of the last expression.PSL Manual                    7 February 1983               Flow Of Control
+section 9.3                                                        page 9.5
+
+ Prog2 Prog2 _ ____ _ ____   ___                              ____ ________  ____(Prog2 A:form B:form): any                              open-compiled, expr
+
+                          _     Returns the value of B (the second argument).
+
+  [??? Redefine prog2 to take N arguments, return second. ???]  [??? Redefine prog2 to take N arguments, return second. ???]  [??? Redefine prog2 to take N arguments, return second. ???]
+
+
+ Prog1 Prog1  _ ____    ___                                                 _____(Prog1 [U:form]): any                                                 macro
+
+     Prog1     Prog1     Prog1  is  a  function  defined in the USEFUL package; to use it,
+                          Prog1                          Prog1     type (LOAD USEFUL).  Prog1 evaluates its arguments in order, like
+     ProgN     ProgN     ProgN, but returns the value of the first.
+
+
+ Prog Prog ____ __ ____  _______  __ ____     ___           ____ ________  _____(Prog VARS:id-list [PROGRAM:{id,form}]): any           open-compiled, fexpr
+
+                                                              Prog     ____      ____    __                                     Prog     VARS is a list of ids which are considered FLUID if the  Prog  is
+     interpreted  and  LOCAL  if  compiled  (see  the  "Variables  and
+                                     Prog                                     Prog     Bindings" Section, 10.2).  The  Prog's  variables  are  allocated
+                     Prog                     Prog     space  if  the  Prog  form is applied, and are deallocated if the
+     Prog             Prog     Prog             Prog     Prog is exited.  Prog variables are  initialized  to  NIL.    The
+     _______     PROGRAM is a set of expressions to be evaluated in order of their
+                          Prog                          Prog            __________     appearance  in  the  Prog function.  identifiers appearing in the
+                      _______     top level of the PROGRAM are labels which can be referred  to  by
+     Go                               Prog     Go                               Prog     Go.    The value returned by the Prog function is determined by a
+     Return                        Prog     Return                        Prog     Return function or NIL if the Prog "falls through".
+
+  There are restrictions as to where a number of control functions, such as
+Go     ReturnGo     ReturnGo and Return, may be placed.  This is so that they may have  only  locally
+determinable  effects.  Unlike most LISPs, which make this restriction only
+in compiled code, PSL enforces this restriction uniformly in both  compiled
+and  interpreted  code.    Not  only  does  this help keep the semantics of
+compiled and interpreted code the same, but we believe  it  leads  to  more
+readable  programs.  For cases in which a non-local exit is truly required,
+                        Catch     Throw                        Catch     Throwthere are the functions Catch and Throw, described in Section 9.5.
+
+                                  Go  Return  Exit      Next                                  Go  Return  Exit      Next  The functions so restricted are Go, Return, Exit, and Next.  They must be
+placed at top-level within the surrounding control structure to which  they
+                   Prog         Return                   Prog         Returnrefer  (e.g.  the  Prog  which  Return  causes to be terminated), or nested
+within only selected functions.  The functions in which they may be  nested
+(to arbitrary depth) are:
+     ProgN     ProgN   - ProgN (compound statement)
+                Cond                Cond   - actions of Conds (if then else)
+                Case                Case   - actions in Cases
+
+
+ Go Go _____ __   ____ ________                           ____ ________  _____(Go LABEL:id): None Returned                           open-compiled, fexpr
+
+     Go                                            Prog     Go                                            Prog     Go alters the normal flow of control within a Prog function.  The
+                          Prog                          Prog     next  statement of a Prog function to be evaluated is immediately
+                             Go                 _____       Go     preceded by LABEL.   A  Go  may  appear  only  in  the  following
+     situations:Flow Of Control               7 February 1983                    PSL Manual
+page 9.6                                                        section 9.3
+
+                                   Prog                                   Prog                _____        a. At  the  top level of a Prog referring to a LABEL that also
+                                                Prog                                                Prog           appears at the top level of the same Prog.
+                              Cond                              Cond        b. As the action of a Cond item
+
+
+                                                 Prog                                                 Prog              i. appearing on the top level of a Prog.
+                                                   Cond                                                   Cond             ii. which appears as the action of a  Cond  item  to  any
+                 level.
+
+
+                                      ProgN                                      ProgN        c. As the last statement of a ProgN
+
+
+                                                          Prog                                                          Prog              i. which  appears  at  the  top  level of a Prog or in a
+                 ProgN                              Cond                 ProgN                              Cond                 ProgN appearing in the action of a Cond to any  level
+                 subject to the restrictions of b.i, or b.ii.
+                           ProgN                       Cond      ProgN                           ProgN                       Cond      ProgN             ii. within  a ProgN or as the action of a Cond in a ProgN
+                 to any level subject  to  the  restrictions  of  b.i,
+                 b.ii, and c.i.
+
+
+                                                         Prog         _____                                           Prog     If  LABEL  does  not appear at the top level of the Prog in which
+         Go         Go     the Go appears, an error occurs:
+
+     ***** LABEL is not a label within the current scope
+
+            Go            Go     If the Go has been placed in a position not defined by rules a-c,
+     another error is detected:  
+
+     ***** Illegal use of GO To LABEL 
+
+
+ Return Return _ ____   ____ ________                          ____ ________  ____(Return U:form): None Returned                          open-compiled, expr
+
+              Prog  Return                                   Prog              Prog  Return                                   Prog     Within a Prog, Return terminates the evaluation  of  a  Prog  and
+                                        Prog              _                         Prog     returns  U  as  the  value  of the Prog.  The restrictions on the
+                  Return                      Go                  Return                      Go     placement of Return are exactly those of Go.  Improper  placement
+        Return        Return     of Return results in the error:
+
+     ***** Illegal use of RETURN 
+
+
+
+9.4. Iteration9.4. Iteration9.4. Iteration
+
+
+ While While _ ____  _ ____    ___                                          _____(While E:form [S:form]): NIL                                          macro
+
+     This is the most commonly used construct for indefinite iteration
+                _                               _     in  LISP.  E is evaluated; if non-NIL, the S's are evaluated from
+                                                          _     left to right and then the process is repeated.  If  E  evaluates
+                 While               Exit                 While               Exit     to  NIL the While returns NIL.  Exit may be used to terminate thePSL Manual                    7 February 1983               Flow Of Control
+section 9.4                                                        page 9.7
+
+     While                                                 Next     While                                                 Next     While  from  within  the body and to return a value.  Next may be
+     used to terminate the current iteration.  In RLISP syntax this is
+     While     Do     While     Do     While ... Do ... .  Note that in RLISP syntax there may be only a
+                                  Do                             ProgN                                  Do                             ProgN     single expression after the  Do;  however,  it  may  be  a  ProgN
+     delimited by <<...>>.  That is, 
+
+        (While E S1 S2)
+
+     should be written in RLISP as 
+
+        While E do <<S1; S2>>;
+
+
+ Repeat Repeat _ ____  _ ____    ___                                         _____(Repeat E:form [S:form]): NIL                                         macro
+
+          _                                            _     The  S's  are  evaluated  left to right, and then E is evaluated.
+                                                       Repeat                                         _             Repeat     This is repeated until the value of E is NIL, if  Repeat  returns
+             Next       Exit             Next       Exit                    _     NIL.    Next  and  Exit may be used in the S's branch to the next
+                    Repeat                    Repeat     iteration of a Repeat or to terminate one and possibly  return  a
+               Go      Return               Go      Return                   _     value.    Go, and Return may appear in the S's.  The RLISP syntax
+         Repeat    Repeat Until        While         Repeat    Repeat Until        While     for Repeat is Repeat Until.  Like While, RLISP syntax only allows
+              _     a single S, so
+
+        (REPEAT E S1 S2)
+
+     should be written in RLISP as 
+
+        REPEAT << S1; S2 >> UNTIL E;
+
+       [???  maybe do REPEAT S1 ... Sn E ???]       [???  maybe do REPEAT S1 ... Sn E ???]       [???  maybe do REPEAT S1 ... Sn E ???]
+
+
+ Next Next    ____ ________                     ____ ________  __________  _____(Next ): None Returned                     open-compiled, restricted, macro
+
+     This  terminates  the  current  iteration  of  the  most  closely
+                  While      Repeat                  While      Repeat     surrounding  While  or  Repeat,  and causes the next to commence.
+     See the note in Section 9.3 about  the  lexical  restrictions  on
+                                                               GO                                                               GO     placement  of  this  construct,  which  is  essentially a GO to a
+     special label placed at the front of a loop construct.
+
+
+ Exit Exit  _ ____    ____ ________              ____ ________ __________  _____(Exit [U:form]): None Returned              open-compiled,restricted, macro
+
+         _     The U's are evaluated left to right, the most closely surrounding
+     While    Repeat     While    Repeat                                             _     While or Repeat is terminated, and the value of  the  last  U  is
+     returned.    With no arguments, NIL is returned.  See the note in
+     Section 9.3 about the lexical restrictions on placement  of  this
+                                       Return                                       Return     construct, which is essentially a Return.
+
+  While       Repeat                          Prog  Next     Exit  While       Repeat                          Prog  Next     Exit  While  and  Repeat each macro expand into a Prog; Next and Exit are macro
+                Go       Return                      Prog                Go       Return                      Progexpanded into a Go and a Return respectively to this Prog.   Thus  using  a
+Next        Exit          Prog          While    RepeatNext        Exit          Prog          While    RepeatNext  or an Exit within a Prog within a While or Repeat will result only inFlow Of Control               7 February 1983                    PSL Manual
+page 9.8                                                        section 9.4
+
+                        Prog                        Progan exit of the internal Prog.  In RLISP be careful to use
+
+    WHILE E DO << S1;...;EXIT(1);...;Sn>>
+
+not 
+
+    WHILE E DO BEGIN S1;...;EXIT(1);...;Sn;END;
+
+
+9.4.1. For9.4.1. For9.4.1. For
+
+           For           For  A simple For construct is available in the basic PSL system and RLISP; an
+extended  form  can  obtained  by loading USEFUL. It is planned to make the
+extended form the version available in the basic system, combining all  the
+             FOR     ForEach                For             FOR     ForEach                Forfeatures  of FOR and ForEach. The basic PSL For provides only the (FROM ..)
+                                                    ForEach                                                    ForEachiterator, and (DO ...) action clause, and uses the  ForEach  construct  for
+some  of the (IN ...) and (ON ...)  iterators. Most PSL syntax users should
+             For             Foruse the full For construct.
+
+
+ For For  _ ____    ___                                                   _____(For [S:form]): any                                                   macro
+
+                      For                      For     The arguments to For are clauses; each clause is itself a list of
+     a keyword and one or more arguments.  The clauses  may  introduce
+     local  variables,  specify  return  values and when the iteration
+     should cease,  have  side-effects,  and  so  on.    Before  going
+     further, it is probably best to give some examples.
+
+        (FOR (FROM I 1 10 2) (DO (PRINT I)))
+                Prints the numbers 1 3 5 7 9
+
+        (FOR (IN U '(A B C)) (DO (PRINT U)))
+                Prints the letters A B C
+
+        (FOR (ON U '(A B C)) (DO (PRINT U)))
+                Prints the lists (A B C) (B C) and (C)
+
+        Finally, the function
+        (DE ZIP (X Y)
+          (FOR (IN U X) (IN V Y)
+                (COLLECT (LIST U V))))
+
+     produces  a  list  of 2 element lists, each consisting of the the
+     corresponding elements  of  the  three  lists  X,  Y  and  Z. For
+     example, 
+
+        (ZIP '(1 2 3 4) '(A B C) )
+
+     produces PSL Manual                    7 February 1983               Flow Of Control
+section 9.4                                                        page 9.9
+
+        ((1 a)(2 b)(3 c))
+
+     The iteration terminates as soon as one of the (IN ..) clauses is
+     exhausted.
+
+     Note  that  the  (IN  ...  ),  (ON  ...)  and  (FROM ...) clauses
+     introduce local variables U, V or I, that are referred to in  the
+     action clause.
+
+     All  the  possible  clauses  are  described below.  The first few
+     introduce iteration variables.  Most  of  these  also  give  some
+     means of indicating when iteration should cease.  For example, if
+                                     In        ____                         In     a  list being mapped over by an In clause is exhausted, iteration
+                                                       For                                                       For     must cease.  If several such clauses are given in For expression,
+     iteration ceases when one of the  clauses  indicates  it  should,
+     whether or not the other clauses indicate that it should cease.
+
+
+     (IN V1 V2)
+                                                                  ____               assigns the variable V1 successive elements of the list
+               V2.
+
+               This  may  take  an  additional,  optional  argument: a
+               function to be applied  to  the  extracted  element  or
+               sublist  before  it  is  assigned to the variable.  The
+               following returns the sum of the  lengths  of  all  the
+               elements of L. 
+
+                 [???  Rather a kludge -- not sure why this is here.                 [???  Rather a kludge -- not sure why this is here.                 [???  Rather a kludge -- not sure why this is here.
+                 Perhaps it should come out again. ???]                 Perhaps it should come out again. ???]                 Perhaps it should come out again. ???]
+
+                  (DE LENGTHS (L)
+                    (FOR (IN N L LENGTH)
+                  (COLLECT (LIST N N)))
+
+                  is the same as
+
+                  (DE LENGTHS (L)
+                    (FOR (IN N L)
+                       (COLLECT
+                        (LIST (LENGTH N) (LENGTH N))))
+                  )
+
+               but only calls LENGTH once. Using the (WITH ..) form to
+               introduce a local LN may be clearer.
+
+                  For example,
+                  (SUMLENGTHS
+                   '((1 2 3 4 5)(a b c)(x y)))
+                  is
+                  ((5 5) (3 3) (2 2))Flow Of Control               7 February 1983                    PSL Manual
+page 9.10                                                       section 9.4
+
+     (ON V1 V2)
+                                                  Cdr                                                  Cdr         ____               assigns the variable V1 successive Cdrs of the list V2.
+
+     (FROM VAR INIT FINAL STEP)
+               is  a  numeric iteration clause.  The variable is first
+               assigned INIT, and then incremented by step until it is
+               larger than FINAL.  INIT, FINAL, and STEP are optional.
+               INIT and STEP both  default  to  1,  and  if  FINAL  is
+               omitted  the  iteration continues until stopped by some
+               other means.  To specify a  STEP  with  INIT  or  FINAL
+               omitted,  or  a FINAL with INIT omitted, place NIL (the
+               constant  --  it  cannot  be  an  expression)  in   the
+               appropriate  slot  to  be  omitted.  FINAL and STEP are
+               only evaluated once.
+
+     (FOR VAR INIT NEXT)
+               assigns the variable INIT first, and  subsequently  the
+               value  of  the  expression  NEXT.  INIT and NEXT may be
+               omitted.  Note that this is identical to  the  behavior
+                                 Do                                 Do               of iterators in a Do.
+
+     (WITH V1 V2 ... Vn)
+               introduces  N locals, initialized to NIL.  In addition,
+               each Vi may also be of the form (VAR  INIT),  in  which
+               case it is initialized to INIT.
+
+     (DO S1 S2 ... Sn)
+               causes the Si's to be evaluated at each iteration.
+
+
+     There  are  two clauses which allow arbitrary code to be executed
+     before the first iteration, and after the last.
+
+
+     (INITIALLY S1 S2 ... Sn)
+               causes the Si's to be evaluated in the new  environment
+               (i.e.  with  the  iteration  variables  bound  to their
+               initial values) before the first iteration.
+
+     (FINALLY S1 S2 ... Sn)
+               causes  the  Si's  to  be  evaluated  just  before  the
+               function returns.
+
+
+     The  next  few  clauses  build  up  return types.  Except for the
+     RETURNS/RETURNING  clause,  they  may  each  take  an  additional
+     argument   which   specifies   that   instead  of  returning  the
+     appropriate value, it is accumulated in the  specified  variable.
+     For example, an unzipper might be defined as PSL Manual                    7 February 1983               Flow Of Control
+section 9.4                                                       page 9.11
+
+        (DE UNZIP (L)
+          (FOR (IN U L) (WITH X Y)
+            (COLLECT (FIRST U) X)
+            (COLLECT (SECOND U) Y)
+            (RETURNS (LIST X Y))))
+
+                                               Zip                                               Zip           ____     This  is  essentially  the  opposite  of  Zip.  Given a list of 2
+             ____                         ____                 ____     element lists, it unzips them into 2 lists, and returns a list of
+             ____     those 2 lists.  For example, (unzip '((1 a)(2 b)(3  c)))  returns
+     is ((1 2 3)(a b c)).
+
+
+     (RETURNS EXP)
+                                                                  For                                                                  For               causes the given expression to be the value of the For.
+               Returning  is synonymous with returns.  It may be given
+               additional arguments, in which case they are  evaluated
+               in  order  and  the  value  of  the  last  is  returned
+                         ProgN                         ProgN               (implicit ProgN).
+
+     (COLLECT EXP)
+               causes the successive values of the  expression  to  be
+                                                       Append                                  ____                 Append               collected  into  a list.  Each value is Appended to the
+                          ____               end of the list.
+
+     (UNION EXP)
+                                                           ____               is similar, but only adds an element to the list if  it
+               is not equal to anything already there.
+
+     (CONC EXP)
+                                                  NConc                                                  NConc               causes the successive values to be NConc'd together.
+
+     (JOIN EXP)
+               causes them to be appended.
+
+     (COUNT EXP)
+               returns the number of times EXP was non-NIL.
+
+     (SUM EXP), (PRODUCT EXP), (MAXIMIZE EXP), and (MINIMIZE EXP)
+               do  the obvious.  Synonyms are summing, maximizing, and
+               minimizing.
+
+     (ALWAYS EXP)
+               returns T if EXP is non-NIL on each iteration.  If  EXP
+               is  ever  NIL,  the  loop  terminates  immediately,  no
+               epilogue code, such as that introduced  by  finally  is
+               run, and NIL is returned.
+
+     (NEVER EXP)
+               is equivalent to (ALWAYS (NOT EXP)).
+
+     (WHILE EXP) and (UNTIL EXP)
+               Explicit  tests  for  the  end of the loop may be givenFlow Of Control               7 February 1983                    PSL Manual
+page 9.12                                                       section 9.4
+
+               using  (WHILE EXP).  The loop terminates if EXP becomes
+               NIL at the beginning of an iteration.   (UNTIL EXP)  is
+                                                       While     Until                                                       While     Until               equivalent  to (WHILE (NOT EXP)).  Both While and Until
+               may be given additional arguments; (WHILE E1 E2 ... En)
+               is   equivalent   to   (WHILE (AND E1 E2 ... En))   and
+               (UNTIL E1 E2 ... En)       is       equivalent       to
+               (UNTIL (OR E1 E2 ... En)).
+
+     (WHEN EXP)
+               causes a jump to the next iteration if EXP is NIL.
+
+     (UNLESS EXP)
+               is equivalent to (WHEN (NOT EXP)).
+
+
+  For  For  For is a general iteration construct similar in many  ways  to  the  LISP
+                       Loop                       LoopMachine  and  MACLISP  Loop  construct,  and  the  earlier  Interlisp CLISP
+                      For                      Foriteration construct.  For,  however,  is  considerably  simpler,  far  more
+                                      For                                      For"lispy", and somewhat less powerful.  For only works in LISP syntax.
+
+  All  variable  binding/updating  still  precedes any tests or other code.
+                   When    Unless                   When    UnlessAlso note that all When or Unless clauses apply to all action clauses,  not
+                                                                   For                                                                   Forjust  subsequent  ones.    This  fixed  order  of evaluation makes For less
+              Loop              Looppowerful than Loop, but also keeps it  considerably  simpler.    The  basic
+order of evaluation is
+
+
+   a. bind   variables  to  initial  values  (computed  in  the  outer
+      environment)
+
+                             Initially                             Initially   b. execute prologue (i.e. Initially clauses)
+
+   c. while none of the termination conditions are satisfied:
+
+
+                                              When       Unless                                              When       Unless         i. check conditionalization clauses (When  and  Unless),  and
+            start next iteration if all are not satisfied.
+
+        ii. perform body, collecting into variables as necessary
+
+       iii. next iteration
+
+
+   d. (after   a  termination  condition  is  satisfied)  execute  the
+                      Finally                      Finally      epilogue (i.e.  Finally clauses)
+
+
+ForForFor does all variable binding/updating in parallel.   There  is  a  similar
+       For*       For*macro, For*, which does it sequentially.PSL Manual                    7 February 1983               Flow Of Control
+section 9.4                                                       page 9.13
+
+ For!* For!*  _ ____    ___                                                 _____(For!* [S:form]): any                                                 macro
+
+
+9.4.2. Mapping Functions9.4.2. Mapping Functions9.4.2. Mapping Functions
+
+  )
+
+  The  mapping  functions  long familiar to LISP programmers are present in
+                                   For                                   ForPSL.  However, we believe that the For construct  described  above  or  the
+        ForEach        ForEachsimpler ForEach described below is generally more useful, since it obviates
+the  usual necessity of constructing a lambda expression, and is often more
+transparent.  Mapping functions  with  more  than  two  arguments  are  not
+                                                ____currently supported.  Note however that several lists may be iterated along
+     For     Forwith For, and with considerably more generality.  For example:
+
+   (Prog (I)
+     (Setq I 0)
+     (Return
+       (Mapcar L
+         (Function (Lambda (X)
+                     (Progn
+                       (Setq I (Plus I 1))
+                       (Cons I X)))))))
+
+may be expressed more transparently as 
+
+   (For (IN X L) (FROM I 1) (COLLECT (CONS I X)))
+
+Note  that  there  is  currently  no  RLISP  syntax  for  this,  but we are
+contemplating something like:
+
+   FOR X IN L AS I FROM 1 COLLECT I . X;
+
+                         For                         For  To augment the simpler For loop present in  basic  PSL  and  support  the
+      For Each      For EachRLISP For Each construct, the following list iterator has been provided:
+
+
+ ForEach ForEach _ ___   ___                                                  _____(ForEach U:any): any                                                  macro
+
+           _____           _____           _____           macro           macro     This  macro is essentially equivalent to the the map functions as
+     follows:
+
+
+     Possible forms are:
+     Setting X to successive elements (CARs) of U:
+     (FOREACH X IN U DO (FOO X))     --> (MAPC U 'FOO)
+     (FOREACH X IN U COLLECT (FOO X))--> (MAPCAR U 'FOO)
+     (FOREACH X IN U CONC (FOO X))   --> (MAPCAN U 'FOO)
+     (FOREACH X IN U JOIN (FOO X))   --> (MAPCAN U 'FOO)
+
+     Setting X to successive CDRs of U:
+     (FOREACH X ON U DO (FOO X))     --> (MAP U 'FOO)Flow Of Control               7 February 1983                    PSL Manual
+page 9.14                                                       section 9.4
+
+     (FOREACH X ON U COLLECT (FOO X))--> (MAPLIST U 'FOO)
+     (FOREACH X ON U CONC (FOO X))   --> (MAPCON U 'FOO)
+     (FOREACH X ON U JOIN (FOO X))   --> (MAPCON U 'FOO)
+
+
+     The RLISP syntax is quite simple:
+
+        FOR EACH x IN y DO z;
+        FOR EACH x ON y COLLECT z;
+        etc.
+
+        Note that FOR EACH may be written as FOREACH
+
+
+ Map Map _ ____ __ ________   ___                                          ____(Map X:list FN:function): NIL                                          expr
+
+                                  Cdr              __                  Cdr             _     Applies  FN  to  successive  Cdr segments of X.  NIL is returned.
+     This is equivalent to:   
+
+        (FOREACH u ON x DO (FN u))
+
+
+ MapC MapC _ ____ __ ________   ___                                         ____(MapC X:list FN:function): NIL                                         expr
+
+                                 Car     __                          Car               ____  _     FN is applied to successive Car segments  of  list  X.    NIL  is
+     returned.  This is equivalent to:   
+
+        (FOREACH u IN x DO (FN u))
+
+
+ MapCan MapCan _ ____ __ ________   ____                                      ____(MapCan X:list FN:function): list                                      expr
+
+                                                     Car                    ____    __                       Car             _     A concatenated list of FN applied to successive Car elements of X
+     is returned.  This is equivalent to:   
+
+        (FOREACH u IN x CONC (FN u))
+
+
+ MapCar MapCar _ ____ __ ________   ____                                      ____(MapCar X:list FN:function): list                                      expr
+
+                                   ____                             __     Returned  is  a  constructed  list,  the elements of which are FN
+                     Car                     Car    ____ _     applied to each Car of list X.  This is equivalent to:
+
+        (FOREACH u IN x COLLECT (FN u))
+
+
+ MapCon MapCon _ ____ __ ________   ____                                      ____(MapCon X:list FN:function): list                                      expr
+
+                                                                   Cdr                                ____    __                         Cdr     Returned is a concatenated list of FN applied to  successive  Cdr
+                 _     segments of X.  This is equivalent to:PSL Manual                    7 February 1983               Flow Of Control
+section 9.4                                                       page 9.15
+
+        (FOREACH u ON x CONC (FN u))
+
+
+ MapList MapList _ ____ __ ________   ____                                     ____(MapList X:list FN:function): list                                     expr
+
+                            ____                            __     Returns  a constructed list, the elements of which are FN applied
+                   Cdr                   Cdr             _     to successive Cdr segments of X.  This is equivalent to:
+
+        (FOREACH u ON x COLLECT (FN u))
+
+
+9.4.3. Do9.4.3. Do9.4.3. Do
+
+                    Do     Let                    Do     Let  The MACLISP style Do and Let are now partially implemented in the  USEFUL
+module.
+
+
+ Do Do _ ____ _ ____  _ ____    ___                                      _____(Do A:list B:list [S:form]): any                                      macro
+
+          Do          Do     The  Do macro is a general iteration construct similar to that of
+     LISPM and friends.  However, it does differ in some  details;  in
+                                                                Do                                                                Do     particular  it  is  not  compatible  with  the  "old style Do" of
+     MACLISP, nor does it support the "no end test  means  once  only"
+                  Do                  Do     convention.  Do has the form
+
+        (DO (I1 I2 ... In)
+            (TEST R1 R2 ... Rk)
+            S1
+            S2
+            ...
+            Sm)
+
+     in which there may be zero or more I's, R's, and S's.  In general
+     the I's have the form 
+
+        (var init step)
+
+                        Do                        Do     On  entry  to  the Do form, all the inits are evaluated, then the
+     variables are bound to their  respective  inits.    The  test  is
+     evaluated,  and if non-NIL the form evaluates the R's and returns
+     the value of the last one.  If none are supplied it returns  NIL.
+     If the test evaluates to NIL the S's are evaluated, the variables
+     are  assigned  the  values of their respective steps in parallel,
+     and the test evaluated again.   This  iteration  continues  until
+     test  evaluates  to  a  non-NIL  value.   Note that the inits are
+     evaluated in the surrounding environment,  while  the  steps  are
+                                                          Do                                                          Do     evaluated  in  the new environment.  The body of the Do (the S's)
+          Prog                             Go          Prog                             Go     is a Prog, and may contain labels and Go's, though use of this is
+                                                          Return                                                          Return     discouraged.  It may be changed at a later  date.    Return  used
+                Do                Do     within  a  Do  returns immediately without evaluating the test or
+     exit forms (R's).Flow Of Control               7 February 1983                    PSL Manual
+page 9.16                                                       section 9.4
+
+     There are alternative forms for the I's:  If the step is omitted,
+     the  variable's  value  is  left unchanged.  If both the init and
+                                        __     step are omitted or if the I is an id, it is initialized  to  NIL
+     and  left unchanged.  This is particularly useful for introducing
+                               SetQ                               SetQ     dummy variables which are SetQ'd inside the body.
+
+
+ Do!* Do!* _ ____ _ ____  _ ____    ___                                    _____(Do!* A:list B:list [C:form]): any                                    macro
+
+     Do!*         Do     Do!*         Do     Do!* is like Do, except the variable bindings and  updatings  are
+     done sequentially instead of in parallel.
+
+
+ Do-Loop Do-Loop _ ____ _ ____ _ ____  _ ____    ___                          _____(Do-Loop A:list B:list C:list [S:form]): any                          macro
+
+     Do-Loop          Do     Do-Loop          Do     Do-Loop  is like Do, except that it takes an additional argument,
+     a prologue.  The general form is 
+
+        (DO-LOOP (I1 I2 ... In)
+            (P1 P2 ... Pj)
+            (TEST R1 R2 ... Rk)
+            S1
+            S2
+            ...
+            Sm)
+
+                                                     Do                                                     Do     This is executed just like  the  corresponding  Do,  except  that
+     after  the  bindings are established and initial values assigned,
+     but before the test is first executed the P's are  evaluated,  in
+     order.    Note  that  the  P's  are  all  evaluated  exactly once
+     (assuming that none of the P's err out, or otherwise throw  to  a
+     surrounding context).
+
+
+ Do-Loop!* Do-Loop!* _ ____ _ ____ _ ____  _ ____     ___                       _____(Do-Loop!* A:list B:list C:list [S:form_]): any                       macro
+
+     Do-Loop!*     Do-Loop!*     Do-Loop!*  does  the  variable  bindings and undates sequentially
+     instead of in parallel.
+
+
+ Let Let _ ____  _ ____    ___                                            _____(Let A:list [B:form]): any                                            macro
+
+     Let     Let     Let is a macro giving a more perspicuous form for writing  lambda
+     expressions.  The basic form is
+
+     (LET ((V1 I1) (V2 I2) ...(Vn In)) S1 S2 ...  Sn)
+
+     The I's are evaluated (in an unspecified order), and then the V's
+     are  bound  to  these values, the S's evaluated, and the value of
+     the last is returned.  Note that the I's  are  evaluated  in  the
+     outer environment before the V's are bound.PSL Manual                    7 February 1983               Flow Of Control
+section 9.4                                                       page 9.17
+
+                __     Note:  the id LET conflicts with a similar construct in RLISP and
+     REDUCE
+
+
+ Let!* Let!* _ ____  _ ____    ___                                          _____(Let!* A:list [B:form]): any                                          macro
+
+     Let!*              Let     Let!*              Let     Let!* is just like Let  except  that  it  makes  the  assignments
+     sequentially.    That  is,  the  first binding is made before the
+     value for the second one is computed.
+
+
+
+9.5. Non-Local Exits9.5. Non-Local Exits9.5. Non-Local Exits
+
+  One occasionally wishes to discontinue a computation in which the lexical
+                             Return                             Returnrestrictions on placement of Return are too  restrictive.    The  non-local
+                  Catch      Throw                  Catch      Throwexit  constructs  Catch  and Throw exist for these cases.  They should not,
+however, be used indiscriminately.  The lexical restrictions on their  more
+local  counterparts  ensure  that the flow of control can be ascertained by
+                                         Catch     Throw                                         Catch     Throwlooking at a single piece of code.  With Catch and Throw,  control  may  be
+passed  to  and  from  totally  unrelated  pieces  of  code.    Under  some
+conditions, these functions are invaluable.  Under others, they  can  wreak
+havoc.
+
+
+ Catch Catch ___ __  ____ ____    ___                        ____ ________  _____(Catch TAG:id [FORM:form]): any                        Open-Compiled, fexpr
+
+     Catch                                      Eval     Catch                  ___                 Eval        ____     Catch  evaluates  the  TAG  and then calls Eval on the FORMs in a
+                                                        Throw                                                        Throw ___ ___     protected environment.  If during this evaluation (Throw TAG VAL)
+             Catch                                 Throw             Catch                     ___         Throw     occurs, Catch immediately returns VAL.  If no Throw  occurs,  the
+                          ____     value  of  the  last FORM is returned.  Note that in general only
+     Throw                                 Throw                    Eq     Throw                ___              Throw        ___         Eq     Throws with the same TAG are caught.  Throws whose TAG is not  Eq
+                Catch                                  Catch                Catch                                  Catch       ___     to that of Catch are passed on out to surrounding Catches.  A TAG
+                                     Catch                                     Catch     of  NIL, however, is special.  (Catch NIL @var[form)] catches any
+     Throw     Throw     Throw.
+
+
+               __________                                            ______THROWSIGNAL!* [Initially: NIL]                                       global
+
+
+            __________                                               ______THROWTAG!* [Initially: NIL]                                          global
+
+     The  FLUID  variables  THROWSIGNAL!*  and   THROWTAG!*   may   be
+                                                             Catch                                                             Catch     interrogated to find out if the most recently evaluated Catch was
+     Throw                                       Throw     Throw                                       Throw     Thrown  to,  and what tag was passed to the Throw.  THROWSIGNAL!*
+        Set                                Catch        Set                                Catch     is Set to NIL upon normal exit from a Catch, and to T upon normal
+               Throw                 Set               Throw                 Set     exit from Throw.  THROWTAG!* is Set to the first argument  passed
+            Throw                    Throw     Eval            Throw                    Throw     Eval ____     to the Throw.  (Mark a place to Throw to, Eval FORM.)Flow Of Control               7 February 1983                    PSL Manual
+page 9.18                                                       section 9.5
+
+ Throw Throw ___ __  ___ ___   ____ ________                                 ____(Throw TAG:id  VAL:any): None Returned                                 expr
+
+                                                      Catch         Eq                                                      Catch         Eq     This  passes  control to the closest surrounding Catch with an Eq
+                                                     Catch             ___                                     Catch     or null TAG.  If there is no such  surrounding  Catch  it  is  an
+                                       _____                                       _____                                       _____                                       Throw            __  ___  _______  __  ___  Throw     error  in  the  context  of  the  Throw.  That is, control is not
+     Throw                                        Error     Throw                                        Error     Thrown to the top level before the call  on  Error.    (Non-local
+     Goto     Goto     Goto.)
+
+  Some examples:
+
+   In LISP syntax, with
+
+   (DE DOIT (x)
+    (COND ((EQN x 1) 100)
+          (T (THROW 'FOO 200))))
+
+   (CATCH 'FOO (DOIT 1) (PRINT "NOPE") 0)
+           will continue and execute the PRINT statement
+           and return 0
+   while
+
+   (CATCH 'FOO (DOIT 2) (PRINT "NOPE") 0)
+
+   will of course THROW, returning 200 and not executing
+   the last forms.
+
+
+  A  common  problem  people  encounter  is  how  to  pass arguments and/or
+                                  CATCH                                  CATCHcomputed functions or tags  into  CATCH  for  protected  evaluation.    The
+following  examples should illustrate. Note that TAG is quoted, since it is
+evaluated before use in CATCH and THROW.
+
+   In LISP syntax:
+
+   (DE PASS-ARGS(X1 X2)
+      (CATCH 'FOO (FEE (PLUS2 X1 X2) (DIFFERENCE X1 X2))))
+
+  This is simple, because CATCH compiles open.  No  FLUID  declarations  or
+                                                                      Apply                                                                      ApplyLIST building is needed, as in previous versions of PSL.  An explicit Apply
+must be used for a function argument; usually, the APPLY will compile open,
+with no overhead:
+
+   In LISP syntax:
+
+   (DE PASS-FN(X1 FN)
+      (CATCH 'FOO (APPLY FN (LIST X1))))
+
+                                                            Catch     Throw                                                            Catch     Throw  The  following  MACROs  are provided to aid in the use of Catch and Throw
+with a NIL tag, by examining the THROWSIGNAL!* and THROWTAG!*:PSL Manual                    7 February 1983               Flow Of Control
+section 9.5                                                       page 9.19
+
+ Catch!-All Catch!-All __ ________  ____ ____    ___                             _____(Catch!-All FN:function [FORM:form]): any                             macro
+
+                     Catch                     Catch     This  issues a (Catch NIL ...); if a Throw was actually done, the
+              __     function FN is applied to the two arguments  THROWTAG!*  and  the
+                            throw                                Throw                            throw                                Throw     value  returned by the throw.  Thus FN is applied only if a Throw
+     was executed.
+
+
+ Unwind!-All Unwind!-All __ ________  ____ ____    ___                            _____(Unwind!-All FN:function [FORM:form]): any                            macro
+
+                    Catch                    Catch                        __     This issues a (Catch NIL ...). The function FN is always  called,
+     and  applied  to  the  two  arguments  THROWTAG!*  and  the value
+                     throw        Throw                     throw        Throw               __     returned by the throw. If no Throw was done then FN is called  on
+     NIL and the value returned.
+
+
+ Unwind!-Protect Unwind!-Protect _ ____  _ ____    ___                                _____(Unwind!-Protect F:form [C:form]): any                                macro
+
+                                                  _     The idea is to execute the "protected" form, F, and then run some
+                      _     "clean-up" forms C even if a Throw (or Error) occurred during the
+                                     Catch                   _                 Catch     evaluation of F. This issues a (Catch NIL ...), the cleanup forms
+     are  then  run,  and  finally  either the value is returned if no
+     Throw occurred, or the Throw is "re-thrown" to the same tag.
+
+     A common example is to ensure a file be closed after  processing,
+     even if an error or throw occurred:
+
+        (SETQ chan (OPEN file ....))
+        (UNWIND-PROTECT (process-file)
+                        (CLOSE chan))
+
+  Note:  Certain special tags are used in the PSL system, and should not be
+interfered with casually:
+
+
+                  Error     ErrorSet                  Error     ErrorSet!$ERROR!$ Used by Error and ErrorSet which  are  implemented  in  terms  of
+          Catch     Throw          Catch     Throw          Catch and Throw, see Chapter 14).
+
+!$UNWIND!-PROTECT!$
+          A  special  TAG  placed  to  ensure  that ALL throws pause at the
+          UNWIND-PROTECT "mark".
+
+                                                  PROG   GO      RETURN                                                  PROG   GO      RETURN!$PROG!$  Used to communicate between interpreted PROGs, GOs and RETURNs.

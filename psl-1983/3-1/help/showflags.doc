@@ -1,0 +1,13 @@
+The Names and State of important Flags and Globals can be displayed
+by executing:
+
+ShowFlags(Flag-name-list) or ShowGlobals(Global-Name-List)
+
+If the List is NIL, some default set of Flags or Globals will be
+displayed.  Each Flag or Global will have a short descriptive string
+associated with it, under the indicator 'FlagInfo or 'GlobalInfo.
+
+These are stored with 
+	DefineFlag(Id,Info-String)  % Note that ID does NOT include the !*
+and
+	DefineGlobal(Global,Info-string)

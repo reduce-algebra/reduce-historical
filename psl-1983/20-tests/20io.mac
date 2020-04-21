@@ -1,0 +1,81 @@
+; 20IO: simple 20 Support routines
+TITLE 20IO
+SEARCH MONSYM
+RADIX ^D10
+ENTRY GETC20,PUTC20,INIT20,QUIT20,TIMC20,ERR20,PUTI20
+
+ST=15
+INIT20: HRROI 1,[Asciz/
+Call on Init
+/]
+	PSOUT
+         JFCL
+	POPJ ST,0
+
+GETC20:	PBIN
+         JFCL
+        POPJ ST,0
+
+PUTC20:	PBOUT
+	 JFCL
+	CAIE 1,10      ; Is it EOL
+         POPJ ST,0     ; No
+	MOVEI 1,13     
+	PBOUT
+	 JFCL
+	MOVEI 1,10
+	POPJ ST,0
+
+PUTI20:	MOVEM 1,JUNK
+	MOVE 2,1
+	MOVEI 1,^O101
+	MOVEI 3,^D10
+        NOUT
+	 JFCL
+	MOVE 1,JUNK
+        POPJ ST,0
+
+ERR20:	MOVEM 1,Junk
+	HRROI 1,[ASCIZ/
+*** ERR20: /]
+	PSOUT
+	MOVE 1,Junk
+        PUSHJ ST,PUTI20
+	MOVEI 1,10
+	PBOUT
+	 HALTF
+	HALTF
+        POPJ ST,0
+
+Junk:   Block 1
+
+QUIT20: Hrroi 1,[ASCIZ/
+Quitting
+/]
+	PSOUT
+	HALTF
+
+TIMC20:	  MOVEI 1,-5
+          RUNTM
+	   JFCL
+    	  MOVEM 1,NTIME
+;	  Hrroi 1,[ASCIZ/
+;Ctime:    /]
+;	  PSOUT
+;	  MOVE 1,NTIME
+;         PUSHJ ST,PutI20
+;         Hrroi 1,[ASCIZ/ ms,  /]
+;	  PSOUT
+	  MOVE 1,NTIME
+;	  SUB  1,OTIME
+;	  PUSHJ ST,PutI20
+;          Hrroi 1,[ASCIZ/ ms
+; /]
+;	  PSOUT
+	  MOVE 1,NTIME
+	  MOVEM 1,OTIME
+	  POPJ ST,0
+Otime:    0
+Ntime:    0
+          END
+

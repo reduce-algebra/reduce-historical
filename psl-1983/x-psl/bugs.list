@@ -1,0 +1,7 @@
+PSL-bug-missfeature-recipients:
+@<PSL.UTAH>LOCAL-PSL-BUGEES.LIST,
+"hplabs!localpsl"@cs,
+; People interested in commenting on suspected PSL bugs/missfeatures.  
+; This is the one that comes in locally and will go to hplabs also.  
+; Referenced by PSL-BUGS. 
+; Maintained by KESSLER

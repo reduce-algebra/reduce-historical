@@ -1,0 +1,52 @@
+ Master macro file for NMODE Manual.
+
+.dv ibm
+.so no-overprint
+.
+.nr both_sides 1
+.sr left_heading \section_title
+.sr left_heading NMODE Manual (\section_title)
+.sr center_heading
+.sr right_heading Page \page_number
+.nr top_margin_size 600
+.nr bottom_margin_size 1400
+.nr heading_pos 400
+.sd file_date_string fdate
+.nr macro_arg_limit 20
+.sr list_left_margin 0
+.sr list_right_margin 0
+.
+.so multipart
+.so std
+.so send
+.so xref
+.so environments
+.
+.so <user-utilities>index
+.nr index_tab 3000
+.
+.de letter_break
+.sp 1
+.ne 4
+.in index_tab!m
+.ta index_tab!m
+.em
+.
+.de before_index_entry
+.br
+.ti 0
+.em
+.
+.sr term_page_separator  . 	
+.sr page_page_separator , 
+.sr subentry_separator ||||
+.
+.de odd_page
+.top_of_page
+.if page%2==0
+.rs
+.bp
+.en
+.em
+.
+.so pndoc:nmode-macros

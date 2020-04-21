@@ -1,0 +1,14 @@
+BUG();                                           mlg, 31 dec 1981
+------
+
+Runs MM in a lower fork, prompting for a Subject:
+A message is send to BENSON, GRISS, and appended to the file
+PSL:USER-BUG-REPORTS.TXT.
+
+After typing message about BUG or MIS-FEATURE, end finally with a
+<Ctrl-Z><return>.
+
+<Ctrl-N> will abort the message.
+
+Alternatively, one can exit PSL and send a message to PSL-BUGS@UTAH-20.
+These messages will be sent to more people.

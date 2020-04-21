@@ -1,0 +1,43 @@
+DEF s: <SCRATCH>
+DEF DSK: DSK:,SYS:
+DEF SYS: DSK:,SYS:
+pas:PASCMP
+OFF SYSLISP$
+OFF MSG$
+OFF NOUUO$
+OFF DOMOVE$             % Can't have BOTH DOMOVE and FXFRM
+OFF NOFIXFRM;		% Reduce ALLOCS
+ON MACECHO$		%OFF Cuts down size of output file.
+REMPROP('W,'STAT);
+REMPROP('PLIST,'STAT);
+
+IN PAS1.SYM$
+% Perhaps the following lines should really be in POLY.RED, but they
+% don't work correctly inside body of text being compiled.
+PUT('CAR,'ANYREG,'T)$
+PUT('CDR,'ANYREG,'T)$
+PUT('VALUE,'OPENCOD,'("        R[1] := idspace[info_of(R[1])].val;"));
+PUT('PLIST,'OPENCOD,'("        R[1] := idspace[Info_of(r[1])].plist;"));
+PUT('FUNCELL,'OPENCOD,'("        R[1] := idspace[Info_of(r[1])].funcell;"));
+PUT('SETVALUE,'OPENCOD,'("       idspace[Info_of(r[1])].val := R[2];"));
+PUT('SETPLIST,'OPENCOD,'("        idspace[Info_of(r[1])].plist := R[2];"));
+PUT('SETFUNCELL,'OPENCOD,'("        idspace[Info_of(r[1])].funcell := R[2];"));
+PUT('CHAR2ID,'OPENCOD,'("     set_tag(R[1], idtag);"));
+PUT('CODEP, 'OPENCOD, '("     tag_of(r[1]) = codetag;"));
+
+OUT PAS2.PAS$
+DRT1('PAS2,PAS1IDS,PAS1CSTS,PAS1LITS,PAS1FNS)$
+IN PAS2.RED$
+
+DRT2()$
+SHUT PAS2.PAS$
+
+OUT PAS2.SYM$
+DUMPSYMS('PAS2)$
+SHUT PAS2.SYM$
+
+OUT PAS2.SLI$
+DRT3()$			% S-expressions and Declarations
+SHUT PAS2.SLI$
+
+QUIT$

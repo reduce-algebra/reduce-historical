@@ -1,0 +1,117 @@
+,MOD
+- R 44X (11 April 1983) <PSL.NMODE-DOC>NM-MARK.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+          201/NMODE Manual (The Mark and the Region)                          Page 10-1
+
+
+          202/10.  The Mark and the Region
+
+            201/In general, a command which processes an arbitrary part of the buffer must
+          know where to start and where to stop.  In NMODE, such commands usually
+          operate on the text between point and 202/the mark201/.  This range of text is called
+          202/the region201/.  To specify a region, you set point to one end of it and mark at
+          the other.  It doesn't matter which one is set first chronologically, or which
+          one comes earlier in the text.  Here are some commands for setting the mark:
+
+                  C-@        Set the mark where point is.
+                  C-Space    The same.
+                  C-X C-X   Interchange mark and point.
+                  M-@        Set mark after end of next word.  This command and the
+                              following three do not move point.
+                  C-M-@      Set mark after end of next Lisp form.
+                  C-<        Set mark at beginning of buffer.
+                  C->        Set mark at end of buffer.
+                  M-H        Put region around current paragraph.
+                  C-M-H     Put region around current Lisp defun.
+                  C-X H     Put region around entire buffer.
+
+            For example, if you wish to convert part of the buffer to all upper-case,
+          you can use the C-X C-U command, which operates on the text in the region.
+          You can first go to the beginning of the text to be capitalized, put the mark
+          there, move to the end, and then type C-X C-U.  Or, you can set the mark
+          at the end of the text, move to the beginning, and then type C-X C-U.  C-X
+          C-U runs the function 203/uppercase-region-command201/, whose name signifies that
+          the region, or everything between point and the mark, is to be capitalized.
+
+            The most common way to set the mark is with the C-@ command or the
+          C-Space command (203/set-mark-command201/).  They set the mark where point is.
+          Then you can move point away, leaving the mark behind.
+
+            It isn't actually possible to type C-Space on non-Meta keyboards.  Yet on
+          many terminals the command appears to work anyway!  This is because trying
+          to type a Control-Space on those terminals actually sends the character C-@,
+          which means the same thing as C-Space.  A few keyboards just send a Space.
+          If you have one of them, you type C-@, or customize your NMODE.
+
+            Since terminals have only one cursor, there is no way for NMODE to show
+          you where the mark is located.  You have to remember.  The usual solution
+          to this problem is to set the mark and then use it soon, before you forget
+          where it is.  But you can see where the mark is with the command C-X C-X
+          (203/exchange-point-and-mark201/) which puts the mark where point was and point
+          where the mark was.  The extent of the region is unchanged, but the cursor
+          and point are now at the previous location of the mark.
+
+            C-X C-X is also useful when you are satisfied with the location of point but
+          want to move the mark; do C-X C-X to put point there and then you can
+          move it.  A second use of C-X C-X, if necessary, puts the mark at the new
+          location with point back at its original location.
+
+            If you insert or delete before the mark, the mark may drift through the
+          201/Page 10-2                          NMODE Manual (The Mark and the Region)
+
+
+          text.  If the buffer contains "FOO BAR" and the mark is before the "B",
+          then if you delete the "F" the mark will be before the "A".  This is an
+          unfortunate result of the simple way the mark is implemented.  It is best not
+          to delete or insert at places above the mark until you are finished using it
+          and don't care where it drifts to.
+
+          202/10.1  Commands to Mark Textual Objects
+
+
+            201/There are commands for placing the mark on the other side of a certain
+          object such as a word or a list, without having to move there first.  M-@
+          (203/mark-word-command201/) puts the mark at the end of the next word, while
+          C-M-@ (203/mark-form-command201/) puts it at the end of the next s-expression.
+          C-> (203/mark-end-command201/) puts the mark at the end of the buffer, while C-<
+          (203/mark-beginning-command201/) puts it at the beginning.  These characters allow
+          you to save a little typing or redisplay, sometimes.
+
+            Other commands set both point and mark, to delimit an object in the buffer.
+          M-H (203/mark-paragraph-command201/) puts point at the beginning of the paragraph
+          it was inside of (or before), and puts the mark at the end.  M-H does all
+          that's necessary if you wish to case-convert or kill a whole paragraph.
+          C-M-H (203/mark-defun-command201/) similarly puts point before and the mark after
+          the current or next defun.   Finally, C-X H (203/mark-whole-buffer-command201/)
+          makes the region the entire buffer by putting point at the beginning and the
+          mark at the end.
+
+          202/10.2  The Ring of Marks
+
+            201/Aside from delimiting the region, the mark is also useful for remembering a
+          spot that you may want to go back to.  To make this feature more useful,
+          NMODE remembers 16 previous locations of the mark for each buffer.  Most
+          commands that set the mark push the old mark onto this stack.  To return to
+          a marked location, use C-U C-@ (or C-U C-Space).  This moves point to
+          where the mark was, and restores the mark from the stack of former marks.
+          So repeated use of this command moves point to all of the old marks on the
+          stack, one by one.  Since the stack is actually a ring, enough uses of C-U
+          C-@ bring point back to where it was originally.  Insertion and deletion can
+          cause the saved marks to drift, but they will still be good for this purpose
+          because they are unlikely to drift very far.
+
+            Some commands whose primary purpose is to move point a great distance
+          take advantage of the stack of marks to give you a way to undo the
+          command.  The best example is M-<, which moves to the beginning of the
+          buffer.  It sets the mark first, so that you can use C-U C-@ or C-X C-X to
+          go back to where you were.

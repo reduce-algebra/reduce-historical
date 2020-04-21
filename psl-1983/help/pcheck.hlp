@@ -1,0 +1,11 @@
+PCHECK.RED				MLG, 10 June 1982
+----------
+
+PCHECK will READ a .SL file, printing some of the top-level of each
+S-expression.  It is meant to survey the file, and if the file has
+unbalanced parensthesis, will show where things get confused.
+
+To use:
+	LOAD PCHECK;
+	PCHECK "foo.sl";
+

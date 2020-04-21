@@ -1,0 +1,1299 @@
+PSL Manual                    7 February 1983                     Utilities
+section 17.0                                                      page 17.1
+
+                                CHAPTER 17                                CHAPTER 17                                CHAPTER 17
+                          MISCELLANEOUS UTILITIES                          MISCELLANEOUS UTILITIES                          MISCELLANEOUS UTILITIES
+
+
+
+
+     17.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    17.1
+     17.2. RCREF - Cross Reference Generator for PSL Files  .  .  .    17.1
+          17.2.1. Restrictions.  .  .  .  .  .  .  .  .  .  .  .  .    17.2
+          17.2.2. Usage .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    17.3
+          17.2.3. Options  .  .  .  .  .  .  .  .  .  .  .  .  .  .    17.3
+     17.3. Picture RLISP.  .  .  .  .  .  .  .  .  .  .  .  .  .  .    17.4
+          17.3.1. Running PictureRLISP on HP2648A and on TEKTRONIX    17.10
+                  4006-1 Terminals  .  .  .  .  .  .  .  .  .  .  .  
+     17.4. Tools for Defining Macros.  .  .  .  .  .  .  .  .  .  .   17.11
+          17.4.1. DefMacro .  .  .  .  .  .  .  .  .  .  .  .  .  .   17.11
+          17.4.2. BackQuote.  .  .  .  .  .  .  .  .  .  .  .  .  .   17.12
+          17.4.3. Sharp-Sign Macros .  .  .  .  .  .  .  .  .  .  .   17.12
+          17.4.4. MacroExpand .  .  .  .  .  .  .  .  .  .  .  .  .   17.13
+          17.4.5. DefLambda.  .  .  .  .  .  .  .  .  .  .  .  .  .   17.13
+     17.5. Simulating a Stack .  .  .  .  .  .  .  .  .  .  .  .  .   17.14
+     17.6. DefStruct .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   17.14
+          17.6.1. Options  .  .  .  .  .  .  .  .  .  .  .  .  .  .   17.17
+          17.6.2. Slot Options.  .  .  .  .  .  .  .  .  .  .  .  .   17.18
+          17.6.3. A Simple Example  .  .  .  .  .  .  .  .  .  .  .   17.18
+     17.7. DefConst  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   17.21
+     17.8. Functions for Sorting .  .  .  .  .  .  .  .  .  .  .  .   17.22
+     17.9. Hashing Cons .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   17.23
+     17.10. Graph-to-Tree  .  .  .  .  .  .  .  .  .  .  .  .  .  .   17.25
+     17.11. Inspect Utility.  .  .  .  .  .  .  .  .  .  .  .  .  .   17.25
+
+
+
+
+17.1. Introduction17.1. Introduction17.1. Introduction
+
+  This chapter describes an assortment of utility packages.  Its purpose is
+to  record  the  existence  and  capabilities  of  a number of tools.  More
+information on existing packages can be found by looking at the current set
+of HELP files (DIR PH:*.* on the DEC-20).
+
+
+
+17.2. RCREF - Cross Reference Generator for PSL Files17.2. RCREF - Cross Reference Generator for PSL Files17.2. RCREF - Cross Reference Generator for PSL Files
+
+  RCREF is a Standard LISP program for processing a set  of  Standard  LISP
+function definitions to produce:
+
+
+   a. A "Summary" showing:Utilities                     7 February 1983                    PSL Manual
+page 17.2                                                      section 17.2
+
+         i. A list of files processed.
+        ii. A  list  of "entry points" (functions which are not called
+            or are called only by themselves).
+       iii. A list of undefined functions (functions  called  but  not
+            defined in this set of functions).
+        iv. A  list  of  variables  that were used non-locally but not
+            declared GLOBAL or FLUID before their use.
+         v. A list of variables that were declared GLOBAL but used  as
+            FLUIDs (i.e. bound in a function).
+        vi. A  list  of  FLUID  variables  that  were  not  bound in a
+            function  so  that  one  might  consider  declaring   them
+            GLOBALs.
+       vii. A list of all GLOBAL variables present.
+      viii. A list of all FLUID variables present.
+        ix. A list of all functions present.
+
+
+   b. A  "global  variable  usage"  table,  showing for each non-local
+      variable:
+
+
+         i. Functions in which it is  used  as  a  declared  FLUID  or
+            GLOBAL.
+        ii. Functions in which it is used but not declared before.
+       iii. Functions in which it is bound.
+                                                SetQ                                                SetQ        iv. Functions in which it is changed by SetQ.
+
+
+   c. A "function usage" table showing for each function:
+
+
+         i. Where it is defined.
+        ii. Functions which call this function.
+       iii. Functions called by it.
+        iv. Non-local variables used.
+
+
+  The output is alphabetized on the first seven characters of each function
+name.
+
+  RCREF  also  checks  that functions are called with the correct number of
+arguments.
+
+
+17.2.1. Restrictions17.2.1. Restrictions17.2.1. Restrictions
+
+  Algebraic procedures in REDUCE are treated as if they were  symbolic,  so
+that  algebraic  constructs actually appear as calls to symbolic functions,
+        AEval        AEvalsuch as AEval.
+
+  SYSLISP procedures are not correctly analyzed.PSL Manual                    7 February 1983                     Utilities
+section 17.2                                                      page 17.3
+
+17.2.2. Usage17.2.2. Usage17.2.2. Usage
+
+  RCREF  should  be  used in PSL:RLISP.  To make a file FILE.CRF which is a
+cross reference listing for files FILE1.EX1 and FILE2.EX2 do the  following
+in RLISP:
+
+   @PSL:RLISP
+   LOAD RCREF;       % RCREF is now autoloading, so this may be omitted
+
+   OUT "file.crf";   % later, CREFOUT ...
+   ON CREF;
+   IN "file1.ex1","file2.ex2";
+   OFF CREF;
+   SHUT "file.crf";  % later CREFEND
+
+To process more files, more IN statements may be added, or the IN statement
+may be changed to include more files.
+
+
+17.2.3. Options17.2.3. Options17.2.3. Options
+
+
+               __________                                            ______!*CREFSUMMARY [Initially: NIL]                                       switch
+
+     If  the  switch  CREFSUMMARY  is  ON then only the summary (see 1
+     above) is produced.
+
+  Functions with the flag NOLIST are not examined or  output.    Initially,
+all  Standard  LISP functions are so flagged.  (In fact, they are kept on a
+list NOLIST!*, so if you wish to see references to ALL functions, then CREF
+should be first loaded with the command LOAD RCREF, and this variable  then
+set to NIL).  (RCREF is now autoloading.)
+
+
+          __________                                                 ______NOLIST!* [Initially: the following list]                             global
+
+        (AND COND LIST MAX MIN OR PLUS PROG PROG2 PROGN TIMES LAMB
+        ADD1 APPEND APPLY ASSOC  ATOM CAR CDR CAAR  CADR CDAR CDDR
+        CAADR CADAR CADDR  CDAAR CDADR CDDAR  CDDDR CAAAAR CAAADR
+        CAADDR CADAAR CADADR  CADDAR CADDDR CDAAAR  CDAADR CDADAR
+        CDDAAR CDDADR CDDDAR CDDDDR  CLOSE CODEP COMPRESS CONS  CO
+        DE DEFLIST  DELETE DF  DIFFERENCE DIGIT  DIVIDE DM  EJECT
+        EQUAL ERROR ERRORSET EVAL EVLIS EXPAND EXPLODE EXPT FIX FI
+        FLAGP FLOAT FLOATP  FLUID FLUIDP  FUNCTION GENSYM  GET GET
+        GLOBAL GLOBALP  GO GREATERP  IDP INTERN  LENGTH LESSP  LIN
+        LITER LPOSN MAP  MAPC MAPCAN  MAPCAR MAPCON  MAPLIST MAX2
+        MEMQ MINUS MINUSP MIN2  MKVECT NCONC NOT  NULL NUMBERP ONE
+        PAGELENGTH PAIR PAIRP  PLUS2 POSN PRINC  PRINT PRIN1 PRIN2
+        PUT PUTD  PUTV  QUOTE QUOTIENT  RDS  READ READCH  REMAINDE
+        REMFLAG REMOB  REMPROP RETURN  REVERSE RPLACA  RPLACD SASS
+        SETQ STRINGP SUBLIS SUBST SUB1 TERPRI TIMES2 UNFLUID UPBV
+        WRS ZEROP)Utilities                     7 February 1983                    PSL Manual
+page 17.4                                                      section 17.2
+
+  It  should  also  be  remembered  that  in RLISP any macros with the flag
+EXPAND or, if FORCE is on, without the flag NOEXPAND  are  expanded  before
+the  definition  is  seen  by the cross-reference program, so this flag can
+also be used to select those macros you require expanded and those  you  do
+not.  The use of ON FORCE; is highly recommended for CREF.
+
+
+
+17.3. Picture RLISP17.3. Picture RLISP17.3. Picture RLISP
+
+  [??? ReWrite ???]  [??? ReWrite ???]  [??? ReWrite ???]
+
+  Picture RLISP is an ALGOL-like graphics language for Teleray, HP2648a and
+Tektronix,  in  which  graphics Model primitives are combined into complete
+Models for display.  PRLISP is a 3D version; PRLISP2D is a faster,  smaller
+2D  version  which  also  drives  more terminals.  Two demonstration files,
+PR-DEMO.RED and PR-DEMO.Sl, are available  on  PU.    See  the  help  files
+PH:PRLISP.HLP and PRLISP2D.HLP.
+
+  Model primitives include:
+
+
+P:={x,y,z};
+          A point (y, and z may be omitted, default to 0).
+
+PS:=P1_ P2_ ... Pn;
+          A Point Set is an ordered set of Points (Polygon).
+
+G := PS1 & PS2 & ... PSn;
+          A Group of Polygons.
+
+Point Set Modifiers
+          alter the interpretation of Point Sets within their scope.
+
+BEZIER()  causes  the  point-set  to  be  interpreted  as the specification
+          points for a BEZIER curve, open pointset.
+
+BSPLINE() does the same for a Bspline curve, closed pointset.
+
+TRANSFORMS:
+          Mostly return a transformation matrix.
+
+Translation:
+          Move   the   specified   amount   along   the   specified   axis.
+          XMOVE(deltaX);            YMOVE(deltaY);           ZMOVE(deltaZ);
+          MOVE(deltaX, deltaY, deltaZ);
+
+Scale:    Scale the Model SCALE  (factor)  XSCALE(factor);  YSCALE(factor);
+          ZSCALE(factor);
+          SCALE1(x.scale.factor,      y.scale.factor,      z.scale.factor);
+          SCALE<Scale factor>;.  Scale along all axes.PSL Manual                    7 February 1983                     Utilities
+section 17.3                                                      page 17.5
+
+Rotation: ROT(degrees); ROT(degrees, point.specifying.axis); XROT(degrees);
+          YROT(degrees); ZROT(degrees);
+
+Window (z.eye,z.screen):
+          The WINDOW primitives assume that the viewer is located along the
+          z  axis looking in the positive z direction, and that the viewing
+          window is to be centered on both the x and y axis.
+
+Vwport(leftclip,rightclip,topclip,bottomclip):
+          The VWPORT, which specifies the region of  the  screen  which  is
+          used for display.
+
+REPEATED (number.of.times, my.transform):
+          The  Section  of the Model which is contained within the scope of
+          the Repeat Specification is replicated.  Note  that  REPEATED  is
+          intended  to duplicate a sub-image in several different places on
+          the screen; it was not designed for animation.
+
+Identifiers of other Models
+          the Model referred to is displayed as if  it  were  part  of  the
+          current Model for dynamic display.
+
+Calls to PictureRLISP Procedures
+          This Model primitive allows procedure calls to be imbedded within
+          Models.    When  the  Model  interpreter  reaches  the  procedure
+          identifier it calls it, passing it the portion of the Model below
+          the procedure as an argument.  The current transformation  matrix
+          and  the current pen position are available to such procedures as
+          the  values  of  the  global  identifiers  GLOBAL!.TRANSFORM  and
+          HEREPOINT.        If   normal   procedure   call   syntax,   i.e.
+          proc.name (parameters), is used then the procedure is  called  at
+          Model-building  time,  but  if only the procedure's identifier is
+          used then the procedure is imbedded in the Model.
+
+ERASE()   Clears the screen and leaves the cursor at the origin.
+
+SHOW(pict)
+          Takes a picture and displays it on the screen.
+
+ESHOW (pict)
+          Erases the whole screen and display "pict".
+
+HP!.INIT(), TEK!.INIT(), TEL!.INIT()
+          Initializes the operating system's view of the characteristics of
+          HP2648A   terminal,   TEKTRONIX   4006-1   (also   ADM-3A    with
+          Retrographics board, and Teleray-1061).
+
+
+  For example, the ModelUtilities                     7 February 1983                    PSL Manual
+page 17.6                                                      section 17.3
+
+   (A _ B _ C  &  {1,2} _ B)  |  XROT (30)  |  'TRAN ;
+
+   %
+   % PictureRLISP Commands to SHOW lots of Cubes
+   %
+   % Outline is a Point Set defining the 20 by 20
+   %   square which is part of the Cubeface
+   %
+   Outline := { 10, 10} _ {-10, 10} _
+             {-10,-10} _ { 10,-10} _ {10, 10};
+
+   % Cubeface also has an Arrow on it
+   %
+   Arrow := {0,-1} _ {0,2}  &  {-1,1} _ {0,2} _ {1,1};
+
+   % We are ready for the Cubeface
+
+   Cubeface   :=   (Outline & Arrow)  |  'Tranz;
+
+   % Note the use of static clustering to keep objects
+   %  meaningful as well as the quoted Cluster
+   %  to the as yet undefined transformation Tranz,
+   %  which results in its evaluation being
+   %  deferred until SHOW time
+
+   % and now define the Cube
+
+   Cube   :=   Cubeface
+           &  Cubeface | XROT (180)  % 180 degrees
+           &  Cubeface | YROT ( 90)
+           &  Cubeface | YROT (-90)
+           &  Cubeface | XROT ( 90)
+           &  Cubeface | XROT (-90);
+   % In order to have a more pleasant look at
+   % the picture shown on the screen we magnify
+   % cube by 5 times.
+   BigCube := Cube | SCALE 5;
+
+   % Set up initial Z Transform for each cube face
+   %
+   Tranz   :=   ZMOVE (10);  % 10 units out
+
+   %
+   % GLOBAL!.TRANSFORM has been treated as a global variable.
+   % GLOBAL!.TRANSFORM should be initialized as a perspective
+   % transformation matrix so that a viewer can have a correct
+   % look at the picture as the viewing location changed.
+   % For instance, it may be set as the desired perspective
+   % with a perspective window centered at the origin and
+   % of screen size 60, and the observer at -300 on the z axis.
+   % Currently this has been set as default perspective transformation.PSL Manual                    7 February 1983                     Utilities
+section 17.3                                                      page 17.7
+
+   % Now draw cube
+   %
+   SHOW  BigCube;
+
+   %Utilities                     7 February 1983                    PSL Manual
+page 17.8                                                      section 17.3
+
+
+   % Draw it again rotated and moved left
+   %
+   SHOW  (BigCube | XROT 20 | YROT 30 | ZROT 10);
+
+   % Dynamically expand the faces out
+   %
+   Tranz   :=   ZMOVE 12;
+   %
+   SHOW  (BigCube | YROT 30 | ZROT 10);
+
+   % Now show 5 cubes, each moved further right by 80
+   %
+   Tranz   :=    ZMOVE 10;
+   %
+   SHOW (Cube | SCALE 2.5 | XMOVE (-240) | REPEATED(5, XMOVE 80));
+
+   %
+   % Now try pointset modifier.
+   % Given a pointset (polygon) as control points either a BEZIER or a
+   % BSPLINE curve can be drawn.
+   %
+   Cpts := {0,0} _ {70,-60} _ {189,-69} _ {206,33} _ {145,130} _ {48,13
+          _ {0,84} $
+   %
+   % Now draw Bezier curve
+   % Show the polygon and the Bezier curve
+   %
+   SHOW (Cpts & Cpts | BEZIER());
+
+   % Now draw Bspline curve
+   % Show the polygon and the Bspline curve
+   %
+   SHOW (Cpts & Cpts | BSPLINE());
+
+   % Now work on the Circle
+   % Given a center position and a radius a circle is drawn
+   %
+   SHOW ( {10,10} | CIRCLE(50));
+
+   %
+   % Define a procedure which returns a model of
+   % a Cube when passed the face to be used
+   %
+   Symbolic Procedure Buildcube;
+    List 'Buildcube;
+   % put the name onto the property list
+   Put('buildcube, 'pbintrp, 'Dobuildcube);
+   Symbolic Procedure Dobuildcube Face$
+          Face  &  Face | XROT(180)
+                &  Face | YROT(90)
+                &  Face | YROT(-90)PSL Manual                    7 February 1983                     Utilities
+section 17.3                                                      page 17.9
+
+                &  Face | XROT(90)
+                &  Face | XROT(-90) ;
+   % just return the value of the one statement
+
+   % Use this procedure to display 2 cubes, with and
+   %  without the Arrow - first do it by calling
+   %  Buildcube at time the Model is built
+   %
+   P := Cubeface | Buildcube() | XMOVE(-15) &
+        (Outline | 'Tranz) | Buildcube() | XMOVE 15;
+   %
+   SHOW (P | SCALE 5);
+
+   % Now define a procedure which returns a Model of
+   %   a cube when passed the half size parameter
+
+   Symbolic Procedure Cubemodel;
+    List 'Cubemodel;
+   %put the name onto the property list
+   Put('Cubemodel,'Pbintrp, 'Docubemodel);
+   Symbolic Procedure Docubemodel  HSize;
+    << if idp HSize then HSize := eval HSize$
+       { HSize,  HSize,  HSize}  _
+       {-HSize,  HSize,  HSize}  _
+       {-HSize, -HSize,  HSize}  _
+       { HSize, -HSize,  HSize}  _
+       { HSize,  HSize,  HSize}  _
+       { HSize,  HSize, -HSize}  _
+       {-HSize,  HSize, -HSize}  _
+       {-HSize, -HSize, -HSize}  _
+       { HSize, -HSize, -HSize}  _
+       { HSize,  HSize, -HSize}  &
+       {-HSize,  HSize, -HSize}  _
+       {-HSize,  HSize,  HSize}  &
+       {-HSize, -HSize, -HSize}  _
+       {-HSize, -HSize,  HSize}  &
+       { HSize, -HSize, -HSize}  _
+       { HSize, -HSize,  HSize} >>;
+
+   % Imbed the parameterized cube in some Models
+   %
+   His!.cube :=  'His!.size | Cubemodel();
+   Her!.cube :=  'Her!.size | Cubemodel();
+   R  :=  His!.cube | XMOVE (60)  &
+         Her!.cube | XMOVE (-60) ;
+
+   % Set up some sizes and SHOW them
+
+   His!.size := 50;
+   Her!.size := 30;
+   %
+   SHOW   R ;Utilities                     7 February 1983                    PSL Manual
+page 17.10                                                     section 17.3
+
+
+   %
+   % Set up some different sizes and SHOW them again
+   %
+   His!.size := 35;
+   Her!.size := 60;
+   %
+   SHOW R;
+
+   %
+   % Now show a triangle rotated 45 degree about the z axis.
+   Rotatedtriangle  :=  {0,0} _ {50,50} _
+                          {100,0} _ {0,0} | Zrot (45);
+   %
+   SHOW Rotatedtriangle;
+
+   %
+   % Define a procedure which returns a model of a Pyramid
+   % when passed 4 vertices of a pyramid.
+   % Procedure Second,Third, Fourth and Fifth are primitive procedures
+   % written in the source program which return the second, the third,
+   % the fourth and the fifth element of a list respectively.
+   % This procedure simply takes 4 points and connects the vertices to
+   % show a pyramid.
+   Symbolic Procedure Pyramid (Point4); %.point4 is a pointset
+          Point4 &
+               Third Point4 _
+               Fifth Point4 _
+               Second Point4 _
+               Fourth Point4 ;
+
+   % Now give a pointset indicating 4 vertices build a pyramid
+   % and show it
+   %
+   My!.vertices := {-40,0} _ {20,-40} _ {90,20} _ {70,100};
+   My!.pyramid := Pyramid Vertices;
+   %
+   SHOW ( My!.pyramid | XROT 30);
+
+   %
+   %  A procedure that makes a wheel with "count"
+   %  spokes rotated around the z axis.
+   %  in which "count" is the number specified.
+   Symbolic Procedure Dowheel(spoke,count)$
+       begin scalar rotatedangle$
+             count := first count$
+             rotatedangle := 360.0 / count$
+            return (spoke | REPEATED(count, ZROT rotatedangle))
+       end$
+   %
+   % Now draw a wheel consisting of 8 cubes
+   %PSL Manual                    7 February 1983                     Utilities
+section 17.3                                                     page 17.11
+
+   Cubeonspoke :=  (Outline | ZMOVE 10 | SCALE 2) | buildcube();
+   Eight!.cubes := Cubeonspoke | XMOVE 50 | WHEEL(8);
+   %
+   SHOW Eight!.cubes;
+
+   %
+   %Draw a cube in which each face consists of just
+   % a wheel of 8 Outlines
+   %
+   Flat!.Spoke := outline | XMOVE 25$
+   A!.Fancy!.Cube := Flat!.Spoke | WHEEL(8) | ZMOVE 50 | Buildcube()$
+   %
+   SHOW A!.Fancy!.Cube;
+
+   %
+   % Redraw the fancy cube, after changing perspective by
+   % moving the observer farther out along Z axis
+   %
+   GLOBAL!.TRANSFORM := WINDOW(-500,60);
+   %
+   SHOW A!.Fancy!.Cube;
+
+   %
+   % Note the flexibility resulting from the fact that
+   % both Buildcube and Wheel simply take or return any
+   % Model as their argument or value
+
+  The current version of PictureRLISP runs on HP2648A graphics terminal and
+TEKTRONIX  4006-1 computer display terminal.  The screen of the HP terminal
+is 720 units long in  the  X  direction,  and  360  units  high  in  the  Y
+direction.   The coordinate system used in HP terminal places the origin in
+approximately the center of the screen, and uses a domain of  -360  to  360
+and  a  range  of  -180  to  180.    Similarly, the screen of the TEKTRONIX
+terminal is 1024 units long in the X direction, and 780 units high in the Y
+direction.  The same origin is used but the domain is -512 to 512 in the  X
+direction and the range is -390 to 390 in the Y direction.
+
+  Procedures  HP!.INIT  and  TEK!.INIT  are  used  to  set the terminals to
+graphics mode and initiate the lower level procedures on HP  and  TEKTRONIX
+terminals  respectively.    Basically,  INIT  procedures  are  written  for
+different terminals depending on their  specific  characteristics.    Using
+INIT  procedures  keeps terminal device dependence at the user's level to a
+minimum.
+
+
+
+17.4. Tools for Defining Macros17.4. Tools for Defining Macros17.4. Tools for Defining Macros
+
+  The following (and other) macro utilities are in the  file  PU:USEFUL.SL;Utilities                     7 February 1983                    PSL Manual
+page 17.12                                                     section 17.4
+
+                                                                     1
+use (LOAD USEFUL) to access.  See PH:USEFUL.HLP for more information. 
+
+
+17.4.1. DefMacro17.4.1. DefMacro17.4.1. DefMacro
+
+
+ DefMacro DefMacro _ __  _ ____   _ ____    __                                 _____(DefMacro A:id  B:form  [C:form]): id                                 macro
+
+                                              _____                                              _____                                              _____     DefMacro                                 macro      DefMacro     DefMacro                                 macro      DefMacro     DefMacro  is  a useful tool for defining macros.  A DefMacro form
+     looks like 
+
+        (DEFMACRO <NAME> <PATTERN> <S1> <S2> ... <Sn>)
+
+                                              ____      __     The <PATTERN> is an S-expression made of pairs and ids.    It  is
+                                             _____                                             _____                                             _____                                             macro                                             macro     matched  against  the  arguments of the macro much like the first
+                 DeSetQ                 DeSetQ                        __     argument to DeSetQ.  All of the  non-NIL  ids  in  <pattern>  are
+     local  variables which may be used freely in the body (the <Si>).
+            _____            _____            _____            macro                                          ProgN            macro                                          ProgN     If the macro is called the <Si> are evaluated as in a ProgN  with
+     the  local  variables  in  <pattern> appropriately bound, and the
+                                       DefMacro                                       DefMacro     value  of  <Sn>  is  returned.    DefMacro  is  often  used  with
+     BackQuote.
+
+
+17.4.2. BackQuote17.4.2. BackQuote17.4.2. BackQuote
+
+  Note  that  the special symbols described below only work in LISP syntax,
+                                                       BackQuote   UnQuote                                                       BackQuote   UnQuotenot RLISP.  In RLISP you may simply use the functions  BackQuote,  UnQuote,
+    UnQuoteL                          BackQuote    UnQuoteL                          BackQuoteand UnQuoteL.  Load USEFUL to get the BackQuote function.
+
+                                            _____                                            _____                                            _____                                      Read  macro                                      Read  macro  The  backquote  symbol  "`"  is  a  Read  macro which introduces a quoted
+expression which may contain the unquote symbols comma "," and comma-atsign
+",@".  An appropriate form consisting of the unquoted expression  calls  to
+             Cons             Consthe function Cons and quoted expressions are produced so that the resulting
+expression looks like the quoted one except that the values of the unquoted
+expressions  are substituted in the appropriate place.  ",@" splices in the
+value of the subsequent expression (i.e. strips  off  the  outer  layer  of
+parentheses).  Thus 
+
+   `(a (b ,x) c d ,@x e f)
+
+is equivalent to 
+
+   (cons 'a (cons (list 'b x) (append '(c d) (append x '(e f)))))
+
+In particular, if x is bound to (1 2 3) this evaluates to 
+
+
+_______________
+
+  1
+   Useful was written by D. Morrison.PSL Manual                    7 February 1983                     Utilities
+section 17.4                                                     page 17.13
+
+   (a (b (1 2 3)) c d 1 2 3 e f)
+
+
+ BackQuote BackQuote _ ____   ____                                              _____(BackQuote A:form): form                                              macro
+
+     Function name for back quote `.
+
+
+ UnQuote UnQuote _ ___   _________                                            _____(UnQuote A:any): Undefined                                            fexpr
+
+                                                   Eval                                                   Eval     Function name for comma ,.  It is an error to Eval this function;
+                                   BackQuote                                   BackQuote     it should occur only inside a BackQuote.
+
+
+ UnQuoteL UnQuoteL _ ___   _________                                           _____(UnQuoteL A:any): Undefined                                           fexpr
+
+                                                             Eval                                                             Eval     Function  name  for comma-atsign ,@.  It is an error to Eval this
+                                             BackQuote                                             BackQuote     function; it should only occur inside a BackQuote.
+
+
+17.4.3. Sharp-Sign Macros17.4.3. Sharp-Sign Macros17.4.3. Sharp-Sign Macros
+
+  USEFUL defines several MACLISP style sharp sign read macros.   Note  that
+these  only work with the LISP reader, not RLISP.  Those currently included
+are
+
+  #' :  this is like the quote mark ' but is for FUNCTION instead of QUOTE.
+
+  #/ :  this returns the numeric  form  of  the  following  character  read
+without raising it.  For example #/a is 97 while #/A is 65.
+
+  #\  :    This  is  a  read macro for the CHAR macro, described in the PSL
+manual.  Not that the argument is  raised,  if  *RAISE  is  non-nil.    For
+                                                              Char                                                              Charexample,  #\a  =  #\A  =  65, while #\!a = #\(lower a) = 97.  Char has been
+redefined in USEFUL to be slightly more table driven -- users can  now  add
+new  "prefixes" such as META or CONTROL: just hang the appropriate function
+(from integers to integers) off the char-prefix-function  property  of  the
+"prefix".    A LARGE number of additional alias for various characters have
+been added, including all the "standard" ASCII names like NAK and DC1.
+
+  #. :  this causes the following expression to be evaluated at read  time.
+For example, `(1 2 #.(plus 1 2) 4) reads as (1 2 3 4)
+
+  #+ :  this reads two expressions, and passes them to the if_system macro.
+That  is,  the  first  should  be a system name, and if that is the current
+system the second argument is returned by the reader.   If  not,  the  next
+expression is returned.
+
+  #-:    #- is similar, but causes the second arg to be returned only if it
+is NOT the current system.Utilities                     7 February 1983                    PSL Manual
+page 17.14                                                     section 17.4
+
+17.4.4. MacroExpand17.4.4. MacroExpand17.4.4. MacroExpand
+
+
+ MacroExpand MacroExpand _ ____   _ __    ____                                    _____(MacroExpand A:form  [B:id]): form                                    macro
+
+                                                _____                                                _____                                                _____     MacroExpand                                macro     MacroExpand                                macro     MacroExpand is a useful tool for debugging macro definitions.  If
+                            MacroExpand                 macro                            MacroExpand                 macro     given  one  argument,  MacroExpand expands all the macros in that
+     form.  Often one wishes for more control over this process.   For
+                      _____                      _____                      _____                      macro                Let                      macro                Let     example,  if  a  macro expands into a Let, we may not wish to see
+         Let         Let     the Let itself  expanded  to  a  lambda  expression.    Therefore
+                                            MacroExpand                                            MacroExpand     additional  arguments  may be given to MacroExpand.  If these are
+                              _____                              _____                              _____                              macro                              macro     supplied, they should be macros, and  only  those  specified  are
+     expanded.
+
+
+17.4.5. DefLambda17.4.5. DefLambda17.4.5. DefLambda
+
+
+ DefLambda DefLambda                                                            _____(DefLambda ):                                                         macro
+
+     Yet  another  little  (two  line) macro has been added to USEFUL:
+     DefLambda     DefLambda     DefLambda.  This defines a macro much like a  substitution  macro
+      ______      ______      ______      smacro      smacro     (smacro)  except  that  it  is a lambda expression.  Thus, modulo
+                                                                 ____                                                                 ____                                                                 ____                                                                 expr                                                                 expr     redefinability, it has the same semantics as the equivalent expr.
+     It is mostly intended as an easy way to open compile things.  For
+     example, we would not normally  want  to  define  a  substitution
+     macro  for  a constructor (NEW-FOO X) which maps into (CONS X X),
+     in case X is  expensive  to  compute  or,  far  worse,  has  side
+     effects.    (DEFLAMBDA  NEW-FOO  (X)  (CONS X X)) defines it as a
+     macro   which   maps    (NEW-FOO    (SETQ    BAR    (BAZ)))    to
+     ((LAMBDA (X) (CONS X X)) (SETQ BAR (BAZ))).
+
+
+
+17.5. Simulating a Stack17.5. Simulating a Stack17.5. Simulating a Stack
+
+  The  following macros are in the USEFUL package.  They are convenient for
+                                              ____adding and deleting things from the head of a list.
+
+
+ Push Push ___ ___  ___ ____   ___                                         _____(Push ITM:any  STK:list): any                                         macro
+
+        (PUSH ITEM STACK)
+
+     is equivalent to 
+
+        (SETF STACK  (CONS ITEM STACK))PSL Manual                    7 February 1983                     Utilities
+section 17.5                                                     page 17.15
+
+ Pop Pop ___ ____   ___                                                   _____(Pop STK:list): any                                                   macro
+
+        (POP STACK)
+
+     does 
+
+        (SETF STACK (CDR STACK))
+
+                                        _____     and  returns  the  item popped off STACK.  An additional argument
+                        Pop                        Pop     may be supplied to Pop, in which case it is a variable  which  is
+     SetQ     SetQ     SetQ'd to the popped value.
+
+
+
+17.6. DefStruct17.6. DefStruct17.6. DefStruct
+
+  (LOAD DEFSTRUCT) to use the functions described below, or FAST!-DEFSTRUCT
+to  use those functions but with fast vector operations used.  DefStruct is
+similar to the Spice (Common) LISP/LISP machine/MacLISP  flavor  of  struct
+definitions,  and  is  expected  to be subsumed by the Mode package.  It is
+                  2
+implemented in PSL  as a function which builds access macros  and  fns  for
+"typed"   vectors,  including  constructor  and  alterant  macros,  a  type
+predicate for the structure type, and  individual  selector/assignment  fns
+for   the  elements.    DefStruct  understands  a  keyword-option  oriented
+structure specification.  DefStruct is now autoloading.
+
+  First a few miscellaneous functions on types,  before  getting  into  the
+depths of defining DefStructs:
+
+
+ DefstructP DefstructP ____ __   _____ _______                                    ____(DefstructP NAME:id): extra-boolean                                    expr
+
+     This   is   a  predicate  that  returns  non-NIL  (the  Defstruct
+                    ____     definition) if NAME is a structured type which has  been  defined
+     using Defstruct, or NIL if it is not.
+
+
+ DefstructType DefstructType _ ______   __                                           ____(DefstructType S:struct): id                                           expr
+
+     This  returns  the type name field of an instance of a structured
+                     _     type, or NIL if S cannot be a Defstruct type.
+
+
+
+
+
+
+_______________
+
+  2
+   Defstruct was implemented by Russ Fish.Utilities                     7 February 1983                    PSL Manual
+page 17.16                                                     section 17.6
+
+ SubTypeP SubTypeP _____ __  _____ __   _______                                 ____(SubTypeP NAME1:id  NAME2:id): boolean                                 expr
+
+                             _____     This  returns  true  if NAME1 is a structured type which has been
+                                                      _____     !:Included in the definition of structured type  NAME2,  possibly
+     through intermediate structure definitions.  (In other words, the
+                  _____                   _____     selectors of NAME1 can be applied to NAME2.)
+
+  Now the function which defines the beasties, in all its gory glory:
+
+
+ Defstruct Defstruct ____ ___ _______  __ ____    ____ _____  __ ____     __    _____(Defstruct NAME-AND-OPTIONS:{id,list}  [SLOT-DESCS:{id,list}]): id    fexpr
+
+     Defines  a  record-structure  data  type.    A  general  call  to
+     Defstruct     Defstruct     Defstruct looks like this: (in RLISP syntax)
+
+        defstruct( struct-name( option-1, option-2, ... ),
+                   slot-description-1,
+                   slot-description-2,
+                    ...
+                  );
+
+     The name of the defined structure is returned.
+
+  Slot-descriptions are:
+
+
+slot-name( default-init, slot-option-1, slot-option-2, ... )
+
+
+                                __  Struct-name and slot-name are ids.  If there are no options  following  a
+name  in  a  spec,  it  can be a bare id with no option argument list.  The
+default-init form is optional and may be omitted.  The default-init form is
+evaluated EACH TIME a structure is to be constructed and the value is  used
+as  the initial value of the slot.  Options are either a keyword id, or the
+keyword followed by its argument list.  Options are described below.
+
+                          _____                          _____                          _____                          macro                          macro  A call to a constructor macro has the form:
+
+   MakeThing( slot-name-1( value-expr-1 ),
+              slot-name-2( value-expr-2 ),
+               ... );
+
+The slot-name:value lists override the default-init values which were  part
+of  the  structure  definition.    Note that the slot-names look like unary
+functions of the value, so the parens can be left off.  A call to MakeThing
+with no arguments of course takes all of the default values.  The order  of
+evaluation  of  the  default-init  forms and the list of assigned values is
+undefined, so code should not depend upon the ordering.
+
+  ____________ ____  Implementors Note: Common/LispMachine Lisps define it this  way,  but  Is
+this  necessary?  It wouldn't be too tough to make the order be the same as
+the struct defn, or the argument order in the constructor call.  Maybe theyPSL Manual                    7 February 1983                     Utilities
+section 17.6                                                     page 17.17
+
+think  such  things  should  not  be advertised and thus constrained in the
+future.  Or perhaps the theory is that  constructs  such  as  this  can  be
+compiled  more  efficiently if the ordering is flexible??  Also, should the
+overridden default-init forms be evaluated or not?  I think not.
+
+               _____               _____               _____               macro               macro  The alterant macro calls have a similar form:
+
+   AlterThing( thing,
+               slot-name-1 value-expr-1,
+               slot-name-2 value-expr-2,
+                ... );
+
+The first argument evaluates to the struct to be altered.    (The  optional
+parens were left off here.)  This is just a multiple-assignment form, which
+eventually  goes through the slot depositors.  Remember that the slot-names
+are used, not the depositor names.  (See !:Prefix,  below.)    The  altered
+structure instance is returned as the value of an Alterant macro.
+
+  Implementators  note:  Common/LispMachine Lisp defines this such that all
+of the slots are  altered  in  parallel  AFTER  the  new  value  forms  are
+evaluated,  but  still with the order of evaluation of the forms undefined.
+This seemed to lose more than it gained, but arguments for its  worth  will
+be entertained.
+
+
+17.6.1. Options17.6.1. Options17.6.1. Options
+
+  Structure options appear as an argument list to the struct-name.  Many of
+the  options  themselves take argument lists, which are sometimes optional.
+Option  ids  all  start  with  a  colon  (!:),  on  the  theory  that  this
+distinguishes them from other things.
+
+  By  default,  the names of the constructor, alterant and predicate macros
+are MakeName, AlterName and  NameP.    "Name"  is  the  struct-name.    The
+!:Constructor,  !:Alterant, and !:Predicate options can be used to override
+the default names.  Their argument is the name to use, and a  name  of  NIL
+causes the respective macro not to be defined at all.
+
+  The  !:Creator  option  causes  a  different  form  of  constructor to be
+defined, in addition to  the  regular  "Make"  constructor  (which  can  be
+suppressed.)    As  in the !:Constructor option above, an argument supplies
+the name of the macro, but the default name in this case is CreateName.   A
+call to a Creator macro has the form:  
+
+
+    CreateThing( slot-value-1, slot-value-2, ... );
+
+
+___                                      ____ __ _______All  of the slot-values of the structure must be present, in the order they
+appear in the structure definition.    No  checking  is  done,  other  than
+assuring that the number of values is the same as the number of slots.  For
+                                                 ___  ___  ___________obvious  reasons,  constructors  of  this  form  are  not  recommended  forUtilities                     7 February 1983                    PSL Manual
+page 17.18                                                     section 17.6
+
+structures with many fields, or which may be expanded or modified.
+
+  Slot selector macros may appear on either the left side or the right side
+of  an  assignment.   They are by default named the same as the slot-names,
+but can be given a common prefix by the !:Prefix option.  If !:Prefix  does
+not  have  an  argument,  the structure name is the prefix.  If there is an
+argument, it should be a string or an id whose print name is the prefix.
+
+  The !:Include option allows building a new  structure  definition  as  an
+extension of an old one.  The required argument is the name of a previously
+defined  structure  type.  The access functions for the slots of the source
+type also works on instances of the new type.  This can be  used  to  build
+hierarchies  of  types.    The  source types contain generic information in
+common to the more specific subtypes which !:Include them.
+
+  The !:IncludeInit option takes an argument  list  of  "slot-name(default-
+init)"  pairs,  like  slot-descriptors without slot-options, and files them
+away to modify the default-init values for fields inherited as part of  the
+!:Included structure type.
+
+
+17.6.2. Slot Options17.6.2. Slot Options17.6.2. Slot Options
+
+  Slot-options  include  the !:Type option, which has an argument declaring
+the type of the slot as a type id or list of permissible type ids.  This is
+not enforced now, but anticipates the Mode system structures.
+
+  The !:UserGet and !:UserPut  slot-options  allow  overriding  the  simple
+vector  reference and assignment semantics of the generated selector macros
+with user-defined functions.  The !:UserGet FNAME is a combination  of  the
+slot-name  and  a !:Prefix if applicable.  The !:UserPut FNAME is the same,
+with "Put" prefixed.   One  application  of  this  capability  is  building
+depositors  which  handle  the  incremental  maintenance  of  parallel data
+structures as a side effect, such as automatically maintaining display file
+representations of objects which are resident in a remote display processor
+in parallel with modifications to the LISP structures  which  describe  the
+objects.    The  Make  and Create macros bypass the depositors, while Alter
+uses them.
+
+
+17.6.3. A Simple Example17.6.3. A Simple Example17.6.3. A Simple Example
+
+  (Input lines have a "> " prompt at the beginning.)PSL Manual                    7 February 1983                     Utilities
+section 17.6                                                     page 17.19
+
+
+   > % (Do definitions twice to see what functions were defined.)
+   > macro procedure TWICE u; list( 'PROGN, second u, second u );
+   TWICE
+
+   > % A definition of Complex, structure with Real and Imaginary parts
+   > % Redefine to see what functions were defined.  Give 0 Init values
+   > TWICE
+   > Defstruct( Complex( !:Creator(Complex) ), R(0), I(0) );
+   *** Function `MAKECOMPLEX' has been redefined
+   *** Function `ALTERCOMPLEX' has been redefined
+   *** Function `COMPLEXP' has been redefined
+   *** Function `COMPLEX' has been redefined
+   *** Function `R' has been redefined
+   *** Function `PUTR' has been redefined
+   *** Function `I' has been redefined
+   *** Function `PUTI' has been redefined
+   *** Defstruct `COMPLEX' has been redefined
+   COMPLEX
+
+
+   > C0 := MakeComplex();    % Constructor with default inits.
+   [COMPLEX 0 0]
+
+   > ComplexP C0;% Predicate.
+   T
+
+   > C1:=MakeComplex( R 1, I 2 );   % Constructor with named values.
+   [COMPLEX 1 2]
+
+   > R(C1); I(C1);% Named selectors.
+   1
+   2
+
+   > C2:=Complex(3,4) % Creator with positional values.
+   [COMPLEX 3 4]
+
+   > AlterComplex( C1, R(2), I(3) );     % Alterant with named values.
+   [COMPLEX 2 3]
+
+   > C1;
+   [COMPLEX 2 3]
+
+   > R(C1):=5; I(C1):=6; % Named depositors.
+   5
+   6
+
+   > C1;
+   [COMPLEX 5 6]
+
+   > % Show use of Include Option.  (Again, redef to show fns defined.)
+   > TWICEUtilities                     7 February 1983                    PSL Manual
+page 17.20                                                     section 17.6
+
+   > Defstruct( MoreComplex( !:Include(Complex) ), Z(99) );
+   *** Function `MAKEMORECOMPLEX' has been redefined
+   *** Function `ALTERMORECOMPLEX' has been redefined
+   *** Function `MORECOMPLEXP' has been redefined
+   *** Function `Z' has been redefined
+   *** Function `PUTZ' has been redefined
+   *** Defstruct `MORECOMPLEX' has been redefined
+   MORECOMPLEX
+
+
+   > M0 := MakeMoreComplex();
+   [MORECOMPLEX 0 0 99]
+
+   > M1 := MakeMoreComplex( R 1, I 2, Z 3 );
+   [MORECOMPLEX 1 2 3]
+
+   > R C1;
+   5
+
+   > R M1;
+   1
+
+   > % A more complicated example: The structures which are used in the
+   > % Defstruct facility to represent defstructs.  (The EX prefix has
+   > % been added to the names to protect the innocent...)
+   > TWICE% Redef to show fns generated.
+   > Defstruct(
+   >     EXDefstructDescriptor( !:Prefix(EXDsDesc), !:Creator ),
+   >DsSize(!:Type int ),   % (Upper Bound of vector.)
+   >Prefix(!:Type string ),
+   >SlotAlist(   !:Type alist ), % (Cdrs are SlotDescriptors.)
+   >ConsName(    !:Type fnId ),
+   >AltrName(    !:Type fnId ),
+   >PredName(    !:Type fnId ),
+   >CreateName(  !:Type fnId ),
+   >Include(     !:Type typeid ),
+   >InclInit(    !:Type alist )
+   > );
+   *** Function `MAKEEXDEFSTRUCTDESCRIPTOR' has been redefined
+   *** Function `ALTEREXDEFSTRUCTDESCRIPTOR' has been redefined
+   *** Function `EXDEFSTRUCTDESCRIPTORP' has been redefined
+   *** Function `CREATEEXDEFSTRUCTDESCRIPTOR' has been redefined
+   *** Function `EXDSDESCDSSIZE' has been redefined
+   *** Function `PUTEXDSDESCDSSIZE' has been redefined
+   *** Function `EXDSDESCPREFIX' has been redefined
+   *** Function `PUTEXDSDESCPREFIX' has been redefined
+   *** Function `EXDSDESCSLOTALIST' has been redefined
+   *** Function `PUTEXDSDESCSLOTALIST' has been redefined
+   *** Function `EXDSDESCCONSNAME' has been redefined
+   *** Function `PUTEXDSDESCCONSNAME' has been redefined
+   *** Function `EXDSDESCALTRNAME' has been redefined
+   *** Function `PUTEXDSDESCALTRNAME' has been redefinedPSL Manual                    7 February 1983                     Utilities
+section 17.6                                                     page 17.21
+
+   *** Function `EXDSDESCPREDNAME' has been redefined
+   *** Function `PUTEXDSDESCPREDNAME' has been redefined
+   *** Function `EXDSDESCCREATENAME' has been redefined
+   *** Function `PUTEXDSDESCCREATENAME' has been redefined
+   *** Function `EXDSDESCINCLUDE' has been redefined
+   *** Function `PUTEXDSDESCINCLUDE' has been redefined
+   *** Function `EXDSDESCINCLINIT' has been redefined
+   *** Function `PUTEXDSDESCINCLINIT' has been redefined
+   *** Defstruct `EXDEFSTRUCTDESCRIPTOR' has been redefined
+   EXDEFSTRUCTDESCRIPTOR
+
+
+   > TWICE% Redef to show fns generated.
+   > Defstruct(
+   >     EXSlotDescriptor( !:Prefix(EXSlotDesc), !:Creator ),
+   >SlotNum(     !:Type int ),
+   >InitForm(    !:Type form ),
+   >SlotFn(!:Type fnId ), % Selector/Depositor id.
+   >SlotType(    !:Type type ), % Hm...
+   >UserGet(     !:Type boolean ),
+   >UserPut(     !:Type boolean )
+   > );
+   *** Function `MAKEEXSLOTDESCRIPTOR' has been redefined
+   *** Function `ALTEREXSLOTDESCRIPTOR' has been redefined
+   *** Function `EXSLOTDESCRIPTORP' has been redefined
+   *** Function `CREATEEXSLOTDESCRIPTOR' has been redefined
+   *** Function `EXSLOTDESCSLOTNUM' has been redefined
+   *** Function `PUTEXSLOTDESCSLOTNUM' has been redefined
+   *** Function `EXSLOTDESCINITFORM' has been redefined
+   *** Function `PUTEXSLOTDESCINITFORM' has been redefined
+   *** Function `EXSLOTDESCSLOTFN' has been redefined
+   *** Function `PUTEXSLOTDESCSLOTFN' has been redefined
+   *** Function `EXSLOTDESCSLOTTYPE' has been redefined
+   *** Function `PUTEXSLOTDESCSLOTTYPE' has been redefined
+   *** Function `EXSLOTDESCUSERGET' has been redefined
+   *** Function `PUTEXSLOTDESCUSERGET' has been redefined
+   *** Function `EXSLOTDESCUSERPUT' has been redefined
+   *** Function `PUTEXSLOTDESCUSERPUT' has been redefined
+   *** Defstruct `EXSLOTDESCRIPTOR' has been redefined
+   EXSLOTDESCRIPTOR
+
+
+   > END;
+   NILUtilities                     7 February 1983                    PSL Manual
+page 17.22                                                     section 17.7
+
+17.7. DefConst17.7. DefConst17.7. DefConst
+
+
+ DefConst DefConst  _ __  _ ______    _________                                _____(DefConst [U:id  V:number]): Undefined                                macro
+
+     DefConst     DefConst     DefConst  is  a  simple  means  for  defining  and using symbolic
+     constants, as an alternative to the heavy-handed NEWNAM or DEFINE
+     facility  in  REDUCE/RLISP.     Constants   are   defined   thus:
+     DefConst(FooSize, 3); or as sequential pairs:  
+
+        DEFCONST(FOOSIZE, 3,
+                 BARSIZE, 4);
+
+
+ Const Const _ __   ______                                                  _____(Const U:id): number                                                  macro
+
+                                       Const                                       Const     They are referred to by the macro Const, so
+
+        CONST(FOOSIZE)
+
+     would be replaced by 3.
+
+
+
+17.8. Functions for Sorting17.8. Functions for Sorting17.8. Functions for Sorting
+
+  The  Gsort module provides functions for sorting lists and vectors.  Some
+                        __________ ________of the functions take a comparison function as an argument.  The comparison
+function takes two arguments and returns NIL if they are out of order, i.e.
+if the second argument should come before the first in the  sorted  result.
+Lambda expressions are acceptable as comparison functions.
+
+
+ Gsort Gsort _____  ____ ______  ___ __  __ ________     ____ ______         ____(Gsort TABLE:{list,vector} leq-fn:{id,function}): {list,vector}        expr
+
+                         ____      ______     ___ __     Returns  a  sorted  list  or  vector.    LEQ-FN is the comparison
+                                                                 _____     function used to determine the sorting order.  The original TABLE
+                    Gsort                    Gsort     is unchanged.  Gsort uses a stable sorting algorithm.   In  other
+                 _                 _                            _     words,  if  X  appears before Y in the original table then X will
+                   _                           _       _     appear before Y in the final table unless X  and  Y  are  out  of
+                                                               _     _     order.   (An unstable sort, on the other hand, might swap X and Y
+                                                       _       _     even if they're in order.  This could happen when X  and  Y  have
+     the  same  "key  field",  so  either one could come first without
+     making a difference to the comparison function.)
+
+
+ GmergeSort GmergeSort _____  ____ ______  ___ __  __ ________     ____ ______    ____(GmergeSort TABLE:{list,vector} leq-fn:{id,function}): {list,vector}   expr
+
+                 Gsort                 Gsort                                 _____     The same as Gsort, but destructively modifies the TABLE argument.
+     GmergeSort                                                 Gsort     GmergeSort                                                 Gsort     GmergeSort has the advantage of being somewhat faster than Gsort.
+
+     Note that you should use the value  returned  by  the  function--PSL Manual                    7 February 1983                     Utilities
+section 17.8                                                     page 17.23
+
+     don't depend on the modified argument to give the right answer.
+
+
+ IdSort IdSort _____  ____ ______     ____ ______                             ____(IdSort TABLE:{list,vector}): {list,vector}                            expr
+
+                            __     Returns  a  table  of  ids  sorted  into alphabetical order.  The
+     original  table  is  unchanged.    Case  is  not  significant  in
+     determining  the  alphabetical  order.    The  table  may contain
+     ______             __     strings as well as ids.
+
+  The following example illustrates the use of Gsort.
+
+   1 lisp> (load gsort)
+   NIL
+   2 lisp> (setq X '(3 8 -7 2 1 5))
+   (3 8 -7 2 1 5)
+   3 lisp>   % Sort from smallest to largest.
+   3 lisp> (Gsort X 'leq)
+   (-7 1 2 3 5 8)
+   4 lisp>   % Sort from largest to smallest.
+   4 lisp> (GmergeSort X 'geq)
+   (8 5 3 2 1 -7)
+   5 lisp>   % Note that X was "destroyed" by GmergeSort.
+   5 lisp> X
+   (3 2 1 -7)
+   6 lisp>
+   6 lisp>   % Here's IdSort, taking a vector as its argument.
+   6 lisp> (IdSort '[the quick brown fox jumped over the lazy dog])
+   [BROWN DOG FOX JUMPED LAZY OVER QUICK THE THE]
+   7 lisp>
+   7 lisp>   % Some examples of user defined comparison functions...
+   7 lisp> (setq X '(("Joe" . 20000) ("Moe" . 21000) ("Larry" . 7000)))
+   (("Joe" . 20000) ("Moe" . 21000) ("Larry" . 7000))
+   8 lisp>
+   8 lisp>   % First, sort the list alphabetically according to name,
+   8 lisp>   % using a lambda expression as the comparison function.
+   8 lisp> (Gsort X
+   8 lisp>     '(lambda (X Y) (string-not-greaterp (car X) (car Y))))
+   (("Joe" . 20000) ("Larry" . 7000) ("Moe" . 21000))
+   9 lisp>
+   9 lisp>   % Now, define a comparison function that compares cdrs of
+   9 lisp>   % pairs, and returns T if the first is less than or equal
+   9 lisp>   % to the second.
+   9 lisp> (de cdr_leq (pair1 pair2)
+   9 lisp>   (leq (cdr pair1) (cdr pair2)))
+   CDR_LEQ
+   10 lisp>
+   10 lisp>   % Use the cdr_leq function to sort X.
+   10 lisp> (Gsort X 'cdr_leq)
+   (("Larry" . 7000) ("Joe" . 20000) ("Moe" . 21000))Utilities                     7 February 1983                    PSL Manual
+page 17.24                                                     section 17.9
+
+17.9. Hashing Cons17.9. Hashing Cons17.9. Hashing Cons
+
+                                       HCons                                       HCons  HCONS  is  a  loadable  module.  The HCons function creates unique dotted
+                        HCons       Eq HCons                        Eq                        HCons _  _  Eq HCons _  _                 _ Eq    _pairs.  In other words, HCons(A, B) Eq HCons(C, D) if and only if A Eq    C
+        Eq     _  Eq  _and  B  Eq  D.  This allows rapid tests for equality between structures, at
+the cost of expending more time in creating the structures.    The  use  of
+HConsHConsHCons  may  also save space in cases where lists share common substructure,
+since only one copy of the substructure is stored.
+
+  Hcons  Hcons                    ____ ____ _____  Hcons works by keeping a pair hash table of  all  pairs  that  have  been
+             HCons             HConscreated  by  HCons.  (So the space advantage of sharing substructure may be
+offset by the space consumed by table  entries.)    This  hash  table  also
+allows  the  system to store property lists for pairs--in the same way that
+LISP has property lists for identifiers.
+
+                   HCons                               RplacA       RplacD                   HCons ______ ___                    RplacA       RplacD  Pairs created by HCons should not be modified  with  RplacA  and  RplacD.
+Doing  so will make the pair hash table inconsistent, as well as being very
+likely to modify structure shared with something that  you  don't  wish  to
+change.  Also note that large numbers may be equal without being eq, so the
+HCons                                  Eq        HConsHCons                                  Eq        HConsHCons  of two large numbers may not be Eq to the HCons of two other numbers
+that appear to be the  same.    (Similar  warnings  hold  for  strings  and
+vectors.)
+
+  The following "user" functions are provided by HCONS:
+
+
+ HCons HCons  _ ___    ____                                                 _____(HCons [U:any]): pair                                                 macro
+
+          HCons          HCons     The  HCons  macro  takes  one or more arguments and returns their
+     "hashed cons" (right associatively).   With  two  arguments  this
+                              Cons                              Cons     corresponds to a call of Cons.
+
+
+ HList HList  _ ___    ____                                                 _____(HList [U:any]): list                                                 nexpr
+
+     HList                               List     HList                               List     HList is the "HCONS version" of the List function.
+
+
+ HCopy HCopy _ ___   ___                                                    _____(HCopy U:any): any                                                    macro
+
+     HCopy                             Copy                      HCopy     HCopy                             Copy                      HCopy     HCopy is the HCONS version of the Copy function.  Note that HCopy
+                                           Copy                                           Copy     serves  a very different purpose than Copy, which is usually used
+     to copy a structure so that destructive changes can  be  made  to
+                                               HCopy                                               HCopy     the  copy without changing the original.  HCopy only copies those
+                                                                Cons                                                                Cons     parts  of  the  structure  which  haven't  already  been  "Consed
+                  HCons                  HCons     together" by HCons.
+
+
+ HAppend HAppend _ ____  _ ____   ____                                         ____(HAppend U:list  V:list): list                                         expr
+
+         HCons            Append         HCons            Append     The HCons version of Append.PSL Manual                    7 February 1983                     Utilities
+section 17.9                                                     page 17.25
+
+ HReverse HReverse _ ____   ____                                                ____(HReverse U:list): list                                                expr
+
+         HCons            Reverse         HCons            Reverse     The HCons version of Reverse.
+
+                                              Get       Put                                              Get       Put  The following two functions can be used to "Get" and "Put" properties for
+pairs  or  identifiers.    The pairs for these functions must be created by
+HCons                                    SetFHCons                                    SetFHCons.  These functions are known to the SetF macro.
+
+
+ Extended-Put Extended-Put _  __ ____   ___ __  ____ ___   ___                      ____(Extended-Put U:{id,pair}  IND:id  PROP:any): any                      expr
+
+
+ Extended-Get Extended-Get _  __ ____   ___ ___   ___                               ____(Extended-Get U:{id,pair}  IND:any): any                               expr
+
+
+
+17.10. Graph-to-Tree17.10. Graph-to-Tree17.10. Graph-to-Tree
+
+  GRAPH-TO-TREE is a loadable module.    For  resident  functions  printing
+circular lists see Section 15.8.
+
+
+ Graph-to-Tree Graph-to-Tree _ ____   ____                                           ____(Graph-to-Tree A:form): form                                           expr
+
+                    Graph-to-Tree                    Graph-to-Tree     The  function  Graph-to-Tree  copies  an  arbitrary s-expression,
+     removing circularity.   It  does  NOT  show  non-circular  shared
+                                                      Eq                                                      Eq     structure.    Places  where  a  substructure  is Eq to one of its
+     ancestors are replaced by non-interned ids of the form <n>  where
+     n  is  a  small integer.  The parent is replaced by a two element
+     list of the form (<n>: u) where the  n's  match,  and  u  is  the
+     (de-circularized) structure.  This is most useful in adapting any
+     printer for use with circular structures.
+
+
+ CPrint CPrint _ ___   ___                                                    ____(CPrint A:any): NIL                                                    expr
+
+                  CPrint                  CPrint     The function CPrint, also defined in the module GRAPH-TO-TREE, is
+             PrettyPrint  Graph-to-Tree             PrettyPrint  Graph-to-Tree     simply (PrettyPrint (Graph-to-Tree X)).
+
+  Note  that  GRAPH-TO-TREE is very embryonic.  It is MUCH more inefficient
+than it needs to be, heavily consing.  A better implementation would use  a
+stack  (vector)  instead  of  lists  to  hold  intermediate expressions for
+comparison, and  would  not  copy  non-circular  structure.    In  addition
+facilities  should  be  added  for optionally showing shared structure, for
+performing the inverse  operation,  and  for  also  editing  long  or  deep
+structures.    Finally,  the output representation was chosen at random and
+can probably be improved, or at least brought in line with CL or some other
+standard.Utilities                     7 February 1983                    PSL Manual
+page 17.26                                                    section 17.11
+
+17.11. Inspect Utility17.11. Inspect Utility17.11. Inspect Utility
+
+  INSPECT is a loadable module.  
+
+
+ Inspect Inspect ________ ______                                               ____(Inspect FILENAME:string):                                             expr
+
+     This  is  a  simple  utility which scans the contents of a source
+     file to tell what functions are  defined  in  it.    It  will  be
+     embellished  slightly  to  permit the on-line querying of certain
+                           Inspect                           Inspect     attributes of files.  Inspect reads one or more  files,  printing
+     and collecting information on defined functions.
+
+  Usage:
+
+   (LOAD INSPECT)
+   (INSPECT "file-name") % Scans the file, and prints proc
+                         % names.  It also
+                         % builds the lists ProcedureList!*
+                         % FileList!* and ProcFileList!*
+
+                         % File-Name can DSKIN other files
+
+On  the  Fly  printing is controlled by !*PrintInspect, default is T. Other
+lists built include FileList!* and  ProcFileList!*,  which  is  a  list  of
+(procedure . filename) for multi-file processing.
+
+  For more complete process, do:  
+
+   (LOAD INSPECT)
+   (OFF PRINTINSPECT)
+   (INSPECTOUT)
+   (DSKIN ...)
+   (DSKIN ...)
+   (INSPECTEND)

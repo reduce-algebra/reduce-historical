@@ -1,0 +1,25 @@
+PSL Spectral Tests,  Cray test system,  No-Date-Yet
+---------------------------------------------------------------
+*** Dummy RECLAIM: 19587 Items used, 130413 Items left.
+EmptyTest 10000         2414
+SlowEmptyTest 10000      35791
+Cdr1Test 100             58905
+Cdr2Test 100             50505
+CddrTest 100             38961
+ListOnlyCdrTest1 301698
+ListOnlyCddrTest1        439219
+ListOnlyCdrTest2 352000
+ListOnlyCddrTest2        489314
+ReverseTest 10           91640
+*** Dummy RECLAIM: 56645 Items used, 93355 Items left.
+MyReverse1Test 10       92964
+*** Dummy RECLAIM: 93304 Items used, 56696 Items left.
+MyReverse2Test 10       85904
+*** Dummy RECLAIM: 129963 Items used, 20037 Items left.
+LengthTest 100          54925
+ArithmeticTest 10000     87468
+EvalTest 10000           533178
+tak 18 12 6              49782
+gtak 18 12 6             237455
+gtsta g0         280169
+gtsta g1         282683

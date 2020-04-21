@@ -1,0 +1,925 @@
+28-Sep-82 17:50:20-PDT,3097;000000000000
+Date: 28 Sep 1982 1750-PDT
+From: Alan Snyder <AS>
+Subject: new PSL!!!!
+To: PSL-News: ;, PSL-Users: ;
+cc: AS
+
+Important Change to PSL!
+
+We have installed a new version of PSL on HULK.  It contains a number of
+significant changes which are described here.  In addition, you must change
+your LOGIN.CMD file to TAKE PSL:LOGICAL-NAMES.CMD instead of
+<PSL>LOGICAL-NAMES.CMD.  The <PSL> directory will disappear soon, so make this
+change right away!
+
+[These changes, except for NMODE, will appear on THOR and HEWEY shortly.  There
+are no immediate plans to move NMODE to the Vax.]
+
+Summary of changes:
+
+* If you run "PSL", you will now get a PSL that contains the NMODE editor,
+which is a replacement for EMODE.  PSL will start up in the editor, instead of
+the PSL listen loop.  You can easily get back to the PSL listen loop from NMODE
+by typing C-] L.  NMODE is a decent subset of EMACS, so if you are familiar
+with EMACS you should be able to use NMODE without too much difficulty.  If you
+are familiar with EMODE, you should read the file PSL:NMODE-GUIDE.TXT, which
+explains the differences between NMODE and EMODE.  A printed copy of this memo,
+including the NMODE command chart, is available in the documentation area next
+to Helen Asakawa's office.
+
+* The "PSL" program (what you get when you say "PSL" to EXEC) no longer
+contains the PSL compiler.  Instead, there is a separate program for compiling
+(Lisp) files.  To compile a file "FOO.SL", give the command "PSLCOMP FOO" to
+EXEC.  PSLCOMP will produce a binary file "FOO.B" that can then be LOADed or
+FASLINed.  To run the compiler interactively, just say "PSLCOMP" to EXEC.
+
+* The PSL directories that contain the source and binaries for all PSL modules
+have been moved to a private structure called SS: (the directories are now
+SS:<PSL*>).  The old PSL directories (PS:<PSL*>) will disappear soon.  In
+addition, the new directories have been reorganized somewhat to better reflect
+the structure of the implementation.  The file PSL:-THIS-.DIRECTORY contains a
+brief description of the new structure.  If you have used logical names to
+refer to PSL directories, then this change should not cause too many problems.
+
+* A number of small bug fixes and improvements have been made.  The most
+notable improvements are (1) a more readable backtrace, (2) a better
+prettyprinter, and (3) the definition of a "complete" set of I/O functions
+taking an explicit channel argument (these functions all have names like
+ChannelTerpri, where Terpri is an example of an I/O function that uses the
+default I/O channels).  The file PSL:BUG-FIX.LOG contains an exhaustive listing
+of the recent changes.
+
+The documentation has been updated to reflect these changes.  The following new
+or revised documents are available in the documentation area next to Helen
+Asakawa's office:
+
+	Notes on PSL at HP
+	DEC-20 PSL New Users' Guide
+	NMODE for EMODE Users
+	How to customize NMODE
+
+We have made "documentation packets" containing copies of these documents.
+Users are encouraged to pick up a copy!
+-------
+11-Oct-82 15:55:41-PDT,5771;000000000000
+Date: 11 Oct 1982 1555-PDT
+From: Alan Snyder <AS>
+Subject: new PSL installed
+To: PSL-News: ;, PSL-Users: ;
+cc: AS
+
+PSL NEWS - 11 October 1982
+
+A new PSL has been installed on Hulk and Hewey.  There are a number of
+improvements, plus some INCOMPATIBLE changes (see below).  A most noticable
+change (on Hulk) is that PSL no longer automatically starts up in the NMODE
+editor.  However, if you want PSL to start up in the editor, you can still make
+this happen using another new feature, INIT files (see below).  Otherwise, you
+can explicitly enter NMODE by invoking the function NMODE, with no arguments.
+In addtion, NMODE now supports the extended VT52 emulator on the 9836 (get the
+latest version from Tracy).  (No, NMODE is not yet installed on Hewey.)
+
+-------------------------------------------------------------------------------
+INCOMPATIBLE CHANGES TO PSL:
+-------------------------------------------------------------------------------
+This latest version of PSL has 3 changes which may require some application
+programs to be changed:
+
+1. SAVESYSTEM
+
+SaveSystem now takes 3 arguments.  The first argument is the banner, the second
+is the file to be written, and the third is a list of forms to evaluated when
+the new core image is started.  For example:
+
+  (SaveSystem "PSL 3.1" "PSL.EXE" '((InitializeInterrupts)))
+
+2. DUMPLISP
+
+Dumplisp now takes 1 argument, the file to be written.  For example:
+
+  (Dumplisp "PSL.EXE")
+
+3. DSKIN
+
+Dskin has been changed from a FEXPR to a single-argument EXPR.  This should
+only affect calls to DSKIN with multiple arguments.  They will have to be
+changed to several calls, each with one argument.
+
+4. BR and UNBR
+
+The functions BR and UNBR are no longer part of PSL.  These functions provided
+a facility for breaking on entry and exit to specific functions.  However,
+they didn't work very well and no one has figured out how to make them work,
+so they have been removed.  Send complaints to PSL.
+
+-------------------------------------------------------------------------------
+MAJOR IMPROVEMENTS TO PSL:
+-------------------------------------------------------------------------------
+The following features have been added to PSL:
+
+1. Init files
+
+When PSL, RLISP, or PSLCOMP (note: not BARE-PSL) is executed, if a file
+PSL.INIT, RLISP.INIT, or PSLCOMP.INIT, respectively, is in your home (login)
+directory, it will be read and evaluated.  This allows you to automatically
+customize your Lisp environment.  (The init files are .pslrc, .rlisprc, and
+.pslcomprc on the Vax.) If you want PSL to come up in NMODE, include the
+statement
+
+  (setf nmode-auto-start T)
+
+in your PSL.INIT file.
+
+2. Prinlevel and Prinlength
+
+The variables PRINLEVEL and PRINLENGTH now exist, as described in the Common
+Lisp Reference Manual.  These variables allow you to limit the depth of
+printing of nested structures and the number of elements of structured objects
+printed.  These variables affect Prin1 and Prin2 (Princ) and those functions
+that use them (Printf, Print).  They do not currently affect Prettyprint,
+although this may be done in the future.  The Printx function now properly
+handles circular vectors.
+
+-------------------------------------------------------------------------------
+CHANGES TO NMODE:
+-------------------------------------------------------------------------------
+
+* NMODE also supports init files (this isn't new, but wasn't stressed in
+  previous documentation).  When NMODE starts up, it will read and execute the
+  file NMODE.INIT in the user's home (login) directory.  This file should
+  contain PSL (Lisp) forms.
+
+* NMODE now reads a default init file if the user has no personal init file.
+  The name of this default init file is "PSL:NMODE.INIT".  If you make your
+  own NMODE.INIT file, you should consider including in it the statement
+  "(nmode-read-and-evaluate-file nmode-default-init-file-name)", which will
+  execute the default init file.
+
+* NMODE now supports the 9836 VT52 emulator (which has recently been extended 
+  to accept commands to change the display enhancement).  The default NMODE
+  init file will set up the NMODE VT52 driver if the system terminal type is
+  VT52.
+
+* NMODE no longer always starts up in the editor after it is RESET, ABORTed,
+  or ^C'ed and STARTed.  It will only restart in the editor if it was in the
+  editor beforehand.
+
+* NMODE will now read and write files containing stray CRs.
+
+* M-X command completion is more like EMACS.
+
+* Typing an undefined command now tells you what command you typed.
+
+* New commands:
+
+  C-X C-L  (Lowercase Region)
+  C-X C-U  (Uppercase Region)
+  C-X E    (Exchange Windows)
+  C-X ^    (Grow Window)
+  M-'      (Upcase Digit)
+  M-C      (Uppercase Initial)
+  M-L      (Lowercase Word)
+  M-U      (Uppercase Word)
+  M-X Append to File
+  M-X DIRED
+  M-X Delete File
+  M-X Delete and Expunge File
+  M-X Edit Directory
+  M-X Find File
+  M-X Insert Buffer
+  M-X Insert File
+  M-X Kill Buffer
+  M-X Kill File
+  M-X List Buffers
+  M-X Prepend to File
+  M-X Query Replace
+  M-X Replace String
+  M-X Save All Files
+  M-X Select Buffer
+  M-X Undelete File
+  M-X Visit File
+  M-X Write File
+  M-X Write Region
+(Case conversion commands contributed by Jeff Soreff)
+
+* Some bugs relating to improper window adjustment have been fixed.
+  For example, when the bottom window "pops up", the top window will now
+  be adjusted.  Also, C-X O now works properly in 1-window mode when the
+  two windows refer to the same buffer (i.e., it switches between two
+  independent buffer positions).
+
+* Bug fix: It should no longer be possible to find a "killed" buffer in
+  a previously unexposed window.
+-------
+ 9-Nov-82 08:17:56-PST,4505;000000000000
+Date:  9 Nov 1982 0817-PST
+From: Alan Snyder <AS>
+Subject: new PSL installed
+To: PSL-News: ;, PSL-Users: ;
+
+A new version of PSL has been installed on Hulk.
+Here are the details:
+
+New PSL Changes (9 November 1982)
+
+---- PSL Changes -------------------------------------------------------------
+
+* The major change in PSL is that CATCH/THROW has been reimplemented to
+  conform to the Common Lisp definition (see Section 7.10 of the Common
+  Lisp manual).  In particular, CATCH has been changed to a special form
+  so that its second argument is evaluated only once, instead of twice.
+  THIS IS AN INCOMPATIBLE CHANGE: if you use CATCH, you must change your
+  programs.  For example, if you wrote:
+
+    (catch 'foo (list 'frobnicate x y z))
+
+  you should change it to:
+
+    (catch 'foo (frobnicate x y z))
+
+  One aspect of this change is that an "unhandled" throw is now reported
+  as an error in the context of the throw, rather than (as before) aborting
+  to top-level and restarting the job.
+
+  Also implemented are UNWIND-PROTECT, CATCH-ALL, and UNWIND-ALL, as
+  described in the Common Lisp manual, with the exception that the
+  catch-function in CATCH-ALL and UNWIND-ALL should expect exactly 2 arguments.
+
+  Note that in Common Lisp, the proper way to catch any throw is to
+  use CATCH-ALL, not CATCH with a tag of NIL.
+
+* A related change is that the RESET function is now implemented by
+  THROWing 'RESET, which is caught at the top-level.  Thus, UNWIND-PROTECTs
+  cannot be circumvented by RESET.
+
+---- NMODE Changes -----------------------------------------------------------
+
+New Features:
+
+* C-X C-B now enters a DIRED-like "Buffer Browser" that allows you to
+  select a buffer, delete buffers, etc.
+* DIRED and the Buffer Browser can now operate in a split-screen mode, where
+  the upper window is used for displaying the buffer/file list and the bottom
+  window is used to examine a particular buffer/file.  This mode is enabled
+  by setting the variable BROWSER-SPLIT-SCREEN to T.  If this variable is
+  NIL, then DIRED and the Buffer Browser will automatically start up in
+  one window mode.
+* M-X Apropos has been implemented.  It will show you all commands whose
+  corresponding function names contain a given string.  Thus, if you
+  enter "window", you will see all commands whose names include the string
+  "window", such as "ONE-WINDOW-COMMAND".
+* M-X Auto Fill Mode has been implemented by Jeff Soreff, along with
+  C-X . (Set Fill Prefix) and C-X F (Set Fill Column).  If you want NMODE
+  to start up in Auto Fill mode, put the following in your NMODE.INIT file:
+       (activate-minor-mode auto-fill-mode)
+* NMODE now attempts to display a message whenever PSL is garbage-collecting.
+  This feature is not 100% reliable: sometimes a garbage collect will happen
+  and no message will be displayed.
+
+Minor Improvements:
+
+* C-N now extends the buffer (like EMACS) if typed without a command argument
+  while on the last line of the buffer.
+* Lisp break handling has been made more robust.  In particular, NMODE now
+  ensures that IN* and OUT* are set to reasonable values.
+* The OUTPUT buffer now starts out with the "modified" attribute ("*") off.
+* The implementation of command prefix characters (i.e., C-X, M-X, C-], and
+  Escape) and command arguments (i.e., C-U, etc.) has changed.  The most
+  visible changes are that C-U, etc. echo differently, and that Escape can
+  now be followed by bit-prefix characters.  (In other words, NMODE will
+  recognize "Escape ^\ E" as Esc-M-E, rather than "Esc-C-\ E"; the 9836
+  terminal emulator has been modified to generate such escape sequences
+  under some circumstances.)  NMODE customizers may be interested to know
+  that all of these previously-magic characters can now be redefined (on a
+  per-mode basis, even), just like any other character.
+* If you are at or near the end of the buffer, NMODE will put the current
+  line closer to the bottom of the screen when it adjusts the window.
+* C-X C-F (Find File) and the Dired 'E' command will no longer "find" an
+  incorrect version of the specified file, should one happen to already be in
+  a buffer.
+* The 'C' (continue) command to the PSL break loop now works again.
+* The "NMODE" indicator on the current window's mode line no longer
+  disappears when the user is entering string input.
+* The command C-X 4 F (Find File in Other Window) now sets the buffer's
+  file name properly.
+-------
+ 6-Dec-82 18:41:19-PST,1969;000000000000
+Date:  6 Dec 1982 1841-PST
+From: Cris Perdue <Perdue>
+Subject: LOADable modules, and HELP for them
+To: PSL-News: ;, PSL-Users: ;
+
+NEW PACKAGES:
+
+Some relatively new packages have been made available by various
+people here.  These belong in PU: (loadable utilities) at some
+point, but for now they are all on PNEW:, both the source code
+and the object code.  See below for an explanation of PNEW:.
+
+Documentation for each of these is either in the source file or
+in PH:<file>.DOC, which has been greatly cleaned up.
+
+HASH.SL
+HISTORY.SL
+IF.SL
+MAN.SL
+NEWPP.SL
+STRING-INPUT.SL
+STRING-SEARCH.SL
+TIME-FNC.SL
+
+DOCUMENTATION ON PH: (the HELP directory):
+
+PH: has been greatly cleaned up.  It should now be reasonable to
+browse through PH: for information on packages not described in
+the PSL reference manual.
+
+TO THE USERS:
+
+These files are intended to be IMPORTed or LOADed.  If you wish
+to use modules from PNEW:, you must put PNEW: into your
+definition of the "logical device" PL:.
+
+The command "INFO LOGICAL PL:" to the EXEC will tell you what the
+current definition of PL: is.  Put a line of the form:
+"DEFINE PL: <directory>,<directory>, ..., PNEW:" into your LOGIN.CMD
+file, including the same directories that are given when you ask
+the EXEC, with PNEW: added at the end as shown.
+
+GETTING MOST RECENT VERSIONS OF MODULES:
+
+PNEW: also contains the object files for new versions of existing
+modules where the latest version is more recent than the latest
+"release" of PSL.  In particular, where PSL.EXE includes the
+module preloaded in it, PSL.EXE will not include the version in
+PNEW:.  If you want the latest version when you LOAD or IMPORT,
+put PNEW: at the front of the list defining PL:.
+
+TO THE IMPLEMENTORS:
+
+If one of these is your product and you feel it is well tried and
+no longer experimental, please send a note to Nancy K. asking her
+to move the source to PU: and the object file to PL:.
+
+-------
+ 4-Jan-83 14:37:11-PST,1577;000000000000
+Date:  4 Jan 1983 1437-PST
+From: Cris Perdue <Perdue>
+Subject: PSL NEWS
+To: PSL-News: ;, PSL-Users: ;
+
+FILES THAT DESCRIBE OTHER FILES
+
+If you need to look at the PSL directories on HULK or find
+something in those directories, look for files with names that
+start with "-", such as -THIS-.DIRECTORY or -FILE-NOTES.TXT.
+These files appear at the beginning of an ordinary directory
+listing and they describe the directory they are in, plus the
+files and/or subdirectories of that directory.
+
+PSL directories likely to be of interest to users are:
+  PSL: (PSL root directory),
+  PU: (source code for libraries),
+  PNEW: (place to keep revisions of source files),
+  PH: (help files and documentation for libraries).
+
+LIBRARY MODULES NOW LISTED
+
+PU: is the repository for the source code of library modules,
+generally contributed by users.  The file PU:-FILE-NOTES.TXT
+contains a listing of available library modules, in most cases
+with a one-line description of each module.  Please look here for
+interesting utilities.  If no documentation appears to exist, bug
+the author of the module, also listed.  (Documentation may appear
+in PH: or in the source file itself on PU:.)
+
+SAVESYSTEM
+
+The function SAVESYSTEM, which used to take one argument, now takes
+three arguments.  The first is the banner, the second is the file to be
+written, and the third is a list of forms to be evaluated when the new
+core image is started.
+
+PSL.TAGS
+
+For those of you who browse through PSL source code, the file
+PSL.TAGS moved to p20sup: from psl:.
+-------
+11-Jan-83 13:09:13-PST,1516;000000000000
+Date: 11 Jan 1983 1309-PST
+From: Cris Perdue <Perdue>
+Subject: PSL NEWS
+To: PSL-News: ;, PSL-Users: ;
+
+When compiled code calls a function that is undefined, the error
+is now continuable.  If the error is continued, the function call
+is repeated.
+
+The function EXITLISP is now available in DEC-20 PSL, where it is
+currently a synonym for QUIT.  Both functions cause PSL to return
+to a command interpreter.  If the operating system permits a
+choice, QUIT is a continuable exit, and EXITLISP is a permanent
+exit (that terminates the PSL process).
+
+The functions LPOSN and CHANNELLPOSN now exist.  These return a
+meaningful value for channels that are open for output, giving
+the number of the current line within the current output page.
+To be precise, the value is the number of newlines output since
+the most recent formfeed.
+
+People have been using the undocumented STRING-CONCAT function.
+This function is NOT actually compatible with Common LISP.  It
+should be used as a function that applies only to string
+arguments, and is otherwise like CONCAT.
+
+Various bugs have been fixed, notably in the compiler and
+debugging facilities.
+
+A new directory of possible interest is PSYS:.  This contains
+executable files.  Executables already documented as being on
+PSL: will stay there for some time, but new ones are on PSYS:.
+
+DOCUMENTATION
+
+The reference manual has been significantly revised and a new
+version will be made available to all PSL users within a week or
+two.
+-------
+11-Jan-83 13:20:09-PST,4950;000000000000
+Date: 11 Jan 1983 1319-PST
+From: Alan Snyder <AS>
+Subject: NMODE news
+To: PSL-News: ;, PSL-Users: ;
+cc: AS
+
+
+NMODE changes (10-Nov-1982 through 5-Jan-1983):
+
+* Bug fix: In the previous version of NMODE, digits and hyphen would insert
+  themselves in the buffer even in "read-only" modes like Dired.  They now act
+  to specify command arguments in those modes.
+
+* Bug fix: control characters are now displayed properly in the message lines
+  at the bottom of the screen.
+
+* Some bugs in auto fill mode have been fixed.
+
+* C-S and C-R now get you an incremental search, very much like that in
+  EMACS.  [Incremental search was implemented by Jeff Soreff.]
+
+* The window scrolling commands have been changed to ring the bell if no
+  actual scrolling takes place (because you are already at the end of the
+  buffer, etc.). In addition, some bugs in the scroll-by-pages commands have
+  been fixed: (1) Previously, a request to scroll by too many pages was ignored;
+  now it will scroll by as many pages as possible.  (2) Previously, a backwards
+  scroll near the beginning of the buffer could fail to leave the cursor in the
+  same relative position on the screen.
+
+* A number of changes have been made that improve the efficiency of refresh,
+  input completion (on buffer names and M-X command names), and Lisp I/O
+  to and from buffers (Lisp-E).
+
+* Jeff Soreff has implemented the following commands:
+
+  M-A                (Backward Sentence)
+  M-E                (Forward Sentence)
+  M-K                (Kill Sentence)
+  C-X Rubout         (Backward Kill Sentence)
+  M-[                (Backward Paragraph)
+  M-]                (Forward Paragraph)
+  M-H                (Mark Paragraph)
+  M-Q                (Fill Paragraph) 
+  M-G                (Fill Region)
+  M-Z                (Fill Comment)
+  M-S                (Center Line)
+  C-X = and C-=	     (What Cursor Position)
+                                                                               
+  These are basically the same as EMACS, except for M-Z, which is new.  M-Z
+  (Fill Comment) is like M-Q (Fill Paragraph), except that it first scans the
+  beginning of the current line for a likely prefix and temporarily sets the
+  fill prefix to that string.  The prefix is determined to be any string of
+  indentation, followed by zero or more non-alphanumeric, non-blank characters,
+  followed by any indentation.  The Fill Prefix works somewhat better than
+  EMACS: lines not containing the fill prefix delimit paragraphs.
+
+* New EMACS commands implemented:
+  C-M-\ (Indent Region) (for both Text and Lisp modes)
+  C-M-C (inserts a ^C)
+
+* Defined C-? same as M-?, C-( same as C-M-(, C-) same as C-M-), for the
+  convenience of 9836 users.
+
+* The following commands have been enhanced to obey the C-U argument as in
+  EMACS:
+
+  C-Y			    (Insert Kill Buffer)
+  M-Y			    (Unkill Previous)
+  M-^			    (Delete Indentation)
+  C-M-(, C-M-U, and C-(     (Backward Up List)
+  C-M-) and C-)             (Forward Up List)
+  C-M-N                     (Move Forward List)
+  C-M-P                     (Move Backward List)
+  C-M-A and C-M-[           (Move Backward Defun)
+  C-M-E and C-M-]           (End of Defun)
+
+* The C-X = command has been extended: if you give it a numeric argument,
+  it will go to the specified line number.
+
+* NMODE's Lisp parsing has been vastly improved.  It now recognizes the
+  following: lists, vectors, comments, #/ character constants, string literals,
+  ! as the escape character, and prefixes (including quote, backquote, comma,
+  comma-atsign, and #-quote).  The only restriction is that parsing is always
+  done from the beginning of the line; thus newline cannot appear in string
+  literals or be quoted in any way.
+
+* NMODE's Lisp indenting has also been improved.  It now recognizes special
+  cases of indenting under functional forms, and indents to match the leftmost
+  (rather than the rightmost) of a sequence of forms on a line.  It also knows
+  about prefixes, like quote.
+
+* Inserting a right bracket in Lisp mode now displays the matching bracket, just
+  as inserting a right paren does.
+
+* Inserting a right paren (or right bracket) now will avoid trying to display
+  the "matching" left paren (or left bracket) when inside a comment, etc.
+
+* Changed multi-line Lisp indenting commands to avoid indenting (in fact, remove
+  any indentation from) blank lines.
+
+* The indenting commands now avoid modifying the buffer if the indentation
+  remains unchanged.
+
+* When a command (such as C-X K) asks for the name of an existing buffer,
+  CR will now complete the name, if possible, and terminate if the name
+  uniquely specifies one existing buffer.  This behavior is more similar
+  to EMACS than the previous behavior, where CR did no completion.
+
+* String input is now confirmed by moving the cursor to the beginning of
+  the input line.
+-------
+11-Jan-83 17:19:31-PST,1032;000000000001
+Date: 11 Jan 1983 1719-PST
+From: Cris Perdue <Perdue>
+Subject: More PSL News
+To: PSL-News: ;, PSL-Users: ;
+
+The behavior of LOAD has been modified so it is possible to use LOAD
+to load in ".SL" files.  As in the past, LOAD searches in two places
+for a file to load:  first in the connected directory (DSK: for the
+DEC-20 cognoscenti), then on PL: (or the equivalent on other machines).
+
+On each of these directories it searches through a list of file
+extensions (.b, .lap, and .sl) for a file with the right name and
+that extension.  Thus LOAD looks first for <file>.b, then <file>.lap,
+then <file>.sl, then pl:<file>.b, then pl:<file>.lap, finally pl:<file>.sl.
+
+Until the latest version of PSL, LOAD would only search for .b and .lap
+files.  The extended behavior should help people who often do not
+compile files.  The main thing to remember is to either keep any
+.b file in the same directory with the .sl, or else make sure that
+the .b file's directory is searched before the .sl file's directory.
+-------
+19-Jan-83 18:28:27-PST,1437;000000000003
+Date: 19 Jan 1983 1826-PST
+From: PERDUE at HP-HULK
+Subject: PSL News Update
+To: psl-news
+
+LOADing files
+
+The LOAD function uses two lists in searching for a file to actually
+load.  The lists are:
+
+loaddirectories*
+
+This initially has the value: ("" "pl:").  It is a list of strings
+which indicate the directory to look in.  Directories are searched in
+order of the list.
+
+loadextensions*
+
+This initially has the value: ((".b" . FASLIN) (".lap" . LAPIN)
+(".sl" . LAPIN)).  It is an association list.  Each element is a pair
+whose CAR is a string representing a file extension and whose CDR is a
+function to apply to LOAD a file of this extension.  Within each
+directory of loaddirectories*, the members of loadextensions* are used
+in order in searching for a file to load.
+
+NOTES: The value of loadextensions* has recently changed.  Removal of
+the last element of loadextensions* will restore the old behavior.  Do
+not expect the exact strings that appear in these lists to remain
+identical across machines or across time, but it is reasonable to
+believe that the lists and their use will be stable for some time.
+
+DEBUGGING: BR and UNBR
+
+BR and UNBR were removed from the PSL system some time ago.  To
+satisfy their devotees, they have been resurrected in a library named
+BR-UNBR.  A bug has also been fixed and very soon the system library
+file will have the fix (if in a hurry see pnew:).
+-------
+24-Jan-83 09:42:10-PST,703;000000000000
+Date: 21 Jan 1983 1909-PST
+From: PERDUE at HP-HULK
+Subject: Documentation directories
+To: psl-news
+
+The PSL documentation directory "pd:" has been cleaned up and
+there are now also machine-dependent directories p20d:, pvd:,
+phpd:, and pad: (Apollo).  No great news of yet concerning the
+contents of these directories, though they do contain some rather
+new documents in source and final form.
+
+Note that some of these logical names are new, and there are some
+other new logical names as well: the group based on the root name
+"pdist" has been filled out, and the group based on the name
+"psup:" has also been filled out with a couple of new directories
+and their logical names.
+-------
+ 9-Feb-83 13:22:20-PST,4442;000000000000
+Date:  9 Feb 1983 1317-PST
+From: AS at HP-HULK
+Subject: NMODE changes
+To: psl-news
+
+The following recent changes are available in PSL:NMODE.EXE on Hulk,
+and on the 9836 (except for Dired).
+
+Recent NMODE changes (20-Jan-1983 through 9-Feb-1983):
+
+Changes:
+
+* The Buffer Browser (C-X C-B) has changed in a number of ways.  It has three
+  new commands:
+
+  F     Saves the buffer in a file, if there are unsaved changes.
+  M-~   Turns off the buffer-modified flag.
+  N     Restores all Ignored files to the display list.
+
+  In addition, Backspace has been made equivalent to Rubout.  Also, the
+  commands D,U,K,I,Rubout,Backspace,F,N, and M-~ all obey a numeric argument
+  of either sign.  The Buffer Browser now starts up pointing at the
+  previously-current buffer.  After performing a sort command, the cursor now
+  continues to point at the same buffer.
+
+* DIRED (the File browser) has been changed in a number of ways.  One
+  SIGNIFICANT INCOMPATIBLE change is that the K and C-K commands now delete
+  the file immediately and remove the file from the display (instead of just
+  marking them for later deletion).  In addition, there are two new commands:
+
+  I     (Ignore File) Removes the file from the display list, without
+	any effect on the actual file.
+  N     Restores all Ignored files to the display list.
+
+  In addition, Backspace has been made equivalent to Rubout.  Also, the
+  commands D,U,K,I,Rubout,Backspace,and N all obey a numeric argument of
+  either sign.  The sort-by-filename procedure has been changed to sort
+  version numbers in numerical, rather than lexicographic order.  When Dired
+  starts, the files are sorted using this procedure, instead of leaving them
+  in the order returned by the file system.  After performing a sort command,
+  the cursor now continues to point at the same file.  Dired will now
+  automatically kill any buffer it had created for viewing a file as soon as
+  you view a new file or exit Dired, unless the buffer contains unsaved
+  changes.
+
+* M-X Insert File now takes as its default the file name used in the previous
+  M-X Insert File command.  This behavior matches EMACS.
+
+* Lisp-E (and Lisp-D, a new command) now insert a free EOL at the end of the
+  buffer, if needed, whenever the buffer-modified flag is set.  Previously the
+  free EOL was inserted only when the current position was at the end of the
+  buffer, regardless of the state of the buffer-modified flag.
+
+New commands:
+
+  M-X Count Occurrences (aka M-X How Many)
+  M-X Delete Matching Lines (aka M-X Flush Lines)
+  M-X Delete Non-Matching Lines (aka M-X Keep Lines)
+  M-X Insert Date (not on 9836 yet)
+  M-X Kill Some Buffers
+  M-X Rename Buffer
+  M-X Revert File
+  M-X Set Key
+  M-X Set Visited Filename
+
+  Lisp-D (in Lisp mode) executes the current defun (if the current position is
+  within a defun) or executes from the current position (otherwise).
+
+Improvements:
+
+* NMODE now checks the system's terminal type every time it is restarted.
+  This change allows you to use an NMODE that was detached from one kind
+  of terminal and later attached on another kind of terminal.
+
+* Fixed bug in Dec-20 version: Find File could leave around an empty file if
+  you tried to find a nonexistent file in a directory that allows you to
+  create new files but whose default file protection does not allow you to
+  delete them.  (On the Dec-20, Find File determines the name of a new file by
+  writing an empty file and immediately deleting it.)
+
+* A soft-key feature has been added, intended primarily for use on the 9836.
+  The command Esc-/ will read a soft-key designator (a single character in the
+  range '0' to 'W') and execute the definition of the corresponding softkey
+  (numbered 0 through 39).  Softkeys are defined using the function
+  (nmode-define-softkey n fcn label-string), where n is the softkey number and
+  fcn is either NIL (for undefined), a function ID (which will be invoked), or a
+  string (which will be executed as if typed at the keyboard).  NMODE on the
+  9836 sets up the keyboard so that the function keys K0 through K9 send an
+  appropriate Esc-/ sequence (using shift and control as modifiers).
+
+* The two message/prompt lines at the bottom of the screen are now sometimes
+  updated independently of the rest of the screen.  This change makes writing
+  messages and prompts more efficient.
+-------
+25-Feb-83 11:03:02-PST,2247;000000000000
+Date: 25 Feb 1983 1059-PST
+From: AS at HP-HULK
+Subject: recent NMODE changes
+To: psl-news
+
+Recent NMODE changes (14-Feb-1983 through 24-Feb-1983):
+
+Bugs fixed:
+
+* Dired wasn't garbage collecting old buffers used to view files, as had been
+  intended.
+* M-Z would enter an infinite loop on a paragraph at the end of the buffer
+  whose last line had no terminating Newline character.
+* When filling with a fill prefix, the cursor would sometimes be placed
+  improperly.
+* M-X Rename Buffer didn't convert the new buffer name to upper case.
+* The Permanent Goal Column feature (Set by C-X C-N) didn't work.
+* The incremental search commands did not handle bit-prefix characters
+  (e.g., the Meta prefix) properly.  Typing a bit-prefix character would
+  terminate the search, but then the bit-prefix character would not be
+  recognized as such.
+* When executing Lisp from the OUTPUT buffer in one-window mode, the window
+  would not be adjusted if the other (unexposed) window also was attached to
+  the OUTPUT buffer.
+* The cursor was being positioned improperly when the window was scrolled
+  horizontally.
+
+Performance Improvements:
+
+* The efficiency of Lisp printing to the OUTPUT buffer has been improved
+  significantly through the use of internal buffering.  One visible change is
+  that the screen is updated only after an entire line is written.
+* Insertion into text buffers has been speeded up by eliminating some
+  unnecessary string consing that occurred when inserting at the beginning or
+  end of a line (which is very common).
+
+EMACS Compatibility Enhancements:
+
+* M-X Set Visited Filename now converts the new name to the true name of the
+  file, if possible.
+* M-X Rename Buffer now checks for attempts to use the name of an existing
+  buffer.
+* Query-Replace now terminates when you type a character that is not a
+  query-replace command and rereads that character.
+* C-M-D has been extended to obey the command argument (either positive
+  or negative).  It still differs from the EMACS C-M-D command in that it
+  always stays within the current enclosing list.
+* M-( has been extended to obey the command argument.
+* The M-) command (Move Over Paren) has been implemented.
+-------
+18-Mar-83 16:29:39-PST,6873;000000000000
+Date: 18 Mar 1983 1626-PST
+From: AS at HP-HULK
+Subject: recent NMODE changes
+To: psl-news
+cc: AS
+
+Recent NMODE changes (28-Feb-1983 through 16-Mar-1983):
+
+(Not all of these changes have been installed on all systems.)
+
+Bugs Fixed:
+
+* NMODE will now refresh the display and clear the message line when it
+  is interrupted and restarted.
+
+* The C-X D command would list the connected directory, rather than
+  the directory of the current file, if the current file name contained a
+  device specification but no directory specification (e.g., "FOO:BAR.TXT").
+
+* The 9836 color screen driver would crash if it tried to display a buffer
+  containing characters with integer values greater than 127.
+
+* The command to write the contents of the current screen to a file would
+  always write the main screen, even when NMODE was using multiple screens.
+
+* NMODE would crash if it encountered a file (on the 9836) with an
+  "invalid" file name (e.g., "FOO.BAR.TEXT").
+
+Performance Improvements:
+
+* File I/O on the 9836 has been speeded up greatly.
+
+* The 9836 color screen driver has been modified to speed up refresh.
+
+* Keyboard interaction has been speeded up significantly following the
+  discovery that certain keyboard input functions were not compiled.
+
+New Commands:
+
+* DIRED is now available on the 9836.
+
+* There is a new command, M-X List Browsers, which brings up a Browser Browser
+  showing all existing browsers (i.e., the Buffers browser and, on the 9836,
+  the NMODE Documentation browser), as well as all potential browsers (i.e.,
+  File Directory browsers).  Potential browsers are displayed as prototype
+  browsers.  Commands are provided to view documentation on a browser (or
+  prototype) and to enter a browser (or instantiate a prototype).
+
+* There is a new command, M-X Print Buffer, also available as C-X C-P,
+  which prints the contents of the current buffer in a format suitable for
+  printing devices.  A file/device name is requested from the user; the
+  default is LPT: on the Dec-20 and PRINTER: on the 9836.  This command
+  translates tabs to spaces and control characters to ^X form.  Note: using
+  C-X C-W on the 9836 to write the buffer to PRINTER: does not work.
+
+* A Browse command has been added to Dired.  This command allows one to
+  browse thru a subdirectory.
+
+* A Create command has been added to the Buffer Browser to create
+  new buffers.  A Create command has been added to Dired to create
+  new files.
+
+Changes:
+
+* The command to write the contents of the current screen to a file has
+  been changed from C-X P to M-X Write Screen.  In addition, this
+  command now has its own default file name.
+
+* The Buffer Browser (C-X C-B) now always displays all named buffers.
+  Previously, it would ignore buffers whose names began with a "+", unless an
+  argument was specified to the C-X C-B command.  The use of "+" to name
+  "internal" buffers has been replaced by the use of "unnamed" buffers.
+
+* A number of changes have been made to the common browser mechanism, which
+  affect the behavior of all browsers (Buffers, Files, Documentation,
+  and the Browser Browser):
+
+  Browsers now use "unnamed" buffers (a new NMODE feature) to display the
+  lists of items.  This change means that browsers no longer appear in the
+  Buffer Browser list of buffers and cannot be selected using C-X B.  Instead,
+  the Browser Browser (M-X List Browsers) can be used to display all existing
+  browsers and to select an existing browser.
+
+  The Buffer Browser and the Browser Browser now update themselves
+  automatically under various circumstances, most notably when you enter or
+  select them, to take account of any items created or deleted since the
+  browser was last updated.  The File Directory Browser (DIRED) does not
+  update itself automatically, since that operation would be too
+  time-consuming.  However, it supports a new command, Look (L), which causes
+  it to re-read the specified directory.
+
+  When you attempt to create a browser, NMODE will first look for an existing
+  browser with the desired information.  If an existing browser is found, it
+  will be reentered.  As described above, the Buffers and Browser browsers
+  update themselves automatically when they are entered.  When a File
+  Directory browser is reused, it also updates itself automatically.
+
+  Quitting a browser no longer kills the browser, but merely returns the
+  display to its previous state.  This change encourages reentering existing
+  browsers instead of unnecessarily creating new ones.  It is possible to kill
+  a browser using the Kill (K) command of the Browser Browser, if you
+  desperately need to reclaim the space taken up by a browser.
+
+  Quitting a browser now does a better job of restoring the previous screen
+  contents.
+
+  The help line at the bottom of the screen is now automatically maintained.
+  Previously, it was displayed only when the browser was entered and would not
+  be restored when returning to the browser from another window or buffer.
+  The ? command (which used to refresh the help line) now displays a buffer
+  of documentation about the browser.
+
+  Browsers now do a better job of managing the screen, especially when the
+  split-screen option is enabled.  (When the split-screen option is enabled,
+  the top window is used to display the list of items, and the bottom window
+  is used to display a particular item.  The split-screen option is enabled by
+  including the statement (SETF BROWSER-SPLIT-SCREEN T) in your NMODE.INIT
+  file.  Split-screen will probably become the default soon.)  When the
+  split-screen option is enabled, each browser will endeavor to ensure that
+  the bottom window displays the most-recently selected item.  When there is
+  no selected item, the browser will display documentation in the bottom
+  window (using an "unnamed" buffer).
+
+  The window label line for a browser now displays additional information
+  about the browser.  For example, the label line for a File Directory Browser
+  displays the name of the directory.  In addition, the label line for a
+  browser documentation buffer displays a descriptive sentence.
+
+* A number of incompatible changes have been made to the common browser
+  mechanism to support the above changes.  If you have written your own
+  browser using these mechanisms, you should consult the sources of the
+  standard browsers to see the kinds of changes you should make.  (See
+  Buffer-Browser.SL, Dired.SL, Doc.SL, Browser.SL, and Browser-Support.SL, all
+  in the PN: directory.)
+
+* Another incompatible change: the function buffer-create-unselectable
+  has been replaced by the function create-unnamed-buffer, which (as the name
+  suggests) does not take a name-of-buffer argument.  (See PN:Buffers.SL.)
+-------

@@ -1,0 +1,144 @@
+LISP$
+% Simple TOKEN scanner to Debug POLY. RED;
+% Griss and Morrison
+
+GLOBAL '(CURCHARTYPE!* CURCHAR!* TOK!*);
+
+SYMBOLIC PROCEDURE CLEARTOKEN;              %. Clear token scanner
+ <<CURCHARTYPE!* := 'WHITE; CURCHAR!* := '! >>;
+
+SYMBOLIC PROCEDURE NTOKEN;		%. get next token
+BEGIN SCALAR TOK;
+  WHILE CURCHARTYPE!* MEMQ '(WHITE COMMENT) DO
+    IF CURCHARTYPE!* EQ 'WHITE THEN
+      READCHAR()
+    ELSE << % Skip the comment
+      REPEAT
+	READCHAR()
+      UNTIL CURCHAR!* MEMQ COMMENTEND!*;
+    READCHAR() >>;
+  IF CURCHARTYPE!* EQ 'DIGIT THEN <<
+    WHILE CURCHARTYPE!* EQ 'DIGIT DO <<
+      TOK := CURCHAR!* . TOK;
+      READCHAR() >>;
+    TOK!* := COMPRESS REVERSIP TOK >>
+  ELSE IF CURCHARTYPE!* MEMQ '(LETTER ESCAPE) THEN <<
+    WHILE CURCHARTYPE!* MEMQ '(LETTER ESCAPE) DO <<
+      IF CURCHARTYPE!* EQ 'ESCAPE THEN <<
+	TOK := '!! . TOK;
+	READCHAR() >>;
+      TOK := CURCHAR!* . TOK;
+      READCHAR() >>;
+    TOK!* := INTERN COMPRESS REVERSIP TOK >>
+  ELSE IF CURCHARTYPE!* EQ 'DELIMITER THEN <<
+    TOK!* := CURCHAR!*;
+    READCHAR();TOK!* >>
+  ELSE IF CURCHARTYPE!* EQ 'TERMINATOR THEN <<
+     TOK!* := CURCHAR!*;    CLEARTOKEN();   TOK!*>>
+  ELSE
+    ERROR(1010,
+	  LIST( "Illegal character `",COMPRESS LIST('!!,CURCHAR!*),
+			          "' in input stream -- NTOKEN") );
+END NTOKEN;
+
+SYMBOLIC PROCEDURE READCHAR;	%. Get next char and classify
+<< CURCHAR!* := READCH();
+   CURCHARTYPE!* := GET(CURCHAR!*,'CHARACTERTYPE) >>;
+
+SYMBOLIC PROCEDURE INITTOKEN;	%. Initialise TOKEN scan
+ BEGIN
+DEFLIST('(
+ (A LETTER)
+ (B LETTER)
+ (C LETTER)
+ (D LETTER)
+ (E LETTER)
+ (F LETTER)
+ (G LETTER)
+ (H LETTER)
+ (I LETTER)
+ (J LETTER)
+ (K LETTER)
+ (L LETTER)
+ (M LETTER)
+ (N LETTER)
+ (O LETTER)
+ (P LETTER)
+ (Q LETTER)
+ (R LETTER)
+ (S LETTER)
+ (T LETTER)
+ (U LETTER)
+ (V LETTER)
+ (W LETTER)
+ (X LETTER)
+ (Y LETTER)
+ (Z LETTER)
+ (a LETTER)
+ (b LETTER)
+ (c LETTER)
+ (d LETTER)
+ (e LETTER)
+ (f LETTER)
+ (g LETTER)
+ (h LETTER)
+ (i LETTER)
+ (j LETTER)
+ (k LETTER)
+ (l LETTER)
+ (m LETTER)
+ (n LETTER)
+ (o LETTER)
+ (p LETTER)
+ (q LETTER)
+ (r LETTER)
+ (s LETTER)
+ (t LETTER)
+ (u LETTER)
+ (v LETTER)
+ (w LETTER)
+ (x LETTER)
+ (y LETTER)
+ (z LETTER)
+ (!_ LETTER)
+ (!. LETTER)
+ (!0 DIGIT)
+ (!1 DIGIT)
+ (!2 DIGIT)
+ (!3 DIGIT)
+ (!4 DIGIT)
+ (!5 DIGIT)
+ (!6 DIGIT)
+ (!7 DIGIT)
+ (!8 DIGIT)
+ (!9 DIGIT)
+ (!+ DELIMITER)
+ (!- DELIMITER)
+ (!* DELIMITER)
+ (!/ DELIMITER)
+ (!^ DELIMITER)
+ (!' DELIMITER)
+ (!( DELIMITER)
+ (!) DELIMITER)
+ (!, DELIMITER)
+ (!; TERMINATOR)
+ (!! ESCAPE)
+ (!  WHITE)     % Blank
+ (!	 WHITE)	% Tab
+ (! WHITE)	% Carriage Return
+ (!
+ WHITE)	% Line Feed
+ (! WHITE)	% Form Feed
+ (!% COMMENT)
+   ), 'CHARACTERTYPE);
+	PUT(!$EOL!$,'CHARACTERTYPE,'WHITE);
+	COMMENTEND!* := LIST !$EOL!$;
+	CLEARTOKEN();
+END;
+
+INITTOKEN();
+
+SYMBOLIC PROCEDURE XAPPLY(FN,ARGS);     %. Interface for PLISP
+   APPLY(FN,ARGS)$
+
+END$

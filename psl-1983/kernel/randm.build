@@ -1,0 +1,18 @@
+%
+% RANDM.BUILD - Miscellaneous interpreter files
+% 
+% Author:      Eric Benson
+%              Symbolic Computation Group
+%              Computer Science Dept.
+%              University of Utah
+% Date:        19 May 1982
+% Copyright (c) 1982 University of Utah
+%
+
+PathIn "known-to-comp-sl.red"$		% SL functions performed inline in code
+PathIn "others-sl.red"$			% DIGIT, LITER and LENGTH
+PathIn "equal.red"$			% equality predicates
+PathIn "carcdr.red"$			% CDDDDR, etc.
+PathIn "easy-sl.red"$			% highly portable SL function defns
+PathIn "easy-non-sl.red"$		% simple, ubiquitous SL extensions
+PathIn "sets.red"$			% Set manipulation functions

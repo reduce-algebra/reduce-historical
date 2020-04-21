@@ -1,0 +1,159 @@
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+        %                                                       % 
+        %            MINI - a small META system                 % 
+        %                                                       % 
+        %          Copyright (c) Robert R. Kessler 1979         % 
+        %          Mods: MLG, Feb 1981				%
+        %                                                       % 
+        %          This is the MINI system self definition.     % 
+        %          The file MINI-SUPPORT.RED contains the       % 
+        %          support routines and MINI.SL is the          % 
+        %          Standard LISP translation of this file.      %
+        %                                                       % 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+ 
+%   The following is the definition of the mini meta system in terms of 
+%    itself.  MINI is very similar to META/REDUCE, except a lot of it has 
+%    been eliminated.  The following features that are in META/REDUCE, are 
+%    not present in MINI: 
+%       - Backup is not supported. 
+%       - Diphthongs of more than 2 characters are not supported.  Also, in 
+%         MINI, the diphthongs must be declared before they are used. 
+%       - Format operations are not supported (the => op). 
+%       - The symbol table operations are not supported (however, they could 
+%         easily be added as calls to the routines. 
+%       - The - operator for stripping off a level of parens is not supported. 
+%       - The META/REDUCE error operators are not supported (*** *****). 
+%    The following is a list of the differences between MINI and META/REDUCE: 
+%       - The += operator has been changed to +. to be consistent with the 
+%         meanings of the + (PUSH) and . (EVAL) operators. 
+%       - The @ operator also includes the semantics that it's token is used 
+%         as a rule terminator (for error recovery).  When a token is found 
+%         during error recovery that is a rule terminator, the grammar is 
+%         reset to its initial stage and scanning continues. 
+%       - A new operator @@ has been added that is the same as the @ operator 
+%         but it signifies a grammar terminator.  During error recovery, if 
+%         a grammar terminator is scanned, parsing will stop. 
+%       - The flag MDEFN controls whether a rule defined is EVALED or MPRINTed. 
+%       - MINI uses the RLISP token reader and is therefore much faster. 
+%         One consequences of this is that comments may be embedded anywhere 
+%         in the text and are ignored by %SCAN
+%         Also, since %SCAN is used, certain quoted keywords need to have a 
+%         escape in front of them.  The ones discovered so far are: '!+ '!- 
+%         '!( and '!).  This also means that diphthongs that use these as
+%         the first character must also be quoted (i.e.  '!+= or '!-.). 
+%         The safe approach is to quote every special character. 
+ 
+%   To define a grammar, call the procedure MINI with the argument being the 
+%    root rule name.   Then when the grammar is defined it may be called by 
+%    using INVOKE root rule name. 
+ 
+%   The following is the MINI Meta self definition. 
+ 
+GLOBAL '(PNAM); 
+ 
+MINI 'RUL; 
+ 
+%   Define the diphthongs to be used in the grammar. 
+DIP: !#!#, !-!>, !+!., !@!@ ; 
+ 
+%   The root rule is called RUL. 
+RUL: ('DIP ': ANYTOK[,]* .(DIPBLD #1) '; / 
+     (ID  .(SETQ !#LABLIST!# NIL) 
+       ( ': ALT            +(DE #2 NIL #1) @; / 
+         '= PRUL[,]* @;    .(RULE!-DEFINE '(PUT (QUOTE ##2) (QUOTE RB) 
+			     (QUOTE #1)))
+                           +(DE ##1 (A) 
+                               (RBMATCH A (GET (QUOTE #1) (QUOTE RB)) NIL)))
+       .(RULE!-DEFINE #1) .(NEXT!-TOK) ))* @@FIN ; 
+ 
+%   An alternative is a sequence of statements separated by /'s; 
+ALT: SEQ < '/ ALT +(OR #2 #1) >; 
+ 
+%   A sequence is a list of items that must be matched. 
+SEQ: REP < SEQ +(AND #2 (FAIL!-NOT #1)) >; 
+ 
+%   A repetition may be 0 or more single items (*) or 0 or more items 
+%    separated by any token (ID[,]* will parse a list of ID's separated by ,'s. 
+REP: ONE 
+      <'[ (ID +(#1) / 
+           '' ANYKEY +(EQTOK!-NEXT (QUOTE #1)) /
+           ANYKEY +(EQTOK!-NEXT (QUOTE #1))) '] +(AND #2 #1) '* BLD!-EXPR /
+        '* BLD!-EXPR>;
+
+%   Create an sexpression to build a repetition.
+BLD!-EXPR: +(PROG (X) (SETQ X (STK!-LENGTH)) 
+                   $1 (COND (#1 (GO $1))) 
+                      (BUILD!-REPEAT X) 
+                      (RETURN T));
+
+ANYKEY: ANYTOK .(ADDKEY ##1) ;  % Add a new KEY
+
+%   One defines a single item. 
+ONE: '' ANYKEY  +(EQTOK!-NEXT (QUOTE #1)) / 
+     '@ ANYKEY  .(ADDRTERM ##1)  +(EQTOK (QUOTE #1)) / 
+     '@@ ANYKEY .(ADDGTERM ##1)  +(EQTOK (QUOTE #1)) / 
+     '+ UNLBLD  +(PUSH #1) / 
+     '. EVLBLD  +(PROGN #1 T) / 
+     '= EVLBLD  / 
+     '< ALT '>  +(PROGN #1 T) / 
+     '( ALT ')  / 
+     '+. EVLBLD +(PUSH #1) / 
+     ID         +(#1) ; 
+ 
+%   This rule defines an un evaled list.  It builds a list with everything 
+%    quoted. 
+UNLBLD: '( UNLBLD ('. UNLBLD ') +(CONS #2 #1) /
+		    UNLBLD* ') +(LIST . (#2 . #1)) /
+		   ') +(LIST . #1)) / 
+        LBLD    / 
+        ID      +(QUOTE #1) ; 
+ 
+%   EVLBLD builds a list of evaled items. 
+EVLBLD: '( EVLBLD ('. EVLBLD ') +(CONS #2 #1) /
+		    EVLBLD* ') +(#2 . #1) /
+		   ') ) / 
+        LBLD / 
+        ID      ; 
+ 
+LBLD: '# NUM    +(EXTRACT #1) /
+      '## NUM   +(REF #1) /
+      '$ NUM    +(GENLAB #1) /
+      '& NUM    +(CADR (ASSOC #1 (CAR VARLIST))) /
+      NUM       /
+      STR       /
+      '' ('( UNLBLD* ') +(LIST . #1) /
+           ANYTOK +(QUOTE #1));
+ 
+%   Defines the pattern matching rules (PATTERN -> BODY). 
+PRUL: .(SETQ INDEXLIST!* NIL) 
+      PAT '-> (EVLBLD)* 
+             +(LAMBDA (VARLIST T1 T2 T3) (AND . #1))
+             .(SETQ PNAM (GENSYM)) 
+	     .(RULE!-DEFINE (LIST 'PUTD (LIST 'QUOTE PNAM) 
+		'(QUOTE EXPR) (LIST 'QUOTE #1)))
+             +.(CONS #1 PNAM);
+ 
+%   Defines a pattern. 
+%   We now allow the . operator to be the next to last in a ().
+PAT: '& ('< PSIMP[/]* '> NUM 
+             +.(PROGN (SETQ INDEXLIST!* (CONS ##1 INDEXLIST!*)) 
+                  (LIST '!& #2 #1) ) / 
+             NUM 
+               +.(COND ((MEMQ ##1 INDEXLIST!*) 
+                         (LIST '!& '!& #1)) 
+                  (T (PROGN (SETQ INDEXLIST!* (CONS ##1 INDEXLIST!*)) 
+                         (LIST '!& #1)))) ) 
+        / ID 
+        / '!( PAT* <'. PAT +.(APPEND #2 #1)> '!) 
+        / '' ANYTOK 
+        / STR 
+        / NUM ; 
+ 
+%   Defines the primitives in a pattern. 
+PSIMP: ID / NUM / '( PSIMP* ') / '' ANYTOK; 
+ 
+%   The grammar terminator. 
+FIN 
+END; 
+ 

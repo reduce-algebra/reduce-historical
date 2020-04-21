@@ -1,0 +1,10 @@
+@reset RLISP
+@PSL:RLISP
+*Options!* := nil; % Force reload
+*load(zboot, syslisp, if!-system, lap!-to!-asm);
+*load(dec20!-comp,dec20!-cmac,dec20!-asm);
+*remflag(''(extrareg),''terminaloperand);
+*off usermode;
+*Date!* := "Dec 20 cross compiler";
+*Dumplisp "S:DEC20-CROSS.EXE";
+*Quit;

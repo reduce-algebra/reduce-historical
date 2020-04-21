@@ -1,0 +1,494 @@
+PSL Manual                    7 February 1983                Implementation
+section 21.0                                                      page 21.1
+
+                                CHAPTER 21                                CHAPTER 21                                CHAPTER 21
+                              IMPLEMENTATION                              IMPLEMENTATION                              IMPLEMENTATION
+
+
+
+
+     21.1. Overview of the Implementation .  .  .  .  .  .  .  .  .    21.1
+     21.2. Files of Interest  .  .  .  .  .  .  .  .  .  .  .  .  .    21.1
+     21.3. Building PSL on the DEC-20  .  .  .  .  .  .  .  .  .  .    21.2
+     21.4. Building the LAP to Assembly Translator .  .  .  .  .  .    21.5
+     21.5. The Garbage Collectors and Allocators.  .  .  .  .  .  .    21.5
+          21.5.1. Compacting Garbage Collector on DEC-20 .  .  .  .    21.5
+          21.5.2. Two-Space Stop and Copy Collector on VAX  .  .  .    21.6
+     21.6. The HEAPs .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    21.6
+     21.7. Allocation Functions  .  .  .  .  .  .  .  .  .  .  .  .    21.8
+
+  This  chapter  is  very  out  of  date  and  will  be replaced as soon as
+possible.  Refer to the release notes for your machine and the  forthcoming
+implementation guide.
+
+
+
+21.1. Overview of the Implementation21.1. Overview of the Implementation21.1. Overview of the Implementation
+
+  In  this  Chapter we give a guide to the sources, although they are still
+rapidly changing.  With these  notes  in  mind,  and  an  understanding  of
+SYSLISP  and  the  compiler at the level of Chapters 18 and 20, it is hoped
+the user will be able to understand and change most of the system.  Much of
+the current information is contained in comments in the source  files,  and
+cannot be reproduced here.
+
+  [??? This Section needs a LOT of work ???]  [??? This Section needs a LOT of work ???]  [??? This Section needs a LOT of work ???]
+
+
+
+21.2. Files of Interest21.2. Files of Interest21.2. Files of Interest
+
+  The  complete sources are divided up into a fairly large number of files,
+spread over a number of sub-directories of <PSL>.  This is  so  that  files
+representing a common machine-independent kernel are in a single directory,
+and  additional  machine  specific  files  in others.  Furthermore, we have
+separated the compiler and LAP files from the rest of the files, since they
+are looked at first when doing a new implementation, but are  not  actually
+important to understanding the working of PSL.
+
+  Some  convenient  logical  device  names  are  defined  in  <psl>logical-
+names.cmd.  This file should have been TAKEn in your  LOGIN.CMD.    Current
+definitions are:
+
+
+;Officially recognized logical names for PSL subdirectories on UTAH-20
+define psl: <psl>               ! Executable files and miscellaneousImplementation                7 February 1983                    PSL Manual
+page 21.2                                                      section 21.2
+
+define ploc: <psl.local>        ! Non-distributed miscellaneous
+define pi: <psl.interp>         ! Interpreter sources
+define pc: <psl.comp>           ! Compiler sources
+define pu: <psl.util>           ! Utility program sources
+define plocu: <psl.local.util>  ! Non-distributed utility sources
+define pd: <psl.doc>            ! Documentation to TYPE
+define pe: <psl.emode>          ! Emode sources and build files
+define plpt: <psl.lpt>          ! Printer version of Documentation
+define ph: <psl.help>           ! Help files
+define plap: <psl.lap>          ! LAP and B files
+define ploclap: <psl.local.lap> ! Non-distributed LAP and B files
+define pred: <reduce.psl-reduce>! Temporary home of Reduce built upon
+                                ! PSL
+define p20: <psl.20-interp>     ! Dec-20 specific interpreter sources
+define p20c: <psl.20-comp>      ! Dec-20 specific compiler sources
+define p20d: <psl.20-dist>      ! Dec-20 distribution files
+define pv: <psl.vax-interp>     ! Vax specific interpreter sources
+define pvc: <psl.vax-comp>      ! Vax specific compiler sources
+define pvd: <psl.vax-dist>      ! Vax distribution files
+define p68: <psl.68000-interp>  ! M68000 specific interpreter sources
+define p68c: <psl.68000-comp>   ! M68000 specific compiler sources
+define pcr: <psl.cray-interp>   ! Cray-1 interpreter sources
+define pcrc: <psl.cray-comp>    ! Cray-1 compiler sources
+define pcrd: <psl.cray-dist>    ! Cray-1 distribution files
+define pl: plap:,ploclap:       ! Search list for LOAD
+
+
+  Sources mostly live on PI:.  DEC-20 build files and very machine specific
+files live on P20:.
+
+
+
+21.3. Building PSL on the DEC-2021.3. Building PSL on the DEC-2021.3. Building PSL on the DEC-20
+
+  [??? fix as FASL works ???]  [??? fix as FASL works ???]  [??? fix as FASL works ???]
+
+  Building  proceeds  in  number  of  steps.    First  the kernel files are
+compiled to MIDAS, using  a  LAP-to-MIDAS  translator,  which  follows  the
+normal  LISP/SYSLISP  compilation  to  LAP.    This phase also includes the
+conversion of constants (atoms names, strings, etc) into structures in  the
+heap, and initialization code into an INIT procedure.  The resulting module
+is  assembled, linked, and saved as BARE-PSL.EXE.  If executed, it reads in
+a batch of LAP files, previously  compiled,  representing  those  functions
+that  should  be  in a minimal PSL, but in fact are not needed to implement
+LAP.  
+
+  [??? When FAP is implemented, these LAP files will  become  FAP  files,  [??? When FAP is implemented, these LAP files will  become  FAP  files,  [??? When FAP is implemented, these LAP files will  become  FAP  files,
+  and the kernel will get smaller ???]  and the kernel will get smaller ???]  and the kernel will get smaller ???]
+
+.
+
+  The  BARE-PSL  kernel build file is P20:PSL-KERNEL.CTL, and is reproducedPSL Manual                    7 February 1983                Implementation
+section 21.3                                                      page 21.3
+
+here, slightly edited:
+
+
+
+; This requires PL:PSL-NON-KERNEL.LAP and P20C:PSLDEF.MID
+copy BARE-PSL.SYM PSL.SYM
+PSL:MIDASCMP              ! previously saved with LAPtoMIDAS
+in "PSL-KERNEL.RED";      % Files for kernel
+quit;
+MIDAS                     ! assemble kernel data
+dpsl
+MIDAS                     ! assemble kernel init code
+spsl
+MIDAS                     ! assemble kernel code
+psl
+load DPSL.REL, SPSL.REL, PSL.REL  ! link into one module
+save BARE-PSL.EXE                 ! save executable
+
+
+
+  The kernel files mentioned in PSL-KERNEL.RED are:
+
+
+MIDASOUT "PSL";
+IN "BINDING.RED"$               % binding from the interpreter
+IN "FAST-BINDER.RED"$           % for binding in compiled code,
+                                % in LAP
+IN "SYMBOL-VALUES.RED"$         % SET, and support for Eval
+IN "FUNCTION-PRIMITIVES.RED"$   % used by PutD, GetD and Eval
+IN "OBLIST.RED"$                % Intern, RemOb and GenSym
+IN "CATCH-THROW.RED"$           % non-local GOTO mechanism
+IN "ALLOCATORS.RED"$            % heap, symbol and code space alloc
+IN "COPIERS.RED"$               % copying functions
+IN "CONS-MKVECT.RED"$           % SL constructor functions
+IN "GC.RED"$                    % the garbage collector
+IN "APPLY-LAP.RED"$             % low-level function linkage, in LAP
+IN "EQUAL.RED"$                 % equality predicates
+IN "EVAL-APPLY.RED"$            % interpreter functions
+IN "PROPERTY-LIST.RED"$         % PUT and FLAG and friends
+IN "FLUID-GLOBAL.RED"$          % variable declarations
+IN "PUTD-GETD.RED"$             % function defining functions
+IN "KNOWN-TO-COMP-SL.RED"$      % SL functions performed online
+                                % in code
+IN "OTHERS-SL.RED"$             % DIGIT, LITER and LENGTH
+IN "CARCDR.RED"$                % CDDDDR, etc.
+IN "EASY-SL.RED"$               % highly portable SL function defns
+IN "EASY-NON-SL.RED"$           % simple, ubiquitous SL extensions
+IN "COMP-SUPPORT.RED"$          % optimized CONS and LIST compilation
+IN "ERROR-HANDLERS.RED"$        % low level error handlers
+IN "TYPE-CONVERSIONS.RED"$      % convert from one type to another
+IN "ARITH.RED"$                 % Lisp arithmetic functions
+IN "IO-DATA.RED"$               % Data structures used by IOImplementation                7 February 1983                    PSL Manual
+page 21.4                                                      section 21.3
+
+IN "SYSTEM-IO.RED"$             % system dependent IO functions
+IN "CHAR-IO.RED"$               % bottom level IO primitives
+IN "OPEN-CLOSE.RED"$            % file primitives
+IN "RDS-WRS.RED"$               % IO channel switching functions
+IN "OTHER-IO.RED"$              % random SL IO functions
+IN "READ.RED"$                  % S-expression parser
+IN "TOKEN-SCANNER.RED"$         % table-driven token scanner
+IN "PRINTERS.RED"$              % Printing functions
+IN "WRITE-FLOAT.RED"$           % Floating point printer
+IN "PRINTF.RED"$                % formatted print routines
+IN "IO-ERRORS.RED"$             % I/O error handlers
+IN "IO-EXTENSIONS.RED"$         % Random non-SL IO functions
+IN "VECTORS.RED"$               % GetV, PutV, UpbV
+IN "STRING-OPS.RED"$            % Indx, SetIndx, Sub, SetSub, Concat
+IN "EXPLODE-COMPRESS.RED"$      % Access to characters of atoms
+IN "BACKTRACE.RED"$             % Stack backtrace
+IN "DEC-20-EXTRAS.RED"$         % Dec-20 specific routines
+IN "LAP.RED"$                   % Compiled code loader
+IN "INTERESTING-SYMBOLS.RED"$ % to access important WCONSTs
+IN "MAIN-START.RED"$            % first routine called
+MIDASEND;
+InitSymTab();
+END;
+
+
+
+  The current non-kernel files are defined in PSL-NON-KERNEL.RED:
+
+
+LapOut "PL:PSL-NON-KERNEL.LAP";
+in "EVAL-WHEN.RED"$             % control evaluation time(load first)
+in "CONT-ERROR.RED"$            % macro for ContinuableError
+in "MINI-TRACE.RED"$            % simple function tracing
+in "TOP-LOOP.RED"$              % generalized top loop function
+in "PROG-AND-FRIENDS.RED"$      % Prog, Go and Return
+in "ERROR-ERRORSET.RED"$        % most basic error handling
+in "TYPE-ERRORS.RED"$           % type mismatch error calls
+in "SETS.RED"$                  % Set manipulation functions
+in "DSKIN.RED"$                 % Read/Eval/Print from files
+in "LISP-MACROS.RED"$           % If, SetF
+in "LOOP-MACROS.RED"$           % While, Repeat, ForEach
+in "CHAR.RED"$                  % Character constant macro
+in "LOAD.RED"$                  % Standard module LAP loader
+in "PSL-MAIN.RED"$              % SaveSystem and Version stuff
+LapEnd;
+
+
+
+  The model on the VAX is similar.
+
+  The  file  GLOBAL-DATA.RED is automatically loaded by the compiler in the
+LAP-to-Assembly phase.  It defines most important external symbols.PSL Manual                    7 February 1983                Implementation
+section 21.3                                                      page 21.5
+
+  A  symbol table file, PSL.SYM is produced, and is meant to be used to aid
+in independent recompilation of modules.  It records assigned  ID  numbers,
+locations of WVARS, WARRAYS, and WSTRINGs, etc.  It is not currently used.
+
+  The  file  P20C:DATA-MACHINE.RED  defines important macros and constants,
+allocating fields within a DEC-20 word (the TAGs, etc).  It  is  used  only
+with  compiled  code,  and  is  so  associated  with the P20C: (20 compiler
+specific code); other files on this directory  include  the  code-generator
+tables  and compiler customization files.  More information on the compiler
+and its support can be found in Chapter 18.
+
+
+
+21.4. Building the LAP to Assembly Translator21.4. Building the LAP to Assembly Translator21.4. Building the LAP to Assembly Translator
+
+  [??? Write after new table-driven LAP and LAP-to-ASM is stable ???]  [??? Write after new table-driven LAP and LAP-to-ASM is stable ???]  [??? Write after new table-driven LAP and LAP-to-ASM is stable ???]
+
+
+
+21.5. The Garbage Collectors and Allocators21.5. The Garbage Collectors and Allocators21.5. The Garbage Collectors and Allocators
+
+
+21.5.1. Compacting Garbage Collector on DEC-2021.5.1. Compacting Garbage Collector on DEC-2021.5.1. Compacting Garbage Collector on DEC-20
+
+  DEC-20  PSL  uses  essentially  the  same  compacting  garbage  collector
+developed  for  the previous MTLISP systems: a single heap with all objects
+tagged in the heap in such a way that  a  linear  scan  from  the  low  end
+permits objects to be identified; they are either tagged as normal objects,
+and  are  thus  in  a PAIR, or are tagged with a "pseudo-tag", indicating a
+header item for some sort of BYTE, WORD or ITEM array.  Tracing of  objects
+is  done  using a small stack, and relocation via a segment table and extra
+bits in the item.  The extra  bits  in  the  item  can  be  replaced  by  a
+bit-table, and this may become the default method.
+
+  During  compaction,  objects  are  "tamped"  to  the low end of the heap,
+permitting  "genetic"  ordering  for  algebraic   operations,   and   rapid
+stack-like allocation.
+
+  Since  the  MTLISP systems included a number of variable sized data-types
+      ______      ______(e.g. vectors and strings), we had to reduce the working set, and ease  the
+addition  of  new data-types, by using a single heap with explicitly tagged
+objects, and compacting garbage collector.  In some versions,  a  bit-table
+was  used  both  for  marking  and  for  compaction.  To preserve locality,
+structures are "tamped" to  one  end  of  the  heap,  maintaining  relative
+(creation   time   or   "Genetic" [Terashima  78])  ordering.    The  order
+preservation was  rather  useful  for  an  inexpensive  canonical  ordering
+required in the REDUCE algebra system (simply compare heap positions, which
+are  "naturally"  related  to  object  creation).    The  single heap, with
+explicit tags made the addition of new data-types rather easy.  The virtual
+memory was implemented as a low level "memory" extension, invisible to  the
+allocator and garbage collector.Implementation                7 February 1983                    PSL Manual
+page 21.6                                                      section 21.5
+
+  This garbage collector has been rewritten a number of times; it is fairly
+easy  to  extend,  but  does waste lot of space in each DEC-20 word.  Among
+possible  alternative  allocators/GC  is  a  bit-table  version,  which  is
+semantically  equivalent  to  that  described  above but has the Dmov field
+replaced by a procedure to count ones in a segment of the  bit-table.    At
+some point, the separate heap model (tried on Z-80 and PDP-11 MTLISP's) may
+be  implemented,  but the separate page-per-type method (BIBOP:="big bag of
+pages") might also be tried; this permits user definition of new types.
+
+  Allocation proceeds as from a stack,  permitting  rapid  allocation,  and
+preserving  creation  time  ordering.    The  current implementation uses a
+recursive mark phase with a small stack (G stack) of about 500 entries.
+
+  Relocation is accomplished with aid the of the SEGMENT table (overlays  G
+stack),  and  a  small  field  (Dmov)  in  each  item  (header)  that gives
+additional motion of this item relative to the relocation of its segment.
+
+
+21.5.2. Two-Space Stop and Copy Collector on VAX21.5.2. Two-Space Stop and Copy Collector on VAX21.5.2. Two-Space Stop and Copy Collector on VAX
+
+  Another alternative is a copying, 2-space GC, which is fast and good  for
+large address space (e.g. extended addressing DEC-20 or VAX).
+
+
+
+21.6. The HEAPs21.6. The HEAPs21.6. The HEAPs
+
+  The  HEAP  is  used  to  store  variable sized objects.  Since one of the
+possible implementations is to have a separate heap for each  of  the  data
+types  PAIR,  STR,  CODE,  and  VECT  (or for the groupings PAIR, CODE+STR,
+VECT), the heap is accessed in type specific fashion  only.    The  current
+implementation   of   the   allocator  and  garbage  collector  maps  these
+type-specific operations onto a single array  of  item  sized  blocks,  the
+first  of  which  is a normal tagged item (CAR of a PAIR), or a pseudo-item
+(header of CODE, STR or VECT).  The  following  blocks  are  either  tagged
+items  or  packed  bytes.  The header item contains a "length" in items, or
+bytes, as appropriate.  Using item sized blocks results in a slight wastage
+at the end of strings and code-vectors.
+
+  Reclamation:
+
+
+h:=INF(x) For garbage collection, compaction and relocation.  The  heap  is
+          viewed as a set of ITEM sized blocks
+PUTINF(x,h)
+PUTTYPE(x,t)
+MARK(h) 
+UNMARK(h) Modify the garbage collector mark
+MARKED(h) Test the mark (in a bit-table, ITEM header, or ITEM itself).
+
+
+  Other Garbage collector primitives include:PSL Manual                    7 February 1983                Implementation
+section 21.6                                                      page 21.7
+
+GCPUSH(x) Push an ITEM onto GCSTACK for later trace
+x:=GCPOP()
+          Retrieve ITEM for tracing
+x:=GCTOP()
+          Examine top of GCSTACK
+
+
+  The  Garbage  collector  uses  a  GCSTACK for saving pointers still to be
+traced.  The compaction and relocation takes place  by  "tamping",  without
+structure reorganization, so that any structure is relocated by the same or
+more  than a neighboring structure, lower in the heap.  This "monotonicity"
+means that the heap can be divided into "segments", and the  relocation  of
+any structure computed as the relocation of its segment, plus an additional
+movement within the segment.  The segment table is an additional structure,
+while  the  "offset"  is computed from the bits in the bit-table, or from a
+small field (if available) in the ITEM.  This garbage collector is  similar
+to that described in [Terashima 78].
+
+
+RELOC(h):=SEGKNT(SEG(h))+DMOV(h)
+          SEGKNT(SEG(h))  is the segment relocation of the segment in which
+          h is, and DMOV is the incremental move within this segment.
+
+i:=SEG(h) Computes the segment number
+
+i:=DSEG(h)
+          The "offset" in the segment
+
+
+  Note that DMOV may actually be a small field in an ITEM header, if  there
+is  space,  or can be computed from the bits in a segment of the BIT-table,
+or may map to some other construct.  The segment table may actually overlay
+the GCSTACK space, since these  are  active  in  different  passes  of  the
+garbage  collection.  The garbage collector used in the MTLISP system is an
+extension of that attributed to  S. Brown  in [Harrison  73, Harrison  74].
+See also [Terashima 78].
+
+
+      __________                                                     ______!*GC [Initially: NIL]                                                switch
+
+     !*GC controls the printing of garbage collector messages.  If NIL
+     no  indication  of garbage collection occurs.  If non-NIL various
+     system dependent messages may be displayed.
+
+
+         __________                                                  ______GCKNT!* [Initially: 0]                                               global
+
+                                      Reclaim                                      Reclaim     Records the number of times that Reclaim has been called to  this
+     point.    GCKNT!*  may be reset to another value to record counts
+     incrementally, as desired.Implementation                7 February 1983                    PSL Manual
+page 21.8                                                      section 21.6
+
+ Reclaim Reclaim    _______                                                    ____(Reclaim ): integer                                                    expr
+
+     User  call  on  GC;  does  a  mark-trace  and compaction of HEAP.
+     Returns size of current Heap top.  If  !*GC  is  T,  prints  some
+                                          Reclaim                                          Reclaim     statistics.    Increments  GCKNT!*.  Reclaim(); is the user level
+     call to the garbage collector.
+
+
+ !%Reclaim !%Reclaim    ___ _______                                              ____(!%Reclaim ): Not Defined                                              expr
+
+     !%Reclaim     !%Reclaim     !%Reclaim(); is the system level call to the  garbage  collector.
+     Active  data  in  the  heap  is  made  contiguous  and all tagged
+     pointers into the  heap  from  active  local  stack  frames,  the
+     binding stack and the symbol table are relocated.
+
+
+
+21.7. Allocation Functions21.7. Allocation Functions21.7. Allocation Functions
+
+
+ GtHEAP GtHEAP _____ ____   ____                                              ____(GtHEAP NWRDS:word): word                                              expr
+
+                                              _____     Return  address  in  HEAP  of a block of NWRDS item sized pieces.
+                                                          GtHeap                                                          GtHeap     Generates HeapOverflow Message if can't  satisfy.    GtHeap  NIL;
+     returns  the  number  of  words  (Lisp  items)  left in the heap.
+     GtHeap     GtHeap     GtHeap 0; returns a pointer  to  the  top  of  the  active  heap.
+     GtHeap     GtHeap     GtHeap N; returns a pointer to N words (items).
+
+
+ GtStr GtStr _____ ____   ____                                               ____(GtStr UPLIM:word): word                                               expr
+
+                 ______     _____     Address  of string, 0..UPLIM bytes.  (Allocate space for a string
+     _____     UPLIM characters.)
+
+
+ GtConstStr GtConstStr _ ______                                                   ____(GtConstStr N:string):                                                 expr
+
+                                                            GtStr                                                            GtStr     (Allocate un-collected string for print name.  Same as GtStr, but
+     uses BPS, not heap.)
+
+
+ GtWrds GtWrds _____ ____   ____                                              ____(GtWrds UPLIM:word): word                                              expr
+
+                         _____                                   _____     Address of WRD,  0..UPLIM  WORDS.    (Allocate  space  for  UPLIM
+     untraced words.)
+
+
+ GtVect GtVect _____ ____   ____                                              ____(GtVect UPLIM:word): word                                              expr
+
+                  ______   _____     Address  of  vector,  UPLIM  items.  (Allocate space for a vector
+     _____     UPLIM items.)PSL Manual                    7 February 1983                Implementation
+section 21.7                                                      page 21.9
+
+ GtFixN GtFixN    _ _______                                                   ____(GtFixN ): s-integer                                                   expr
+
+     Allocate space for a fixnum.
+
+
+ GtFltN GtFltN    _ _______                                                   ____(GtFltN ): s-integer                                                   expr
+
+                          _____     Allocate space for a float.
+
+
+ GtID GtID    __                                                            ____(GtID ): id                                                            expr
+
+                    __     Allocate a new id.
+
+
+ GtBps GtBps _ _ _______   _ _______                                         ____(GtBps N:s-integer): s-integer                                         expr
+
+              _     Allocate N words for binary code.
+
+
+ GtWArray GtWArray _ _ _______   _ _______                                      ____(GtWArray N:s-integer): s-integer                                      expr
+
+              _     Allocate N words for WVar/WArray/WString.
+
+
+ DelBps DelBps                                                                ____(DelBps ):                                                             expr
+
+
+ DelWArray DelWArray                                                             ____(DelWArray ):                                                          expr
+
+  GtBps                                                GtWArray  GtBps                                                GtWArray  GtBps NIL; returns the number of words left in BPS.  GtWArray NIL returns
+the same quantity.
+
+  GtBps  GtBps  GtBps  0;  returns  a  pointer to the bottom of BPS, that is, the current
+                   GtWArray                   GtWArrayvalue of NextBPS.  GtWArray 0; returns a pointer to the  top  of  BPS,  the
+                                                                     DelBps                                                                     DelBpscurrent value of LastBPS.  This is sometimes convenient for use with DelBps
+    DelWArray    DelWArrayand DelWArray.
+
+  GtBps  GtBps  GtBps  N;  returns a pointer to N words in BPS, moving NextBPS up by that
+         GtWArray         GtWArrayamount.  GtWArray returns a pointer to (the bottom of) N words at  the  top
+of  BPS,  pushing LastBPS down by that amount.  Remember that the arguments
+are number of WORDS to allocate, that is, 1/4 the number of  bytes  on  the
+VAX or 68000.
+
+  DelBps  DelBps  DelBps(Lo,  Hi)  returns  a  block  to  BPS, if it is contiguous with the
+current free space.  In other words,  if  Hi  is  equal  to  NextBPS,  then
+NextBPS  is set to Lo.  Otherwise, NIL is returned and no space is added to
+      DelHeap                                 DelBps      DelHeap                                 DelBpsBPS.  DelHeap(Lo, Hi) is similar in action to DelBps.
+
+  DelWArray  DelWArray  DelWArray(Lo, Hi) returns a block to the top of BPS, if it is  contiguous
+with  the  current  free space.  In other words, if Lo is equal to LastBPS,
+then LastBPS is set to Hi.  Otherwise, NIL is  returned  and  no  space  isImplementation                7 February 1983                    PSL Manual
+page 21.10                                                     section 21.7
+
+added to BPS.
+
+  The  storage  management routines above are intended for either very long
+term or very short term use.  BPS is not examined by the garbage  collector
+at  all.    The routines below should be used with great care, as they deal
+with the heap which must be kept in a  consistent  state  for  the  garbage
+collector.    All  blocks  of memory allocated in the heap must have header
+words describing the size and type of data contained, and all pointers into
+the heap must have type tags consistent with the data they refer to.

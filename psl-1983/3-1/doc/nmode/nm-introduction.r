@@ -1,0 +1,99 @@
+.so pndoc:nman
+.part nm-introduction manual
+.chapter Introduction
+.label Introduction
+.
+@node("intro")
+This document describes the NMODE text editor.
+NMODE is an 
+advanced, self-documenting,
+customizable, extensible,
+interactive, multiple-window, screen-oriented
+editor written in PSL (Portable Standard Lisp).
+NMODE provides a compatible subset of the EMACS text editor,
+developed at M.I.T.  It also contains a number of
+extensions, most notably an interface to the underlying
+Lisp system for Lisp programmers.
+
+NMODE was developed at the Hewlett-Packard Laboratories
+Computer Research Center by Alan Snyder.
+A number of significant extensions have been contributed by
+Jeff Soreff.
+
+NMODE is based on an earlier editor, EMODE, written in PSL
+by William F. Galway at the University of Utah.
+Many of the basic ideas and the underlying structure
+of the NMODE editor come directly from EMODE.
+
+This document is only partially complete, but is being
+reprinted at this time for the benefit of new users that
+are not familiar with EMACS.  The bulk of this document
+has been borrowed from EMACS documentation and modified
+(by Jeff Soreff)
+appropriately in areas where NMODE and EMACS differ.
+The EMACS documentation was written by Richard M. Stallman.
+
+  We say that NMODE is a screen-oriented editor because normally the text
+being edited is visible on the screen and is updated automatically as
+you type your commands.  @Note("Screen" "Display").
+
+  We call it an interactive editor because the display is updated very
+frequently, usually after each character or pair of characters you
+type.  This minimizes the amount of information you must keep in your
+head as you edit.
+
+  We call NMODE advanced because it provides facilities that go beyond
+simple insertion and deletion: filling of text; automatic indentation
+of programs; viewing two files at once; and dealing in terms of
+characters, words, lines, sentences, and paragraphs, as well as
+LISP constructs.
+It is much easier to type one command meaning "go to the end of the
+paragraph" than to find the desired spot with repetition of simpler
+commands.
+
+  Self-documenting means that there are on-line functions to find out the
+function of any command and to view documentation about that command.
+@Note("Help").
+
+  Customizable means that you can change the definitions of NMODE
+commands in little ways.  
+For example, you can rearrange the command set.
+If you prefer the four basic cursor motion commands (up,
+down, left and right) on keys in a diamond pattern on the keyboard,
+you can have it.
+@Manual{@Note("Customization")}.
+
+  Extensible means that you can go beyond simple customization and
+write entirely new commands, programs in the language PSL.  NMODE is
+an "on-line extensible" system, which means that it is divided into
+many functions that call each other, any of which can be redefined in
+the middle of an editing session.  Any part of NMODE can be replaced
+without making a separate copy of all of NMODE.
+@Section(Preface)
+  This manual documents the use and simple customization of the
+display editor NMODE with the hp9836 operating system.  The reader is @i(not)
+expected to be a programmer.  Even simple customizations do not
+require programming skill, but the user who is not interested in
+customizing can ignore the scattered customization hints.
+
+  This is primarily a reference manual, but can also be used as a
+primer.  However, I recommend that the newcomer first use the on-line,
+learn-by-doing tutorial NTEACH.  With it, you learn NMODE by using
+NMODE on a specially designed file which describes commands, tells you
+when to try them, and then explains the results you see.  This gives a
+more vivid introduction than a printed manual.
+
+  On first reading, you need not make any attempt to memorize chapters
+2 and 3, which describe the notational conventions of the manual and the
+general appearance of the NMODE display screen.  It is enough to be
+aware of what questions are answered in these chapters, so you can
+refer back when you later become interested in the answers.  After
+reading the Basic Editing chapter you should practice the commands
+there.  The next few chapters describe fundamental techniques and
+concepts that are referred to again and again.  It is best to
+understand them thoroughly, experimenting with them if necessary.
+
+  To find the documentation on a particular command, look in the index
+if you know what the command is.  Both command characters and function
+names are indexed.  If you know vaguely what the command
+does, look in the topic index.

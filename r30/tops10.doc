@@ -1,0 +1,286 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+               RUNNING REDUCE ON A DECSYSTEM 10 SERIES COMPUTER
+
+                                 Version 3.0
+
+                                      by
+
+                               Anthony C. Hearn
+
+                             The Rand Corporation
+                          Santa Monica, CA 90406 USA
+
+                                  April 1983
+
+
+
+
+
+
+
+
+
+
+
+
+                                   ABSTRACT
+
+
+This  document describes operating procedures specific to running REDUCE under
+TOPS-10 on a DECSYSTEM 10 series computer.
+
+
+
+
+
+
+
+
+
+                         Rand Publication CP80(4/83)
+
+                   Copyright (c) 1983 The Rand Corporation
+
+
+
+
+                              _T_A_B_L_E__O_F__C_O_N_T_E_N_T_S
+
+
+
+
+
+
+
+1.  PRELIMINARY .........................................................    1
+
+2.  FILE HANDLING .......................................................    1
+
+3.  AN INTRODUCTION TO REDUCE ...........................................    2
+
+4.  REDUCE DOCUMENTATION ................................................    2
+
+5.  IMPLEMENTATION DEPENDENT PARAMETERS .................................    2
+         5.1  Object sizes ..............................................    2
+         5.2  Special characters and interrupts .........................    2
+         5.3  Memory Requirements .......................................    3
+         5.4  Miscellaneous .............................................    3
+
+6.  IMPLEMENTATION DEPENDENT ERROR MESSAGES .............................    3
+
+7.  FURTHER HELP ........................................................    4
+
+Running REDUCE under TOPS-10                                            Page 1
+
+
+1.  _P_R_E_L_I_M_I_N_A_R_Y
+
+This document describes operating procedures for running  REDUCE  specific  to
+the  DECSYSTEM  10  series  of  computers.   It  supplements the REDUCE User's
+Manual, describing features, extension and limitations specific to this imple-
+mentation of REDUCE.
+
+REDUCE under TOPS-10 for a DECSYSTEM 10 series computer is stored as  an  exe-
+cutable  binary  disk file.  The name of the directory that contains this file
+is identified in this document as "reduce:" .  Other REDUCE related files  are
+also stored in this directory.
+
+Unless reduce: is equivalent to sys: at your site, your command  files  should
+be  modified  to  include  reduce:  in your sys: search path.  An entry of the
+form:
+
+    path sys:/search=reduce:
+
+is sufficient.
+
+To run REDUCE, you then type (in upper or lower case)
+
+    reduce
+
+REDUCE will respond with a banner line and then prompt for the first  line  of
+input:
+
+    reduce 3.0, 15-Apr-83 ...
+
+    1:
+
+You can now begin entering commands.
+
+
+2.  _F_I_L_E__H_A_N_D_L_I_N_G
+
+TOPS-10 REDUCE file names follow TOPS-10 conventions. In particular, the  name
+and extension fields can be a maximum of six and three characters long respec-
+tively. As a result, the filenames that appear in IN, OUT and SHUT  statements
+must follow this convention. Directory names can be of three forms:
+
+   An identifier followed by a colon, e.g., reduce:.
+
+   An identifier enclosed in angle brackets, e.g., <reduce>. (Normally only
+      used with TOPS-20.)
+
+   A project, programmer pair, enclosed in square brackets, e.g., [22,304].
+      (Normally only used with TOPS-10.)
+
+The first two styles of directory name must precede the  file  name,  and  the
+third follow it, as in
+
+     "reduce:reduce.tst"
+
+     "<reduce>reduce.tst"
+
+Running REDUCE under TOPS-10                                            Page 2
+
+
+or
+     "reduce.tst[22,304]".
+
+As a test of the system, you should try
+
+     in "reduce:reduce.tst";
+
+which will load the standard REDUCE test file.
+
+
+3.  _A_N__I_N_T_R_O_D_U_C_T_I_O_N__T_O__R_E_D_U_C_E
+
+New users of REDUCE are advised to process the seven REDUCE Lessons  that  are
+available as reduce:lessi.  For example, to run Lesson 1, you would say:
+
+     in "reduce:less1";
+
+
+4.  _R_E_D_U_C_E__D_O_C_U_M_E_N_T_A_T_I_O_N
+
+REDUCE documents are also kept in the reduce: directory,  with  the  extension
+doc. These include:
+
+     instal.doc      Installation instructions
+
+     reduce.doc      REDUCE User's Manual
+
+     tops10.doc      TOPS-10 specific operation notes (i.e., this document).
+
+
+5.  _I_M_P_L_E_M_E_N_T_A_T_I_O_N__D_E_P_E_N_D_E_N_T__P_A_R_A_M_E_T_E_R_S
+
+5.1  _O_b_j_e_c_t__s_i_z_e_s
+
+The maximum string and identifier lengths are limited only by the  total  size
+of  the  memory partition for the names of such objects in the underlying LISP
+interpreter.  This is usually several thousand characters  long.  However,  we
+recommend  that  such  names  be limited to twenty-four characters or less for
+compatibility with other versions of REDUCE.
+
+Floating point numbers are printed with eight digit precision in either  fixed
+notation  or  in  a scientific notation with a two digit exponent depending on
+the size of the number.
+
+Arbitrary precision integer and real arithmetic is supported.
+
+Times (as reported by ON TIME or SHOWTIME)  are  given  in  milliseconds,  and
+measure execution time including garbage collection time.  They do not include
+operating system overhead (e.g., swapping time).
+
+5.2  _S_p_e_c_i_a_l__c_h_a_r_a_c_t_e_r_s__a_n_d__i_n_t_e_r_r_u_p_t_s
+
+Lower case input is permitted.
+
+The end-of-file character is <control>Z.
+
+Running REDUCE under TOPS-10                                            Page 3
+
+
+<del> deletes a single character from terminal  input,  <control>U  the  whole
+line.
+
+A command may be terminated by <escape> instead  of  $.  This  has  the  added
+advantage  that a Return is then not needed to evaluate the line.  <escape> is
+also used to terminate strings in the REDUCE interactive editor.
+
+^ may be used instead of ** to represent exponentiation.
+
+5.3  _M_e_m_o_r_y__R_e_q_u_i_r_e_m_e_n_t_s
+
+The distributed version of REDUCE requires a minimum of 193 pages of memory to
+run.   This  size  will  increase  as  additional facilities are automatically
+loaded by user actions.  A default expression workspace of approximately 26000
+cells  is also provided, which may prove to be insufficient for some problems.
+A command CORE is available to increase the size of the workspace.  This  com-
+mand MUST be given at the top level and not from a file since it reinitializes
+all file buffers.  CORE takes an integer as argument, representing  the  basic
+REDUCE  program  size  in  K words (exclusive of operating system increments).
+The minimum value is 60 (the default) and the maximum 124.   For  example,  to
+increase the user workspace by 10K words, one would say:
+
+     CORE 70;
+
+at the top level.
+
+In addition to the expression workspace, there  is  another  memory  partition
+called  the  binary  program  space  (which holds compiled programs) that also
+requires top level adjustment. A command EXCORE is available to  increase  the
+size  of  this  space.  Its  single argument is also an integer representing K
+words, but, unlike CORE, it causes the space to be incremented by that amount,
+not  set  to  that  amount. For system modules referenced at the top level, an
+automatic increase in binary program space occurs.  Otherwise  the  user  must
+increase  this  space  manually, prompted by a system message telling how much
+extra space is needed.
+
+5.4  _M_i_s_c_e_l_l_a_n_e_o_u_s
+
+There is no link currently to an external editor.
+
+The internal ordering on alphabetic characters is from A through Z followed by
+a through z.
+
+To exit REDUCE use either "bye;" or "quit;".  These  are  equivalent.   If  no
+non-ephemeral  processes  have been invoked after this, such a job may be res-
+tarted by the operating system command CONTINUE.
+
+
+6.  _I_M_P_L_E_M_E_N_T_A_T_I_O_N__D_E_P_E_N_D_E_N_T__E_R_R_O_R__M_E_S_S_A_G_E_S
+
+A number of error messages from the underlying LISP system may  be  seen  from
+time to time.  These include:
+
+NO FREE STG LEFT
+        Your problem is too large in its present form for the available
+
+Running REDUCE under TOPS-10                                            Page 4
+
+
+        workspace; either change your problem formulation or increase the
+        amount of workspace by the CORE command
+
+REG PUSHDOWN CAPACITY EXCEEDED
+        Your program probably contains a non-terminating loop that exhausts
+        the system's space for recursive references.  If you think your
+        program is correct, ask your site consultant to build you a system
+        with a bigger pushdown stack.
+
+For further details, the Manual for Standard  LISP  on  DECSYSTEM  10  and  20
+should be consulted.
+
+
+7.  _F_U_R_T_H_E_R__H_E_L_P
+
+For further help with REDUCE, please contact
+
+     <list your site consultant here>

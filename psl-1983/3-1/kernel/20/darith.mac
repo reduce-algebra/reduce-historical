@@ -1,0 +1,15 @@
+	radix 10
+	extern SYMNAM
+	extern SYMVAL
+	extern SYMFNC
+	extern SYMPRP
+	extern L0001
+	extern L0002
+	extern L0003
+L1397:	1
+	0
+	0
+	intern L1397
+L1398:	<3_30>+<1_18>+L1397
+	intern L1398
+	end

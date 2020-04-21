@@ -1,0 +1,77 @@
+,MOD
+- R 44X (11 April 1983) <PSL.NMODE-DOC>NM-REPLACEMENT.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+          201/NMODE Manual (Replacement Commands)                             Page 19-1
+
+
+          202/19.  Replacement Commands
+
+            201/Global search-and-replace operations are not needed as often in NMODE as
+          they are in other editors, but they are available.  In addition to the simple
+          Replace operation which is like that found in most editors, there is a Query
+          Replace operation which asks you, for each occurrence of the pattern,
+          whether to replace it.
+
+            To replace every instance of FOO after point with BAR, you can do
+
+          M-X Replace<CR>FOO<CR>BAR<CR>
+
+          This invokes 203/replace-string-command201/.  Replacement occurs only after point,
+          so if you want to cover the whole buffer you must go to the beginning first.
+          Replacement continues to the end of the buffer.
+
+          202/19.1  Query Replace
+
+            201/If you want to change only some of the occurrences of FOO, not all, then
+          you  cannot  use  an  ordinary  Replace.   Instead,  use  M-X  Query
+          Replace<CR>FOO<CR>BAR<CR> (203/query-replace-command201/).  This displays each
+          occurrence of FOO and waits for you to say whether to replace it with a
+          BAR.  The things you can type when you are shown an occurrence of FOO
+          are:
+
+                  Space      to replace the FOO
+                  Rubout     to skip to the next FOO without replacing this one.
+                  Comma     to replace this FOO and display the result.  You are then
+                              asked for another input character, except that since the
+                              replacement has already been made, Rubout and Space are
+                              equivalent.
+                  Escape     to exit without doing any more replacements.
+                  Period      to replace this FOO and then exit.
+                  !           to replace all remaining FOO's without asking.
+                  ^           to go back to the previous FOO (or, where it was), in
+                              case you have made a mistake.
+
+          If you type any other character, the Query Replace is exited, and the
+          character executed as a command.
+
+          202/19.2  Other Search-and-loop Functions
+
+            201/Here are some other functions related to replacement.  Their arguments are
+          strings.
+
+
+
+                  M-X How Many<CR>FOO<CR> invoke 203/count-occurrences-command 201/and
+                                  print the number of occurrences of FOO after point.
+                  M-X Count Occurrences<CR>FOO<CR> Same as M-X How Many.
+          201/Page 19-2                   NMODE Manual (Other Search-and-loop Functions)
+
+
+                  M-X            Keep            Lines<CR>FOO<CR>            invoke
+                                  203/delete-non-matching-lines-command 201/and kill all lines
+                                  after point that don't contain FOO.
+                  M-X  Delete  Non-Matching  Lines<CR>FOO<CR>  Same  as  M-X Keep
+                                  Lines.
+                  M-X Flush Lines<CR>FOO<CR> invoke 203/delete-matching-lines-command
+                                  201/and kill all lines after point that contain FOO.
+                  M-X Delete Matching Lines<CR>FOO<CR> Same as M-X Flush Lines.

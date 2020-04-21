@@ -1,0 +1,120 @@
+30-Jul-82 17:06:17-PDT,2293;000000000001
+Date: 30 Jul 1982 1706-PDT
+From: Alan Snyder <AS>
+Subject: NEW EMODE
+To: PSL-News: ;, PSL-Users: ;
+cc: AS
+
+------------------------------ EMODE Changes ------------------------------
+
+A new PSL has been installed with the following changes made to EMODE:
+
+1. C-X C-R (Read File) now replaces the contents of the current buffer
+   with the contents of the file, instead of inserting the contents
+   of the file at the current location in the buffer.  This is an
+   INCOMPATIBLE change.  (If you want to insert a file, you can first
+   read it into an auxiliary buffer.)
+2. File INPUT and OUTPUT have been speeded up greatly (by a factor of 5).
+   Still noticably slower than EMACS, however.
+3. Three bugs in file I/O have been fixed: (a) EMODE no longer treats a ^Z
+   in a file as an end-of-file mark; (b) EMODE will no longer lose the
+   last line of a file should it lack a terminating CRLF; (c) EMODE no
+   longer appends a spurious blank line when writing to a file.
+4. Many more EMACS commands have been implemented (see list below).
+   Please note that Lisp Indentation (available using TAB, LineFeed,
+   and C-M-Q) makes many bad choices.  These deficiencies are known, but
+   it was decided that in this case something was better than nothing.
+   Complaints about indentation are considered redundant.
+
+Send bug reports to "PSL@Hulk".
+
+New EMODE commands:
+
+  C-Q             (Quoted Insert)
+  M-\             (Delete Horizontal Space)
+  C-X C-O         (Delete Blank Lines)
+  M-M and C-M-M   (Back to Indentation)
+  M-^             (Delete Indentation)
+  M-@             (Mark Word)
+  C-X H           (Mark Whole Buffer)
+  C-M-@           (Mark Sexp)
+  Tab             (Indent for Lisp)
+  LineFeed        (Indent New Line)
+  C-M-U           (Backward Up List) [ should also be C-M-( ]
+  C-M-O           (Forward Up List)  [ should be C-M-) ]
+  C-M-A and C-M-[ (Beginning of Defun)
+  C-M-D           (Down List)
+  C-M-E and C-M-] (End of Defun)
+  C-M-H           (Mark Defun)
+  C-M-N           (Next List)
+  C-M-P           (Previous List)
+  C-M-Q           (Indent Sexp)
+  M-(             (Insert Parens)
+  M-)             (Move over Paren)
+
+-------------------------------------------------------------------------------
+-------
+10-Aug-82 17:02:41-PDT,1652;000000000001
+Date: 10 Aug 1982 1702-PDT
+From: Cris Perdue <Perdue>
+Subject: Latest, hottest PSL news
+To: PSL-News: ;, PSL-Users: ;
+
+PSL NEWS FLASH!! -- August 10, 1982
+
+
+CATCH
+
+An implementation of CATCH with "correct" semantics is on its
+way.  Eric Benson has an implementation that allows code for the
+body of the CATCH to be compiled in line.  Variables used free
+inside the body will not have to be declared fluid.  Unhandled
+exceptions will, unfortunately, continue to result in abort to
+the top level.
+
+BUG FIXES
+
+Be sure to peruse PSL:BUGS.TXT.  In addition to an invaluable
+compilation of commentary, bug reports and just plain flaming,
+this file contains reports of some fixes to bugs!
+
+TOKEN SCANNER FOUND WANTING
+
+The current PSL token scanner has been tried in the balance and
+found wanting.  Eric Benson says it was ripped off from some
+other token scanner in rather a hurry and needs to be replaced.
+
+PACKAGE SYSTEM ALSO FOUND WANTING
+
+Sources close to Doug Lanam report that the PSL "package system"
+is not adequate.  We asked Martin Griss, "What about the package
+system?".  He admitted the inadequacy, calling the package system
+"experimental" and saying that the fasloader needs to know about
+packages.
+
+EMODE IMPROVED AND DOCUMENTED
+
+Some improvements to EMODE are described in the key documentation
+file PSL:HP-PSL.IBM (and .LPT).  Enhancements continue at a rapid
+pace, leading one experienced observer to comment, "Looks like
+Alan has really been tearing into EMODE -- impressive!".  The
+file PE:DISPATCH.DOC contains some key information on
+customization of EMODE.  More reports to come.
+-------
+16-Aug-82 09:59:32-PDT,520;000000000001
+Date: 16 Aug 1982 0959-PDT
+From: Alan Snyder <AS>
+Subject: New PSL
+To: PSL-News: ;, PSL-Users: ;
+cc: AS
+
+A new version of "NPSL" has been installed with the following
+changes:
+
+  * EMODE now uses clear-EOL for faster redisplay.
+  * EMODE's start-up glitches have been removed.  EMODE will
+    now start up in 1-window mode.
+  * A "compile" command has been added; you can now say
+    "PSL compile foo" to EXEC to compile the file "foo.sl".
+    (This feature has been added to both PSL and NPSL.)
+-------

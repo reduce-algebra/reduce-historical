@@ -1,0 +1,46 @@
+
+
+Time-fnc.sl : code to time function calls.
+
+
+
+Usage:
+
+	do 
+	(timef function-name-1 function-name-2 ...)
+
+	Timef is a fexpr.
+	It will redefine the functions named so that timing information is
+	kept on these functions.  
+	This information is kept on the property list of the function name.
+	The properties used are `time' and `number-of-calls'.
+
+	(get function-name 'time) gives you the total time in the function.
+	(not counting gc time).
+	Note, this is the time from entrance to exit.
+	The timef function redefines the function with an
+	unwind-protect, so calls that are interrupted
+	by *throws are counted.
+
+	(get function-name 'number-of-calls) gives you the number of times
+	the function is called.
+
+	To stop timing do : 
+	(untimef function-name1 ..)
+	or do (untimef) for all functions.
+	(untimef) is a fexpr.
+
+	To print timing information do 
+	(print-time-info function-name-1 function-name-2 ..)
+
+	or do (print-time-info) for timing information on all function names.
+
+	special variables used: 
+	*timed-functions* : list of all functions currently being timed.
+	*all-timed-functions* : list of all functions ever timed in the
+		current session.
+
+	Comment: if tr is called on a called on a function that is already
+	being timed, and then untimef is called on the function, the
+	function will no longer be traced.
+

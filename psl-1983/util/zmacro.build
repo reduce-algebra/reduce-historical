@@ -1,0 +1,2 @@
+compiletime load(zboot,zbasic,zmacro);
+in "zmacro.lsp"$

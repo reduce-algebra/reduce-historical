@@ -1,0 +1,170 @@
+.silent_index {Append Next Kill} idx 14
+.silent_index {Append To Buffer} idx 14
+.silent_index {Append To File} idx 14
+.silent_index {Apropos} idx 14
+.silent_index {Argument Digit} idx 15
+.silent_index {Auto Fill Mode} idx 15
+.silent_index {Back To Indentation} idx 16
+.silent_index {Backward Kill Sentence} idx 16
+.silent_index {Backward Paragraph} idx 16
+.silent_index {Backward Sentence} idx 16
+.silent_index {Backward Up List} idx 17
+.silent_index {Buffer Browser} idx 17
+.silent_index {Buffer Not Modified} idx 17
+.silent_index {C-X Prefix} idx 17
+.silent_index {Center Line} idx 18
+.silent_index {Copy Region} idx 18
+.silent_index {Count Occurrences} idx 18
+.silent_index {Delete And Expunge File} idx 18
+.silent_index {Delete Backward Hacking Tabs} idx 19
+.silent_index {Delete Blank Lines} idx 19
+.silent_index {Delete File} idx 19
+.silent_index {Delete Forward Character} idx 19
+.silent_index {Delete Horizontal Space} idx 20
+.silent_index {Delete Indentation} idx 20
+.silent_index {Delete Matching Lines} idx 20
+.silent_index {Delete Non-Matching Lines} idx 20
+.silent_index {Dired} idx 20
+.silent_index {Down List} idx 21
+.silent_index {Edit Directory} idx 21
+.silent_index {End Of Defun} idx 21
+.silent_index {Esc Prefix} idx 22
+.silent_index {Exchange Point And Mark} idx 22
+.silent_index {Exchange Windows} idx 22
+.silent_index {Execute Buffer} idx 22
+.silent_index {Execute File} idx 22
+.silent_index {Execute Form} idx 23
+.silent_index {Exit Nmode} idx 23
+.silent_index {Fill Comment} idx 23
+.silent_index {Fill Paragraph} idx 23
+.silent_index {Fill Region} idx 24
+.silent_index {Find File} idx 24
+.silent_index {Forward Paragraph} idx 24
+.silent_index {Forward Sentence} idx 25
+.silent_index {Forward Up List} idx 25
+.silent_index {Get Register} idx 25
+.silent_index {Grow Window} idx 25
+.silent_index {Help Dispatch} idx 26
+.silent_index {Incremental Search} idx 26
+.silent_index {Indent New line} idx 26
+.silent_index {Insert Buffer} idx 26
+.silent_index {Insert Closing bracket} idx 27
+.silent_index {Insert Comment} idx 27
+.silent_index {Insert Date} idx 27
+.silent_index {Insert File} idx 27
+.silent_index {Insert Kill Buffer} idx 28
+.silent_index {Insert Next Character} idx 28
+.silent_index {Insert Parens} idx 28
+.silent_index {Kill Backward Form} idx 28
+.silent_index {Kill Backward Word} idx 29
+.silent_index {Kill Buffer} idx 29
+.silent_index {Kill Forward Form} idx 29
+.silent_index {Kill Forward Word} idx 29
+.silent_index {Kill Line} idx 30
+.silent_index {Kill Region} idx 30
+.silent_index {Kill Sentence} idx 30
+.silent_index {Kill Some Buffers} idx 30
+.silent_index {Lisp Abort} idx 31
+.silent_index {Lisp Backtrace} idx 31
+.silent_index {Lisp Continue} idx 31
+.silent_index {Lisp Help} idx 31
+.silent_index {Lisp Indent Region} idx 32
+.silent_index {Lisp Indent sexpr} idx 32
+.silent_index {Lisp Mode} idx 32
+.silent_index {Lisp Prefix} idx 32
+.silent_index {Lisp Quit} idx 33
+.silent_index {Lisp Retry} idx 33
+.silent_index {Lisp Tab} idx 33
+.silent_index {Lowercase Region} idx 33
+.silent_index {Lowercase Word} idx 34
+.silent_index {M-X Prefix} idx 34
+.silent_index {Mark Beginning} idx 34
+.silent_index {Mark Defun} idx 34
+.silent_index {Mark End} idx 35
+.silent_index {Mark Form} idx 35
+.silent_index {Mark Paragraph} idx 35
+.silent_index {Mark Whole Buffer} idx 35
+.silent_index {Mark Word} idx 35
+.silent_index {Move Backward Character} idx 36
+.silent_index {Move Backward Defun} idx 36
+.silent_index {Move Backward Form} idx 36
+.silent_index {Move Backward List} idx 36
+.silent_index {Move Backward Word} idx 37
+.silent_index {Move Down} idx 37
+.silent_index {Move Down Extending} idx 37
+.silent_index {Move Forward Character} idx 37
+.silent_index {Move Forward Form} idx 38
+.silent_index {Move Forward List} idx 38
+.silent_index {Move Forward Word} idx 38
+.silent_index {Move To Buffer End} idx 38
+.silent_index {Move To Buffer Start} idx 39
+.silent_index {Move To End Of Line} idx 39
+.silent_index {Move To Screen Edge} idx 39
+.silent_index {Move To Start Of Line} idx 39
+.silent_index {Move Up} idx 39
+.silent_index {Negative Argument} idx 40
+.silent_index {Next Screen} idx 40
+.silent_index {Nmode Abort} idx 40
+.silent_index {Nmode Exit To Superior} idx 40
+.silent_index {Nmode Full Refresh} idx 40
+.silent_index {Nmode Gc} idx 41
+.silent_index {Nmode Invert Video} idx 41
+.silent_index {Nmode Refresh} idx 41
+.silent_index {One Window} idx 41
+.silent_index {Open Line} idx 41
+.silent_index {Other Window} idx 42
+.silent_index {Prepend To File} idx 42
+.silent_index {Previous Screen} idx 42
+.silent_index {Put Register} idx 42
+.silent_index {Query Replace} idx 42
+.silent_index {Rename Buffer} idx 43
+.silent_index {Replace String} idx 43
+.silent_index {Reposition Window} idx 43
+.silent_index {Return} idx 43
+.silent_index {Reverse Search} idx 44
+.silent_index {Revert File} idx 44
+.silent_index {Save All Files} idx 44
+.silent_index {Save File} idx 44
+.silent_index {Scroll Other Window} idx 44
+.silent_index {Scroll Window Down Line} idx 45
+.silent_index {Scroll Window Down Page} idx 45
+.silent_index {Scroll Window Left} idx 45
+.silent_index {Scroll Window Right} idx 45
+.silent_index {Scroll Window Up Line} idx 45
+.silent_index {Scroll Window Up Page} idx 46
+.silent_index {Select Buffer} idx 46
+.silent_index {Select Previous Buffer} idx 46
+.silent_index {Set Fill Column} idx 46
+.silent_index {Set Fill Prefix} idx 47
+.silent_index {Set Goal Column} idx 47
+.silent_index {Set Key} idx 47
+.silent_index {Set Mark} idx 47
+.silent_index {Set Visited Filename} idx 48
+.silent_index {Split Line} idx 48
+.silent_index {Start Scripting} idx 48
+.silent_index {Start Timing} idx 48
+.silent_index {Stop Scripting} idx 49
+.silent_index {Stop Timing} idx 49
+.silent_index {Tab To Tab Stop} idx 49
+.silent_index {Text Mode} idx 49
+.silent_index {Transpose Characters} idx 50
+.silent_index {Transpose Forms} idx 50
+.silent_index {Transpose Lines} idx 50
+.silent_index {Transpose Regions} idx 50
+.silent_index {Transpose Words} idx 51
+.silent_index {Two Windows} idx 51
+.silent_index {Undelete File} idx 51
+.silent_index {Universal Argument} idx 51
+.silent_index {Unkill Previous} idx 52
+.silent_index {Upcase Digit} idx 52
+.silent_index {Uppercase Initial} idx 52
+.silent_index {Uppercase Region} idx 52
+.silent_index {Uppercase Word} idx 53
+.silent_index {View Two Windows} idx 53
+.silent_index {Visit File} idx 53
+.silent_index {Visit In Other Window} idx 53
+.silent_index {What Cursor Position} idx 54
+.silent_index {Write File} idx 54
+.silent_index {Write Region} idx 54
+.silent_index {Write Screen Photo} idx 54
+.silent_index {Yank Last Output} idx 55

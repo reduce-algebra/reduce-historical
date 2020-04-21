@@ -1,0 +1,62 @@
+ 4-Jun-82 22:09:33-MDT,0000003647;000000000001
+Date:  4 Jun 1982 2209-MDT
+From: Chip Maguire
+Subject: Files
+Sender: MAGUIRE at UTAH-20
+To: Griss
+cc: Benson, Lowder
+Reply-To: Maguire at Utah-20
+
+Eric has provided some excellent material for the documentation. However, I think
+that we really have quite a lot more to consider with respect to files,
+stream, and filenames. Based on the early morning conversation re files
+and the generalization of COMPRESS, etc. to multiple incore files
+the following is submitted for comments and reactions. In addition it would
+seem that a useful funciton is to allow the user to PutSysFCN(FcnName, SysVec)
+i.e. put a new definiton into the IO function vectors; as an explicit
+operation. This should make it clear when a function is being assigned to a 
+channel and allow the user to replace the functions associated with a channel
+in a very obvious manner. I would like to seem the initialization of 
+object become an Initialization time activity rather than lost of things
+being stuck in vectors before hand.  This should only mean a lot of 
+time spend doing these initiallizations the first time a system is buuilt,
+if a SaveSytem is done, the things which  have been built in stay builtin
+unless they are redefined later (so the execution cost is minimal). This
+will hopefully allow the IO-DATA.red file vectors to be idential on all machines
+as the binding will take place in a system dependent initialization file.
+
+Notes regarding files in PSL:
+
+1. The model is clearly not simply a stream oriented model as there are
+   non-stream based behaviour required.
+   a. In a stream model the input and output streams are independent,
+      there is no association such as streamM (an output stream) is
+      the corresponding output to streamN (an input stream) - however,
+      this behavior is being required by the RDTTY code on the 20 and the
+      faked RDTTY code on the VAX - this hides the fact that the system
+      "knows" about a primary terminal output, which is treated specially.
+   b. The functions Flatten-size, explode, compress, etc. - a not being
+      treated as what they really are - which is simply incore files
+      (i.e. a stream which flows to and from a string) - they should
+      get allocated just like other streams with the attendant properties that
+      there can be many of them and they need to be opened as incore
+      streams.
+2. The terminal is NOT being handled as a character oriented device,
+   it is being handled as a record oriented device - with the system providing
+   record editing prior to the entry of the carriage return. It is unclear
+   whether the prompting should be done the way it is on the VAX and the 20
+   for the Apollo, as the input buffer expands and contracts based on
+   the number of lines entered; in hold mode the input is not send to the
+   process until the hold is released, and then it is only sent as the lines
+   are read; it does not seem to make sense to prompt on the basis of
+   one prompt for each line. While it might seem reasonable to prompt for
+   each new READ, i.e. so the user know WHO is reading and the MODE that they
+   are reading in, it is currently not possible to know this unless the
+   terminial handling function remembers theold string and compares it to
+   the current one and checks if they are different.
+
+3. The use of the Promptout!* on the VAX does not eliminate all of these
+   problems asit does not correlate the PromptOut!* with the changes between
+   the set StdIn .  StdOut and ErrIn . ErrOut (but yet who you are prompting
+   is clearly related to the StdIn or ErrOut streams!
+-------

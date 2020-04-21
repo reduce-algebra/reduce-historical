@@ -1,0 +1,511 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                          REDUCE INSTALLATION GUIDE
+
+                         FOR THE DECSYSTEMS 10 AND 20
+
+                                 Version 3.0
+
+                                      by
+
+                               Anthony C. Hearn
+
+                             The Rand Corporation
+                          Santa Monica, CA 90406 USA
+
+                                  April 1983
+
+
+
+
+
+
+
+
+                                   ABSTRACT
+
+
+This guide describes the DECSYSTEM REDUCE distribution tape and procedures for
+installing,  testing  and  maintaining  REDUCE on a DECSYSTEM 10 or 20 running
+TOPS-10 or TOPS-20.
+
+
+
+
+
+
+
+
+
+                         Rand Publication CP79(4/83)
+
+                   Copyright (c) 1983 The Rand Corporation
+
+                              _T_A_B_L_E__O_F__C_O_N_T_E_N_T_S
+
+
+
+
+
+
+
+1.  INTRODUCTION ........................................................    1
+
+2.  DESCRIPTION OF THE DECSYSTEM REDUCE DISTRIBUTION TAPE ...............    1
+
+3.  INSTALLING REDUCE ...................................................    1
+         3.1  Assembly of the LISP Interpreter ..........................    2
+         3.2  Assembly of REDUCE ........................................    3
+         3.3  Making REDUCE Accessible to Users .........................    4
+
+4.  PRINTING DOCUMENTS ..................................................    4
+
+5.  TESTING REDUCE ......................................................    4
+
+6.  RUNNING REDUCE PROGRAMS .............................................    5
+
+7.  WORKING WITH MINIMAL DISK SPACE .....................................    5
+
+8.  REBUILDING REDUCE FASL FILES ........................................    6
+
+9.  PROGRAM REGISTRATION ................................................    6
+
+10.  INQUIRIES AND REPORTING OF ERRORS ..................................    7
+
+REDUCE Installation Guide for DECSYSTEMS 10 and 20                      Page 1
+
+
+1.  _I_N_T_R_O_D_U_C_T_I_O_N
+
+This guide describes the DECSYSTEM REDUCE distribution tape and procedures for
+installing,  testing  and  maintaining  REDUCE on a DECSYSTEM 10 or 20 running
+TOPS-10 or TOPS-20.  The distributed version of REDUCE requires at  least  140
+pages of memory in order to run effectively.
+
+The job times given in this guide are for a  DECSYSTEM  2060T  running  REDUCE
+with  a 230 page memory partition.  The following adjustment factors for other
+machines have been found to apply.
+
+                        KA-10   6.7       2040    3.3
+                        KI-10   3.3       KL-10   1.0
+
+These factors are however approximate and will vary according to machine  con-
+figuration and memory speeds.
+
+
+2.  _D_E_S_C_R_I_P_T_I_O_N__O_F__T_H_E__D_E_C_S_Y_S_T_E_M__R_E_D_U_C_E__D_I_S_T_R_I_B_U_T_I_O_N__T_A_P_E
+
+The distribution tape is in DUMPER (BACKUP) format and recorded in interchange
+mode  at  a density of 1600 bpi.  The files are organized into groups with the
+following structure:
+
+DOC              REDUCE documents, all with an extension DOC, including:
+
+                 instal.doc      Installation instructions (i.e., this
+                                 document)
+                 reduce.doc      REDUCE User's Manual
+                 sl.doc          Standard LISP Report
+                 sldec.doc       Manual for Standard LISP on DECSYSTEM
+                                 10 and 20
+                 tops10.doc      System specific operation notes.
+                 tops20.doc
+
+EXE              reduce.exe, the REDUCE executable file.
+
+FASL             Fast loading LISP files for loading REDUCE functions, all
+                 with the extension FAP.
+
+SRC              MACRO and RLISP sources for creating LISP and REDUCE.
+                 These files have the extensions MAC, RED and SL.
+
+UTIL             Macro Interpreted Command facility scripts for building
+                 REDUCE, etc.
+
+XMPL             REDUCE examples, tests, demonstrations and the interactive
+                 lessons. The lessons have names LESS1 through LESS7 with
+                 no extension. Other such files have the extension TST.
+
+
+3.  _I_N_S_T_A_L_L_I_N_G__R_E_D_U_C_E
+
+To install REDUCE, you need to create a directory for the REDUCE file  system.
+A good name for this under TOPS-20 is <reduce>, which will be used to describe
+
+REDUCE Installation Guide for DECSYSTEMS 10 and 20                      Page 2
+
+
+it from now on.  Connect to this directory, mount the tape and give  the  fol-
+lowing commands:
+
+TMOUNT MTA: MYTAPE:/REELID:name of tape
+DUMPER (or R BACKUP on TOPS-10 machines)
+TAPE MYTAPE
+INTERCHANGE
+DEN 1600
+RESTORE *.*
+EXIT
+
+This will retrieve all the files on the tape, and requires  approximately  the
+following pages of disk space, in 512K bytes:
+
+                              DOC   200
+                              EXE   200
+                              FASL  330
+                              SRC   500
+                              UTIL   10
+                              XMPL   60
+                                   ----
+                             total 1300
+
+If you are running on a computer using Release 4 or later of TOPS-20,  and  no
+source  updates  are  necessary,  then you are now ready to run REDUCE and its
+supporting Standard LISP system.  In this case, you can proceed to the section
+"Making REDUCE Accessible to Users".  Otherwise you must assemble the Standard
+LISP interpreter and build the REDUCE executable file as described in the fol-
+lowing sub-sections.
+
+3.1  _A_s_s_e_m_b_l_y__o_f__t_h_e__L_I_S_P__I_n_t_e_r_p_r_e_t_e_r
+
+To assemble the Standard LISP interpreter, the following two steps are  neces-
+sary:
+
+1) Using a suitable editor, look for the line "OPSYS is set here" in the
+   file LISP.MAC.  This is approximately 400 lines from the beginning of
+   the file.  Change the following lines to give OPSYS the appropriate
+   value for your system.  These values are:
+
+OPSYS==-1       TOPS-20 (the default)
+OPSYS==0        TOPS-10
+OPSYS==1        TENEX
+
+2) Build the LISP execute file LISP.EXE by the following sequence of
+   commands:
+
+     LOAD LISP
+     SAVE            (or SAVE LISP 12 under TOPS-10)
+
+This assembly takes about  60  seconds  to  complete  on  the  DECSYSTEM  2060
+described earlier.
+
+If this assembly is done on a machine running the TOPS-20AN (Arpanet) monitor,
+a  message "Multiply defined global symbol CLOSE" may be printed.  This is due
+
+REDUCE Installation Guide for DECSYSTEMS 10 and 20                      Page 3
+
+
+to the presence of a JSYS CLOSE in the TCP/IP enhancements that conflicts with
+the  LISP  function  CLOSE in the assembler. This conflict causes no harm, and
+can therefore be ignored.
+
+3.2  _A_s_s_e_m_b_l_y__o_f__R_E_D_U_C_E
+
+In the following narrative, user input is shown in lower case and system  out-
+put  in upper case.  Except where noted, user input terminates with a carriage
+return.
+
+For TOPS-10, the following sequence of commands is used:
+
+     .as dsk: sys:
+     DSK ASSIGNED
+
+     .r lisp 70
+
+     ALLOCATE? y
+     SYS: <cr>
+     FWDS=7000<space>
+     BPS.=100000<space>
+     SPDL=600<space>
+     RPDL=600<space>
+     HASH=475<space>
+
+     STANDARD LISP (APRIL 1983)
+
+     *(setq fislsize 1500)
+
+     1500
+
+     *(load rlisp rend alg1 alg2 rend2 entry)
+
+     NIL
+
+     *(excise)
+
+     T
+
+     *(quit)
+
+     .save reduce
+     REDUCE SAVED
+
+For TOPS-20, the following sequence is used:
+
+     @def sys: <reduce>,sys:
+     @lisp
+
+     ALLOCATE? y
+     CORE (K): 60<space>
+     SYS: <space>
+     FWDS=12000<space>
+     SPDL=600<space>
+     RPDL=600<space>
+
+REDUCE Installation Guide for DECSYSTEMS 10 and 20                      Page 4
+
+
+     HASH=475<space>
+
+     STANDARD LISP (APRIL 1983)
+
+     *(load rlisp rend alg1 alg2 rend2 entry)
+
+     NIL
+
+     *(excise)
+
+     T
+
+     *(quit)
+     @save reduce
+     REDUCE.EXE.1 SAVED
+
+This assembly takes about 10 seconds.
+
+For those systems that support the Macro Interpreted  Commands  facility,  the
+file  group UTIL contains a number of files that can be used to facilitate the
+building process. In particular, the files mkred1.mic and  mkred2.mic  can  be
+used  to  perform the above assembly for TOPS-10 and TOPS-20 respectively. For
+example, to build REDUCE under TOPS-20, you would say
+
+     do mkred2
+
+3.3  _M_a_k_i_n_g__R_E_D_U_C_E__A_c_c_e_s_s_i_b_l_e__t_o__U_s_e_r_s
+
+In order to make REDUCE accessible to them,  users  should  be  instructed  to
+include <reduce> in their SYS: pathname by a system command such as
+
+     def sys: <reduce>,sys:
+
+Alternatively, the file reduce.exe and the files  in  the  group  FASL  (i.e.,
+those  with  the extension fap) should be moved to a SYS: directory.  The FASL
+files must be moved since they are needed during REDUCE runs.
+
+
+4.  _P_R_I_N_T_I_N_G__D_O_C_U_M_E_N_T_S
+
+A number of documents relating to the assembly and running of LISP and  REDUCE
+are included in the file group DOC.  The documents are pagenated and formatted
+with standard ASCII control characters and may therefore be printed  by  stan-
+dard  printing  programs.  A maximum page length of 60 lines is assumed.  Note
+also that the left margin offset must be supplied by the user.
+
+
+5.  _T_E_S_T_I_N_G__R_E_D_U_C_E
+
+To test the REDUCE installation, the following job should be run:
+
+     Under TOPS-10:                  Under TOPS-20:
+
+     .r reduce 140                   @reduce
+
+REDUCE Installation Guide for DECSYSTEMS 10 and 20                      Page 5
+
+
+     REDUCE 3.0, 15-Apr-83           REDUCE 3.0, 15-Apr-83
+
+     *in "reduce.tst";               *core 70;
+
+                                     *in "reduce.tst";
+
+
+
+This requires about 25 seconds on the DEC 2060 as described above. If the out-
+put  is  directed  to  a  file (by a command such as "out out;"), this time is
+reduced to about 16 seconds.
+
+Other programs for testing the REDUCE system assembly may also be found in the
+file group XMPL.
+
+
+6.  _R_U_N_N_I_N_G__R_E_D_U_C_E__P_R_O_G_R_A_M_S
+
+Once reduce.exe has been placed on the user's search path,  REDUCE  is  simply
+invoked with its name:
+
+     reduce
+
+REDUCE will respond with a banner line and then prompt for the first  line  of
+input:
+
+     reduce 3.0, 15-Apr-83 ...
+
+     1:
+
+Prototypical instructions for using the TOPS-10 and TOPS-20 versions of REDUCE
+are  available  as  the  files  tops10.doc  and tops-20.doc respectively.  You
+should edit the appropriate version to reflect your site-specific  implementa-
+tion  before  issuing  it  to  users.   See  also the REDUCE User's Manual for
+further details.
+
+
+7.  _W_O_R_K_I_N_G__W_I_T_H__M_I_N_I_M_A_L__D_I_S_K__S_P_A_C_E
+
+Many of the REDUCE system files are not necessary for the running  of  REDUCE.
+In  situations  where  disk  space is at a premium, the following files may be
+deleted from disk:
+
+     -all files in the groups DOC, SRC, UTIL and XMPL,
+
+     -the files alg1.fap, alg2.fap, entry.fap, rend.fap, rend2.fap and
+      rlisp.fap from the file group FASL.
+
+Although the file groups DOC and XMPL are not necessary, it  is  advisable  to
+leave at least the REDUCE manual, TOP-10 or TOPS-20 operating instructions and
+the REDUCE interactive lessons on-line for users.
+
+REDUCE Installation Guide for DECSYSTEMS 10 and 20                      Page 6
+
+
+8.  _R_E_B_U_I_L_D_I_N_G__R_E_D_U_C_E__F_A_S_L__F_I_L_E_S
+
+Because of its organization into independently compilable modules, the current
+REDUCE system is fairly easy to maintain. If any source updates are necessary,
+they can be incorporated into the appropriate files using a convenient editor.
+
+Once any of the system source files have been  updated,  it  is  necessary  to
+rebuild  the  equivalent fast loading modules in order to utilize the changes.
+The following job will achieve this:
+
+    .r reduce 140 (or "reduce" under TOPS-20)
+
+    REDUCE 3.0, 15-Apr-83 ...
+
+    *core 70;   (TOPS-20 only)
+
+    *symbolic;
+
+    *faslout <filename>;
+
+    <system message>
+
+    *in "<filename>.red"$
+
+    *faslend;
+
+where <filename> is the name of the source file (eg, alg1).
+
+A MIC script is also available for this purpose. This is called as follows:
+
+    do mkfas1 <filename>  (TOPS-10)
+or
+    do mkfas2 <filename>  (TOPS-20).
+
+If the modules ALG1, ALG2, ENTRY, FEND, FISL, REND, REND2 or RLISP  have  been
+changed, then the REDUCE execute file must be rebuilt (see the section "Assem-
+bly of REDUCE").  Since all other modules are loaded  on  demand,  one  simply
+needs  to  ensure that the updated FASL files are on the appropriate directory
+to complete the update.
+
+
+9.  _P_R_O_G_R_A_M__R_E_G_I_S_T_R_A_T_I_O_N
+
+After installing REDUCE, fill out the accompanying registration form and  send
+to:
+
+                             Dr. Anthony C.Hearn
+                             The Rand Corporation
+                               1700 Main Street
+                            Santa Monica, CA 90406
+
+                          Telephone (213) 393-0411.
+
+This should be done so that you can be advised direct of any changes which are
+made  to  the  system.   Persons receiving  REDUCE from sources other than the
+
+REDUCE Installation Guide for DECSYSTEMS 10 and 20                      Page 7
+
+
+Rand Corporation are particularly requested to  follow  this  procedure.   The
+test  time requested on the registration form is the time printed by the final
+call of SHOWTIME in the output from the test described in the section "Testing
+REDUCE".
+
+
+10.  _I_N_Q_U_I_R_I_E_S__A_N_D__R_E_P_O_R_T_I_N_G__O_F__E_R_R_O_R_S
+
+Any  enquiries regarding the assembly or operation of REDUCE  should  also  be
+directed  to  the  above address. Suspected errors should  be  accompanied  by
+the relevant job output and a copy of the input source.
+
+                         REDUCE REGISTRATION FORM
+
+
+After installing REDUCE, please fill out this form and send to the address
+listed at the bottom.  This should be done so that you can be advised direct
+of any changes made to the system.  Persons receiving REDUCE from sources
+other than the Rand Corporation are particularly requested to follow this
+procedure.
+
+  Contact Person ______________________________________________ Date__________
+
+  Title          ______________________________________________
+
+  Organization   ______________________________________________
+
+  Address        ______________________________________________
+
+  City, State    ______________________________________________ Zip___________
+
+  Telephone      ______________________________________________ Ext___________
+
+  Network Address______________________________________________
+     (ARPANET, CSNET or UUCP, if available)
+
+
+COMPUTER DESCRIPTION
+
+  Vendor ___________   Model _____________  Operating System _________________
+
+  Equivalent, if not DECSYSTEM, IBM or VAX ___________________________________
+
+
+TIMING
+
+Please indicate the test time as printed by the final call of SHOWTIME in the
+output from the installation test described in the section "Testing REDUCE",
+of the REDUCE Installation Guide.  Also give the total system time, region
+(virtual) and real system memory available, if known and applicable.
+
+
+  Time ___________   Total System Time ___________  Region ___________
+
+  Real System Memory ___________
+
+
+Please also write on the back of this form any comments you may have about the
+installation procedure, and system documentation and performance.
+
+If  you  would  like  to  be  listed  in a published registry of REDUCE system
+holders,  please check here  ___.
+
+Mail this completed form to:
+
+                             Dr. Anthony C. Hearn
+                             The Rand Corporation
+                               1700 Main Street
+                            Santa Monica, CA 90406
+

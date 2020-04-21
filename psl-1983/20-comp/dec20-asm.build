@@ -1,0 +1,10 @@
+CompileTime <<
+load If!-System;
+load SysLisp;
+off UserMode;
+>>;
+CompileTime if_system(PDP10, NIL, <<
+in "DEC20-DATA-MACHINE.RED"$
+in "PC:DATA-MACHINE.RED"$
+>>)$
+in "DEC20-ASM.RED"$

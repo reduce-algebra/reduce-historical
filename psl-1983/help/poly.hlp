@@ -1,0 +1,31 @@
+POLY.RED                                       MLG July 82
+--------
+
+POLY is a simple (pedagogic) Rational Function Evaluator.
+
+After loading POLY.RED, run function ALGG(); or RAT();
+These accept a sequence of expressions:
+
+	 <exp> ; | QUIT; (Semicolon terminator)
+	 <exp> ::= <term> [+ <exp>  | - <exp>]
+	 <term> ::= <primary> [* <term> | / <term>]
+	 <primary> ::= <primary0> [^ <primary0> | ' <primary0> ]
+		 ^ is exponentiation, ' is derivative
+	 <primary0> ::= <number> | <variable> | ( <exp> )
+
+It includes a simple parser (RPARSE), 2 evaluators (RSIMP x)
+and (PRESIMP), and 2 prettyprinters, (RATPRINT) and (PREPRINT)
+
+ PREFIX Format:	<number> | <id> | (op arg1 arg2)
+		+ -> PLUS2
+		- -> DIFFERENCE (or MINUS)
+		* -> TIMES2
+		/ -> QUOTIENT
+		^ -> EXPT
+		' -> DIFF
+
+ Canonical Formats: Polynomial: integer | (term . polynomial)
+                    term      : (power . polynomial)
+                    power     : (variable . integer)
+                    Rational  : (polynomial .  polynomial)
+

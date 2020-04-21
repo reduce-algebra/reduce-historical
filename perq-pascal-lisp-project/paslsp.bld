@@ -1,0 +1,19 @@
+; Command file to assemble PASn pieces together and then compile them.
+;
+COP PAS3.INI PASLSP.INI
+APP PAS1.SLI PASLSP.INI
+APP PAS2.SLI PASLSP.INI
+APP PAS3.SLI PASLSP.INI
+APP USER.SLI PASLSP.INI
+copy pas0.pas S:PASLSP.pas
+append pas1.pas S:PASLSP.pas
+append pas2.pas S:PASLSP.pas
+append pas3.pas S:PASLSP.pas
+append exec.pas S:PASLSP.pas
+append pasN.pas S:PASLSP.pas
+pascal
+S:PASLSP.rel
+S:PASLSP.lst
+S:PASLSP.pas
+load S:PASLSP.REL
+save S:PASLSP.EXE

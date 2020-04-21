@@ -1,0 +1,17 @@
+	radix 10
+	extern SYMNAM
+	extern SYMVAL
+	extern SYMFNC
+	extern SYMPRP
+	extern L0001
+	extern L0002
+	extern L0003
+	extern L2260
+	extern L2253
+	extern L2254
+	extern L2255
+L3504:	1
+	intern L3504
+L3505:	block 41
+	intern L3505
+	end

@@ -1,0 +1,17 @@
+%
+% ALLOC.BUILD - Files dealing with allocation of memory blocks
+% 
+% Author:      Eric Benson
+%              Symbolic Computation Group
+%              Computer Science Dept.
+%              University of Utah
+% Date:        19 May 1982
+% Copyright (c) 1982 University of Utah
+%
+
+PathIn "allocators.red"$		% heap, symbol and code space alloc
+PathIn "copiers.red"$			% copying functions
+PathIn "cons-mkvect.red"$		% SL constructor functions
+PathIn "comp-support.red"$		% optimized CONS and LIST compilation
+PathIn "system-gc.red"$			% system-specific GC routines
+PathIn "gc.red"$			% the garbage collector

@@ -1,0 +1,10 @@
+@Comment{OUTLINE of TEST-GUIDE.MSS.17 by Scribe 3C(1254) on 24 July 1982 at 13:19}
+1. Introduction                                           1 TEST-GUIDE.MSS.17 line 51
+2. Basic I/O Support                                      1 TEST-GUIDE.MSS.17 line 64
+3. LAP and CMACRO Tests                                   4 TEST-GUIDE.MSS.17 line 181
+4. SysLisp Tests                                          4 TEST-GUIDE.MSS.17 line 189
+5. Mini PSL Tests                                         7 TEST-GUIDE.MSS.17 line 295
+6. Full PSL Tests                                         7 TEST-GUIDE.MSS.17 line 306
+7. References                                             8 TEST-GUIDE.MSS.17 line 322
+I. Sample DEC-20 Output                                   9 TEST-GUIDE.MSS.17 line 325
+ Table of Contents                                        1 <PSL.TESTS.20>-SCRIBE-SCRATCH-.15-3-1.100015 line 3

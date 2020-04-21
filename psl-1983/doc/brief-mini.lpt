@@ -1,0 +1,123 @@
+
+
+
+                         MINI BRIEF DEFINITION                         MINI BRIEF DEFINITION                         MINI BRIEF DEFINITION
+
+
+The  MINI  Translator  Writing  System  was developed in two steps.  The
+first was the enhancement of the META/REDUCE [Marti79] system  with  the
+definition  of  pattern  matching  primitives  to  aid in describing and
+performing tree-to-tree transformations.  META/REDUCE is very proficient
+at translating an input programming  language  into  LISP  or  LISP-like
+trees, but did not have a good method for manipulating the trees nor for
+direct  generation  of  target machine code.  PMETA (as it was initially
+called) [Kessler79], solved these  problems  and  created  a  very  good
+environment  for  the  development  of  compilers.    In fact, the PMETA
+enhancements have been fully integrated into META/REDUCE.
+
+The second step was the elimination of META/REDUCE and  the  development
+of  a  smaller, faster system (MINI).  Since META/REDUCE was designed to
+provide maximum flexibility and full generality,  the  parsers  that  is
+creates  are  large  and  slow.  One of its most significant problems is
+that it uses its own single character driven LISP  functions  for  token
+scanning  and  recognition.  Elimination of this overhead has produced a
+faster translator.  MINI uses the hand coded scanner in  the  underlying
+RLISP.    The  other  main aspect of MINI was the elimination of various
+META/REDUCE features to decrease the size of the system (also decreasing
+the flexibility, but MINI has been successful for the  various  purposes
+in COG).  MINI is now small enough to run on small LISP systems (as long
+as a token scanner is provided).  The META/REDUCE features that MINI has
+changed or eliminated include the following:
+
+
+   1. The  ability  to  backup  the  parser  state  upon failure is
+      supported in META/REDUCE.  However, by  modifying  a  grammar
+      definition, the need for backup can be mostly avoided and was
+      therefore eliminated from MINI
+
+   2. META/REDUCE  has  extensive  mechanisms  to  allow  arbitrary
+      length  dipthongs.    MINI  only   supports   two   character
+      dipthongs, declared prior to their use
+
+   3. The target machine language and error specification operators
+      are  not  supported  because  they  can  be  implemented with
+      support routines
+
+   4. REDUCE subsyntax for specification of semantic operations  is
+      not supported (only LISP is provided)
+
+
+Although  MINI  lacks  many of the features of META/REDUCE, it still has
+been  quite  sufficient  for  use  in  COG.    It  has  been  used   for
+implementation  of  MIDL,  pattern matching ruleblocks and the prototype
+parser/semantic analyzer.  The following  is  a  brief  introduction  to
+MINI, the reader is referred to [Marti79] for a more detailed discussion
+of the META/REDUCE operators, which are very similar to those of MINI.                                   2
+
+
+MINI uses a stack to perform parsing.  For example,
+
+
+  FOO: ID '!- ID +(PLUS2 #2 #1)
+
+
+defines  a  rule  FOO,  which  recognizes two identifiers separated by a
+minus sign (each ID pushes the recognized identifier  onto  the  stack).
+The  last  expression  replaces the top 2 elements on the stack (#2 pops
+the first ID pushed onto the stack, while #1 pops the other) with a LISP
+statement.  Specification of a parser using MINI  consists  of  defining
+the syntax with BNF-like rules and semantics with LISP expressions.  The
+following is a brief list of the operators:
+
+
+'               Used  to  designate a terminal symbol (i.e. 'WHILE, 'DO,
+                '!=)
+
+Identifier      Specifies a nonterminal
+
+( )             Used for grouping (i.e. (FOO BAR) requires rule  FOO  to
+                parse followed immediately by BAR)
+
+< >             Optional  parse,  if  it fails then continue (i.e. <FOO>
+                tries to parse FOO)
+
+/               Optional rules (i.e. FOO / BAR allows either FOO or  BAR
+                to parse, with FOO tested first)
+
+STMT[ANYTOKEN]* Parse any number of STMT separated by ANYTOKEN, create a
+                list  and  push onto the stack (i.e. ID[,]* will parse a
+                number of IDentifiers separated by commas,  like  in  an
+                argument list)
+
+##n             Reference the nth stack location (n must be an integer)
+
+#n              Pop the nth stack location (n must be an integer)
+
++(STMT)         Push the unevaluated (STMT) onto the stack
+
+.(SEXPR)        Evaluate the SEXPR and ignore the result
+
++.(SEXPR)       Evaluate the SEXPR and push the result on the stack
+
+@ANYTOKEN       Specifies  a  statement  terminator,  used  in the error
+                recovery mechanism to search for when an error occurs
+
+@@ANYTOKEN      Grammar terminator
+
+
+The useful files are as follows:                                   3
+
+
+MINI.MIN        The self definition of MINI in MINI.
+
+MINI.SL         A  Standard LISP version of MINI.MIN, translated by MINI
+                itself.
+
+MINI.RED        The support RLISP for MINI.
+
+SENTER.RED      The META/REDUCE symbol table package.
+
+MINI.BLD        A runfile that builds MINI.FAP from the above 4 files.
+
+MINIME.BLD      A runfile that builds the MINI.SL file  by  loading  and
+                translating MINI.MIN.

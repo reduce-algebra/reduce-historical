@@ -1,0 +1,909 @@
+PSL Manual                    7 February 1983              System Interface
+section 19.0                                                      page 19.1
+
+                                CHAPTER 19                                CHAPTER 19                                CHAPTER 19
+                        OPERATING SYSTEM INTERFACE                        OPERATING SYSTEM INTERFACE                        OPERATING SYSTEM INTERFACE
+
+
+
+
+     19.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    19.1
+     19.2. System Dependent Functions  .  .  .  .  .  .  .  .  .  .    19.2
+     19.3. TOPS-20 Interface  .  .  .  .  .  .  .  .  .  .  .  .  .    19.2
+          19.3.1. User Level Interface .  .  .  .  .  .  .  .  .  .    19.2
+          19.3.2. The Basic Fork Manipulation Functions  .  .  .  .    19.5
+          19.3.3. File Manipulation Functions.  .  .  .  .  .  .  .    19.6
+          19.3.4. Miscellaneous Functions .  .  .  .  .  .  .  .  .    19.7
+          19.3.5. Jsys Interface .  .  .  .  .  .  .  .  .  .  .  .    19.8
+          19.3.6. Bit, Word and Address Operations for Jsys Calls .   19.10
+          19.3.7. Examples .  .  .  .  .  .  .  .  .  .  .  .  .  .   19.12
+     19.4.  New Vax Specific Interface .  .  .  .  .  .  .  .  .  .   19.13
+          19.4.1. Setting Your .LOGIN and .CSHRC files.  .  .  .  .   19.13
+          19.4.2. Important PSL executables  .  .  .  .  .  .  .  .   19.14
+          19.4.3. Creating the Init Files .  .  .  .  .  .  .  .  .   19.14
+          19.4.4.  Directories and Symbols   .  .  .  .  .  .  .  .   19.15
+          19.4.5.  Miscellaneous Unix Interface Functions   .  .  .   19.18
+          19.4.6.  Oload   .  .  .  .  .  .  .  .  .  .  .  .  .  .   19.18
+          19.4.7. Calling oloaded functions  .  .  .  .  .  .  .  .   19.20
+          19.4.8. OLOAD Internals.  .  .  .  .  .  .  .  .  .  .  .   19.21
+          19.4.9.  I/O Control functions  .  .  .  .  .  .  .  .  .   19.24
+
+
+
+
+19.1. Introduction19.1. Introduction19.1. Introduction
+
+  From  within  each  PSL  implementation, there will be a set of functions
+that permit the user to access specific operating system services.  On  the
+DEC-20  and VAX these include the ability to submit commands to be run in a
+"lower fork", such  as  starting  an  editor,  submitting  a  system  print
+command,  listing  directories, and so on.  We will attempt to provide such
+       EXEC     CMDS       EXEC     CMDScalls (EXEC and CMDS) in all PSL implementations.  We also will provide  as
+clean  an interface to Low-level services as possible.  On the DEC-20, this
+         Jsys         Jsysis  the  Jsys  function.    Appropriate  support  functions  (such  as  bit
+operations,  byte-pointers,  etc.)  are also used by the assembler.  On the
+                        SYSCALL                        SYSCALLVAX we will provide the SYSCALL capability.
+
+
+
+19.2. System Dependent Functions19.2. System Dependent Functions19.2. System Dependent Functions
+
+
+ If_System If_System ___ ____ __  ____ ____ ___  _____ ____ ___   ___          ______(If_System SYS-NAME:id, TRUE-CASE:any, FALSE-CASE:any): any          cmacro
+
+     This is a compile-time  conditional  macro  for  system-dependent
+              _____ ____                                      ___ ____     code.    FALSE-CASE can be omitted and defaults to NIL.  SYS-NAMESystem Interface              7 February 1983                    PSL Manual
+page 19.2                                                      section 19.2
+
+     must  be  a  member of the fluid variable System_List!*.  For the
+     Dec-20, System_List!* is (Dec20 PDP10 Tops20 KL10).  For the  VAX
+     it is (VAX Unix VMUnix).  An example of its use follows.  
+
+        PROCEDURE MAIL();
+        IF_SYSTEM(TOPS20, RUNFORK "SYS:MM.EXE",
+            IF_SYSTEM(UNIX, SYSTEM "/BIN/MAIL",
+                      STDERROR "MAIL COMMAND NOT IMPLEMENTED"));
+
+
+
+19.3. TOPS-20 Interface19.3. TOPS-20 Interface19.3. TOPS-20 Interface
+
+
+19.3.1. User Level Interface19.3.1. User Level Interface19.3.1. User Level Interface
+
+                                      DoCmds                                      DoCmds  The  basic  function of interest is DoCmds, which takes a list of strings
+as arguments, concatenates them together, starts a lower fork, and  submits
+this string (via the Rescan buffer).  The string should include appropriate
+<CR><LF>,  "POP"  etc.    A  global  variable,  CRLF,  is provided with the
+<CR><LF> string.  Some additional entry points, and common calls have  been
+defined to simplify the task of submitting these commands.
+
+
+ DoCmds DoCmds _ ______ ____   ___                                            ____(DoCmds L:string-list): any                                            expr
+
+     Concatenate  strings  into a single string (using ConcatS), place
+     into the rescan buffer using PutRescan,  and  then  run  a  lower
+     EXEC, trying to use an existing Exec fork if possible.
+
+
+      __________                                                     ______CRLF [Initially: "<cr><lf>"]                                         global
+
+     This  variable  is  "CR-LF",  to  be  appended  to or inserted in
+     Command strings for  fnc(DoCmds).  It is STRING(Char CR,Char LF).
+
+
+ ConcatS ConcatS _ ______ ____   ______                                        ____(ConcatS L:string-list): string                                        expr
+
+     Concatenate string-list into a single string, ending with CRLF.
+
+     [??? Probably ConcatS should be in STRING, we add final  CRLF  in
+     PutRescan ???]
+
+
+ Cmds Cmds  _ ______    ___                                                _____(Cmds [L:string]): any                                                fexpr
+
+     Submit a set of commands to lower EXEC
+
+     E.g. CMDS("VDIR *.RED ", CRLF, "DEL *.LPT", CRLF, "POP");.
+
+  The following useful commands are defined:PSL Manual                    7 February 1983              System Interface
+section 19.3                                                      page 19.3
+
+ VDir VDir _ ______   ___                                                   ____(VDir L:string): any                                                   expr
+
+     Display  a  directory  and  return  to  PSL,  e.g.  (VDIR "R.*").
+     Defined as DoCmds LIST("VDIR ",L,CRLF,"POP");
+
+
+ HelpDir HelpDir    ___                                                        ____(HelpDir ): any                                                        expr
+
+     Display  PSL  help  directory.    Defined  as  DoCmds   LIST("DIR
+     PH:*.HLP",CRLF,"POP").
+
+
+ Sys Sys _ ______   ___                                                    ____(Sys L:string): any                                                    expr
+
+     Defined as DoCmds LIST("SYS ", L, CRLF, "POP");
+
+
+ Take Take _ ____   ___                                                     ____(Take L:list): any                                                     expr
+
+     Defined as DoCmds LIST("Take ",FileName,CRLF,"POP");
+
+
+ Type Type _ ______   ___                                                   ____(Type L:string): any                                                   expr
+
+     Type out files.  Defined as DoCmds LIST("TYPE ",L,CRLF,"POP");
+
+  While  definable  in  terms of the above DoCmds via a string, more direct
+execution of files and fork  manipulation  is  provided  by  the  following
+functions.  Recall that file names are simply Strings, e.g. "<psl>foo.exe",
+and that ForkHandles are allocated by TOPS-20 as large integers.
+
+
+ Run Run ________ ______   ___                                             ____(Run FILENAME:string): any                                             expr
+
+     Create  a fork, into which file name will be loaded, then run it,
+     waiting for completion.  Finally Kill the fork.
+
+
+ Exec Exec    ___                                                           ____(Exec ): any                                                           expr
+
+     Continue a lower EXEC, return with POP.  The Fork will be created
+     the first time this is run, and the ForkHandle preserved  in  the
+     global variable ExecFork.
+
+
+ Emacs Emacs    ___                                                          ____(Emacs ): any                                                          expr
+
+     Continue  a lower EMACS fork.  The Fork will be created the first
+     time this is run, and the  ForkHandle  preserved  in  the  global
+     variable EmacsFork.
+
+     [??? Figure out how to pass a buffer to from Emacs ???]System Interface              7 February 1983                    PSL Manual
+page 19.4                                                      section 19.3
+
+ MM MM    ___                                                             ____(MM ): any                                                             expr
+
+     Continue  a  lower  MM  fork.  The Fork will be created the first
+     time this is run, and the  ForkHandle  preserved  in  the  global
+     variable MMFork.
+
+       [???  MM  looks  in the rescan buffer for commands, so fairly       [???  MM  looks  in the rescan buffer for commands, so fairly       [???  MM  looks  in the rescan buffer for commands, so fairly
+       useful  mailers  (e.g.  for  BUG  reports)  can  be  created.       useful  mailers  (e.g.  for  BUG  reports)  can  be  created.       useful  mailers  (e.g.  for  BUG  reports)  can  be  created.
+       Perhaps make MM(s:string) for this purpose. ???]       Perhaps make MM(s:string) for this purpose. ???]       Perhaps make MM(s:string) for this purpose. ???]
+
+
+ Reset Reset    ____ ________                                                ____(Reset ): None Returned                                                expr
+
+     This function causes the system to be restarted.
+
+
+19.3.2. The Basic Fork Manipulation Functions19.3.2. The Basic Fork Manipulation Functions19.3.2. The Basic Fork Manipulation Functions
+
+
+ GetFork GetFork ___ _______   _______                                         ____(GetFork JFN:integer): integer                                         expr
+
+     Create a fork handle for a file; a GET on the file is done.
+
+
+ StartFork StartFork __ _______   ____ ________                                  ____(StartFork FH:integer): None Returned                                  expr
+
+     Start a fork running, don't wait, do something else.  Can also be
+     used to Restart a fork, after a WaitFork.
+
+
+ WaitFork WaitFork __ _______   _______                                         ____(WaitFork FH:integer): Unknown                                         expr
+
+     Wait for a running fork to terminate.
+
+
+ RunFork RunFork __ _______   _______                                          ____(RunFork FH:integer): Unknown                                          expr
+
+     Start and Wait for a FORK to terminate.
+
+
+ KillFork KillFork __ _______   _______                                         ____(KillFork FH:integer): Unknown                                         expr
+
+     Kill a fork (may not be restarted).
+
+
+ OpenFork OpenFork ________ ______   _______                                    ____(OpenFork FILENAME:string): integer                                    expr
+
+     Get a file into a Fork, ready to be run.PSL Manual                    7 February 1983              System Interface
+section 19.3                                                      page 19.5
+
+ PutRescan PutRescan _ ______   _______                                          ____(PutRescan S:string): Unknown                                          expr
+
+     Copy  a string into the rescan buffer, and announce to system, so
+     that next PBIN will get this characters.  Used  to  pass  command
+     strings to lower forks.
+
+
+ GetRescan GetRescan     ___ ______                                              ____(GetRescan ): {NIL,string}                                             expr
+
+     See  if  there  is a string in the rescan buffer.  If not, Return
+     NIL, else extract that string and return it.  This is useful  for
+     getting  command line arguments in PSL, if MAIN() is rewritten by
+     the user.  This will also include the program name,  under  which
+     this is called.
+
+
+19.3.3. File Manipulation Functions19.3.3. File Manipulation Functions19.3.3. File Manipulation Functions
+
+  These mostly return a JFN, as a small integer.
+
+
+ GetOldJfn GetOldJfn ________ ______   _______                                   ____(GetOldJfn FILENAME:string): integer                                   expr
+
+     Get a Jfn on an existing file.
+
+
+ GetNewJfn GetNewJfn ________ ______   _______                                   ____(GetNewJfn FILENAME:string): integer                                   expr
+
+     Get a Jfn for an new (non-existing) file.
+
+
+ RelJfn RelJfn ___ _______   _______                                          ____(RelJfn JFN:integer): integer                                          expr
+
+     Return Jfn to TOPS-20 for re-use.
+
+
+ FileP FileP ________ ______   _______                                       ____(FileP FILENAME:string): boolean                                       expr
+
+     Check  if  FILENAME  is  existing  file; this is a more efficient
+     method than the kernel version that uses ErrorSet.
+
+
+ OpenOldJfn OpenOldJfn ___ _______   _______                                      ____(OpenOldJfn JFN:integer): integer                                      expr
+
+     Open file on Jfn to READ 7-bit bytes.
+
+
+ OpenNewJfn OpenNewJfn ___ _______   _______                                      ____(OpenNewJfn JFN:integer): Unknown                                      expr
+
+     Open file on Jfn to write 7 bit bytes.System Interface              7 February 1983                    PSL Manual
+page 19.6                                                      section 19.3
+
+ GtJfn GtJfn ________ ______ ____ _______   _______                          ____(GtJfn FILENAME:string,BITS:integer): integer                          expr
+
+     Get a Jfn for a file, with standard Tops-20 Access bits set.
+
+
+ NameFromJfn NameFromJfn ___ _______   ______                                      ____(NameFromJfn JFN:integer): string                                      expr
+
+     Find the name of the File attached to the Jfn.
+
+
+19.3.4. Miscellaneous Functions19.3.4. Miscellaneous Functions19.3.4. Miscellaneous Functions
+
+
+ GetUName GetUName    ______                                                    ____(GetUName ): string                                                    expr
+
+     Get USER name as a string
+
+
+ GetCDir GetCDir    ______                                                     ____(GetCDir ): string                                                     expr
+
+     Get Connected DIRECTORY
+
+
+ InFile InFile  ____ __ ____    _______                                      _____(InFile [FILS:id-list]): Unknown                                      fexpr
+
+     Either  solicit  user  for file name (InFile), and then open that
+     file, else open specified file, for input.
+
+
+19.3.5. Jsys Interface19.3.5. Jsys Interface19.3.5. Jsys Interface
+
+      Jsys      Jsys  The Jsys interface and jsys-names (as symbols  of  the  form  jsXXX)  are
+defined in the source file PU:JSYS0.RED.
+
+  The  access  to  the  Jsys  call  is modeled after IDapply to avoid CONS,
+register reloads.  These could easily be done Open coded
+
+  The following SYSLISP calls, XJsys'n', expect W-values in the  registers,
+R1...R4,  a W-value for the Jsys number, Jnum and the contents of the 'nth'
+register.  Unused registers should be given 0.  Any  errors  detected  will
+               JsysError               JsysErrorresult  in the JsysError being called, which will use the system ErStr JSYS
+                                      StdError                                      StdErrorto find the error string, and issue a StdError.
+
+
+ XJsys0 XJsys0 __ _ _______  __ _ _______  __ _ _______(XJsys0 R1:s-integer, R2:s-integer, R3:s-integer,
+        __ _ _______  ____ _ _______   _ _______                       ____        R4:s-integer, Jnum:s-integer): s-integer                       expr
+
+     Used if no result register is needed.PSL Manual                    7 February 1983              System Interface
+section 19.3                                                      page 19.7
+
+ XJsys1 XJsys1 __ _ _______  __ _ _______  __ _ _______(XJsys1 R1:s-integer, R2:s-integer, R3:s-integer,
+        __ _ _______  ____ _ _______   _ _______                       ____        R4:s-integer, Jnum:s-integer): s-integer                       expr
+
+
+ XJsys2 XJsys2 __ _ _______  __ _ _______  __ _ _______(XJsys2 R1:s-integer, R2:s-integer, R3:s-integer,
+        __ _ _______  ____ _ _______   _ _______                       ____        R4:s-integer, Jnum:s-integer): s-integer                       expr
+
+
+ XJsys3 XJsys3 __ _ _______  __ _ _______  __ _ _______(XJsys3 R1:s-integer, R2:s-integer, R3:s-integer,
+        __ _ _______  ____ _ _______   _ _______                       ____        R4:s-integer, Jnum:s-integer): s-integer                       expr
+
+
+ XJsys4 XJsys4 __ _ _______  __ _ _______  __ _ _______(XJsys4 R1:s-integer, R2:s-integer, R3:s-integer,
+        __ _ _______  ____ _ _______   _ _______                       ____        R4:s-integer, Jnum:s-integer): s-integer                       expr
+
+  The  following functions are the LISP level calls, and expect integers or
+strings for the arguments, which  are  converted  into  s-integers  by  the
+          JConv          JConvfunction  JConv, below.  We will use JS to indicate the argument type.  The
+                      _______result returned is an integer, which should  be  converted  to  appropriate
+type  by  the  user, depending on the nature of the Jsys.  See the examples
+below for clarification.
+
+
+ Jsys0 Jsys0 __ __  __ __  __ __  __ __  ____ _ _______   _______            ____(Jsys0 R1:JS, R2:JS, R3:JS, R4:JS, Jnum:s-integer): integer            expr
+
+     Used is no result register is needed.
+
+
+ Jsys1 Jsys1 __ __  __ __  __ __  __ __  ____ _ _______   _______            ____(Jsys1 R1:JS, R2:JS, R3:JS, R4:JS, Jnum:s-integer): integer            expr
+
+
+ Jsys2 Jsys2 __ __  __ __  __ __  __ __  ____ _ _______   _______            ____(Jsys2 R1:JS, R2:JS, R3:JS, R4:JS, Jnum:s-integer): integer            expr
+
+
+ Jsys3 Jsys3 __ __  __ __  __ __  __ __  ____ _ _______   _______            ____(Jsys3 R1:JS, R2:JS, R3:JS, R4:JS, Jnum:s-integer): integer            expr
+
+
+ Jsys4 Jsys4 __ __  __ __  __ __  __ __  ____ _ _______   _______            ____(Jsys4 R1:JS, R2:JS, R3:JS, R4:JS, Jnum:s-integer): integer            expr
+
+      JConv      JConv  The JConv converts the argument type, JS, to  an  appropriate  s-integer,
+representing either an integer, or string pointer, or address.
+
+
+ JConv JConv _  _______ ______    _ _______                                  ____(JConv J:{integer,string}): s-integer                                  expr
+
+        _______     An integer J is directly converted to a s-integer, by Int2Sys(J).
+         ______     A   string  J  is  converted  to  a  byte  pointer  by  the  call
+     Lor(8#10700000000,Strinf(J)).  Otherwise  a  StdError,  "'J'  not
+     known in Jconv" is produced.
+
+  Additional  convertions  of  interest  may  be performed by the functions
+Int2Sys  Sys2IntInt2Sys  Sys2IntInt2Sys, Sys2Int, and the following functions:System Interface              7 February 1983                    PSL Manual
+page 19.8                                                      section 19.3
+
+ Str2Int Str2Int _ ______   _______                                            ____(Str2Int S:string): integer                                            expr
+
+     Returns  the  physical address of the string start as an integer;
+     this can CHANGE if a GC takes  place,  so  should  be  done  just
+     before calling the jsys.
+
+
+ Int2Str Int2Str _ _______   ______                                            ____(Int2Str J:integer): string                                            expr
+
+     J  is  assumed to be the address of a string, and a legal, tagged
+     string is created.
+
+
+19.3.6. Bit, Word and Address Operations for Jsys Calls19.3.6. Bit, Word and Address Operations for Jsys Calls19.3.6. Bit, Word and Address Operations for Jsys Calls
+
+
+ RecopyStringToNULL RecopyStringToNULL _ _ ______   ______                                ____(RecopyStringToNULL S:w-string): string                                expr
+
+     S is assumed to be the address of a string, and a  legal,  tagged
+     string  is  created,  by  searching  for  the  terminating  NULL,
+     allocating a HEAP string, and copying  the  characters  into  it.
+     This  is  used  to ensure that addresses not in the LISP heap are
+     not passed around  "cavalierly"  (although  PSL  is  designed  to
+     permit this quite safely).
+
+
+ Swap Swap _ _______   _______                                              ____(Swap X:integer): integer                                              expr
+
+     Swap  half  words of X; actually Xword(LowHalfWord X,HighHalfWord
+     X).
+
+
+ LowHalfWord LowHalfWord _ _______   _______                                       ____(LowHalfWord X:integer): integer                                       expr
+
+     Return  the  low-half  word  of  the  machine  representation  of
+     X. Actually Land(X,8#777777).
+
+
+ HighHalfWord HighHalfWord _ _______   _______                                      ____(HighHalfWord X:integer): integer                                      expr
+
+     Return  the  Upper  half  word as a small integer, of the machine
+     word           representation           of            X. Actually
+     Lsh(Land(X,8#777777000000),-18).
+
+
+ Xword Xword _ _______ _ _______   _______                                   ____(Xword X:integer,Y:integer): integer                                   expr
+
+     Build       a       Word      from      Half-Words,      actually
+     Lor(Lsh(LowHalfWord(X),18),LowHalfWord Y).PSL Manual                    7 February 1983              System Interface
+section 19.3                                                      page 19.9
+
+ JBits JBits _ ____   _______                                                ____(JBits L:list): integer                                                expr
+
+     Construct  a  word-image  by  OR'ing  together  selected  bits or
+     byte-fields.  L is list of integers or integer pairs.   A  single
+     integer  in  the range 0...35, BitPos, represents a single bit to
+     be turned on.  A pair of integers,  (FieldValue  .  RightBitPos),
+     causes  the  integer  FieldValue  to  be  shifted  so  its  least
+     significant bit (LSB) will fall  in  the  position,  RightBitPos.
+     This  value  is  then  OR'ed into the result.  Recall that on the
+     DEC-20, the most significant bit (MSB), is bit 0 and that the LSB
+     is bit 35.
+
+
+ Bits Bits _ ____   _______                                                _____(Bits L:list): integer                                                macro
+
+     A convenient access to Jbits:  JBits cdr L. 
+
+
+19.3.7. Examples19.3.7. Examples19.3.7. Examples
+
+  The  following  range  of  examples  illustrate  the  use  of  the  above
+functions.  More examples can be found in PU:exec0.red.
+
+
+
+Jsys1Jsys1Jsys1(0,0,0,0,jsPBIN);
+        % Reads a character, returns the ASCII code.
+
+Jsys0Jsys0Jsys0(ch,0,0,0,jsPBOUT);
+        % Takes ch as Ascii code, and prints it out.
+
+Procedure OPENOLDJfn Jfn;        %. OPEN to READ
+ JSYS0(Jfn,Bits( (7 . 5),19),0,0,jsOPENF);
+
+Lisp procedure GetFork Jfn;      %. Create Fork, READ File on Jfn
+   Begin scalar FH;
+      FH := JSYS1(Bits(1),0,0,0,jsCFork);
+      JSYS0(Xword(FH ,Jfn),0,0,0,jsGet);
+      return FH
+   END;
+
+Procedure GetOLDJfn FileName; %. test If file OLD and return Jfn
+   Begin scalar Jfn;
+      If NULL StringP FileName then return NIL;
+      Jfn := JSYS1(Bits(2,3,17),FileName,0,0,jsGTJfn);
+         % OLD!MSG!SHORT
+      If Jfn<0 then return NIL;
+      return Jfn
+   END;
+
+Procedure GetUNAME;      %. USER name
+ Begin Scalar S;System Interface              7 February 1983                    PSL Manual
+page 19.10                                                     section 19.3
+
+   S:=Mkstring 80;              % Allocate a 80 char buffer
+   JSYS0(s,JSYS1(0,0,0,0,jsGJINF),0,0,jsDIRST);
+   Return RecopyStringToNULL S;
+                % Since a NULL may be appear before end
+ End;
+
+Procedure ReadTTY;
+Begin Scalar S;
+        S:=MkString(30);    % Allocate a String Buffer
+        Jsys0        Jsys0        Jsys0(S,BITS(10,(30 . 35),"Retype it!",0,jsRDTTY);
+               % Sets a length halt (Bit 10),
+               % and length 30 (field at 35) in R2
+               % Gives a Prompt string in R3
+               % The input is RAISE'd to upper case.
+               % The Prompt will be typed if <Ctrl-R> is input
+        Return RecopyStringToNULL S;
+               % Since S will now possibly have a shorter
+               % string returned
+end;
+
+
+
+19.4. New Vax Specific Interface19.4. New Vax Specific Interface19.4. New Vax Specific Interface
+
+  Most of this information depends on the use of the Berkeley c-shell (csh)
+and  will need modification (or might not work) if the Bourne shell (sh) is
+your command shell of choice.  Extensive use is made of  csh  variables  to
+                                                      1
+describe path-names to the various PSL subdirectories. 
+
+
+19.4.1. Setting Your .LOGIN and .CSHRC files19.4.1. Setting Your .LOGIN and .CSHRC files19.4.1. Setting Your .LOGIN and .CSHRC files
+
+  During  installation of PSL, a file "psl-names" defining these path-names
+will have been edited and tested by the installer. The  message  announcing
+the  location of PSL on your system should indicate where this file is.  It
+is often placed on "~psl" or "~psl/dist".
+
+  It is absolutely essential that you place the line 
+
+
+        source ~psl/psl-names
+
+
+in your .login and .cshrc files. If you do not have either of  these,  they
+
+
+_______________
+
+  1
+   This  section  was contributed by Russ Fish.  The source for most of the
+functions mentioned is "$pv/system-extras.red".PSL Manual                    7 February 1983              System Interface
+section 19.4                                                     page 19.11
+
+should  be  created.  After  execution  of  this  statement,  a  set  of "$
+variables" will be available to refer to  files  of  interest  in  the  PSL
+system from the c-shell, from editors, and from within PSL.
+
+  You  may  have to add another directory to the search path of your shell,
+in the definition of path in your .login file, which gives the location  of
+the  PSL  executable  files.  This  should  be  done after the line "source
+~psl/psl-names", and is a line of the form 
+
+
+        set path=(. $psys /bin /usr/bin)
+
+
+  $psys is the c-cshell variable defined in psl-names to point at  the  psl
+"executables".
+
+
+19.4.2. Important PSL executables19.4.2. Important PSL executables19.4.2. Important PSL executables
+
+  "psl"  is  the PSL executable with a LISP syntax toploop. "rlisp" runs an
+RLISP (Algol-like) toploop syntax. At some  installations,  "bare-psl"  and
+"pslcomp"  also exist, particularly if "psl" has had many modules preloaded
+for local customization.
+
+  There are also a set of c-shell scripts that can be run as if  they  were
+exectable  programs.  These  include a "build" utility to recompile utility
+modules, "oload" to permit dynamic loading of non-LISP code into  PSL,  and
+"cmds.csh" to define some useful PSL related aliases.
+
+
+19.4.3. Creating the Init Files19.4.3. Creating the Init Files19.4.3. Creating the Init Files
+
+  On  startup  PSL,  RLISP,  and PSLCOMP look for LISP syntax init files on
+your home (login) directory, respectively named  ".pslrc",  ".rlisprc"  and
+".pslcomprc",  which  are  executed  in  the PSL before it prompts for user
+                                                  SaveSystem                                                  SaveSysteminput. Other PSL based programs that are saved by SaveSystem  can  also  be
+made to look for .xxxrc files of their own.
+
+  These  files  typically  contain  code  to  load modules of interest, set
+various switches, such as !*BREAK, etc.
+
+
+19.4.4.  Directories and Symbols19.4.4.  Directories and Symbols19.4.4.  Directories and Symbols
+
+  The specific locations of subtrees  of  PSL  files  is  left  up  to  the
+installer,  to  reflect  the  conventions  of  local  usage and file system
+layout.  This section discusses the use of c-shell variables ($  variables)
+for system-invariant navigation. To use these, the lines 
+
+
+        source ~psl/psl-names
+        source $pvsup/cmds.cshSystem Interface              7 February 1983                    PSL Manual
+page 19.12                                                     section 19.4
+
+        source lisp-psl-names
+
+
+should be placed in your login.cmd file
+
+  The  root  of  the PSL distribution tree is (usually) located in the home
+directory of a pseudo-user named  "psl",  and  hence  may  be  accessed  as
+"~psl/dist".    During  installation,  links in ~psl are often also made to
+startup files in the vax support directory, "$pvsup".    (These  should  be
+SYMBOLIC links in Berkeley 4.1a VmUnix and above.)
+
+  Note  -  the  c-shell  expands "~user" and "$variable" in filenames.  The
+current version  of  PSL  3.1  will  also  permit  these  constructions  in
+filenames,  though  in  a  somewhat  limited form. Future PSL releases will
+integrate this more fully. Currently, a file of psl-names in LISP systax is
+generated by the "source lisp-psl-names", and it must be read into PSL, etc
+via the .xxxrc files.
+
+  File "~psl/psl-names" defines c-shell symbols for the whole hierarchy  of
+distributed PSL directories.
+
+  File $pvsup/cmds.csh contains c-shell commands useful in conjunction with
+PSL.    As  of  this  writing,  there are only two commands (c-shell alias)
+defined there:
+
+
+   a. "lisp-psl-names".  When run from the .login file, it  creates  a
+      file  "psl-names.sl" on your home directory.  This file contains
+      a series of PUT statements to associate the full Unix path names
+      with ids that have the same name as the C-shell aliases  created
+      by various set commands in your .login. Each entry has the form 
+
+
+         (PUT (quote ID) (quote pslname) "pathname")
+
+
+      It is suggested that the line 
+
+
+              lisp-psl-names
+
+
+      be  placed  at  the  end  of your .login if you wish to use this
+      feature.  The file "psl-names.sl" should then be read  into  the
+      various PSL, RLISP, etc by placing a line 
+
+
+              (load vax!-path)
+
+
+      into your .pslrc, .rlisprc, etc. This loads the VAX-PATH module,
+      and  reads  the  file  "psl-names.sl"  which  was created by thePSL Manual                    7 February 1983              System Interface
+section 19.4                                                     page 19.13
+
+      "lisp-psl-names"  command  on  your  "home" directory, which can
+      also be loaded to give a procedure PATH that builds files  names
+      using a "$ID/.." syntax, and also a modified OPEN.
+
+   b. "lisp-csh-vars".    An  older  form of lisp-psl-names.It returns
+      LISP syntax assignments  for  all  of  the  directory  variables
+      defined  in the c-shell in which it is executed.  Its output may
+      be directly put into files ".pslrc" and ".rlisprc" in your  home
+      directory by placing this command in your .login file:  
+
+
+              lisp-csh-vars | tee .pslrc 
+
+
+      .rlisprc  >  after  which  any  directory  variables set in your
+      c-shell startup will be known in your PSL as arguments for "cd".
+      There are innumerable variations on this, of course.
+
+
+ cd cd ___ ______   _______                                               ____(cd DIR:string): boolean                                               expr
+
+     Like the shell "cd" command, sets the current directory (".")  of
+                                 cd                                 cd     the  running  PSL.   Unless cd is executed, the current directory
+                                                                __ ___     will remain the same as the current directory of the shell at the
+     ____ ___ ___ ___ _______     time the PSL was started.  (Unix filenames are paths relative  to
+                                                                    Cd                                                                    Cd     the  current  directory  unless  they  begin  with  a slash.)  Cd
+     returns T if it successfully found the  directory  given  in  the
+     argument as a path, NIL otherwise.
+
+
+ pwd pwd    ______                                                         ____(pwd ): string                                                         expr
+
+     Like  the  "pwd" unix command, meaning "print working directory".
+     Returns the current directory of the PSL as a string,  terminated
+     with  a  slash so filenames may be direcly "concat"ed to it.  The
+                                  cd                                  cd     trailing slash is ignored by cd.
+
+
+ path path _ ______   ______                                                ____(path S:string): string                                                expr
+
+     Examines the argument string; if it starts with $,  extracts  the
+     next  string up to the / (if any), converts it to (an upper-case)
+     __     id. Then an associated string is looked for under  the  indicator
+     'pslnames.    If  an  associated string is not found, an Error is
+                    _     generated.  If S does not start with $, it is returned unchanged.
+
+     Thus CD PATH "$PU"; will work.
+
+     When VAX-PATH is loaded, OPEN is redefined to apply PATH  to  the
+     file-name. Thus OPEN, IN, DSKIN, OUT, FILEP and and LAPIN can use
+     $vars  in  file  names without calling PATH explicitly. LOAD-PATH
+     also   reads   the   "psl-names.sl"   files   from   the   user'sSystem Interface              7 February 1983                    PSL Manual
+page 19.14                                                     section 19.4
+
+     home-directory.
+
+
+19.4.5.  Miscellaneous Unix Interface Functions19.4.5.  Miscellaneous Unix Interface Functions19.4.5.  Miscellaneous Unix Interface Functions
+
+
+ ExitLisp ExitLisp    _________                                                 ____(ExitLisp ): undefined                                                 expr
+
+     Since  "quit"  uses  the Berkeley job-control facility to the PSL
+     (like a ^Z at the keyboard), a separate function is  needed  when
+                                            ExitLisp                                            ExitLisp     you really want the PSL to terminate.  ExitLisp does it.  (A "^\"
+     from  the  keyboard  has  the same effect, assuming you have your
+     core-dump limit set low.)
+
+
+ GetEnv GetEnv __________ ______   ______                                     ____(GetEnv ENVVARNAME:string): string                                     expr
+
+     Returns value of the specified Unix  environment  variable  as  a
+     string, or NIL if the argument is not a string or the environment
+     variable is not set.
+
+
+ System System _______ ______   _________                                     ____(System UNIXCMD:string): undefined                                     expr
+
+     Starts  up  a sub-shell and passes the Unix command to it via the
+     Unix "system" command.  The working directory of the command will
+     be the same as the PSL.
+
+
+19.4.6.  Oload19.4.6.  Oload19.4.6.  Oload
+
+
+
+oload( LdSpec:String )                             c-shell-script
+----------------------                             --------------
+
+
+  Oload is a means of linking Unix .o and .a files into a running Vax  PSL.
+It  was  developed  to  get  access to existing C code driver libraries for
+graphics devices, but should work for any Unix compiled code with C calling
+conventions.
+
+  The single  argument  to  the  oload  function  is  a  string  containing
+arguments  to the Unix "ld" loader, separated by blanks.  File names ending
+in ".o" are compiled relocatable code files.   ".a"  files  are  "ar"  load
+libraries,  which  are assumed to contain a set of ".o" files, all of which
+are to be  loaded.    Other  loader  arguments  should  follow,  specifying
+whatever  libraries  are  necessary to satisfy all external references from
+the ".o" and ".a" files mentioned.  Library specs are in the  form  "-lfoo"
+to search the "libfoo.a" library on /lib, /usr/lib, or /usr/local/lib, e.g.
+"-lc" for the C library.PSL Manual                    7 February 1983              System Interface
+section 19.4                                                     page 19.15
+
+  This is an "incremental" (-A flag) load.  Symbols which are already known
+in the running PSL will be linked to the existing addresses.
+
+  If  the  load string argument is NIL, an attempt is made to re-oload from
+an existing .oload.out file.  This can only be done if the BPS  and  WARRAY
+base  addresses  are  EXACTLY the same as they were on the previously done,
+full oload.  An error message results if the BPS locations  are  different.
+This is meant to facilitate rapidly repeating an oload at startup time.
+
+  Alternately,  a  customized  version  of PSL may be saved by the function
+SaveSystemSaveSystemSaveSystem, after first performing oloads and loading or compiling  in  PSL
+code including functions which interface to the oloaded code.
+
+  Oload returns a status code of T if it succeded, or NIL if not.
+
+
+19.4.7. Calling oloaded functions19.4.7. Calling oloaded functions19.4.7. Calling oloaded functions
+
+  All entry points and global data objects in ".o" and ".a" files mentioned
+are  made known to the PSL system.  C functions may be called from compiled
+code ONLY, and are flagged 'ForeignFunction  by  oload.    Data  areas  are
+flagged  'ForeignData,  with  a  property  containing  a  pair  of the data
+location and size in bytes for use by SYSLISP interface code.
+
+  Currently, foreign function calls may not be compiled into Fasl files, so
+                                                             Compile                                                             Compilethe compilation must be done incrementally, via "on Comp" or Compile.
+
+                       C                       C  The names of oloaded C functions within PSL are the "true"  names,  which
+have  an  underscore  ("_")  prefixed to the C name.  This makes it easy to
+make a compiled "pass through" interface function which gives the same name
+within PSL as the C names.  e.g. "procedure foo(); _foo();"
+
+  Functions which take integer arguments can be called directly, due to the
+invisible tagging of integers up to +-2^^27 in Vax PSL.  Similarly, integer
+return values will be  passed  back  from  the  C  functions.    String  or
+structured arguments will require a bit of conversion code in the interface
+functions, using SYSLISP functions to remove tags on arguments and add them
+                                      ImportForeignString                                      ImportForeignStringto  return  values.    The  function  ImportForeignString constructs a LISP
+string, given a C string (char *).
+
+  Warning: currently, foreign function  calls  may  have  no  more  than  5
+arguments and floating point and struct arguments and return values are not
+supported.   This will be remedied in the compiler eventually.  In the mean
+time, both of these restrictions may  be  easily  circumvented  by  putting
+arguments  in  work  areas  and  passing the address of the work area as an
+argument to an intermediate C  "kluge  function"  which  unpacks  the  real
+arguments and passes them on to the target C function.
+
+  If  work  areas are needed in SYSLISP interface code, as when arrays must
+be passed to the C code, use a LispVar to hold the address of a word  block
+              GtWArray                        GtWrds              GtWArray                        GtWrdsacquired  via GtWArray (for static arrays) or GtWrds (for dynamic blocks in
+                                              C                                              Cthe heap).  Pass the array  address  to  the  C  function  as  the  pointerSystem Interface              7 February 1983                    PSL Manual
+page 19.16                                                     section 19.4
+
+argument.
+
+
+19.4.8. OLOAD Internals19.4.8. OLOAD Internals19.4.8. OLOAD Internals
+
+  Oload  invokes  the  Unix "ld" loader through a c-shell script to convert
+the relocatable code in .o files inwto absolute form, then  reads  it  into
+space  allocated  within the BPS area of the PSL.  The text segment goes at
+the low end of BPS, and the data and bss  segments  go  at  the  high  end,
+following the BPS storage allocation conventions of the LISP compiler.
+
+  Since  an  incremental  (-A) load is done, oload needs a filename path to
+the executable file containing the loader  symbol  table  of  the  previous
+load.        The   variable   SymbolFileName!*   tells   both   Oload   and
+SaveSystem/DumpLisp the file name string  to  use  (for  this  reason,  the
+executable files should be publicly readable.)
+
+  When PSL is started, SymbolFileName!* is automatically set to the name of
+the  executed PSL file.  This is done by importing the Unix argument string
+to variable UnixArgs!*.  UnixArgs!*[0] is the (possibly  partial)  path  to
+the  PSL  file  which  was  executed.    The unix environment variable PATH
+contains a set of path prefixes to which partial paths are appended,  until
+a  valid  filename  results.    "."    refers  to  the  path to the current
+directory, which is returned by pwd().  [ Unix system  interface  functions
+are contained in file $pv/system-extras.red. ]
+
+  SymbolFileName!*  is  set  to  ".oload.out"  by  oload, so that succesive
+oloads will accumulate a loader symbol table, and so that unexec, called by
+DumpSystemDumpSystemDumpSystem, will get the right symbol table in the saved PSL.  (It  may  be
+useful  to  know  that  the  initial  value of SymbolFileName!* is saved in
+StartupName!*.)
+
+  A number of work files are created on the current directory by the  oload
+script,  with  file  names  that  begin  ".oload".   The .oload.out file in
+particular is quite large because it spans the gap of unused space in  BPS.
+It  is a good idea to remove those files if you do not intend to repeat the
+oload exactly.  This can be done  from  your  rlisp,  via  the  command  ''
+system( "rm .oload.*" ); ''.
+
+
+ ImportForeignString ImportForeignString _ ______ ____   ______                            ____(ImportForeignString C_STRING:word): string                            expr
+
+     Constructs  and  returns a LISP string, given a C string (char *)
+     returned from a C ForeignFunction.  A NULL (0) string pointer  is
+     returned as NIL.
+
+
+                  __________                                         ______SYMBOLFILENAME!* [Initially: ]                                       global
+
+     Gives  the name of the PSL executable file to be examined by both
+     Oload and SaveSystem/DumpLisp to find the Unix  symbol  table  of
+     the  PSL.    Set  to the executed PSL file at startup, changed toPSL Manual                    7 February 1983              System Interface
+section 19.4                                                     page 19.17
+
+     ".oload.out" by Oload.
+
+
+               __________                                            ______STARTUPNAME!* [Initially: ]                                          global
+
+     The  path  to  the  originally  executed PSL file, as returned by
+              GetStartupName              GetStartupName     function GetStartupName, based on UnixArgs!*[0].
+
+
+            __________                                               ______UNIXARGS!* [Initially: ]                                             global
+
+     A vector of strings, passed to the PSL on  startup  by  the  Unix
+     shell.  Imported by function "getUnixArgs".
+
+
+19.4.9.  I/O Control functions19.4.9.  I/O Control functions19.4.9.  I/O Control functions
+
+
+ EchoOff EchoOff    _________                                                  ____(EchoOff ): undefined                                                  expr
+
+
+ EchoOn EchoOn    _________                                                   ____(EchoOn ): undefined                                                   expr
+
+     EchoOff     EchoOff     EchoOff  enters  raw,  character-at-a-time  input mode for Emode,
+                                                                EchoOn                                                                EchoOn     Nmode, and  similar  keystroke  oriented  environments.    EchoOn
+     returns to normal, line oriented input mode.
+
+
+ CharsInInputBuffer CharsInInputBuffer    _______                                         ____(CharsInInputBuffer ): integer                                         expr
+
+     Returns  the number of characters waiting for input from the TTY,
+     including those still in the Stdio buffer and those not yet  read
+     from Unix.
+
+
+ FlushStdOutputBuffer FlushStdOutputBuffer    ____ ________                                 ____(FlushStdOutputBuffer ): None Returned                                 expr
+
+     The  standard output from PSL is in Stdio line-buffered mode, and
+     is normally flushed to the TTY whenever an end-of-line is printed
+     or  before  waiting  for  input.    In   screen-oriented   output
+     environements   like   Emode/Nmode   which   use   screen  cursor
+     positioning, it is necessary to explictly  flush  the  buffer  at
+     appropriate  times.    It  may  also be desireable to see partial
+     lines of output at other times.
+
+
+ ChannelFlush ChannelFlush ____ __ _______   ____ ________                          ____(ChannelFlush Chnl:io-channel): None Returned                          expr
+
+     Flushes any channel, as FlushStdOutputBuffer does for StdOut!*.System Interface              7 February 1983                    PSL Manual
+page 19.18                                                     section 19.5
+
+19.5. Apollo System Calls19.5. Apollo System Calls19.5. Apollo System Calls
+
+  PSL  contains  a syscall package for use on the Apollo PSL.  See the USCG
+operating note "Apollo Syscall Package for PSL", by S. Lowder,  G. Maguire,
+and J. W. Peterson.

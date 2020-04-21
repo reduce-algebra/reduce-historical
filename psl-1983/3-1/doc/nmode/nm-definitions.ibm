@@ -1,0 +1,57 @@
+,MOD
+- R 44X (11 April 1983) <PSL.NMODE-DOC>NM-DEFINITIONS.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+          201/NMODE Manual (Definitions)                                         Page 25-1
+
+
+          202/25.  Definitions
+
+          201/This section defines a number of terms used in the descriptions of NMODE
+          commands.
+
+
+
+
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Definition: Defun
+
+
+          201/A defun is a list whose ( falls in column 0.  Its end is after the CRLF
+          following its ).
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Definition: Paragraph
+
+
+          201/Paragraphs are delimited by blank lines and psuedo-blank lines, which are
+          lines which don't match the existing fill prefix (when there is one), and,
+          when in text mode, also by indentation and by text justifier command lines,
+          which are currently defined as lines starting with a period and which are
+          treated as another type of psuedo-blank line.  Paragraphs contain the final
+          CRLF after their last test, and contain any immediately preceding empty line.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Definition: Region
+
+
+          201/The region is that portion of text between point, the current buffer position,
+          and mark.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Definition: Sentence
+
+
+          201/A sentence is ended by a ., ? or ! followed by two spaces or a CRLF (with
+          optional space), with any number of "closing characters" ", ', ) and ]
+          between.  A sentence also starts at the start of a paragraph.  A sentence
+          also ends at the end of a paragraph.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

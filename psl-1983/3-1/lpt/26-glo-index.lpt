@@ -1,0 +1,157 @@
+PSL Manual                    7 February 1983                  Global Index
+section 26.0                                                      page 26.1
+
+                                CHAPTER 26                                CHAPTER 26                                CHAPTER 26
+                       INDEX OF GLOBALS AND SWITCHES                       INDEX OF GLOBALS AND SWITCHES                       INDEX OF GLOBALS AND SWITCHES
+
+  The  following  is an alphabetical list of the PSL global variables, with
+the page on which they are defined.
+
+
+      !$BREAK!$ . . . . . . . . . . global    14.8
+      !$ERROR!$ . . . . . . . . . . global    14.1, 14.2
+      !*BACKTRACE . . . . . . . . . switch      14.1, 14.2
+      !*BREAK . . . . . . . . . . . switch      14.4, 14.8
+      !*BTR . . . . . . . . . . . . switch      15.10
+      !*BTRSAVE . . . . . . . . . . switch      15.10
+      !*COMP. . . . . . . . . . . . switch      10.3, 18.2
+      !*COMPRESSING . . . . . . . . switch      12.13, 12.16, 12.21
+      !*ContinuableError. . . . . . switch      14.3
+      !*CREFSUMMARY . . . . . . . . switch      17.3
+      !*DEFN. . . . . . . . . . . . switch      18.3
+      !*ECHO. . . . . . . . . . . . switch      12.2, 12.14
+      !*EMsgP . . . . . . . . . . . switch      13.5
+      !*EOLINSTRINGOK . . . . . . . switch      12.21
+      !*ERFG. . . . . . . . . . . . switch      18.23
+      !*GC. . . . . . . . . . . . . switch      21.7
+      !*INSTALL . . . . . . . . . . switch      15.10, 15.14
+      !*INSTALLDESTROY. . . . . . . switch      18.23
+      !*INT . . . . . . . . . . . . switch      18.23
+      !*MODULE. . . . . . . . . . . switch      18.7
+      !*MSGP. . . . . . . . . . . . switch      14.2
+      !*NOFRAMEFLUID. . . . . . . . switch      18.23
+      !*NOLINKE . . . . . . . . . . switch      18.6
+      !*NOTRARGS. . . . . . . . . . switch      15.6
+      !*ORD . . . . . . . . . . . . switch      18.6
+      !*PECHO . . . . . . . . . . . switch      13.5
+      !*PGWD. . . . . . . . . . . . switch      18.13
+      !*PLAP. . . . . . . . . . . . switch      18.7, 18.13
+      !*PVAL. . . . . . . . . . . . switch      13.5
+      !*PWRDS . . . . . . . . . . . switch      18.7, 18.13
+      !*R2I . . . . . . . . . . . . switch      18.6
+      !*RAISE . . . . . . . . . . . switch      12.19, 12.21
+      !*REDEFMSG. . . . . . . . . . switch      10.3
+      !*SAVECOM . . . . . . . . . . switch      18.13
+      !*SAVEDEF . . . . . . . . . . switch      18.13
+      !*SAVENAMES . . . . . . . . . switch      15.14
+      !*SHOWDEST. . . . . . . . . . switch      18.23
+      !*SYSLISP . . . . . . . . . . switch      18.24
+      !*TIME. . . . . . . . . . . . switch      13.5
+      !*TRACE . . . . . . . . . . . switch      15.7
+      !*TRACEALL. . . . . . . . . . switch      15.10, 15.14
+      !*TRCOUNT . . . . . . . . . . switch      15.11
+      !*UNSAFEBINDER. . . . . . . . switch      18.24
+      !*USEREGFLUID . . . . . . . . switch      18.24
+      !*USERMODE. . . . . . . . . . switch      10.3Global Index                  7 February 1983                    PSL Manual
+page 26.2                                                      section 26.0
+
+
+      \CURRENTPACKAGE!* . . . . . . global    6.10
+      \PACKAGENAMES!* . . . . . . . global    6.10
+
+      BREAKEVALUATOR!*. . . . . . . global    14.4
+      BreakIn!* . . . . . . . . . . global    12.3, 14.8
+      BreakLevel!*. . . . . . . . . global    14.4
+      BreakOut!*. . . . . . . . . . global    12.3, 14.8
+      BREAKPRINTER!*. . . . . . . . global    14.4
+      BREAKREADER!* . . . . . . . . global    14.4
+
+      CRLF. . . . . . . . . . . . . global    19.2
+      CurrentReadMacroIndicator!* . global    12.17
+      CurrentScanTable!*. . . . . . global    12.17, 12.18, 12.21, 12.25
+
+      Date!*. . . . . . . . . . . . global    13.3
+      DFPRINT!* . . . . . . . . . . global    18.3
+
+      EMSG!*. . . . . . . . . . . . global    14.2
+      ERRORFORM!* . . . . . . . . . global    14.3, 14.4, 14.5
+      ERRORHANDLERS!* . . . . . . . global    14.10
+      ERROUT!*. . . . . . . . . . . global    12.4, 12.10
+
+      GCKNT!* . . . . . . . . . . . global    21.7
+      GCTime!*. . . . . . . . . . . global    13.5
+
+      HelpIn!*. . . . . . . . . . . global    12.3, 13.7
+      HelpOut!* . . . . . . . . . . global    12.3, 13.7
+      HistoryCount!*. . . . . . . . global    13.6
+      HistoryList!* . . . . . . . . global    13.6
+
+      IgnoredInBacktrace!*. . . . . global    14.5
+      IN!*. . . . . . . . . . . . . global    12.3, 12.5, 12.13
+      InitForms!* . . . . . . . . . global    13.5
+      InterpreterFunctions!*. . . . global    14.5
+
+      LASTACTUALREG . . . . . . . . global    18.24
+      LispBanner!*. . . . . . . . . global    13.2
+      LISPSCANTABLE!* . . . . . . . global    12.21
+      LoadDirectories!* . . . . . . global    18.4
+      LoadExtensions!*. . . . . . . global    18.4
+
+      MaxBreakLevel!* . . . . . . . global    14.4
+      MAXLEVEL. . . . . . . . . . . global    16.12
+      MAXNARGS. . . . . . . . . . . global    18.24
+
+      NIL . . . . . . . . . . . . . global    6.15
+      NOLIST!*. . . . . . . . . . . global    17.3
+
+      OPTIONS!* . . . . . . . . . . global    18.3
+      OUT!* . . . . . . . . . . . . global    12.3, 12.5
+      OUTPUTBASE!*. . . . . . . . . global    12.20, 12.24PSL Manual                    7 February 1983                  Global Index
+section 26.0                                                      page 26.3
+
+
+      PATHIN!*. . . . . . . . . . . global    12.15
+      PLEVEL. . . . . . . . . . . . global    16.1
+      PPFPRINTER!*. . . . . . . . . global    15.15
+      PrinLength. . . . . . . . . . global    12.12
+      PrinLevel . . . . . . . . . . global    12.12
+      PROMPTSTRING!*. . . . . . . . global    12.4
+      PROPERTYPRINTER!* . . . . . . global    15.15
+      PUTDHOOK!*. . . . . . . . . . global    15.14
+
+      RandomSeed. . . . . . . . . . global    5.14
+      RLISPSCANTABLE!*. . . . . . . global    12.21, 12.22
+
+      SPECIALCLOSEFUNCTION!*. . . . global    12.4, 12.6
+      SPECIALRDSACTION!*. . . . . . global    12.5, 12.6
+      SPECIALREADFUNCTION!* . . . . global    12.4, 12.6
+      SPECIALWRITEFUNCTION!*. . . . global    12.4, 12.6
+      SPECIALWRSACTION!*. . . . . . global    12.5, 12.6
+      StartupName!* . . . . . . . . global    19.17
+      STDIN!* . . . . . . . . . . . global    12.2, 12.3, 12.5
+      STDOUT!*. . . . . . . . . . . global    12.2, 12.3, 12.5
+      STUBPRINTER!* . . . . . . . . global    15.15
+      STUBREADER!*. . . . . . . . . global    15.15
+      SymbolFileName!*. . . . . . . global    19.16
+
+      T . . . . . . . . . . . . . . global    6.15
+      ThrowSignal!* . . . . . . . . global    9.17
+      ThrowTag!*. . . . . . . . . . global    9.17
+      TOKTYPE!* . . . . . . . . . . global    12.16, 12.24
+      TopLoopEval!* . . . . . . . . global    13.4, 14.8
+      TopLoopLevel!*. . . . . . . . global    13.5
+      TopLoopName!* . . . . . . . . global    13.4
+      TopLoopPrint!*. . . . . . . . global    13.4, 14.8
+      TopLoopRead!* . . . . . . . . global    13.4, 14.8
+      TRACEMAXLEVEL!* . . . . . . . global    15.8
+      TRACEMINLEVEL!* . . . . . . . global    15.8
+      TRACENTRYHOOK!* . . . . . . . global    15.14
+      TRACEXITHOOK!*. . . . . . . . global    15.14
+      TRACEXPANDHOOK!*. . . . . . . global    15.15
+      TREXPRINTER!* . . . . . . . . global    15.15
+      TRINSTALLHOOK!* . . . . . . . global    15.15
+      TRPRINTER!* . . . . . . . . . global    15.16
+      TRSPACE!* . . . . . . . . . . global    15.16
+
+      UnixArgs!*. . . . . . . . . . global    19.17
+      UPFINDFLG . . . . . . . . . . global    16.12

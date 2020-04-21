@@ -1,0 +1,12 @@
+There are two possible editors to use in PSL.  One, the PSL Structure
+Editor, can be used inside the Break Loop by typing e or called in PSL
+or RLISP by calling the function Edit on the structure whic requires
+editing; for more information do Help MiniEditor; [(Help MiniEditor)
+in LISP].  A more complete structure Editor is available as a loadable
+option (Load ZPEdit); when that is loaded, the Break Loop and the
+function Edit call the more powerful functions available in that
+option (Help ZPEdit).
+
+A more powerful EMACS-like editor is also being developed; it is
+called EMODE.  For more information do Help Emode; [(Help Emode) in
+LISP].

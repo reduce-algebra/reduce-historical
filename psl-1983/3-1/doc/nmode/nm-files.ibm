@@ -1,0 +1,216 @@
+,MOD
+- R 44X (11 April 1983) <PSL.NMODE-DOC>NM-FILES.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+          201/NMODE Manual (File Handling)                                      Page 15-1
+
+
+          202/15.  File Handling
+
+            201/The basic unit of stored data is the file.  Each program, each paper, lives
+          usually in its own file.  To edit a program or paper, the editor must be told
+          the name of the file that contains it.  This is called 202/visiting 201/the file.  To
+          make your changes to the file permanent on disk, you must 202/save 201/the file.
+          NMODE also has facilities for deleting files conveniently, and for listing your
+          file directory.
+
+          202/15.1  Visiting Files
+
+                  201/C-X C-V   Visit a file.
+                  C-X C-S   Save the visited file.
+                  Meta-~     Tell NMODE to forget that the buffer has been changed.
+
+            202/Visiting 201/a file means copying its contents into NMODE where you can edit
+          them.  NMODE remembers the name of the file you visited.  Unless you use
+          the multiple buffer or window features of NMODE, you can only be visiting
+          one file at a time.  The name of the file you are visiting in the currently
+          selected buffer is visible in the mode line.
+
+            The changes you make with NMODE are made in a copy inside NMODE.  The
+          file itself is not changed.  The changed text is not permanent until you 202/save
+          201/it in a file.  The first time you change the text, a star appears at the end of
+          the mode line; this indicates that the text contains fresh changes which will
+          be lost unless you save them.
+
+            To visit a file, use the command C-X C-V (203/visit-file-command201/).  Follow the
+          command with the name of the file you wish to visit, terminated by a Return.
+          After C-X C-V is entered, 203/visit-file-command 201/will display a prompt.  This
+          prompt may contain a default filename, if so then any component of the
+          filename which you don't specify is taken from it.  You can abort the
+          command by typing C-G, or edit the filename with normal NMODE editing
+          commands.  If you do type a Return to finish the command, the new file's
+          text appears on the screen, and its name appears in the mode line.
+
+            When you wish to save the file and make your changes permanent, type
+          C-X C-S (203/save-file-command201/).  After the save is finished, C-X C-S prints
+          "Written: <filename>" in the echo area at the bottom of the screen.  If there
+          are no changes to save (no star at the end of the mode line), the file is not
+          saved; it would be redundant to save a duplicate of the previous version.
+
+            What if you want to create a file?  Just visit it.  NMODE prints "(New
+          File)" but aside from that behaves as if you had visited an existing empty
+          file.  If you make any changes and save them, the file is created.  If you
+          visit a nonexistent file unintentionally (because you typed the wrong file
+          name), go ahead and visit the file you meant.  If you don't save the
+          unwanted file, it is not created.
+
+            If you alter one file and then visit another in the same buffer, NMODE
+          offers to save the old one.  If you answer YES, the old file is saved; if you
+          answer NO, all the changes you have made to it since the last save are lost.
+          201/Page 15-2                                      NMODE Manual (Visiting Files)
+
+
+            Sometimes you will change a buffer by accident.  Even if you undo the
+          change by hand, NMODE still knows that "the buffer has been changed".
+          You can tell NMODE to believe that there have been no changes with the
+          Meta-~ (203/buffer-not-modified-command201/) command.  This command simply clears
+          the "modified" flag which says that the buffer contains changes which need to
+          be saved.  Even if the buffer really 203/is 201/changed NMODE will still act as if it
+          were not.  If we take "~" to mean "not", then Meta-~ is "not", metafied.
+
+          202/15.2  How to Undo Drastic Changes to a File
+
+            201/If you have made extensive changes to a file and then change your mind
+          about them, you can get rid of them by reading in the previous version of
+          the file.  To do this, use M-X Revert File (203/revert-file-command201/).
+
+            M-X Revert File does not change point, so that if the file was only edited
+          slightly, you will be at approximately the same piece of text after the Revert
+          as before.  If you have made drastic changes, the same value of point in the
+          old file may address a totally different piece of text.
+
+          202/15.3  Listing a File Directory
+
+            201/To look at a file directory, use the C-X D command (203/dired-command201/).  With
+          no argument, it shows you the directory of the file you are visiting.  C-U
+          C-X D reads a directory specification from the keyboard and shows you the
+          files    related    to    that    directory    specification.     M-X    DIRED
+          (203/edit-directory-command201/)  differs  in  that  it  prompts  for  a  directory
+          specification even without an argument.
+
+          202/15.4  DIRED, the Directory Editor Subsystem
+
+            201/DIRED makes it easy to delete many of the files in a single directory at
+          once.  It presents a copy of a listing of the directory, which you can move
+          around in, marking files for deletion.  When you are satisfied, you can tell
+          DIRED to go ahead and delete the marked files.
+
+            Invoke DIRED with C-X D or M-X DIRED<CR><CR> to edit the current
+          default directory, or M-X DIRED<CR><dir><CR> to edit directory <dir>.  You
+          are then given a listing of the directory which you can move around in with
+          all the normal NMODE motion commands.  Some NMODE commands are made
+          undefined and others do special things, but it's still a recursive editing level
+          which you can exit normally with Q.
+
+          202/15.4.1  Basic DIRED Commands
+
+            201/You can mark a file for deletion by moving to the line describing the file
+          and typing D.  The deletion mark is visible as a D at the beginning of the
+          line.  Point is moved to the beginning of the next line, so that several D's
+          delete several files.  Alternatively, if you give D an argument it marks that
+          many consecutive files.  Given a negative argument, it marks the preceding
+          file (or several files) and puts point at the first (in the buffer) line marked.
+          Most of the DIRED commands (D, U, E, Space) repeat this way with numeric
+          arguments.
+          201/NMODE Manual (Basic DIRED Commands)                            Page 15-3
+
+
+            If you wish to remove a deletion mark, use the U (for Undelete) command,
+          which is invoked like D: it removes the deletion mark from the current line
+          (or next few lines, if given an argument).  The Rubout command removes the
+          deletion mark from the previous line, moving up to that line.   Thus, a
+          Rubout after a D precisely cancels the D.
+
+            For extra convenience, Space is made a command similar to C-N.  Moving
+          down a line is done so often in DIRED that it deserves to be easy to type.
+          Rubout is often useful simply for moving up.
+
+            If you are not sure whether you want to delete a file, you can examine it
+          by typing E.  This enters a recursive editing mode on the file, which you
+          can exit with C-M-L.  This also allows you to modify files.  When you exit
+          the recursive editing level, you return to DIRED.
+
+            When you have marked the files you wish to mark, you can exit DIRED with
+          Q.   If any files were marked for deletion, DIRED lists them in a concise
+          format, several per line.  You can type "YES" (Just "Y" won't do) to go
+          ahead and delete them, "N" to return to editing the directory so you can
+          change the marks, or "X" to give up and delete nothing.   No Return
+          character is needed.  No other inputs are accepted at this point.
+
+          202/15.4.2  Other DIRED Commands
+
+            201/S sorts the files into a different order.  It reads another character to say
+          which order: F for filename (the default), S for size, R for read date, or W
+          for write date.
+
+            R does the same sorting as S, but uses the reverse order (small files,
+          older files or end of alphabet first).
+
+            ? displays documentation on DIRED.
+
+          202/15.4.3  Invoking DIRED
+
+            201/There are some other ways to invoke DIRED.   The command C-X D
+          (203/dired-command201/) puts you in DIRED on the directory containing the file you
+          are currently editing.  With a numeric argument of 1 (C-U 1 C-X D), only
+          the current file is displayed instead of the whole directory.  This is present
+          for historical reasons.  On file systems which contain multiple versions of
+          files, such as twenex, this allows one to see how much space old versions of
+          a file are consuming.  With a numeric argument of 4 (C-U C-X D), it asks
+          you for the directory name.  Type a directory name and/or a file name.  If
+          you explicitly specify a file name only versions of that file are displayed,
+          otherwise the whole directory is displayed.
+
+          202/15.5  Miscellaneous File Operations
+
+            201/NMODE has extended commands for performing many other operations on
+          files.
+
+            M-X Write File<CR><file><CR> (203/write-file-command201/) writes the contents of
+          the buffer into the file <file>, and then visits that file.  It can be thought of
+          201/Page 15-4                       NMODE Manual (Miscellaneous File Operations)
+
+
+          as a way of "changing the name" of the file you are visiting.  Unlike C-X
+          C-S, Write File saves even if the buffer has not been changed.  C-X C-W is
+          another way of getting at this command.
+
+            M-X Insert File<CR><file><CR> (203/insert-file-command201/) inserts the contents of
+          <file> into the buffer at point, leaving point unchanged before the contents
+          and mark after them.
+
+            M-X Write Region<CR><file><CR> (203/write-region-command201/) writes the region
+          (the text between point and mark) to the specified file.  It does not set the
+          visited filename.  The buffer is not changed.
+
+            M-X Append to File<CR><file><CR> (203/append-to-file-command201/) appends the
+          region to <file>.  The text is added to the end of <file>.
+
+            M-X Prepend to File<CR><file><CR> (203/prepend-to-file-command201/) adds the text
+          to the beginning of <file> instead of the end.
+
+            M-X  Set  Visited  Filename<CR><file><CR>  (203/set-visited-filename-command201/)
+          changes the name of the file being visited without reading or writing the data
+          in the buffer.  M-X Write File is approximately equivalent to this command
+          followed by a C-X C-S.
+
+            M-X Delete File<CR><file><CR> (203/delete-file-command201/) deletes the file.  In
+          twenex this has the effect of putting the file in the directory of deleted files,
+          from which it can be retrieved until the next expunge.  On the hp9836, this
+          has the effect of irretrievably removing the file.
+
+            M-X         Delete         and         Expunge         File<CR><file><CR>
+          (203/delete-and-expunge-file-command201/) will, if possible, irretrievably delete a
+          file.  If the operation fails, a bell will sound.
+
+            M-X Undelete File<CR><file><CR> (203/undelete-file-command201/) will attempt to
+          retrieve a deleted file.  This only works on Twenex.

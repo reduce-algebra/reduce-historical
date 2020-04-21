@@ -1,0 +1,609 @@
+PSL Manual                    7 February 1983                         RLISP
+section 3.0                                                        page 3.1
+
+                                 CHAPTER 3                                 CHAPTER 3                                 CHAPTER 3
+                               RLISP SYNTAX                               RLISP SYNTAX                               RLISP SYNTAX
+
+
+
+
+     3.1. Motivation for RLISP Interface to PSL .  .  .  .  .  .  .     3.1
+     3.2. An Introduction to RLISP  .  .  .  .  .  .  .  .  .  .  .     3.2
+          3.2.1. LISP equivalents of some RLISP constructs  .  .  .     3.2
+     3.3. An Overview of RLISP and LISP Syntax Correspondence  .  .     3.3
+          3.3.1. Function Call Syntax in RLISP and LISP  .  .  .  .     3.4
+                                                                        ...          3.3.2. RLISP Infix Operators and Associated LISP Functions....3.4
+                 
+          3.3.3. Differences between Parse and Read.  .  .  .  .  .     3.6
+          3.3.4. Procedure Definition  .  .  .  .  .  .  .  .  .  .     3.6
+          3.3.5. Compound Statement Grouping .  .  .  .  .  .  .  .     3.7
+          3.3.6. Blocks with Local Variables .  .  .  .  .  .  .  .     3.7
+          3.3.7. The If Then Else Statement  .  .  .  .  .  .  .  .     3.8
+     3.4. Looping Statements  .  .  .  .  .  .  .  .  .  .  .  .  .     3.8
+          3.4.1. While Loop.  .  .  .  .  .  .  .  .  .  .  .  .  .     3.8
+          3.4.2. Repeat Loop  .  .  .  .  .  .  .  .  .  .  .  .  .     3.8
+          3.4.3. For Each Loop.  .  .  .  .  .  .  .  .  .  .  .  .     3.9
+          3.4.4. For Loop  .  .  .  .  .  .  .  .  .  .  .  .  .  .     3.9
+          3.4.5. Loop Examples.  .  .  .  .  .  .  .  .  .  .  .  .     3.9
+     3.5. Switch Syntax .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    3.10
+     3.6. RLISP I/O Syntax .  .  .  .  .  .  .  .  .  .  .  .  .  .    3.10
+     3.7. Transcript of a Short Session with RLISP .  .  .  .  .  .    3.11
+
+
+
+
+3.1. Motivation for RLISP Interface to PSL3.1. Motivation for RLISP Interface to PSL3.1. Motivation for RLISP Interface to PSL
+
+  Most  of  the  PSL  users  at  Utah  prefer  to  write LISP code using an
+ALGOL-like (or PASCAL-like) preprocessor language, RLISP,  because  of  its
+similarity to the heavily used PASCAL and C languages.  RLISP was developed
+as  part  of  the  REDUCE  Computer  Algebra project [Hearn 73], and is the
+ALGOL-like user language as well as the  implementation  language.    RLISP
+provides  a  number of syntactic niceties which we find convenient, such as
+                                   If-Then-Else                                   If-Then-Elsevector subscripts, case statement, If-Then-Else, etc.  We  usually  do  not
+distinguish LISP from RLISP, and can mechanically translate from one to the
+other in either direction using a parser and pretty-printer written in PSL.
+That  is,  RLISP  is  a  convenience,  but it is not necessary to use RLISP
+syntax rather than LISP.  A complete BNF-like definition of RLISP  and  its
+translation  to  LISP using the MINI system is given in Section 22.4.  Also
+discussed in Chapter 22 is an extensible table driven parser which is  used
+for  the  current RLISP parser.  There we give explicit tables which define
+RLISP syntax.
+
+  In this chapter we provide enough of an introduction to make the examples
+and sources readable, and to assist the user in writing RLISP code.RLISP                         7 February 1983                    PSL Manual
+page 3.2                                                        section 3.2
+
+3.2. An Introduction to RLISP3.2. An Introduction to RLISP3.2. An Introduction to RLISP
+
+  An  RLISP  program  consists  of  a  set of functional commands which are
+evaluated sequentially.  RLISP expressions are built up from  declarations,
+statements  and  expressions.    Such entities are composed of sequences of
+numbers, variables, operators, strings, reserved words and delimiters (such
+as commas and parentheses), which in turn are sequences of characters.  The
+evaluation proceeds by a  parser  first  converting  the  ALGOL-like  RLISP
+source  language  into  LISP S-expressions, and evaluating and printing the
+                                 Parse-Eval-Print                                 Parse-Eval-Printresult.  The basic cycle is thus Parse-Eval-Print,  although  the  specific
+functions, and additional processing, are under the control of a variety of
+switches, described in appropriate sections.
+
+
+3.2.1. LISP equivalents of some RLISP constructs3.2.1. LISP equivalents of some RLISP constructs3.2.1. LISP equivalents of some RLISP constructs
+
+  The  following gives a few examples of RLISP statements and functions and
+their corresponding LISP forms.  To see the exact LISP equivalent of  RLISP
+code, set the switch !*PECHO to T [On PECHO; in RLISP, (On PECHO) in LISP].
+
+  Assignment statements in RLISP and LISP:
+
+   X := 1;                         (setq x 1)
+
+  A procedure to take a factorial, in RLISP:
+
+   LISP PROCEDURE FACTORIAL N;
+     IF N <= 1 THEN 1
+      ELSE N * FACTORIAL (N-1);
+
+  in LISP:
+
+   (de factorial (n)
+     (cond
+       ((leq n 1)  1)
+       (T
+         (times n (factorial (difference n 1))))))
+
+  Take the Factorial of 5 in RLISP and in LISP:
+
+   FACTORIAL 5;                    (factorial 5)
+
+  Build a list X as a series of "Cons"es in RLISP:
+
+   X := 'A . 'B . 'C . NIL;
+
+   in LISP:
+   (setq x (cons 'a  (cons 'b (cons 'c nil))))PSL Manual                    7 February 1983                         RLISP
+section 3.3                                                        page 3.3
+
+3.3. An Overview of RLISP and LISP Syntax Correspondence3.3. An Overview of RLISP and LISP Syntax Correspondence3.3. An Overview of RLISP and LISP Syntax Correspondence
+
+  The  RLISP parser converts RLISP expressions, typed in at the terminal or
+read  from  a  file,  into  directly  executable  LISP  expressions.    For
+convenience  in the following examples, the "==>" arrow is used to indicate
+the LISP actually  produced  from  the  input  RLISP.    To  see  the  LISP
+equivalents  of  RLISP code on the machine, set the switch !*PECHO to T [On
+Pecho; in RLISP, (On Pecho) in LISP].  As far as possible, upper and  lower
+cases are used as follows:
+
+
+   a. Upper  case  tokens  and  punctuation represent items which must
+      appear as is in the source RLISP or output LISP.
+
+   b. Lower case tokens represent  other  legal  RLISP  constructs  or
+      corresponding  LISP  translations.    We  typically  use "e" for
+                                                             ____      expression, "s" for statement, and "v" for variable; "-list"  is
+      tacked on for lists of these objects.
+
+
+  For  example,  the  following  rule describes the syntax of assignment in
+RLISP:
+
+   VAR := number;
+      ==>  (SETQ VAR number)
+
+  Another example:
+
+      __________      ______ _       ______ _   IF expression THEN action_1  ELSE action_2
+                  __________ ______ _     ______ _      ==> (COND ((expression action_1) (T action_2)))
+
+  In RLISP, a function is recognized as an "ftype" (one of the tokens EXPR,
+FEXPR, etc. or none) followed by the keyword PROCEDURE, followed by an "id"
+(the name of the function), followed by a "v-list"  (the  formal  parameter
+names)  enclosed  in  parentheses.   A semicolon terminates the title line.
+The body of the function is a <statement> followed by a semicolon.  In LISP
+syntax, a function is defined using one of the "Dx" functions, i.e. one  of
+De  Df  Dm     DnDe  Df  Dm     DnDe, Df, Dm, or Dn, depending on "ftype".  For example:
+
+   EXPR PROCEDURE NULL(X);
+     EQ(X, NIL);
+      ==>  (DE NULL (X) (EQ X NIL))
+
+
+3.3.1. Function Call Syntax in RLISP and LISP3.3.1. Function Call Syntax in RLISP and LISP3.3.1. Function Call Syntax in RLISP and LISP
+
+  A  function  call  with  N  arguments  (called an N-ary function) is most
+commonly   represented   as   "FN(X1, X2, ... Xn)"   in   RLISP   and    as
+"(FN X1 X2 ... Xn)" in LISP.  Commas are required to separate the arguments
+in RLISP but not in LISP.  A zero argument function call is "FN()" in RLISP
+and  "(FN)"  in LISP.  An unary function call is "FN(a)" or "FN a" in RLISP
+and "(FN a)" in LISP; i.e. the parentheses may be omitted around the singleRLISP                         7 February 1983                    PSL Manual
+page 3.4                                                        section 3.3
+
+argument of any unary function in RLISP.
+
+
+3.3.2. RLISP Infix Operators and Associated LISP Functions3.3.2. RLISP Infix Operators and Associated LISP Functions3.3.2. RLISP Infix Operators and Associated LISP Functions
+
+  Many  important  PSL  binary functions, particularly those for arithmetic
+operations, have associated infix  operators,  consisting  of  one  or  two
+special  characters.  The conversion of an RLISP expression "A op B" to its
+corresponding LISP form  is  easy:    "(fn A B)",  in  which  "fn"  is  the
+associated  function.  The function name fn may also be used as an ordinary
+RLISP function call, "fn(A, B)".
+
+  Refer to Chapter 22 for details on how the association of "op"  and  "fn"
+is installed.
+
+  Parentheses   may   be   used   to  specify  the  order  of  combination.
+"((A op_a B) op_b C)" in RLISP becomes "(fn_b (fn_a A B) C)" in LISP.
+
+  If two or  more  different  operators  appear  in  a  sequence,  such  as
+"A op_a B op_b C",  grouping  (similar  to the insertion of parentheses) is
+done based on relative  precedence  of  the  operators,  with  the  highest
+precedence  operator  getting the first argument pair:  "(A op_a B) op_b C"
+if     Precedence(op_a) >= Precedence(op_b);     "A op_a (B op_b C)"     if
+Precedence(op_a) < Precedence(op_b).
+
+  If  two  or  more  of  the  same  operator  appear in a sequence, such as
+"A op B op C", grouping is normally to the  left  (Left  Associative;  i.e.
+"(fn (fn A B) C)"),  unless  the  operator  is explicitly Right Associative
+               Cons             SetQ               Cons             SetQ(such as . for Cons and  := for SetQ; i.e. "(fn A (fn B C))").
+
+  The operators + and * are N-ary; i.e.  "A nop B nop C nop B" parses  into
+"(nfn A B C D)" rather than into "(nfn (nfn (nfn A B) C) D)".
+
+  The current binary operator-function correspondence is as follows:PSL Manual                    7 February 1983                         RLISP
+section 3.3                                                        page 3.5
+
+________       ________       __________Operator       Function       Precedence
+
+               Cons               Cons.              Cons           23  Right Associative
+               Expt               Expt**             Expt           23
+
+               Quotient               Quotient/              Quotient       19
+               Times               Times*              Times          19  N-ary
+
+               Difference               Difference-              Difference     17
+               Plus               Plus+              Plus           17  N-ary
+
+Eq             EqEq             EqEq             Eq             15
+               Equal               Equal=              Equal          15
+               Geq               Geq>=             Geq            15
+               GreaterP               GreaterP>              GreaterP       15
+               Leq               Leq<=             Leq            15
+               LessP               LessP<              LessP          15
+Member         MemberMember         MemberMember         Member         15
+Memq           MemQMemq           MemQMemq           MemQ           15
+Neq            NeqNeq            NeqNeq            Neq            15
+
+And            AndAnd            AndAnd            And            11  N-ary
+
+Or             OrOr             OrOr             Or             9  N-ary
+
+               SetQ               SetQ:=             SetQ           7  Right Associative
+
+
+  Note:  There  are  other INFIX operators, mostly used as key-words within
+                                    Then    Else        If           Do                                    Then    Else        If           Doother syntactic constructs (such as Then or Else in the If-...,  or  Do  in
+     While     Whilethe  While-..., etc.).  They have lower precedences than those given above.
+These key-words include: the parentheses "()", the brackets "[]", the colon
+":", the comma ",", the semi-colon ";", the dollar sign "$", and  the  ids:
+Collect   Conc   Do   Else   End   Of  Procedure  Product  Step  Such  SumCollect   Conc   Do   Else   End   Of  Procedure  Product  Step  Such  SumCollect,  Conc,  Do,  Else,  End,  Of, Procedure, Product, Step, Such, Sum,
+Then  To      UntilThen  To      UntilThen, To, and Until.
+
+  As pointed out above, an unary function FN can be used  with  or  without
+parentheses:  FN(a); or FN a;.  In the latter case, FN is assumed to behave
+as a prefix operator with highest  precedence  (99)  so  that  "FOO 1 ** 2"
+parses  as  "FOO(1) ** 2;".   The operators +, -, and / can also be used as
+                                   Plus   Minus       Recip                                   Plus   Minus       Recipunary prefix operators, mapping to Plus,  Minus  and  Recip,  respectively,
+with  precedence  26.  Certain other unary operators (RLISP key-words) have
+low precedences or explicit  special  purpose  parsing  functions.    These
+include:  BEGIN,  CASE, CONT, EXIT, FOR, FOREACH, GO, GOTO, IF, IN, LAMBDA,
+NOOP, NOT, OFF, ON, OUT,  PAUSE,  QUIT,  RECLAIM,  REPEAT,  RETRY,  RETURN,
+SCALAR, SHOWTIME, SHUT, WHILE and WRITE.RLISP                         7 February 1983                    PSL Manual
+page 3.6                                                        section 3.3
+
+3.3.3. Differences between Parse and Read3.3.3. Differences between Parse and Read3.3.3. Differences between Parse and Read
+
+  A  single  character  can  be  interpreted in different ways depending on
+context and on whether it is used in a LISP  or  in  an  RLISP  expression.
+Such  differences  are  not immediately apparent to a novice user of RLISP,
+but an example is given below.
+
+  The RLISP infix operator "." may appear in an  RLISP  expression  and  is
+                    Parse                                   Cons                    Parse                                   Consconverted  by  the  Parse  function  to  the  LISP function Cons, as in the
+expression x := 'y . 'z;.  A dot may also occur in a quoted  expression  in
+                                               Read                                               ReadRLISP mode, in which case it is interpreted by Read as part of the notation
+                                                   Read                                                   Readfor  pairs,  as  in  (SETQ X '(Y . Z)).  Note that Read called from LISP or
+from RLISP uses slightly different scan tables (see Chapter 12).  In  order
+                        Cons                               Cons                        Cons                               Consto  use  the  function  Cons in LISP one must use the word Cons in a prefix
+position.
+
+
+3.3.4. Procedure Definition3.3.4. Procedure Definition3.3.4. Procedure Definition
+
+  Procedure definitions in PSL (both RLISP and LISP) are not nested  as  in
+ALGOL;  all  appear  at the same top level as in C.  The basic function for
+                       PutD                       PutDdefining procedures is PutD (see Chapter 10).  Special syntactic forms  are
+provided in both RLISP and LISP:
+
+     mode ftype PROCEDURE name(v_1,...,v_n); body;
+        ==> (Dx name (v_1 ... v_N) body)
+
+  Examples:
+
+   PROCEDURE ADD1 N;
+     N+1;
+      ==> (DE ADD1 (N) (PLUS N 1))
+
+   MACRO PROCEDURE FOO X;
+     LIST('FUM, CDR X, CDR X);
+      ==> (DM FOO (X) (LIST 'FUM (CDR X) (CDR X))
+
+  The  value  returned  by  the  procedure  is  the  value  of the body; no
+assignment to the function name (as in ALGOL or PASCAL) is needed.
+
+  In the general definition given above "mode" is usually optional; it  can
+be  LISP  or  SYMBOLIC  (which  mean  the  same  thing) or SYSLISP [only of
+                                                              ____   _____                                                              ____   _____                                                              ____   _____                                                              expr   fexpr                                                              expr   fexprimportance if SYSLISP and LISP are inter-mixed].  "Ftype" is  expr,  fexpr,
+_____   _____       ___________   _____       ___________   _____       ______macro   nexpr       smacromacro   nexpr       smacromacro,  nexpr,  or  smacro (or can be omitted, in which case it defaults to
+____________exprexprexpr).  Name(v_1,...,v_N) is any legal form of call, including infix.    Dx
+             ____            _____          _____         _____             ____            _____          _____         _____             ____            _____          _____         _____    De       expr   Df       fexpr   Dm     macro  Dn     nexpr      Ds    De       expr   Df       fexpr   Dm     macro  Dn     nexpr      Dsis  De  for  expr,  Df  for  fexpr,  Dm for macro, Dn for nexpr, and Ds for
+__________________smacrosmacrosmacro.
+
+      ______                          _____      ______                          _____      ______                          _____      smacro                          macro      smacro                          macro  The smacro is a simple substitution macro.PSL Manual                    7 February 1983                         RLISP
+section 3.3                                                        page 3.7
+
+   SMACRO PROCEDURE ELEMENT X;    % Defines ELEMENT(x)  to substitute
+    CAR CDR (X);                  % as Car Cdr x;
+      ==> (DS ELEMENT (X) (CAR (CDR X)))
+
+In  code  which  calls  ELEMENT after it was defined, ELEMENT(foo); behaves
+exactly like CAR CDR foo;.
+
+
+3.3.5. Compound Statement Grouping3.3.5. Compound Statement Grouping3.3.5. Compound Statement Grouping
+
+  A group of RLISP expressions may be used  in  any  position  in  which  a
+single  expression  is  expected  by  enclosing the group of expressions in
+double angle brackets, << and >>, and separating them by the ; delimiter.
+
+  The RLISP <<A; B; C; ... Z>> becomes (PROGN A B C ... Z) in  LISP.    The
+value of the group is the value of the last expression, Z. 
+  Example:
+
+   X:=<<PRINT X; X+1>>;          % prints old X then increments X
+     ==> (SETQ X (PROGN (PRINT X) (PLUS X 1)))
+
+
+3.3.6. Blocks with Local Variables3.3.6. Blocks with Local Variables3.3.6. Blocks with Local Variables
+
+  A  more  powerful  construct,  sometimes used for the same purpose as the
+                    Begin-End                       Prog                    Begin-End                       Prog<< >> group, is the Begin-End block  in  RLISP  or  Prog  in  LISP.    This
+construct  also  permits  the  allocation  of  0  or  more local variables,
+initialized to NIL.  The normal value of a block is  NIL,  but  it  may  be
+                                             Return                                             Returnexited  at  a  number  of  points, using the Return statement, and each can
+                                                                       GoTo                                                                       GoToreturn a different value.   The  block  also  permits  labels  and  a  GoTo
+construct.
+
+  Example:
+
+   BEGIN SCALAR X,Y;  % SCALAR declares locals X and Y
+           X:='(1 2 3);
+     L1:   IF NULL X THEN RETURN Y;
+           Y:=CAR X;
+           X:=CDR X;
+           GOTO L1;
+   END;
+
+
+    ==> (PROG (X Y)
+          (SETQ X '(1 2 3))
+     L1   (COND ((NULL X)  (RETURN Y)))
+          (SETQ Y (CAR X))
+          (SETQ X (CDR X))
+          (GO L1))RLISP                         7 February 1983                    PSL Manual
+page 3.8                                                        section 3.3
+
+3.3.7. The If Then Else Statement3.3.7. The If Then Else Statement3.3.7. The If Then Else Statement
+
+                     If                                     Cond                     If                                     Cond  RLISP  provides an If statement, which maps into the LISP Cond statement.
+See Chapter 9 for full details.  For example:
+
+   IF e THEN s;
+      ==> (COND (e s))
+
+   IF e THEN s1 ELSE s2;
+      ==> (COND (e s1) (T s2))
+
+   IF e1 THEN s1
+    ELSE IF e2 THEN s2
+    ELSE s3;
+      ==> (COND (e1 s1)
+                (e2 s2)
+                (T  s3))
+
+
+
+3.4. Looping Statements3.4. Looping Statements3.4. Looping Statements
+
+                 While   Repeat   For       For  Each                 While   Repeat   For       For  Each  RLISP provides While,  Repeat,  For  and  For  Each  loops.    These  are
+discussed in greater detail in Chapter 9.  Some examples follow:
+
+
+3.4.1. While Loop3.4.1. While Loop3.4.1. While Loop
+
+   WHILE e DO s;           % As long as e NEQ NIL, do s
+      ==>  (WHILE e s)
+
+
+3.4.2. Repeat Loop3.4.2. Repeat Loop3.4.2. Repeat Loop
+
+   REPEAT s UNTIL e;       % repeat doing s until "e" is not NIL
+      ==>  (REPEAT s e)
+
+
+3.4.3. For Each Loop3.4.3. For Each Loop3.4.3. For Each Loop
+
+       For  Each       For  Each  The  For  Each loops provide various mapping options, processing elements
+of a list in some way and sometimes constructing a new list.
+
+   FOR EACH x IN y DO s;   % y is a list, x traverses list bound to eac
+                           % element in turn.
+      ==>  (FOREACH x IN y DO s)
+
+   FOR EACH x ON y DO s;   % y is a list, x traverses list Bound to suc
+                           % Cdr's of y.
+      ==>  (FOREACH x ON y DO s)
+
+  Other options can return modified lists, etc.  See chapter 9.PSL Manual                    7 February 1983                         RLISP
+section 3.4                                                        page 3.9
+
+3.4.4. For Loop3.4.4. For Loop3.4.4. For Loop
+
+      For      For  The For loop permits an iterative form with a compacted control variable.
+Other options can compute sums and products.
+
+   FOR i := a:b DO s;      % step i successively from a to b in
+                           % steps of 1.
+      ==> (FOR (FROM I a b 1) DO s)
+
+   FOR i := a STEP b UNTIL c DO s; % More general stepping
+      ==> (FOR (FROM I a c b) DO s)
+
+
+3.4.5. Loop Examples3.4.5. Loop Examples3.4.5. Loop Examples
+
+   LISP PROCEDURE count lst; % Count elements in lst
+    BEGIN SCALAR k;
+          k:=0;
+          WHILE PAIRP lst DO <<k:=k+1; lst:=CDR lst>>;
+          RETURN k;
+    END;
+
+      ==>  (DE COUNT (LST)
+              (PROG (K)
+                 (SETQ K 0)
+                 (WHILE (PAIRP LST)
+                         (PROGN
+                           (SETQ K (PLUS K 1))
+                           (SETQ LST (CDR LST))))
+                 (RETURN K)))
+
+   or
+
+   LISP PROCEDURE CountNil lst; % Count  NIL elements in lst
+    BEGIN SCALAR k;
+          k:=0;
+          FOR EACH x IN lst DO If Null x then k:=k+1;
+          RETURN k;
+    END;
+
+      ==>  (DE COUNTNIL (LST)
+              (PROG (K)
+                 (SETQ K 0)
+                 (FOREACH X IN LST DO (COND
+                         ((NULL X) (SETQ K (PLUS K 1)))))
+                 (RETURN K)))RLISP                         7 February 1983                    PSL Manual
+page 3.10                                                       section 3.5
+
+3.5. Switch Syntax3.5. Switch Syntax3.5. Switch Syntax
+
+  Two  declarations are offered to the user for turning on or off a variety
+of switches in the system.  Switches are global variables  that  have  only
+the  values  T  or  NIL.    By convention, the switch name is XXXX, but the
+associated global variable is !*XXXX.  The RLISP commands ON and OFF take a
+list of switch names as argument and turn  them  on  and  off  respectively
+(i.e. set the corresponding !* variable to T or NIL).
+
+  Example:
+
+   ON ECHO, FEE, FUM;    % Sets !*ECHO, !*FEE, !*FUM to T;
+      ==> (ON  ECHO FEE FUM)
+
+   OFF INT,SYSLISP;       % Sets !*INT and !*SYSLISP to NIL
+      ==> (OFF  INT SYSLISP)
+
+  [??? Mention SIMPFG property ???]  [??? Mention SIMPFG property ???]  [??? Mention SIMPFG property ???]
+
+  See Section 6.7 for a complete set of switches and global variables.
+
+
+
+3.6. RLISP I/O Syntax3.6. RLISP I/O Syntax3.6. RLISP I/O Syntax
+
+  RLISP provides special commands to OPEN and SELECT files for input or for
+output  and  to CLOSE files.  File names must be enclosed in "....".  Files
+                                               In                                               Inwith the extension ".sl" or ".lsp" are read by In in LISP mode rather  than
+RLISP mode.
+
+   IN "<griss.stuff>fff.red","ggg.lsp"; % First reads fff.red
+                                        % Then reads ggg.lsp
+   OUT "keep-it.output";                % Diverts output to "keep-it.ou
+   OUT "fum";                           % now to fum, keeping the other
+   SHUT "fum";                          % to close fum and flush the bu
+
+  File  names can use the full system conventions.  See Chapter 12 for more
+detail on I/O.
+
+
+
+3.7. Transcript of a Short Session with RLISP3.7. Transcript of a Short Session with RLISP3.7. Transcript of a Short Session with RLISP
+
+  The following is a transcript of RLISP running on the DEC-20.PSL Manual                    7 February 1983                         RLISP
+section 3.7                                                       page 3.11
+
+   @psl:rlisp
+   PSL 3.1 Rlisp, 27-Oct-82
+   [1] % Notice the numbered prompt.
+   [1] % Comments begin with "%" and do not change the prompt number.
+   [1] Z := '(1 2 3);              % Make an assignment for Z.
+   (1 2 3)
+   [2] Cdr Z;                      % Notice the change in the prompt nu
+   (2 3)
+   [3] Lisp Procedure Count L;     % "Count" counts the number of eleme
+   [3]   If Null L Then 0          %    in a list L.
+   [3]     Else 1 + Count Cdr L;
+   COUNT
+   [4] Count Z;                    % Try out "Count" on Z.
+   3
+   [5] Tr Count;          % Trace the recursive execution of "Count".
+   (COUNT)
+   [6]                    % A call on "Count" now shows the value of
+   [6]                    %   "Count" and of its argument each time it
+   [6] Count Z;           %   is called.
+   COUNT being entered
+      L:   (1 2 3)
+     COUNT (level 2) being entered
+        L: (2 3)
+       COUNT (level 3) being entered
+          L:       (3)
+         COUNT (level 4) being entered
+            L:     NIL
+         COUNT (level 4) = 0
+       COUNT (level 3) = 1
+     COUNT (level 2) = 2
+   COUNT = 3
+   3
+   [7] Lisp Procedure Factorial X;
+   [7]   If X <= 1 Then 1
+   [7]     Else X * Factorial (X-1);
+   FACTORIAL
+   [8] Tr Factorial;
+   (FACTORIAL)
+   [9] Factorial 4;            % Trace execution of "Factorial".
+   FACTORIAL being entered
+      X:   4
+     FACTORIAL (level 2) being entered
+        X: 3
+       FACTORIAL (level 3) being entered
+          X:       2
+         FACTORIAL (level 4) being entered
+            X:     1
+         FACTORIAL (level 4) = 1
+       FACTORIAL (level 3) = 2
+     FACTORIAL (level 2) = 6
+   FACTORIAL = 24
+   24RLISP                         7 February 1983                    PSL Manual
+page 3.12                                                       section 3.7
+
+   [10] UnTr Count,Factorial;
+   NIL
+   [11] Count 'A;
+   ***** An attempt was made to do CDR on `A', which is not a pair
+   Break loop
+   1 lisp break> ?
+   BREAK():{Error,return-value}
+   ----------------------------
+   This is a Read-Eval-Print loop, similar to the top level loop, excep
+   that the following IDs at the top level cause functions to be called
+   rather than being evaluated:
+   ?        Print this message, listing active Break IDs
+   T        Print stack backtrace
+   Q        Exit break loop back to ErrorSet
+   C        Return last value to the ContinuableError call
+   R        Reevaluate ErrorForm!* and return
+   M        Display ErrorForm!* as the "message"
+   E        Invoke a simple structure editor on ErrorForm!*
+                   (For more information do Help Editor.)
+   I        Show a trace of any interpreted functions
+
+   See the manual for details on the Backtrace, and how ErrorForm!* is
+   set.  The Break Loop attempts to use the same TopLoopRead!* etc, as
+   the calling top loop, just expanding the PromptString!*.
+   NIL
+   2 lisp break>         % Get a Trace-Back of the
+   2 lisp break> I       %    interpreted functions.
+   Backtrace, including interpreter functions, from top of stack:
+   LIST2 CDR COUNT PLUS2 PLUS COND COUNT
+   NIL
+   3 lisp break> Q             % To exit the Break Loop.
+   [12]                        % Load in a file, showing the file
+   [12] In "small-file.red";   % and its execution.
+   X := 'A . 'B . NIL;(A B)    % Construct a list with "." for Cons.
+
+   Count X;2                   % Call "Count" on X.
+
+   Reverse X;(B A)             % Call "Reverse" on X.
+
+   NIL
+   [13]                        % This leaves RLISP and enters
+   [13] End;                   %   LISP mode.
+   Entering LISP...
+   PSL, 27-Oct-82
+   6 lisp> (SETQ X 3)          % A LISP assignment statement.
+   3
+   7 lisp> (FACTORIAL 3)       % Call "Factorial" on 3.
+   6
+   8 lisp> (BEGINRLISP)        % This function returns us to RLISP.
+   Entering RLISP...
+   [14] Quit;                  % To exit call "Quit".
+   @continuePSL Manual                    7 February 1983                         RLISP
+section 3.7                                                       page 3.13
+
+   "Continued"
+   [15] X;                     % Notice the prompt number.
+   3
+   [16] ^C                     % One can also quit with <Ctrl-C>.
+   @start                     % Alternative immediate re-entry.
+   [17] Quit;
+   @

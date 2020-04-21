@@ -1,0 +1,5 @@
+CompileTime <<
+load If!-System;
+load Syslisp;
+>>;
+in "fast-vector.red"$

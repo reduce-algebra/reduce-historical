@@ -1,0 +1,8 @@
+@pascal
+s:paslsp.rel
+
+s:paslsp.pas
+@load s:paslsp.rel
+@save s:paslsp.exe
+@st
+

@@ -1,0 +1,673 @@
+PSL Manual                    7 February 1983           Strings and Vectors
+section 8.0                                                        page 8.1
+
+                                 CHAPTER 8                                 CHAPTER 8                                 CHAPTER 8
+                            STRINGS AND VECTORS                            STRINGS AND VECTORS                            STRINGS AND VECTORS
+
+
+
+
+     8.1. Vector-Like Objects .  .  .  .  .  .  .  .  .  .  .  .  .     8.1
+     8.2. Strings .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     8.1
+     8.3. Vectors .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     8.3
+     8.4. Word Vectors  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     8.5
+     8.5. General X-Vector Operations  .  .  .  .  .  .  .  .  .  .     8.5
+     8.6. Arrays  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     8.7
+     8.7. Common LISP String Functions .  .  .  .  .  .  .  .  .  .     8.7
+
+
+
+
+8.1. Vector-Like Objects8.1. Vector-Like Objects8.1. Vector-Like Objects
+
+                          ______   ______   ____ ______   ________ ______  In  this  Chapter, LISP strings, vectors, word-vectors, halfword-vectors,
+    ____ ______and byte-vectors are described.  Each may have several  elements,  accessed
+       _______by  an integer index.  For convenience, members of this set are referred to
+   _ ______    _ ______                           ____as x-vectors.  X-vector functions also apply  to  lists.    Currently,  the
+                                                                Size    UpB          _ ______                                              Size    UpBindex for x-vectors ranges from 0 to an upper limit, called the Size or UpB
+                                           Size                        _ ______           Size               ______(upper bound).  Thus an x-vector X has 1 + Size(X) elements.  Strings index
+                                                   ______from  0  because  they are considered to be packed vectors of bytes.  Bytes
+are 7 bits on the DEC-20 and 8 bits on the VAX.
+
+                                           ______                  ____                                           ______                  ____                                           ______                  ____  [??? Note that with new integer tagging, strings  are  "packed"  words,  [??? Note that with new integer tagging, strings  are  "packed"  words,  [??? Note that with new integer tagging, strings  are  "packed"  words,
+                             ______                             ______                             ______  which are special cases of vectors.  Should we add byte-vectors too, so  which are special cases of vectors.  Should we add byte-vectors too, so  which are special cases of vectors.  Should we add byte-vectors too, so
+       ______       ______       ______  that strings are different print mode of byte vector ???]  that strings are different print mode of byte vector ???]  that strings are different print mode of byte vector ???]
+
+  [??? Size should probably be replaced by UPLIM or UPB. ???]  [??? Size should probably be replaced by UPLIM or UPB. ???]  [??? Size should probably be replaced by UPLIM or UPB. ???]
+
+  In  RLISP  syntax,  X[i];  may  be  used to access the i'th element of an
+_ ______x-vector, and X[i]:=y; is used to  change  the  i'th  element  to  y. These
+                                           Indx     SetIndx                                           Indx     SetIndxfunctions correspond to the LISP functions Indx and SetIndx.
+
+  [??? Change names to GetIndex, PutIndex ???]  [??? Change names to GetIndex, PutIndex ???]  [??? Change names to GetIndex, PutIndex ???]
+
+For  functions  which  change  an object from one data type to another, see
+Section 4.3.
+
+
+
+8.2. Strings8.2. Strings8.2. Strings
+
+    ______                                   ______  A string is currently thought of as a Byte vector, or  a  packed  integer
+______                                                  ______vector,  with  elements  that  are ASCII characters.  A string has a header
+containing its length and perhaps a tag.  The next M words  contain  the  0
+...  Size  characters,  packed  as  appropriate, terminated with at least 1
+                                      ______                ______NULL.  On the DEC-20, this means that strings have an ASCIZ string startingStrings and Vectors           7 February 1983                    PSL Manual
+page 8.2                                                        section 8.2
+
+in the second word.  (ASCIZ strings are NULL terminated.)
+
+
+ Make!-String Make!-String ____ _______ _______ _______   ______                    ____(Make!-String SIZE:integer INITVAL:integer): string                    expr
+
+                                  ______        ____     Constructs  and  returns  a  string  with  SIZE characters,  each
+                                   _______     initialized to the ASCII code INITVAL.
+
+
+ MkString MkString _____ _______ _______ _______   ______                       ____(MkString UPLIM:integer INITVAL:integer): string                       expr
+
+                    Make!-String                    Make!-String     An old form of Make!-String.  Returns a string of characters  all
+                    _______                   _____     initialized to INITVAL, with upper bound UPLIM.  So, the returned
+                                _____   _     string contains a total of UPLIM + 1 characters.
+
+
+ String String  ____ _______    ______                                       _____(String [ARGS:integer]): string                                       nexpr
+
+            ______                            ____     Create string of elements from a list of ARGS.
+
+       [???  Should  we check each arg in 0 ... 127.  What about 128       [???  Should  we check each arg in 0 ... 127.  What about 128       [???  Should  we check each arg in 0 ... 127.  What about 128
+       - 255 with 8 bit vectors? ???]       - 255 with 8 bit vectors? ???]       - 255 with 8 bit vectors? ???]
+
+
+         (String 65 66 67) returns "ABC"
+
+
+ CopyStringToFrom CopyStringToFrom ___ ______ ___ ______   ___ ______                   ____(CopyStringToFrom NEW:string OLD:string): NEW:string                   expr
+
+                                 ___        ___     Copy all  characters  from  OLD  into  NEW.    This  function  is
+     destructive.
+
+
+ CopyString CopyString _ ______   ______                                          ____(CopyString S:string): string                                          expr
+
+                      ______     Copy to new heap string, allocating space.
+
+  [??? Should we add GetS, PutS, UpbS, etc ???]  [??? Should we add GetS, PutS, UpbS, etc ???]  [??? Should we add GetS, PutS, UpbS, etc ???]
+
+  When  processing strings it is frequently necessary to be able to specify
+a particular character.   In  PSL  a  character  is  just  its  ASCII  code
+representation,  but  it  is difficult to remember the code, and the use of
+                                                                       Char                                                                       Charcodes does not add to the readability of programs.  One can  use  the  Char
+                                                             __macro, defined in Chapter 20.  It expects a single character id as argument
+and returns the ASCII code of that character.  For example
+
+
+             (Char A)  returns 65
+             (Char !a) returns 97
+             (Char !@) returns 64PSL Manual                    7 February 1983           Strings and Vectors
+section 8.2                                                        page 8.3
+
+Note  that to get lower-case a one must precede the a by "!", otherwise the
+a will be raised.  See also the sharp-sign macros in Chapter 17.
+
+
+
+8.3. Vectors8.3. Vectors8.3. Vectors
+
+    ______                                          ____  A vector is a structured entity in which  random  item  elements  may  be
+                    _______             ______accessed  with  an  integer  index.   A vector has a single dimension.  Its
+maximum size is determined by the implementation and available  space.    A
+                        ______suggested input/output "vector notation" is defined (see Chapter 12).
+
+
+ GetV GetV _ ______ _____ _______   ___                                     ____(GetV V:vector INDEX:integer): any                                     expr
+
+                                           _____        ______ _     Returns  the value stored at position INDEX of the vector V.  The
+                                                            _____     type mismatch error may occur.  An error occurs if the INDEX does
+                           UPBV                           UPBV _     not lie within 0 ... (UPBV V) inclusive:
+
+     ***** INDEX subscript is out of range 
+
+                                                        _ _____     A similar effect may be obtained in RLISP by using V[INDEX];.
+
+
+ MkVect MkVect _____ _______   ______                                         ____(MkVect UPLIM:integer): vector                                         expr
+
+                                       ______      _____     Defines and allocates space for a vector with UPLIM + 1  elements
+                       _____     accessed as 0 ... UPLIM.  Each element is initialized to NIL.  If
+     _____     UPLIM  is  -1,  an  empty vector is returned.  An error occurs if
+     _____                                                  ______     UPLIM is < -1 or if there is not enough space  for  a  vector  of
+     this size:  
+
+     ***** A vector of size UPLIM cannot be allocated 
+
+
+ Make!-Vector Make!-Vector _____ _______ _______ ___   ______                       ____(Make!-Vector UPLIM:integer INITVAL:any): vector                       expr
+
+          MkVect          MkVect                                    _______     Like MkVect but each element is initialized to INITVAL.
+
+
+ PutV PutV _ ______ _____ _______ _____ ___   ___                           ____(PutV V:vector INDEX:integer VALUE:any): any                           expr
+
+             _____           ______  _                _____   _____     Stores  VALUE  in  the  vector  V  at  position  INDEX.  VALUE is
+                                                       _____     returned.  The type mismatch error may occur.  If INDEX does  not
+                  UPBV                  UPBV _     lie in 0 ... UPBV(V), an error occurs:
+
+     ***** INDEX subscript is out of range 
+
+     A   similar  effect  can  be  obtained  in  RLISP  by  typing  in
+     _ _____   _____     V[INDEX]:=VALUE;.  It is important to use square  brackets,  i.e.
+     "[]".Strings and Vectors           7 February 1983                    PSL Manual
+page 8.4                                                        section 8.3
+
+ UpbV UpbV _ ___    ___  _______                                            ____(UpbV U:any): {NIL, integer}                                           expr
+
+                                   _    _      ______     Returns  the  upper  limit of U if U is a vector, or NIL if it is
+     not.
+
+
+ Vector Vector  ____ ___    ______                                           _____(Vector [ARGS:any]): vector                                           nexpr
+
+            ______                  ____    ____        ______     Create vector of elements from list of ARGS.  The  vector  has  N
+                     Size                     Size                                      ____     elements, i.e.  Size = N - 1, in which N is the number of ARGS.
+
+
+ CopyVectorToFrom CopyVectorToFrom ___ ______ ___ ______   ___ ______                   ____(CopyVectorToFrom NEW:vector OLD:vector): NEW:vector                   expr
+
+     Move elements, don't recurse.  
+
+       [ ???Check size compatibility? ]       [ ???Check size compatibility? ]       [ ???Check size compatibility? ]
+
+
+ CopyVector CopyVector _ ______   ______                                          ____(CopyVector V:vector): vector                                          expr
+
+                 ______     Copy to new vector in heap.
+
+  The  following  functions  can  be used after the FAST!-VECTOR module has
+been loaded (LOAD FAST!-VECTOR).
+
+
+ IGetV IGetV _ ______ _____ _______   ___                     ____ ________  ____(IGetV V:vector INDEX:integer): any                     open-compiled, expr
+
+                          GetV                          GetV     Used the same way as GetV.
+
+
+ IPutV IPutV _ ______ _____ _______ _____ ___   ___           ____ ________  ____(IPutV V:vector INDEX:integer VALUE:any): any           open-compiled, expr
+
+                     PutV                     PutV     Fast version of PutV.
+
+
+ ISizeV ISizeV _ ___    ___ _______                            ____ ________  ____(ISizeV U:any): {NIL,integer}                           open-compiled, expr
+
+                     UpbV                     UpbV     Fast version of UpbV.
+
+
+ ISizeS ISizeS _ _ ______   _______                            ____ ________  ____(ISizeS X:x-vector): integer                            open-compiled, expr
+
+                     Size                     Size     Fast version of Size.
+
+
+ IGetS IGetS _ _ ______ _ _______   ___                       ____ ________  ____(IGetS X:x-vector I:integer): any                       open-compiled, expr
+
+                     Indx                     Indx     Fast version of Indx.PSL Manual                    7 February 1983           Strings and Vectors
+section 8.3                                                        page 8.5
+
+ IPutS IPutS _ _ ______ _ _______ _ ___   ___                 ____ ________  ____(IPutS X:x-vector I:integer A:any): any                 open-compiled, expr
+
+                     SetIndx                     SetIndx     Fast version of SetIndx.
+
+
+
+8.4. Word Vectors8.4. Word Vectors8.4. Word Vectors
+
+  ____ ______       _ _______  Word-vectors  or  w-vectors  are  vector-like  structures,  in which each
+element is a "word" sized, untagged entity.  This can be thought  of  as  a
+                ______ ______special case of fixnum vector, in which the tags have been removed.
+
+
+ Make!-Words Make!-Words _____ _______ _______ _______   ____ ______               ____(Make!-Words UPLIM:integer INITVAL:integer): Word-Vector               expr
+
+                                            ____ ______      _____     Defines  and  allocates  space  for  a Word-Vector with UPLIM + 1
+                                   _______     elements, each initialized to INITVAL.
+
+
+ Make!-Halfwords Make!-Halfwords _____ _______ _______ _______   ________ ______       ____(Make!-Halfwords UPLIM:integer INITVAL:integer): Halfword-Vector       expr
+
+                                       ________ ______      _____     Defines and allocates space for a Halfword-vector with UPLIM +  1
+                                   _______     elements, each initialized to INITVAL.
+
+
+ Make!-Bytes Make!-Bytes _____ _______ _______ _______   ____ ______               ____(Make!-Bytes UPLIM:integer INITVAL:integer): Byte-vector               expr
+
+                                            ____ ______      _____     Defines  and  allocates  space  for  a Byte-Vector with UPLIM + 1
+                                   _______     elements, each initialized to INITVAL.
+
+  [??? Should we convert elements to true integers when accessing ???]  [??? Should we convert elements to true integers when accessing ???]  [??? Should we convert elements to true integers when accessing ???]
+
+  [??? Should we add GetW, PutW, UpbW, etc ???]  [??? Should we add GetW, PutW, UpbW, etc ???]  [??? Should we add GetW, PutW, UpbW, etc ???]
+
+
+
+8.5. General X-Vector Operations8.5. General X-Vector Operations8.5. General X-Vector Operations
+
+
+ Size Size _ _ ______   _______                                             ____(Size X:x-vector): integer                                             expr
+
+                           _ ______     Size (upper bound) of x-vector.
+
+
+ Indx Indx _ _ ______ _ _______   ___                                       ____(Indx X:x-vector I:integer): any                                       expr
+
+                                   _ ______     Access the I'th element of an x-vector.
+
+       [??? Rename to GetIndex, or some such ???]       [??? Rename to GetIndex, or some such ???]       [??? Rename to GetIndex, or some such ???]
+
+                                                              Size                                _                             Size _     Generates a range error if I is outside the range 0 ...  Size(X):
+     Strings and Vectors           7 February 1983                    PSL Manual
+page 8.6                                                        section 8.5
+
+     ***** Index is out of range
+
+
+ SetIndx SetIndx _ _ ______ _ _______ _ ___   ___                              ____(SetIndx X:x-vector I:integer A:any): any                              expr
+
+                                     _     Store  an  appropriate  value,  A,  as  the  I'th  element  of an
+     _ ______                               _     x-vector.  Generates a range error if  I  is  outside  the  range
+         Size         Size _     0...Size(X):
+
+     ***** Index is out of range
+
+
+ Sub Sub _ _ ______ __ _______ _ _______   _ ______                        ____(Sub X:x-vector I1:integer S:integer): x-vector                        expr
+
+                                 _ ______              __     Extract  a  subrange  of an x-vector, starting at I1, producing a
+                     Size                              Size         _ ______    Size _   ____         _ ______    Size        ___     new x-vector of Size S.  Note that an x-vector of Size 0 has  one
+     entry.
+
+
+ SetSub SetSub _ _ ______ __ _______ _ _______ _ _ ______   _ ______          ____(SetSub X:x-vector I1:integer S:integer Y:x-vector): x-vector          expr
+
+                       _         _      _             __           _     Store subrange of Y of size S into X starting at I1.  Returns Y.
+
+
+ SubSeq SubSeq _ _ ______ __ _______ __ _______   _ ______                    ____(SubSeq X:x-vector LO:integer HI:integer): x-vector                    expr
+
+                              Size                  _ ______    Size __ __     Returns  an  x-vector of Size HI-LO-1, beginning with the element
+        _            __                                              _     of X with index LO.  In other words, returns the subsequence of X
+                 __            ____ ______ __     starting at LO and ending just before HI.  For example,
+
+        (Setq A '[0 1 2 3 4 5 6])
+        (SubSeq A 4 6)
+
+     returns [4 5].
+
+
+ SetSubSeq SetSubSeq _ _ ______ __ _______ __ _______ _ _ ______   _ _ ______    ____(SetSubSeq X:x-vector LO:integer HI:integer Y:x-vector): Y:x-vector    expr
+
+                  Size     _            Size __ __     Y must be of Size HI-LO-1; it must also be of the  same  type  of
+     _ ______      _              __         __      _     x-vector  as  X.    Elements LO through HI-1 in X are replaced by
+                        Size                        Size _     _   _                 _     elements 0 through Size(Y) of Y.  Y is returned and X is  changed
+     destructively.         If A is "0123456" and B is "abcd", then 
+
+        (SetSubSeq A 3 7 B)
+
+     returns "abcd".  A is "012abcd" and B is unchanged.
+
+
+ Concat Concat _ _ ______ _ _ ______   _ ______                               ____(Concat X:x-vector Y:x-vector): x-vector                               expr
+
+                   _ ______     Concatenate 2 x-vectors.  Currently they must be of same type.PSL Manual                    7 February 1983           Strings and Vectors
+section 8.5                                                        page 8.7
+
+       [??? Should we do conversion to common type ???]       [??? Should we do conversion to common type ???]       [??? Should we do conversion to common type ???]
+
+
+ TotalCopy TotalCopy _ ___   ___                                                 ____(TotalCopy S:any): any                                                 expr
+
+     Returns  a  unique  copy  of  entire  structure,  i.e., it copies
+     everything for which storage is allocated - everything but  inums
+                     Copy            TotalCopy                     Copy            TotalCopy     and  ids.  Like Copy (Chapter 7)TotalCopy will not terminate when
+     applied to circular structures.
+
+
+
+8.6. Arrays8.6. Arrays8.6. Arrays
+
+                                                                      _____                                                                      _____                                                                      _____                                                                      macro                                                                      macro  Arrays do not exist in PSL as distinct data-types; rather an array  macro
+package  is anticipated for declaring and managing multi-dimensional arrays
+   ____   _________       ____of items, characters and  words,  by  mapping  them  onto  one  dimensional
+vectors.
+
+  [??? What operations, how to map, and what sort of checking ???]  [??? What operations, how to map, and what sort of checking ???]  [??? What operations, how to map, and what sort of checking ???]
+
+
+
+8.7. Common LISP String Functions8.7. Common LISP String Functions8.7. Common LISP String Functions
+
+  A  Common  LISP  compatible package of string and character functions has
+been implemented in PSL, obtained by  LOADing  the  STRINGS  module.    The
+following  functions are defined from Chapters 13 and 14 of the Common LISP
+                     Char       String                     Char       Stringmanual [Steele 81].  Char  and  String  are  not  defined  because  of  PSL
+functions with the same name.
+
+  Common  LISP  provides  a  character  data  type in which every character
+object has three attributes:  code, bits, and font.    The  bits  attribute
+allows  extra  flags to be associated with a character.  The font attribute
+permits a specification of the style of the glyphs (such as italics).   PSL
+does  not support nonzero bit and font attributes.  Because of this some of
+the Common LISP character functions described below have no affect  or  are
+not very useful as implemented in PSL.  They are present for compatibility.
+
+  Recall  that  in  PSL a character is represented as its code, a number in
+the range 0...127.  For an argument to the  following  character  functions
+                          Char                          Chargive  the code or use the Char function or the sharp-sign macros in Chapter
+17.
+
+
+ Standard!-CharP Standard!-CharP _ _________   _______                                 ____(Standard!-CharP C:character): boolean                                 expr
+
+     Returns T if the argument is a "standard character", that is, one
+     of the ninety-five ASCII printing characters or <return>.Strings and Vectors           7 February 1983                    PSL Manual
+page 8.8                                                        section 8.7
+
+             (Standard-CharP (Char A)) returns T
+             (Standard-CharP (Char !^A)) returns NIL
+
+
+ GraphicP GraphicP _ _________   _______                                        ____(GraphicP C:character): boolean                                        expr
+
+                     _     Returns  T  if  C  is  a  printable  character and NIL if it is a
+     non-printable (formatting  or  control)  character.    The  space
+     character is assumed to be graphic.
+
+
+ String!-CharP String!-CharP _ _________   _______                                   ____(String!-CharP C:character): boolean                                   expr
+
+                  _     Returns T if C is a character that can be an element of a string.
+                                      Standard-Charp     Graphicp                                      Standard-Charp     Graphicp     Any  character  that  satisfies  Standard-Charp and Graphicp also
+               String-Charp               String-Charp     satisfies String-Charp.
+
+
+ AlphaP AlphaP _ _________   _______                                          ____(AlphaP C:character): boolean                                          expr
+
+                  _     Returns T if C is an alphabetic character.
+
+
+ UpperCaseP UpperCaseP _ _________   _______                                      ____(UpperCaseP C:character): boolean                                      expr
+
+                  _     Returns T if C is an upper case letter.
+
+
+ LowerCaseP LowerCaseP _ _________   _______                                      ____(LowerCaseP C:character): boolean                                      expr
+
+                  _     Returns T if C is a lower case letter.
+
+
+ BothCaseP BothCaseP _ _________   _______                                       ____(BothCaseP C:character): boolean                                       expr
+
+                                         AlphaP                                         AlphaP     In PSL this function is the same as AlphaP.
+
+
+ DigitP DigitP _ _________   _______                                          ____(DigitP C:character): boolean                                          expr
+
+                     _     Returns  T  if  C  is  a  digit  character  (optional  radix  not
+     supported).
+
+
+ AlphaNumericP AlphaNumericP _ _________   _______                                   ____(AlphaNumericP C:character): boolean                                   expr
+
+                  _     Returns T if C is a digit or an alphabetic.PSL Manual                    7 February 1983           Strings and Vectors
+section 8.7                                                        page 8.9
+
+ Char!= Char!= __ _________  __ _________   _______                           ____(Char!= C1:character  C2:character): boolean                           expr
+
+                  __     __     Returns T if C1 and C2 are the same in all three attributes.
+
+
+ Char!-Equal Char!-Equal __ _________  __ _________   _______                      ____(Char!-Equal C1:character  C2:character): boolean                      expr
+
+                    __     __     Returns  T  if C1 and C2 are similar.  Differences in case, bits,
+     or font are ignored by this function.
+
+
+ Char!< Char!< __ _________  __ _________   _______                           ____(Char!< C1:character  C2:character): boolean                           expr
+
+                  __                       __     Returns T if C1 is strictly less than C2.
+
+
+ Char!> Char!> __ _________  __ _________   _______                           ____(Char!> C1:character  C2:character): boolean                           expr
+
+                  __                          __     Returns T if C1 is strictly greater than C2.
+
+
+ Char!-LessP Char!-LessP __ _________  __ _________   _______                      ____(Char!-LessP C1:character  C2:character): boolean                      expr
+
+          Char!<          Char!<     Like Char!< but ignores differences in case, fonts, and bits.
+
+
+ Char!-GreaterP Char!-GreaterP __ _________  __ _________   _______                   ____(Char!-GreaterP C1:character  C2:character): boolean                   expr
+
+          Char!>          Char!>     Like Char!> but ignores differences in case, fonts, and bits.
+
+
+ Char!-Code Char!-Code _ _________   _________                                    ____(Char!-Code C:character): character                                    expr
+
+                                   _     Returns the code attribute of C.  In  PSL  this  function  is  an
+     identity function.
+
+
+ Char!-Bits Char!-Bits _ _________   _______                                      ____(Char!-Bits C:character): integer                                      expr
+
+                                   _     Returns the bits attribute of C, which is always 0 in PSL.
+
+
+ Char!-Font Char!-Font _ _________   _______                                      ____(Char!-Font C:character): integer                                      expr
+
+                                   _     Returns the font attribute of C, which is always 0 in PSL.
+
+
+ Code!-Char Code!-Char _ _______    _________ ___                                 ____(Code!-Char I:integer): {character,nil}                                expr
+
+     The  purpose  of  this  function  is  to  be  able to construct a
+     character by specifying the code, bits, and font.   Because  bits
+                                                      Code!-Char                                                      Code!-Char     and  font  attributes  are  not  used  in  PSL,  Code!-Char is anStrings and Vectors           7 February 1983                    PSL Manual
+page 8.10                                                       section 8.7
+
+     identity function.
+
+
+ Character Character _  _________  ______  __    _________                       ____(Character C:{character, string, id}): character                       expr
+
+                          _                        _                 _     Attempts  to  coerce C to be a character.  If C is a character, C
+                      _     is returned.  If C is a string, then the first character  of  the
+                             _     string is returned.  If C is a symbol, the first character of the
+     symbol is returned.  Otherwise an error occurs.
+
+
+ Char!-UpCase Char!-UpCase _ _________   _________                                  ____(Char!-UpCase C:character): character                                  expr
+
+         LowerCaseP                    Char-UpCase         LowerCaseP _                  Char-UpCase     If  LowerCaseP(C)  is  true, then Char-UpCase returns the code of
+                       _                                    _     the upper case of C.  Otherwise it returns the code of C.
+
+
+ Char!-DownCase Char!-DownCase _ _________   _________                                ____(Char!-DownCase C:character): character                                expr
+
+        UpperCaseP                  Char-DownCase        UpperCaseP _                Char-DownCase     If UpperCaseP(C) is true, then Char-DownCase returns the code  of
+                       _                                    _     the lower case of C.  Otherwise it returns the code of C.
+
+
+ Digit!-Char Digit!-Char _ _________   _______                                     ____(Digit!-Char C:character): integer                                     expr
+
+                                        _                            _     Converts  character to its code if C is a one-digit number.  If C
+                                                    _     is larger than one digit, NIL is returned.  If C is not  numeric,
+     an error message is caused.
+
+
+ Char!-Int Char!-Int _ _________   _______                                       ____(Char!-Int C:character): integer                                       expr
+
+     Converts character to integer.  This is the identity operation in
+     PSL.
+
+
+ Int!-Char Int!-Char _ _______   _________                                       ____(Int!-Char I:integer): character                                       expr
+
+     Converts integer to character.  This is the identity operation in
+     PSL.
+
+  The string functions follow.
+
+
+ RplaChar RplaChar _ ______  _ _______  _ _________   _________                 ____(RplaChar S:string  I:integer  C:character): character                 expr
+
+                       _             _             _     Store a character C in a string S at position I.PSL Manual                    7 February 1983           Strings and Vectors
+section 8.7                                                       page 8.11
+
+ String!= String!= __ ______  __ ______   _______                               ____(String!= S1:string  S2:string): boolean                               expr
+
+                             __       __     Compares  two  strings  S1  and  S2,  case sensitive.  (Substring
+     options not implemented).
+
+
+ String!-Equal String!-Equal __ ______  __ ______   _______                          ____(String!-Equal S1:string  S2:string): boolean                          expr
+
+                         __     __     Compare two strings S1 and S2, ignoring case, bits and font.
+
+                                                  _____ _______  The following string comparison functions  are  extra-boolean.    If  the
+comparison results in a value of T, the first position of inequality in the
+strings is returned.
+
+
+ String!< String!< __ ______  __ ______   _____ _______                         ____(String!< S1:string  S2:string): extra-boolean                         expr
+
+     Lexicographic comparison of strings.  Case sensitive.
+
+
+ String!> String!> __ ______  __ ______   _____ _______                         ____(String!> S1:string  S2:string): extra-boolean                         expr
+
+     Lexicographic comparison of strings.  Case sensitive.
+
+
+ String!<!= String!<!= __ ______  __ ______   _____ _______                       ____(String!<!= S1:string  S2:string): extra-boolean                       expr
+
+     Lexicographic comparison of strings.  Case sensitive.
+
+
+ String!>!= String!>!= __ ______  __ ______   _____ _______                       ____(String!>!= S1:string  S2:string): extra-boolean                       expr
+
+     Lexicographic comparison of strings.  Case sensitive.
+
+
+ String!<!> String!<!> __ ______  __ ______   _____ _______                       ____(String!<!> S1:string  S2:string): extra-boolean                       expr
+
+     Lexicographic comparison of strings.  Case sensitive.
+
+
+ String!-LessP String!-LessP __ ______  __ ______   _____ _______                    ____(String!-LessP S1:string  S2:string): extra-boolean                    expr
+
+     Lexicographic  comparison  of  strings.    Case  differences  are
+     ignored.
+
+
+ String!-GreaterP String!-GreaterP __ ______  __ ______   _____ _______                 ____(String!-GreaterP S1:string  S2:string): extra-boolean                 expr
+
+     Lexicographic  comparison  of  strings.    Case  differences  are
+     ignored.Strings and Vectors           7 February 1983                    PSL Manual
+page 8.12                                                       section 8.7
+
+ String!-Not!-GreaterP String!-Not!-GreaterP __ ______  __ ______   _____ _______            ____(String!-Not!-GreaterP S1:string  S2:string): extra-boolean            expr
+
+     Lexicographic  comparison  of  strings.    Case  differences  are
+     ignored.
+
+
+ String!-Not!-LessP String!-Not!-LessP __ ______  __ ______   _____ _______               ____(String!-Not!-LessP S1:string  S2:string): extra-boolean               expr
+
+     Lexicographic  comparison  of  strings.    Case  differences  are
+     ignored.
+
+
+ String!-Not!-Equal String!-Not!-Equal __ ______  __ ______   _____ _______               ____(String!-Not!-Equal S1:string  S2:string): extra-boolean               expr
+
+     Lexicographic  comparison  of  strings.    Case  differences  are
+     ignored.
+
+
+ String!-Repeat String!-Repeat _ ______  _ _______   ______                           ____(String!-Repeat S:string  I:integer): string                           expr
+
+                     _                    _     Appends copy of S to itself total of I-1 times.
+
+
+ String!-Trim String!-Trim ___  ____  ______   _ ______   ______                    ____(String!-Trim BAG:{list, string}  S:string): string                    expr
+
+                                               ___               _     Remove leading and trailing characters in BAG from a string S.
+
+
+          (String-Trim "ABC" "AABAXYZCB") returns "XYZ"
+          (String-Trim (List (Char A) (Char B) (Char C))
+                                               "AABAXYZCB")
+           returns "XYZ"
+          (String-Trim '(65 66 67) "ABCBAVXZCC") returns "VXZ"
+
+
+ String!-Left!-Trim String!-Left!-Trim ___  ____  ______   _ ______   ______              ____(String!-Left!-Trim BAG:{list, string}  S:string): string              expr
+
+     Remove leading characters from string.
+
+
+ String!-Right!-Trim String!-Right!-Trim ___  ____  ______   _ ______   ______             ____(String!-Right!-Trim BAG:{list, string}  S:string): string             expr
+
+     Remove trailing characters from string.
+
+
+ String!-UpCase String!-UpCase _ ______   ______                                      ____(String!-UpCase S:string): string                                      expr
+
+     Copy and raise all alphabetic characters in string.PSL Manual                    7 February 1983           Strings and Vectors
+section 8.7                                                       page 8.13
+
+ NString!-UpCase NString!-UpCase _ ______   ______                                     ____(NString!-UpCase S:string): string                                     expr
+
+     Destructively raise all alphabetic characters in string.
+
+
+ String!-DownCase String!-DownCase _ ______   ______                                    ____(String!-DownCase S:string): string                                    expr
+
+     Copy and lower all alphabetic characters in string.
+
+
+ NString!-DownCase NString!-DownCase _ ______   ______                                   ____(NString!-DownCase S:string): string                                   expr
+
+     Destructively lower all alphabetic characters in string.
+
+
+ String!-Capitalize String!-Capitalize _ ______   ______                                  ____(String!-Capitalize S:string): string                                  expr
+
+     Copy and raise first letter of all words in string; other letters
+     in lower case.
+
+
+ NString!-Capitalize NString!-Capitalize _ ______   ______                                 ____(NString!-Capitalize S:string): string                                 expr
+
+     Destructively  raise  first letter of all words; other letters in
+     lower case.
+
+
+ String!-to!-List String!-to!-List _ ______   ____                                      ____(String!-to!-List S:string): list                                      expr
+
+     Unpack string characters into a list.
+
+
+ String!-to!-Vector String!-to!-Vector _ ______   ______                                  ____(String!-to!-Vector S:string): vector                                  expr
+
+     Unpack string characters into a vector.
+
+
+ SubString SubString _ ______  __ _______  __ _______   ______                   ____(SubString S:string  LO:integer  HI:integer): string                   expr
+
+             SubSeq             SubSeq                                   ______     Same as SubSeq, but the first argument must be a string.  Returns
+                         Size                    _    Size __   __     a substring of S of Size HI - LO - 1, beginning with the  element
+                __     with index LO.
+
+
+ String!-Length String!-Length _ ______   _______                                     ____(String!-Length S:string): integer                                     expr
+
+     Last index of a string, plus one.

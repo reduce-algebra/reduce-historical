@@ -1,0 +1,7 @@
+.silent_index {mark} idx 10-1
+.silent_index {Region} idx 10-1
+.silent_index {words} idx 10-2
+.silent_index {lists} idx 10-2
+.silent_index {paragraphs} idx 10-2
+.silent_index {Defuns} idx 10-2
+.silent_index {pages} idx 10-2

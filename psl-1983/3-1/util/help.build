@@ -1,0 +1,22 @@
+% Build file for HELP.RED module
+% MLG, 9 Feb, 1983
+%	Changed Unix paths to use $ vars
+
+CompileTime load If!-System;
+
+if_system(Tops20, <<
+HelpFileFormat!* := "ph:%w.hlp";
+HelpTable!* := "ph:help.tbl";
+>>);
+
+if_system(Unix, <<
+HelpFileFormat!* := "$ph/%w.hlp";
+HelpTable!* := "$ph/help.tbl";
+>>);
+
+if_system(HP9836, <<
+HelpFileFormat!* := "ph:%w.hlp";
+HelpTable!* := "ph:help.tbl";
+>>);
+
+in "help.red"$

@@ -1,0 +1,69 @@
+
+			 8-Jun-83  9:37:41
+
+BATCON Version	104(4133)			GLXLIB Version	1(527)
+
+	    Job EVAL Req #480 for KESSLER in Stream 0
+
+	OUTPUT:	 Nolog				TIME-LIMIT: 0:10:00
+	UNIQUE:	 Yes				BATCH-LOG:  Supersede
+	RESTART: No				ASSISTANCE: Yes
+						SEQUENCE:   1737
+
+	Input from => PS:<PSL.KERNEL.20.EXT>EVAL.CTL.3
+	Output to  => PS:<PSL.KERNEL.20.EXT>EVAL.LOG
+
+
+
+ 9:37:41 MONTR	 Univ of Utah Computer Science KL-20, TOPS-20AN Monitor 5.3(1500)
+ 9:37:41 MONTR	@SET TIME-LIMIT 600
+ 9:37:41 MONTR	@LOGIN KESSLER SMALL
+ 9:37:44 MONTR	 Job 12 on TTY224 8-Jun-83 09:37:44
+ 9:37:44 MONTR	 Previous login at 8-Jun-83 09:36:52
+ 9:37:44 MONTR	 There is 1 other job logged in as user KESSLER
+ 9:37:52 MONTR	@
+ 9:37:52 MONTR	[PS Mounted]
+ 9:37:52 MONTR	
+ 9:37:52 MONTR	[CONNECTED TO PS:<PSL.KERNEL.20.EXT>]
+		;Modifications to this file may disappear, as this file is generated
+		;automatically using information in P20:20-KERNEL-GEN.SL.
+ 9:37:52 MONTR	def dsk: dsk:,p20e:,pk:,p20:
+ 9:37:53 MONTR	@S:EX-DEC20-CROSS.EXE
+ 9:37:55 USER	[29] ASMOut "eval";
+ 9:37:56 USER	ASMOUT: IN files; or type in expressions
+ 9:37:56 USER	When all done execute ASMEND;
+ 9:37:58 USER	[30] PathIn "eval.build";
+ 9:37:59 USER	%
+ 9:37:59 USER	% EVAL.BUILD - Files with Eval and Apply in the interpreter
+ 9:37:59 USER	% 
+ 9:37:59 USER	% Author:      Eric Benson
+ 9:37:59 USER	%              Symbolic Computation Group
+ 9:37:59 USER	%              Computer Science Dept.
+ 9:37:59 USER	%              University of Utah
+ 9:37:59 USER	% Date:        19 May 1982
+ 9:37:59 USER	% Copyright (c) 1982 University of Utah
+ 9:37:59 USER	%
+ 9:37:59 USER	
+ 9:37:59 USER	PathIn "apply-lap.red"$                 % low-level function linkage, in LAP
+ 9:38:08 USER	PathIn "eval-apply.red"$                % interpreter functions
+ 9:38:20 USER	PathIn "catch-throw.red"$
+ 9:38:20 USER	*** Function `CATCH!-ALL' has been redefined
+ 9:38:21 USER	*** Function `UNWIND!-ALL' has been redefined
+ 9:38:22 USER	*** Function `UNWIND!-PROTECT' has been redefined
+ 9:38:23 USER	*** Function `!*CATCH' has been redefined
+ 9:38:28 USER	                % non-local GOTO mechanism
+ 9:38:28 USER	PathIn "prog-and-friends.red"$          % Prog, Go and Return
+ 9:38:32 USER	[31] ASMEnd;
+ 9:38:33 USER	*** Garbage collection starting
+ 9:38:36 USER	*** GC 12: time 1916 ms, 146295 recovered, 239467 free
+ 9:38:43 USER	0
+ 9:38:43 USER	[32] quit;
+ 9:38:43 MONTR	@compile eval.mac, deval.mac
+ 9:38:46 USER	MACRO:  .MAIN
+ 9:38:53 USER	MACRO:  .MAIN
+ 9:38:54 USER	
+ 9:38:54 USER	EXIT
+ 9:38:54 MONTR	@
+ 9:38:55 MONTR	Killed by OPERATOR, TTY 221
+ 9:38:55 MONTR	Killed Job 12, User KESSLER, Account SMALL, TTY 224,
+ 9:38:56 MONTR	  at  8-Jun-83 09:38:55,  Used 0:00:41 in 0:01:11

@@ -1,0 +1,46 @@
+						01/11/82
+						Kessler
+
+          Working on the PSL sources
+
+When you desire to work on any of the PSL sources and will want to place
+them back into the PSL system you must use the check-out/in procedure
+outlined here.
+
+As a preliminary, you must place in your Comand.cmd file the following line:
+     dec/noc env <psl.util>co
+This will define the 3 commands used to check files (co, unco and ci).
+
+Check Out
+     When you want to check out a file or files, issue the CO command
+     followed by the name(s) of the file(s).  This will record in a
+     data base file the fact that you have them checked out and will
+     inhibit anyone else from checking them out.  Then it will send a mail
+     message to the Czar's at HP and here.  For example,
+       CO pc:compiler.red  
+       CO pc:compiler.* 
+       CO pu:rlisp-support.red, pu:rlisp-parser.red
+     The CO command will accept wildcards and the escape key functions
+     in the normal manner.  If someone has already checked out a file,
+     you will be so informed, including the person who checked it out
+     and the date and time it was done.
+
+Un Check Out
+     If you decide later that you really didn't want to check the file out,
+     you may cancel your check out by issuing the UNCO command, followed
+     by the file(s) that you want to cancel.  You may only UNCO files that
+     you have checked out, you may not UNCO anyone else's files.  It has
+     the same format as CO above.
+
+Check In
+     Finally, when you are finished making changes and are satisfied that
+     the changes are complete and well documented, you may check the files
+     back in using the CI command, followed by the file(s) that you want to
+     check back in.  This will send a message to the Local Czar.  It is
+     your responsibility to copy the file from your local directory to the
+     newversions directory.
+
+Note: These do not perform any automatic file copy.  Should we add this??
+That is, upon CO, it copies the files to your currently connected directory
+and when you CI it copies from your connected directory to the
+newversions??

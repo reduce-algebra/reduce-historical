@@ -1,0 +1,15 @@
+CompileTime <<
+load If!-System;
+>>;
+if_system(PDP10, <<
+imports '(comp!-decls pass!-1!-lap
+	  dec20!-lap dec20!-cmac faslout);
+if_system(KL10, NIL, imports '(non!-kl!-comp));
+>>);
+if_system(VAX,
+imports '(comp!-decls pass!-1!-lap
+	  vax!-lap vax!-cmac faslout));
+if_system(HP9836,
+imports '(comp!-decls pass!-1!-lap
+	  hp!-lap hp!-cmac hp!-comp faslout));
+in "compiler.red"$

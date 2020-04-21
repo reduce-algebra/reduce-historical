@@ -1,0 +1,16 @@
+submit types.ctl
+submit randm.ctl
+submit alloc.ctl
+submit arith.ctl
+submit debg.ctl
+submit error.ctl
+submit eval.ctl
+submit extra.ctl
+submit fasl.ctl
+submit io.ctl
+submit macro.ctl
+submit prop.ctl
+submit symbl.ctl
+submit sysio.ctl
+submit tloop.ctl
+submit heap.ctl

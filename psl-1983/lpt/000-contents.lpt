@@ -1,0 +1,437 @@
+PSL Manual                    7 February 1983                        page i
+Table of Contents
+
+                             TABLE OF CONTENTS                             TABLE OF CONTENTS                             TABLE OF CONTENTS
+
+
+
+
+
+
+
+                          CHAPTER 1. INTRODUCTION                          CHAPTER 1. INTRODUCTION                          CHAPTER 1. INTRODUCTION
+
+
+     1.1. Opening Remarks  .  .  .  .  .  .  .  .  .  .  .  .  .  .     1.1
+     1.2. Scope of the Manual .  .  .  .  .  .  .  .  .  .  .  .  .     1.2
+          1.2.1. Typographic Conventions within the Manual  .  .  .     1.2
+          1.2.2. The Organization of the Manual .  .  .  .  .  .  .     1.3
+
+
+                    CHAPTER 2. GETTING STARTED WITH PSL                    CHAPTER 2. GETTING STARTED WITH PSL                    CHAPTER 2. GETTING STARTED WITH PSL
+
+
+     2.1. Purpose of This Chapter.  .  .  .  .  .  .  .  .  .  .  .     2.1
+     2.2. Defining Logical Device Names for PSL .  .  .  .  .  .  .     2.1
+          2.2.1. DEC-20 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     2.2
+          2.2.2. VAX .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     2.2
+     2.3. Starting PSL  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     2.3
+          2.3.1. DEC-20 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     2.3
+          2.3.2. VAX .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     2.3
+     2.4. Running the PSL System .  .  .  .  .  .  .  .  .  .  .  .     2.4
+          2.4.1. Loading Optional Modules .  .  .  .  .  .  .  .  .     2.4
+          2.4.2. Notes on Running PSL and RLISP .  .  .  .  .  .  .     2.4
+          2.4.3. Transcript of a Short Session with PSL  .  .  .  .     2.5
+     2.5. Error and Warning Messages.  .  .  .  .  .  .  .  .  .  .     2.8
+     2.6. Compilation Versus Interpretation  .  .  .  .  .  .  .  .     2.8
+     2.7. Function Types.  .  .  .  .  .  .  .  .  .  .  .  .  .  .     2.9
+     2.8. Switches and Globals.  .  .  .  .  .  .  .  .  .  .  .  .    2.10
+     2.9. Reporting Errors and Misfeatures.  .  .  .  .  .  .  .  .    2.10
+
+
+                          CHAPTER 3. RLISP SYNTAX                          CHAPTER 3. RLISP SYNTAX                          CHAPTER 3. RLISP SYNTAX
+
+
+     3.1. Motivation for RLISP Interface to PSL .  .  .  .  .  .  .     3.1
+     3.2. An Introduction to RLISP  .  .  .  .  .  .  .  .  .  .  .     3.2
+          3.2.1. LISP equivalents of some RLISP constructs  .  .  .     3.2
+     3.3. An Overview of RLISP and LISP Syntax Correspondence  .  .     3.3
+          3.3.1. Function Call Syntax in RLISP and LISP  .  .  .  .     3.3
+                                                                        ...          3.3.2. RLISP Infix Operators and Associated LISP Functions....3.4
+                 
+          3.3.3. Differences between Parse and Read.  .  .  .  .  .     3.6
+          3.3.4. Procedure Definition  .  .  .  .  .  .  .  .  .  .     3.6
+          3.3.5. Compound Statement Grouping .  .  .  .  .  .  .  .     3.7
+          3.3.6. Blocks with Local Variables .  .  .  .  .  .  .  .     3.7PSL Manual                    7 February 1983                       page ii
+Table of Contents
+
+          3.3.7. The If Then Else Statement  .  .  .  .  .  .  .  .     3.8
+     3.4. Looping Statements  .  .  .  .  .  .  .  .  .  .  .  .  .     3.8
+          3.4.1. While Loop.  .  .  .  .  .  .  .  .  .  .  .  .  .     3.8
+          3.4.2. Repeat Loop  .  .  .  .  .  .  .  .  .  .  .  .  .     3.8
+          3.4.3. For Each Loop.  .  .  .  .  .  .  .  .  .  .  .  .     3.8
+          3.4.4. For Loop  .  .  .  .  .  .  .  .  .  .  .  .  .  .     3.9
+          3.4.5. Loop Examples.  .  .  .  .  .  .  .  .  .  .  .  .     3.9
+     3.5. Switch Syntax .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    3.10
+     3.6. RLISP I/O Syntax .  .  .  .  .  .  .  .  .  .  .  .  .  .    3.10
+     3.7. Transcript of a Short Session with RLISP .  .  .  .  .  .    3.10
+
+
+                           CHAPTER 4. DATA TYPES                           CHAPTER 4. DATA TYPES                           CHAPTER 4. DATA TYPES
+
+
+     4.1. Data Types and Structures Supported in PSL  .  .  .  .  .     4.1
+          4.1.1. Data Types.  .  .  .  .  .  .  .  .  .  .  .  .  .     4.1
+          4.1.2. Other Notational Conventions.  .  .  .  .  .  .  .     4.3
+          4.1.3. Structures.  .  .  .  .  .  .  .  .  .  .  .  .  .     4.4
+     4.2. Predicates Useful with Data Types  .  .  .  .  .  .  .  .     4.5
+          4.2.1. Functions for Testing Equality .  .  .  .  .  .  .     4.5
+          4.2.2. Predicates for Testing the Type of an Object  .  .     4.7
+          4.2.3. Boolean Functions  .  .  .  .  .  .  .  .  .  .  .     4.8
+     4.3. Converting Data Types  .  .  .  .  .  .  .  .  .  .  .  .     4.9
+
+
+                CHAPTER 5. NUMBERS AND ARITHMETIC FUNCTIONS                CHAPTER 5. NUMBERS AND ARITHMETIC FUNCTIONS                CHAPTER 5. NUMBERS AND ARITHMETIC FUNCTIONS
+
+
+     5.1. Big Integers  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     5.1
+     5.2. Conversion Between Integers and Floats.  .  .  .  .  .  .     5.1
+     5.3. Arithmetic Functions.  .  .  .  .  .  .  .  .  .  .  .  .     5.2
+     5.4. Functions for Numeric Comparison.  .  .  .  .  .  .  .  .     5.5
+     5.5. Bit Operations.  .  .  .  .  .  .  .  .  .  .  .  .  .  .     5.7
+     5.6. Various Mathematical Functions  .  .  .  .  .  .  .  .  .     5.8
+
+
+                          CHAPTER 6. IDENTIFIERS                          CHAPTER 6. IDENTIFIERS                          CHAPTER 6. IDENTIFIERS
+
+
+     6.1. Introduction  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     6.1
+     6.2. Fields of Ids .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     6.2
+     6.3. Identifiers and the Id hash table  .  .  .  .  .  .  .  .     6.2
+          6.3.1. Identifier Functions  .  .  .  .  .  .  .  .  .  .     6.3
+          6.3.2. Find.  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     6.4
+     6.4. Property List Functions.  .  .  .  .  .  .  .  .  .  .  .     6.4
+          6.4.1. Functions for Flagging Ids  .  .  .  .  .  .  .  .     6.6
+          6.4.2. Direct Access to the Property Cell.  .  .  .  .  .     6.7
+     6.5. Value Cell Functions.  .  .  .  .  .  .  .  .  .  .  .  .     6.7
+     6.6. Package System Functions  .  .  .  .  .  .  .  .  .  .  .    6.10
+     6.7. System Global Variables, Switches and Other "Hooks"  .  .    6.13
+          6.7.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .    6.13PSL Manual                    7 February 1983                      page iii
+Table of Contents
+
+          6.7.2. Setting Switches.  .  .  .  .  .  .  .  .  .  .  .    6.14
+          6.7.3. Special Global Variables .  .  .  .  .  .  .  .  .    6.15
+          6.7.4. Special Put Indicators.  .  .  .  .  .  .  .  .  .    6.15
+          6.7.5. Special Flag Indicators  .  .  .  .  .  .  .  .  .    6.16
+          6.7.6. Displaying Information About Globals .  .  .  .  .    6.16
+
+
+                         CHAPTER 7. LIST STRUCTURE                         CHAPTER 7. LIST STRUCTURE                         CHAPTER 7. LIST STRUCTURE
+
+
+     7.1. Introduction to Lists and Pairs .  .  .  .  .  .  .  .  .     7.1
+     7.2. Basic Functions on Pairs  .  .  .  .  .  .  .  .  .  .  .     7.2
+     7.3. Functions for Manipulating Lists.  .  .  .  .  .  .  .  .     7.4
+          7.3.1. Selecting List Elements  .  .  .  .  .  .  .  .  .     7.4
+          7.3.2. Membership and Length of Lists .  .  .  .  .  .  .     7.6
+          7.3.3. Constructing, Appending, and Concatenating Lists .     7.6
+          7.3.4. Lists as Sets.  .  .  .  .  .  .  .  .  .  .  .  .     7.7
+          7.3.5. Deleting Elements of Lists  .  .  .  .  .  .  .  .     7.8
+          7.3.6. List Reversal.  .  .  .  .  .  .  .  .  .  .  .  .     7.9
+     7.4. Functions for Building and Searching A-Lists.  .  .  .  .    7.10
+     7.5. Substitutions .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    7.11
+
+
+                      CHAPTER 8. STRINGS AND VECTORS                      CHAPTER 8. STRINGS AND VECTORS                      CHAPTER 8. STRINGS AND VECTORS
+
+
+     8.1. Vector-Like Objects .  .  .  .  .  .  .  .  .  .  .  .  .     8.1
+     8.2. Strings .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     8.1
+     8.3. Vectors .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     8.3
+     8.4. Word Vectors  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     8.5
+     8.5. General X-Vector Operations  .  .  .  .  .  .  .  .  .  .     8.5
+     8.6. Arrays  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     8.7
+     8.7. Common LISP String Functions .  .  .  .  .  .  .  .  .  .     8.7
+
+
+                        CHAPTER 9. FLOW OF CONTROL                        CHAPTER 9. FLOW OF CONTROL                        CHAPTER 9. FLOW OF CONTROL
+
+
+     9.1. Introduction  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     9.1
+     9.2. Conditionals  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     9.1
+          9.2.1. Conds and Ifs.  .  .  .  .  .  .  .  .  .  .  .  .     9.1
+          9.2.2. The Case Statement .  .  .  .  .  .  .  .  .  .  .     9.3
+     9.3. Sequencing Evaluation  .  .  .  .  .  .  .  .  .  .  .  .     9.4
+     9.4. Iteration  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     9.6
+          9.4.1. For .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     9.8
+          9.4.2. Mapping Functions  .  .  .  .  .  .  .  .  .  .  .    9.13
+          9.4.3. Do  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    9.15
+     9.5. Non-Local Exits  .  .  .  .  .  .  .  .  .  .  .  .  .  .    9.17PSL Manual                    7 February 1983                       page iv
+Table of Contents
+
+                CHAPTER 10. FUNCTION DEFINITION AND BINDING                CHAPTER 10. FUNCTION DEFINITION AND BINDING                CHAPTER 10. FUNCTION DEFINITION AND BINDING
+
+
+     10.1. Function Definition in PSL  .  .  .  .  .  .  .  .  .  .    10.1
+          10.1.1. Notes on Code Pointers  .  .  .  .  .  .  .  .  .    10.1
+          10.1.2. Functions Useful in Function Definition.  .  .  .    10.2
+          10.1.3. Function Definition in LISP Syntax  .  .  .  .  .    10.4
+          10.1.4. Function Definition in RLISP Syntax .  .  .  .  .    10.5
+          10.1.5. Low Level Function Definition Primitives  .  .  .    10.6
+          10.1.6. Function Type Predicates.  .  .  .  .  .  .  .  .    10.7
+     10.2. Variables and Bindings.  .  .  .  .  .  .  .  .  .  .  .    10.7
+          10.2.1. Binding Type Declaration.  .  .  .  .  .  .  .  .    10.8
+          10.2.2. Binding Type Predicates .  .  .  .  .  .  .  .  .    10.9
+     10.3. User Binding Functions.  .  .  .  .  .  .  .  .  .  .  .    10.9
+          10.3.1. Funargs, Closures and Environments  .  .  .  .  .   10.10
+
+
+                        CHAPTER 11. THE INTERPRETER                        CHAPTER 11. THE INTERPRETER                        CHAPTER 11. THE INTERPRETER
+
+
+     11.1. Evaluator Functions Eval and Apply.  .  .  .  .  .  .  .    11.1
+     11.2. Support Functions for Eval and Apply .  .  .  .  .  .  .    11.5
+     11.3. Special Evaluator Functions, Quote, and Function .  .  .    11.6
+     11.4. Support Functions for Macro Evaluation  .  .  .  .  .  .    11.7
+
+
+                       CHAPTER 12. INPUT AND OUTPUT                       CHAPTER 12. INPUT AND OUTPUT                       CHAPTER 12. INPUT AND OUTPUT
+
+
+     12.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    12.1
+     12.2. The Underlying Primitives for Input and Output.  .  .  .    12.1
+     12.3. Opening, Closing, and Selecting Channels.  .  .  .  .  .    12.4
+     12.4. Functions for Printing.  .  .  .  .  .  .  .  .  .  .  .    12.6
+     12.5. Functions for Reading .  .  .  .  .  .  .  .  .  .  .  .   12.13
+          12.5.1. Reading S-Expression .  .  .  .  .  .  .  .  .  .   12.13
+          12.5.2. Reading Files into PSL  .  .  .  .  .  .  .  .  .   12.14
+          12.5.3. Reading Single Characters  .  .  .  .  .  .  .  .   12.15
+          12.5.4. Reading Tokens .  .  .  .  .  .  .  .  .  .  .  .   12.16
+          12.5.5. Read Macros .  .  .  .  .  .  .  .  .  .  .  .  .   12.24
+     12.6. Scan Table Utility Functions.  .  .  .  .  .  .  .  .  .   12.25
+     12.7. I/O to and from Lists and Strings .  .  .  .  .  .  .  .   12.25
+     12.8. Example of Simple I/O in PSL.  .  .  .  .  .  .  .  .  .   12.27
+
+
+                        CHAPTER 13. USER INTERFACE                        CHAPTER 13. USER INTERFACE                        CHAPTER 13. USER INTERFACE
+
+
+     13.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    13.1
+     13.2. Stopping PSL and Saving a New Executable Core Image .  .    13.1
+     13.3. Init Files.  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    13.3
+     13.4. Changing the Default Top Level Function .  .  .  .  .  .    13.3
+     13.5. The General Purpose Top Loop Function.  .  .  .  .  .  .    13.4PSL Manual                    7 February 1983                        page v
+Table of Contents
+
+     13.6. The HELP Mechanism .  .  .  .  .  .  .  .  .  .  .  .  .    13.7
+     13.7. The Break Loop  .  .  .  .  .  .  .  .  .  .  .  .  .  .    13.8
+     13.8. Terminal Interaction Commands in RLISP  .  .  .  .  .  .    13.8
+
+
+                        CHAPTER 14. ERROR HANDLING                        CHAPTER 14. ERROR HANDLING                        CHAPTER 14. ERROR HANDLING
+
+
+     14.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    14.1
+     14.2. The Basic Error Functions.  .  .  .  .  .  .  .  .  .  .    14.1
+     14.3. Break Loop.  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    14.4
+     14.4. Interrupt Keys  .  .  .  .  .  .  .  .  .  .  .  .  .  .    14.8
+     14.5. Details on the Break Loop.  .  .  .  .  .  .  .  .  .  .    14.8
+     14.6. Some Convenient Error Calls .  .  .  .  .  .  .  .  .  .    14.8
+     14.7. Special Purpose Error Handlers .  .  .  .  .  .  .  .  .   14.10
+
+
+                        CHAPTER 15. DEBUGGING TOOLS                        CHAPTER 15. DEBUGGING TOOLS                        CHAPTER 15. DEBUGGING TOOLS
+
+
+     15.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    15.1
+          15.1.1. Brief Summary of Full Debug Package .  .  .  .  .    15.1
+          15.1.2. Mini-Trace Facility  .  .  .  .  .  .  .  .  .  .    15.2
+          15.1.3. Step  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    15.3
+                                                                       ....          15.1.4. Functions Which Depend on Redefining User Functions..15.4
+                  
+          15.1.5. A Few Known Deficiencies.  .  .  .  .  .  .  .  .    15.4
+     15.2. Tracing Function Execution  .  .  .  .  .  .  .  .  .  .    15.5
+          15.2.1. Tracing Functions .  .  .  .  .  .  .  .  .  .  .    15.5
+          15.2.2. Saving Trace Output  .  .  .  .  .  .  .  .  .  .    15.6
+          15.2.3. Making Tracing More Selective .  .  .  .  .  .  .    15.7
+          15.2.4. Turning Off Tracing  .  .  .  .  .  .  .  .  .  .    15.8
+          15.2.5. Enabling Debug Facilities and Automatic Tracing .    15.9
+     15.3. A Heavy Handed Backtrace Facility .  .  .  .  .  .  .  .   15.10
+     15.4. Embedded Functions .  .  .  .  .  .  .  .  .  .  .  .  .   15.11
+     15.5. Counting Function Invocations  .  .  .  .  .  .  .  .  .   15.11
+     15.6. Stubs  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   15.12
+     15.7. Functions for Printing Useful Information  .  .  .  .  .   15.12
+     15.8. Printing Circular and Shared Structures .  .  .  .  .  .   15.13
+     15.9. Internals and Customization .  .  .  .  .  .  .  .  .  .   15.14
+          15.9.1. User Hooks  .  .  .  .  .  .  .  .  .  .  .  .  .   15.14
+          15.9.2. Functions Used for Printing/Reading .  .  .  .  .   15.15
+     15.10. Example  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   15.16
+
+
+                            CHAPTER 16. EDITORS                            CHAPTER 16. EDITORS                            CHAPTER 16. EDITORS
+
+
+     16.1. A Mini Structure-Editor  .  .  .  .  .  .  .  .  .  .  .    16.1
+     16.2. The EMODE Screen Editor  .  .  .  .  .  .  .  .  .  .  .    16.3
+          16.2.1. Windows and Buffers in Emode  .  .  .  .  .  .  .    16.5
+     16.3. Introduction to the Full Structure Editor  .  .  .  .  .    16.5PSL Manual                    7 February 1983                       page vi
+Table of Contents
+
+          16.3.1. Starting the Structure Editor .  .  .  .  .  .  .    16.6
+          16.3.2. Structure Editor Commands  .  .  .  .  .  .  .  .    16.7
+
+
+                    CHAPTER 17. MISCELLANEOUS UTILITIES                    CHAPTER 17. MISCELLANEOUS UTILITIES                    CHAPTER 17. MISCELLANEOUS UTILITIES
+
+
+     17.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    17.1
+     17.2. RCREF - Cross Reference Generator for PSL Files  .  .  .    17.1
+          17.2.1. Restrictions.  .  .  .  .  .  .  .  .  .  .  .  .    17.2
+          17.2.2. Usage .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    17.3
+          17.2.3. Options  .  .  .  .  .  .  .  .  .  .  .  .  .  .    17.3
+     17.3. Picture RLISP.  .  .  .  .  .  .  .  .  .  .  .  .  .  .    17.4
+     17.4. Tools for Defining Macros.  .  .  .  .  .  .  .  .  .  .   17.11
+          17.4.1. DefMacro .  .  .  .  .  .  .  .  .  .  .  .  .  .   17.12
+          17.4.2. BackQuote.  .  .  .  .  .  .  .  .  .  .  .  .  .   17.12
+          17.4.3. Sharp-Sign Macros .  .  .  .  .  .  .  .  .  .  .   17.13
+          17.4.4. MacroExpand .  .  .  .  .  .  .  .  .  .  .  .  .   17.14
+          17.4.5. DefLambda.  .  .  .  .  .  .  .  .  .  .  .  .  .   17.14
+     17.5. Simulating a Stack .  .  .  .  .  .  .  .  .  .  .  .  .   17.14
+     17.6. DefStruct .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   17.15
+          17.6.1. Options  .  .  .  .  .  .  .  .  .  .  .  .  .  .   17.17
+          17.6.2. Slot Options.  .  .  .  .  .  .  .  .  .  .  .  .   17.18
+          17.6.3. A Simple Example  .  .  .  .  .  .  .  .  .  .  .   17.18
+     17.7. DefConst  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   17.22
+     17.8. Functions for Sorting .  .  .  .  .  .  .  .  .  .  .  .   17.22
+     17.9. Hashing Cons .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   17.24
+     17.10. Graph-to-Tree  .  .  .  .  .  .  .  .  .  .  .  .  .  .   17.25
+     17.11. Inspect Utility.  .  .  .  .  .  .  .  .  .  .  .  .  .   17.26
+
+
+                      CHAPTER 18. LOADER AND COMPILER                      CHAPTER 18. LOADER AND COMPILER                      CHAPTER 18. LOADER AND COMPILER
+
+
+     18.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    18.1
+     18.2. The Compiler .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    18.1
+          18.2.1. Compiling Functions into Memory  .  .  .  .  .  .    18.2
+          18.2.2. Compiling Functions into FASL Files .  .  .  .  .    18.2
+          18.2.3. Loading FASL Files.  .  .  .  .  .  .  .  .  .  .    18.3
+          18.2.4. Functions to Control the Time When Something is Done 18.4
+                  .  
+          18.2.5. Order of Functions for Compilation  .  .  .  .  .    18.5
+          18.2.6. Fluid and Global Declarations .  .  .  .  .  .  .    18.5
+          18.2.7. Switches Controlling Compiler .  .  .  .  .  .  .    18.6
+          18.2.8. Differences between Compiled and Interpreted Code    18.7
+          18.2.9. Compiler Errors.  .  .  .  .  .  .  .  .  .  .  .    18.8
+     18.3. The Loader.  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    18.9
+          18.3.1. Legal LAP Format and Pseudos  .  .  .  .  .  .  .   18.10
+          18.3.2. Examples of LAP for DEC-20, VAX and Apollo.  .  .   18.10
+          18.3.3. Lap Switches.  .  .  .  .  .  .  .  .  .  .  .  .   18.13
+     18.4. Structure and Customization of the Compiler.  .  .  .  .   18.14
+     18.5. First PASS of Compiler.  .  .  .  .  .  .  .  .  .  .  .   18.14PSL Manual                    7 February 1983                      page vii
+Table of Contents
+
+          18.5.1. Tagging Information  .  .  .  .  .  .  .  .  .  .   18.15
+          18.5.2. Source to Source Transformations .  .  .  .  .  .   18.15
+     18.6. Second PASS - Basic Code Generation  .  .  .  .  .  .  .   18.15
+          18.6.1. The Cmacros .  .  .  .  .  .  .  .  .  .  .  .  .   18.15
+          18.6.2. Classes of Functions .  .  .  .  .  .  .  .  .  .   18.18
+          18.6.3. Open Functions .  .  .  .  .  .  .  .  .  .  .  .   18.18
+     18.7. Third PASS - Optimizations  .  .  .  .  .  .  .  .  .  .   18.22
+     18.8. Some Structural Notes on the Compiler.  .  .  .  .  .  .   18.23
+
+
+                  CHAPTER 19. OPERATING SYSTEM INTERFACE                  CHAPTER 19. OPERATING SYSTEM INTERFACE                  CHAPTER 19. OPERATING SYSTEM INTERFACE
+
+
+     19.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    19.1
+     19.2. System Dependent Functions  .  .  .  .  .  .  .  .  .  .    19.1
+     19.3. TOPS-20 Interface  .  .  .  .  .  .  .  .  .  .  .  .  .    19.2
+          19.3.1. User Level Interface .  .  .  .  .  .  .  .  .  .    19.2
+          19.3.2. The Basic Fork Manipulation Functions  .  .  .  .    19.4
+          19.3.3. File Manipulation Functions.  .  .  .  .  .  .  .    19.5
+          19.3.4. Miscellaneous Functions .  .  .  .  .  .  .  .  .    19.6
+          19.3.5. Jsys Interface .  .  .  .  .  .  .  .  .  .  .  .    19.6
+          19.3.6. Bit, Word and Address Operations for Jsys Calls .    19.8
+          19.3.7. Examples .  .  .  .  .  .  .  .  .  .  .  .  .  .    19.9
+     19.4. New Vax Specific Interface  .  .  .  .  .  .  .  .  .  .   19.10
+          19.4.1. Setting Your .LOGIN and .CSHRC files.  .  .  .  .   19.10
+          19.4.2. Important PSL executables  .  .  .  .  .  .  .  .   19.11
+          19.4.3. Creating the Init Files .  .  .  .  .  .  .  .  .   19.11
+          19.4.4.  Directories and Symbols   .  .  .  .  .  .  .  .   19.11
+          19.4.5.  Miscellaneous Unix Interface Functions   .  .  .   19.14
+          19.4.6.  Oload   .  .  .  .  .  .  .  .  .  .  .  .  .  .   19.14
+          19.4.7. Calling oloaded functions  .  .  .  .  .  .  .  .   19.15
+          19.4.8. OLOAD Internals.  .  .  .  .  .  .  .  .  .  .  .   19.16
+          19.4.9.  I/O Control functions  .  .  .  .  .  .  .  .  .   19.17
+     19.5. Apollo System Calls.  .  .  .  .  .  .  .  .  .  .  .  .   19.18
+
+
+                            CHAPTER 20. SYSLISP                            CHAPTER 20. SYSLISP                            CHAPTER 20. SYSLISP
+
+
+     20.1. Introduction to the SYSLISP level of PSL.  .  .  .  .  .    20.1
+     20.2. The Relationship of SYSLISP to RLISP .  .  .  .  .  .  .    20.2
+          20.2.1. SYSLISP Declarations .  .  .  .  .  .  .  .  .  .    20.2
+          20.2.2. SYSLISP Mode Analysis.  .  .  .  .  .  .  .  .  .    20.3
+          20.2.3. Defining Special Functions for Mode Analysis .  .    20.3
+          20.2.4. Modified FOR Loop .  .  .  .  .  .  .  .  .  .  .    20.4
+          20.2.5. Char and IDLOC Macros.  .  .  .  .  .  .  .  .  .    20.4
+          20.2.6. The Case Statement.  .  .  .  .  .  .  .  .  .  .    20.5
+          20.2.7. Memory Access and Address Operations.  .  .  .  .    20.7
+          20.2.8. Bit-Field Operation  .  .  .  .  .  .  .  .  .  .    20.7
+     20.3. Using SYSLISP.  .  .  .  .  .  .  .  .  .  .  .  .  .  .    20.9
+          20.3.1. To Compile SYSLISP Code .  .  .  .  .  .  .  .  .    20.9
+     20.4. SYSLISP Functions  .  .  .  .  .  .  .  .  .  .  .  .  .   20.10PSL Manual                    7 February 1983                     page viii
+Table of Contents
+
+          20.4.1. W-Arrays .  .  .  .  .  .  .  .  .  .  .  .  .  .   20.11
+     20.5. Remaining SYSLISP Issues .  .  .  .  .  .  .  .  .  .  .   20.11
+          20.5.1. Stand Alone SYSLISP Programs  .  .  .  .  .  .  .   20.11
+          20.5.2. Need for Two Stacks  .  .  .  .  .  .  .  .  .  .   20.12
+          20.5.3. New Mode System.  .  .  .  .  .  .  .  .  .  .  .   20.12
+          20.5.4. Extend CREF for SYSLISP .  .  .  .  .  .  .  .  .   20.12
+
+
+                        CHAPTER 21. IMPLEMENTATION                        CHAPTER 21. IMPLEMENTATION                        CHAPTER 21. IMPLEMENTATION
+
+
+     21.1. Overview of the Implementation .  .  .  .  .  .  .  .  .    21.1
+     21.2. Files of Interest  .  .  .  .  .  .  .  .  .  .  .  .  .    21.1
+     21.3. Building PSL on the DEC-20  .  .  .  .  .  .  .  .  .  .    21.2
+     21.4. Building the LAP to Assembly Translator .  .  .  .  .  .    21.5
+     21.5. The Garbage Collectors and Allocators.  .  .  .  .  .  .    21.5
+          21.5.1. Compacting Garbage Collector on DEC-20 .  .  .  .    21.5
+          21.5.2. Two-Space Stop and Copy Collector on VAX  .  .  .    21.6
+     21.6. The HEAPs .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    21.6
+     21.7. Allocation Functions  .  .  .  .  .  .  .  .  .  .  .  .    21.8
+
+
+                         CHAPTER 22. PARSER TOOLS                         CHAPTER 22. PARSER TOOLS                         CHAPTER 22. PARSER TOOLS
+
+
+     22.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    22.1
+     22.2. The Table Driven Parser  .  .  .  .  .  .  .  .  .  .  .    22.2
+          22.2.1. Flow Diagram for the Parser.  .  .  .  .  .  .  .    22.2
+          22.2.2. Associating the Infix Operator with a Function  .    22.4
+          22.2.3. Precedences .  .  .  .  .  .  .  .  .  .  .  .  .    22.5
+          22.2.4. Special Cases of 0 <-0 and 0 0.  .  .  .  .  .  .    22.5
+          22.2.5. Parenthesized Expressions  .  .  .  .  .  .  .  .    22.5
+          22.2.6. Binary Operators in General.  .  .  .  .  .  .  .    22.6
+          22.2.7. Assigning Precedences to Key Words  .  .  .  .  .    22.7
+          22.2.8. Error Handling .  .  .  .  .  .  .  .  .  .  .  .    22.7
+          22.2.9. The Parser Program for the RLISP Language .  .  .    22.7
+          22.2.10. Defining Operators  .  .  .  .  .  .  .  .  .  .    22.8
+     22.3. The MINI Translator Writing System.  .  .  .  .  .  .  .   22.10
+          22.3.1. A Brief Guide to MINI.  .  .  .  .  .  .  .  .  .   22.10
+          22.3.2. Pattern Matching Rules  .  .  .  .  .  .  .  .  .   22.12
+          22.3.3. A Small Example.  .  .  .  .  .  .  .  .  .  .  .   22.12
+          22.3.4. Loading Mini.  .  .  .  .  .  .  .  .  .  .  .  .   22.12
+          22.3.5. Running Mini.  .  .  .  .  .  .  .  .  .  .  .  .   22.13
+          22.3.6. MINI Error messages and Error Recovery .  .  .  .   22.13
+          22.3.7. MINI Self-Definition .  .  .  .  .  .  .  .  .  .   22.13
+          22.3.8. The Construction of MINI.  .  .  .  .  .  .  .  .   22.15
+          22.3.9. History of MINI Development.  .  .  .  .  .  .  .   22.16
+     22.4. BNF Description of RLISP Using MINI  .  .  .  .  .  .  .   22.17PSL Manual                    7 February 1983                       page ix
+Table of Contents
+
+                         CHAPTER 23. BIBLIOGRAPHY                         CHAPTER 23. BIBLIOGRAPHY                         CHAPTER 23. BIBLIOGRAPHY
+
+
+                       CHAPTER 24. INDEX OF CONCEPTS                       CHAPTER 24. INDEX OF CONCEPTS                       CHAPTER 24. INDEX OF CONCEPTS
+
+
+                      CHAPTER 25. INDEX OF FUNCTIONS                      CHAPTER 25. INDEX OF FUNCTIONS                      CHAPTER 25. INDEX OF FUNCTIONS
+
+
+                 CHAPTER 26. INDEX OF GLOBALS AND SWITCHES                 CHAPTER 26. INDEX OF GLOBALS AND SWITCHES                 CHAPTER 26. INDEX OF GLOBALS AND SWITCHES

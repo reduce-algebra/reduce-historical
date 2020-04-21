@@ -1,0 +1,2 @@
+(faslin "$pnb/nmode-vax.b")
+(load-nmode)

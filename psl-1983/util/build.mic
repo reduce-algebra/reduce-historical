@@ -1,0 +1,7 @@
+get PSL:RLISP.EXE
+START
+load Build;
+BuildFileFormat!* := "%w";
+Build '''A;
+quit;
+RESET .

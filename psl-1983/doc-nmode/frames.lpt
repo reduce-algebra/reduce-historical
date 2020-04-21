@@ -1,0 +1,2223 @@
+###0
+Action Type Explanation: Alter Display Format
+
+This type of command alters how text is displayed without altering the contents
+of existing buffers.
+
+###1
+Action Type Explanation: Alter Existing Text
+
+This type of command alters some part of the existing text, generally
+transforming and/or moving text rather than just inserting or deleting it.
+
+###2
+Action Type Explanation: Change Mode
+
+This type of command turns some feature(s) of the editor on or off.  This may
+include major modes, minor modes, timing, or scripting.
+
+###3
+Action Type Explanation: Escape
+
+Escape from the current level.
+
+###4
+Action Type Explanation: Inform
+
+This type of command informs the user of some property of the text being worked
+with, or of the state of the editor (including where point is, what the existing
+buffer(s) is(are), what is in the documentation, etc.).
+
+###5
+Action Type Explanation: Insert Constant
+
+This type of command inserts a character constant like tab or space or a
+multiple thereof.
+
+###6
+Action Type Explanation: Mark
+
+This type of command sets mark.
+
+###7
+Action Type Explanation: Move Data
+
+This command copies some data (which is not a constant wired into the program)
+from one place to another.
+
+###8
+Action Type Explanation: Move Point
+
+This type of command moves point.  It may move it within a buffer or from buffer
+to buffer.
+
+###9
+Action Type Explanation: Preserve
+
+Make a copy of something current and put it somewhere else (usually disc).
+
+###10
+Action Type Explanation: Remove
+
+This type of command allows a user to get rid of data, either killing or
+deleting text or removing files or directory entries.
+
+###11
+Action Type Explanation: Select
+
+This type of command finds particular strings in text, and may perform some
+action upon them, such as counting, replacement, or deletion.
+
+###12
+Action Type Explanation: Set Global Variable
+
+This type of command sets some global variable which tends to remain stable for
+some time, such as prefix variables and key bindings.
+
+###13
+Action Type Explanation: Subsequent Command Modifier
+
+This type of command modifies the meaning of the keys that immediately follow
+it, as the prefix commands and the argument commands do.
+
+###14
+Definition: Defun
+
+A defun is a list whose ( falls in column 0.  Its end is after the CRLF
+following its ).
+
+###15
+Definition: Paragraph
+
+Paragraphs are delimited by blank lines and psuedo-blank lines, which are lines
+which don't match the existing fill prefix (when there is one), and, when in
+text mode, also by indentation and by text justifier command lines, which are
+currently defined as lines starting with a period and which are treated as
+another type of psuedo-blank line.  Paragraphs contain the final CRLF after
+their last test, and contain any immediately preceding empty line.
+
+###16
+Definition: Region
+
+The region is that portion of text between point, the current buffer position,
+and mark.
+
+###17
+Definition: Sentence
+
+A sentence is ended by a ., ? or ! followed by two spaces or a CRLF (with
+optional space), with any number of "closing characters" ", ', ) and ] between.
+A sentence also starts at the start of a paragraph.  A sentence also ends at the
+end of a paragraph.
+
+###18
+Global Explanation: Fill Column
+
+The fill column is the column beyond which all the fill commands: auto fill,
+fill paragraph, fill region, and fill comment, will try to break up lines.  The
+fill column can be set by the Set Fill Column command.
+
+###19
+Global Explanation: Fill Prefix
+
+The fill prefix, if present, is a string that the fill paragraph and fill region
+commands expect to see on the areas that they are filling. It is useful, for
+instance, in filling indented text.  Only the indented area will be filled, and
+any new lines created by the filling will be properly indented.  Autofill will
+also insert it on each new line it starts.
+
+###20
+Global Explanation: Goal Column
+
+This is not yet correctly implemented
+
+###21
+Global Explanation: Kill Ring
+
+ The kill ring is a stack of the 16 most recently killed pieces of text.  The
+Insert Kill Buffer command reads text on the top of the kill ring and inserts it
+back into the buffer.  It can accept an argument, specifying an argument other
+than the top one.  If one knows that the text one wants is on the kill ring, but
+is not certain how deeply it is buried, one can retrieve the top item with the
+Insert Kill Buffer command, then look through the other items one by one with
+the Unkill Previous command.  This rotates the items on the kill ring,
+displaying them one by one in a cycle.
+ Most kill commands push their text onto the top of the kill ring.  If two kill
+commands are performed right after each other, the text they kill is
+concatenated.  Commands the kill forward add onto the end of the previously
+killed text.  Commands that kill backward add onto the beginning. That way, the
+text is assembled in its original order.  If intervening commands have taken
+place one can issue an Append Next Kill command before the next kill in order to
+assemble the next killed text together with the text on top of the kill ring.
+
+###22
+Command: Append Next Kill
+
+Function: append-next-kill-command
+Key: C-M-W
+See Global: Kill Ring
+Action Type: Move Data
+
+Make following kill commands append to last batch.  Thus, C-K C-K, cursor
+motion, this command, and C-K C-K, generate one block of killed stuff,
+containing two lines.
+
+###23
+Command: Append To Buffer
+
+Function: append-to-buffer-command
+Key: C-X A
+Topic: Buffers
+See Definition: Region
+Action Type: Move Data
+
+Append region to specified buffer.  The buffer's name is read from the keyboard;
+the buffer is created if nonexistent.  A numeric argument causes us to "prepend"
+instead.  We always insert the text at that buffer's pointer, but when
+"prepending" we leave the pointer before the inserted text.
+
+###24
+Command: Append To File
+
+Function: append-to-file-command
+Key: M-X Append To File
+Topic: Files
+See Definition: Region
+Action Type: Move Data
+
+Append region to end of specified file.
+
+###25
+Command: Apropos
+
+Function: apropos-command
+Key: M-X Apropos
+Action Type: Inform
+
+M-X Apropos lists functions with names containing a string for which the user is
+prompted.
+
+###26
+Command: Argument Digit
+
+Function: argument-digit
+Key: C-0
+Key: C-1
+Key: C-2
+Key: C-3
+Key: C-4
+Key: C-5
+Key: C-6
+Key: C-7
+Key: C-8
+Key: C-9
+Key: C-M-0
+Key: C-M-1
+Key: C-M-2
+Key: C-M-3
+Key: C-M-4
+Key: C-M-5
+Key: C-M-6
+Key: C-M-7
+Key: C-M-8
+Key: C-M-9
+Key: M-0
+Key: M-1
+Key: M-2
+Key: M-3
+Key: M-4
+Key: M-5
+Key: M-6
+Key: M-7
+Key: M-8
+Key: M-9
+Action Type: Subsequent Command Modifier
+
+Specify numeric argument for next command.  Several such digits typed in a row
+all accumulate.
+
+###27
+Command: Auto Fill Mode
+
+Function: auto-fill-mode-command
+Key: M-X Auto Fill Mode
+See Command: Set Fill Column
+Action Type: Change Mode
+
+Break lines between words at the right margin.  A positive argument turns Auto
+Fill mode on; zero or negative, turns it off.  With no argument, the mode is
+toggled.  When Auto Fill mode is on, lines are broken at spaces to fit the right
+margin (position controlled by Fill Column).  You can set the Fill Column with
+the Set Fill Column command.
+
+###28
+Command: Back To Indentation
+
+Function: back-to-indentation-command
+Key: C-M-M
+Key: C-M-RETURN
+Key: M-M
+Key: M-RETURN
+Action Type: Move Point
+
+Move to end of this line's indentation.
+
+###29
+Command: Backward Kill Sentence
+
+Function: backward-kill-sentence-command
+Key: C-X RUBOUT
+See Global: Kill Ring
+See Definition: Sentence
+Action Type: Remove
+
+Kill back to beginning of sentence.  With a command argument n kills backward
+(n>0) or forward (n>0) by |n| sentences.
+
+###30
+Command: Backward Paragraph
+
+Function: backward-paragraph-command
+Key: M-[
+See Definition: Paragraph
+Action Type: Move Point
+
+Move backward to start of paragraph.  When given argument moves backward (n>0)
+or forward (n<0) by |n| paragraphs where n is the command argument.
+
+###31
+Command: Backward Sentence
+
+Function: backward-sentence-command
+Key: M-A
+See Definition: Sentence
+Action Type: Move Point
+
+Move to beginning of sentence.  When given argument moves backward (n>0) or
+forward (n<0) by |n| sentences where n is the command argument.
+
+###32
+Command: Backward Up List
+
+Function: backward-up-list-command
+Key: C-(
+Key: C-M-(
+Key: C-M-U
+Mode: Lisp
+Topic: Lisp
+Action Type: Move Point
+
+Move up one level of list structure, backward.  Given a command argument n move
+up |n| levels backward (n>0) or forward (n<0).
+
+###33
+Command: Buffer Browser
+
+Function: buffer-browser-command
+Key: C-X C-B
+Key: M-X List Buffers
+Topic: Buffers
+Action Type: Inform
+
+Put up a buffer browser subsystem. If an argument is given, then include buffers
+whose names begin with "+".
+
+###34
+Command: Buffer Not Modified
+
+Function: buffer-not-modified-command
+Key: M-~
+Topic: Buffers
+Action Type: Set Global Variable
+
+Pretend that this buffer hasn't been altered.
+
+###35
+Command: C-X Prefix
+
+Function: c-x-prefix
+Key: C-X
+Action Type: Subsequent Command Modifier
+
+The command Control-X is an escape-prefix for more commands.  It reads a
+character (subcommand) and dispatches on it.
+
+###36
+Command: Center Line
+
+Function: center-line-command
+Key: M-S
+Topic: Text
+See Global: Fill Column
+Action Type: Alter Existing Text
+
+Center this line's text within the line.  With argument, centers that many lines
+and moves past.  Centers current and preceding lines with negative argument.
+The width is Fill Column.
+
+###37
+Command: Copy Region
+
+Function: copy-region
+Key: M-W
+See Global: Kill Ring
+See Definition: Region
+Action Type: Preserve
+
+Stick region into kill-ring without killing it.  Like killing and getting back,
+but doesn't mark buffer modified.
+
+###38
+Command: Count Occurrences
+
+Function: count-occurrences-command
+Key: M-X Count Occurrences
+Key: M-X How Many
+Action Type: Inform
+
+Counts occurrences of a string, after point.  The user is prompted for the
+string.  Case is ignored in the count.
+
+###39
+Command: Delete And Expunge File
+
+Function: delete-and-expunge-file-command
+Key: M-X Delete And Expunge File
+Topic: Files
+Action Type: Remove
+
+This command prompts the user for the name of the file. NMODE will fill in
+defaults in a partly specified filename (eg filetype can be defaulted).  If
+possible, the file will then be deleted and expunged, and a message to that
+effect will be displayed. If the operation fails, the bell will sound.
+
+###40
+Command: Delete Backward Hacking Tabs
+
+Function: delete-backward-hacking-tabs-command
+Key: BACKSPACE
+Key: C-RUBOUT
+Key: RUBOUT
+Mode: Lisp
+Action Type: Remove
+
+Delete character before point, turning tabs into spaces.  Rather than deleting a
+whole tab, the tab is converted into the appropriate number of spaces and then
+one space is deleted.  With positive arguments this operation is performed
+multiple times on the text before point.  With negative arguments this operation
+is performed multiple times on the text after point.
+
+###41
+Command: Delete Blank Lines
+
+Function: delete-blank-lines-command
+Key: C-X C-O
+Action Type: Remove
+
+Delete all blank lines around this line's end.  If done on a non-blank line,
+deletes all spaces and tabs at the end of it, and all following blank lines
+(Lines are blank if they contain only spaces and tabs).  If done on a blank
+line, deletes all preceding blank lines as well.
+
+###42
+Command: Delete File
+
+Function: delete-file-command
+Key: M-X Delete File
+Key: M-X Kill File
+Topic: Files
+Action Type: Remove
+
+Delete a file.  Prompts for filename.
+
+###43
+Command: Delete Forward Character
+
+Function: delete-forward-character-command
+Key: C-D
+Key: ESC-P
+See Global: Kill Ring
+Action Type: Remove
+
+Delete character after point.  With argument, kill that many characters (saving
+them).  Negative args kill characters backward.
+
+###44
+Command: Delete Horizontal Space
+
+Function: delete-horizontal-space-command
+Key: M-\
+Action Type: Remove
+
+Delete all spaces and tabs around point.
+
+###45
+Command: Delete Indentation
+
+Function: delete-indentation-command
+Key: M-^
+Action Type: Remove
+
+Delete CRLF and indentation at front of line.  Leaves one space in place of
+them.  With argument, moves down one line first (deleting CRLF after current
+line).
+
+###46
+Command: Delete Matching Lines
+
+Function: delete-matching-lines-command
+Key: M-X Delete Matching Lines
+Key: M-X Flush Lines
+Action Type: Select
+Action Type: Remove
+
+Delete Matching Lines: Prompts user for string.  Deletes all lines containing
+specified string.
+
+###47
+Command: Delete Non-Matching Lines
+
+Function: delete-non-matching-lines-command
+Key: M-X Delete Non-Matching Lines
+Key: M-X Keep Lines
+Action Type: Select
+Action Type: Remove
+
+Delete Non-Matching Lines: Prompts user for string.  Deletes all lines not
+containing specified string.
+
+###48
+Command: Dired
+
+Function: dired-command
+Key: C-X D
+
+Run Dired on the directory of the current buffer file.  With no argument, edits
+that directory.  With an argument of 1, shows only the versions of the file in
+the buffer.  With an argument of 4, asks for input, only versions of that file
+are shown.
+
+###49
+Command: Down List
+
+Function: down-list
+Key: C-M-D
+Mode: Lisp
+Topic: Lisp
+Action Type: Move Point
+
+Move down one level of list structure, forward.  Command argument sensitivity
+not yet implemented.
+
+###50
+Command: Edit Directory
+
+Function: edit-directory-command
+Key: M-X Dired
+Key: M-X Edit Directory
+
+DIRED: Edit a directory.  The string argument may contain the filespec (with
+wildcards of course)
+        D deletes the file which is on the current line. (also K,^D,^K)
+        U undeletes the current line file.
+        Rubout undeletes the previous line file.
+        Space is like ^N - moves down a line.
+        E edit the file.
+        S sorts files according to size, read or write date.
+        R does a reverse sort.
+        ? types a list of commands.
+        Q lists files to be deleted and asks for confirmation:
+          Typing YES deletes them; X aborts; N resumes DIRED.
+
+###51
+Command: End Of Defun
+
+Function: end-of-defun-command
+Key: C-M-E
+Key: C-M-]
+Mode: Lisp
+Topic: Lisp
+See Definition: Defun
+Action Type: Move Point
+
+Move to end of this or next defun.  With argument of 2, finds end of following
+defun.  With argument of -1, finds end of previous defun, etc.
+
+###52
+Command: Esc Prefix
+
+Function: esc-prefix
+Key: ESCAPE
+Action Type: Subsequent Command Modifier
+
+The command esc-prefix is an escape-prefix for more commands.  It reads a
+character (subcommand) and dispatches on it.  Used for escape sequences sent by
+function keys on the keyboard.
+
+###53
+Command: Exchange Point And Mark
+
+Function: exchange-point-and-mark
+Key: C-X C-X
+Action Type: Mark
+Action Type: Move Point
+
+Exchange positions of point and mark.
+
+###54
+Command: Exchange Windows
+
+Function: exchange-windows-command
+Key: C-X E
+Action Type: Alter Display Format
+
+Exchanges the current window with the other window, which becomes current.  In
+two window mode, the windows swap physical positions.
+
+###55
+Command: Execute Buffer
+
+Function: execute-buffer-command
+Key: M-X Execute Buffer
+Topic: Buffers
+
+This command makes NMODE take input from the specified buffer as if it were
+typed in.  This command supercedes any such previous request.  Newline
+characters are ignored when reading from a buffer.  If a command argument is
+given then only the last refresh of the screen triggered by the commands
+actually occurs, otherwise all of the updating of the screen is visible.
+
+###56
+Command: Execute File
+
+Function: execute-file-command
+Key: M-X Execute File
+Topic: Files
+
+This command makes NMODE take input from the specified file as if it were typed
+in.  This command supercedes any such previous request.  Newline characters are
+ignored when reading from a buffer.  If a command argument is given then only
+the last refresh of the screen triggered by the commands actually occurs,
+otherwise all of the updating of the screen is visible.
+
+###57
+Command: Execute Form
+
+Function: execute-form-command
+Key: Lisp-E
+Mode: Lisp
+Topic: Lisp
+Action Type: Mark
+
+Causes the Lisp reader to read and evaluate a form starting at the beginning of
+the current line.  We arrange for output to go to the end of the output buffer.
+The mark is set at the current location in the input buffer, in case user wants
+to go back.
+
+###58
+Command: Exit Nmode
+
+Function: exit-nmode
+Key: Lisp-L
+Mode: Lisp
+Topic: Lisp
+Action Type: Escape
+
+Leave NMODE, return to normal listen loop.
+
+###59
+Command: Fill Comment
+
+Function: fill-comment-command
+Key: M-Z
+See Global: Fill Prefix
+See Global: Fill Column
+See Definition: Paragraph
+Action Type: Alter Existing Text
+
+This command creates a temporary fill prefix from the start of the current line.
+It replaces the surrounding paragraph (determined using fill-prefix) with a
+filled version.  It leaves point at the a position bearing the same relation to
+the filled text that the old point did to the old text.
+
+###60
+Command: Fill Paragraph
+
+Function: fill-paragraph-command
+Key: M-Q
+Topic: Text
+See Global: Fill Prefix
+See Global: Fill Column
+See Definition: Paragraph
+Action Type: Alter Existing Text
+
+This fills (or justifies) this (or next) paragraph.  It leaves point at the a
+position bearing the same relation to the filled text that the old point did to
+the old text.  A numeric argument triggers justification rather than filling.
+
+###61
+Command: Fill Region
+
+Function: fill-region-command
+Key: M-G
+Topic: Text
+See Command: Set Fill Column
+See Command: Set Fill Prefix
+See Global: Fill Prefix
+See Global: Fill Column
+See Definition: Paragraph
+See Definition: Sentence
+Action Type: Alter Existing Text
+
+Fill text from point to mark.  Fill Column specifies the desired text width.
+Fill Prefix if present is a string that goes at the front of each line and is
+not included in the filling.  See Set Fill Column and Set Fill Prefix.  An
+explicit argument causes justification instead of filling.  Each sentence which
+ends within a line is followed by two spaces.
+
+###62
+Command: Find File
+
+Function: find-file-command
+Key: C-X C-F
+Key: M-X Find File
+Topic: Files
+Topic: Buffers
+Action Type: Move Data
+Action Type: Move Point
+
+Visit a file in its own buffer.  If the file is already in some buffer, select
+that buffer.  Otherwise, visit the file in a buffer named after the file.
+
+###63
+Command: Forward Paragraph
+
+Function: forward-paragraph-command
+Key: M-]
+Topic: Text
+See Definition: Paragraph
+Action Type: Move Point
+
+Move forward to end of this or the next paragraph.  When given argument moves
+forward (n>0) or backward (n<0) by |n| paragraphs where n is the command
+argument.
+
+###64
+Command: Forward Sentence
+
+Function: forward-sentence-command
+Key: M-E
+Topic: Text
+See Definition: Sentence
+Action Type: Move Point
+
+Move forward to end of this or the next sentence.  When given argument moves
+forward (n>0) or backward (n<0) by |n| sentences.  where n is the command
+argument.
+
+###65
+Command: Forward Up List
+
+Function: forward-up-list-command
+Key: C-)
+Key: C-M-)
+Mode: Lisp
+Topic: Lisp
+Action Type: Move Point
+
+Move up one level of list structure, forward.  Given a command argument n move
+up |n| levels forward (n>0) or backward (n<0).
+
+###66
+Command: Get Register
+
+Function: get-register-command
+Key: C-X G
+Action Type: Move Data
+Action Type: Mark
+
+Get contents of register (reads name from keyboard).  The name is a single
+letter or digit.  Usually leaves the pointer before, and the mark after, the
+text.  With argument, puts point after and mark before.
+
+###67
+Command: Grow Window
+
+Function: grow-window-command
+Key: C-X ^
+Action Type: Alter Display Format
+
+Make this window use more lines.  Argument is number of extra lines (can be
+negative).
+
+###68
+Command: Help Dispatch
+
+Function: help-dispatch
+Key: C-?
+Key: M-/
+Key: M-?
+Action Type: Inform
+
+Prints the documentation of a command (not a function).  The command character
+is read from the terminal.
+
+###69
+Command: Incremental Search
+
+Function: incremental-search-command
+Key: C-S
+Action Type: Move Point
+Action Type: Select
+
+Search for character string as you type it.  C-Q quotes special characters.
+Rubout cancels last character.  C-S repeats the search, forward, and C-R repeats
+it backward.  C-R or C-S with search string empty changes the direction of
+search or brings back search string from previous search.  Altmode exits the
+search.  Other Control and Meta chars exit the search and then are executed.  If
+not all the input string can be found, the rest is not discarded.  You can rub
+it out, discard it all with C-G, exit, or use C-R or C-S to search the other
+way.  Quitting a successful search aborts the search and moves point back;
+quitting a failing search just discards whatever input wasn't found.
+
+###70
+Command: Indent New line
+
+Function: indent-new-line-command
+Key: NEWLINE
+Action Type: Insert Constant
+
+This function performs the following actions: Executes whatever function, if
+any, is associated with <CR>.  Executes whatever function, if any, is associated
+with TAB, as if no command argument was given.
+
+###71
+Command: Insert Buffer
+
+Function: insert-buffer-command
+Key: M-X Insert Buffer
+Topic: Buffers
+Action Type: Move Data
+
+Insert contents of another buffer into existing text.  The user is prompted for
+the buffer name.  Point is left just before the inserted material, and mark is
+left just after it.
+
+###72
+Command: Insert Closing bracket
+
+Function: insert-closing-bracket
+Key: )
+Key: ]
+Mode: Lisp
+Topic: Lisp
+Action Type: Insert Constant
+
+Insert the character typed, which should be a closing bracket, then display the
+matching opening bracket.
+
+###73
+Command: Insert Comment
+
+Function: insert-comment-command
+Key: M-;
+Mode: Lisp
+Topic: Lisp
+Action Type: Insert Constant
+
+Move to the end of the current line, then add a "%" and a space at its end.
+Leave point after the space.
+
+###74
+Command: Insert Date
+
+Function: insert-date-command
+Key: M-X Insert Date
+Action Type: Move Data
+
+Insert the current time and date after point.  The mark is put after the
+inserted text.
+
+###75
+Command: Insert File
+
+Function: insert-file-command
+Key: M-X Insert File
+Topic: Files
+Action Type: Move Data
+
+Insert contents of file into existing text.  File name is string argument.  The
+pointer is left at the beginning, and the mark at the end.
+
+###76
+Command: Insert Kill Buffer
+
+Function: insert-kill-buffer
+Key: C-Y
+See Global: Kill Ring
+Action Type: Move Data
+Action Type: Mark
+
+Re-insert the last stuff killed.  Puts point after it and the mark before it.
+An argument n says un-kill the n'th most recent string of killed stuff (1 = most
+recent).  A null argument (just C-U) means leave point before, mark after.
+
+###77
+Command: Insert Next Character
+
+Function: insert-next-character-command
+Key: C-Q
+Action Type: Move Data
+
+Reads a character and inserts it.
+
+###78
+Command: Insert Parens
+
+Function: insert-parens
+Key: M-(
+Mode: Lisp
+Topic: Lisp
+Action Type: Insert Constant
+
+Insert () putting point between them.  Also make a space before them if
+appropriate.  With argument, put the ) after the specified number of already
+existing s-expressions.  Thus, with argument 1, puts extra parens around the
+following s-expression.
+
+###79
+Command: Kill Backward Form
+
+Function: kill-backward-form-command
+Key: C-M-RUBOUT
+Mode: Lisp
+Topic: Lisp
+See Global: Kill Ring
+Action Type: Remove
+
+Kill the last form.  With a command argument kill the last (n>0) or next (n<0)
+|n| forms, where n is the command argument.
+
+###80
+Command: Kill Backward Word
+
+Function: kill-backward-word-command
+Key: M-RUBOUT
+Topic: Text
+See Global: Kill Ring
+Action Type: Remove
+
+Kill last word.  With a command argument kill the last (n>0) or next (n<0) |n|
+words, where n is the command argument.
+
+###81
+Command: Kill Buffer
+
+Function: kill-buffer-command
+Key: C-X K
+Key: M-X Kill Buffer
+Topic: Buffers
+Action Type: Remove
+
+Kill the buffer with specified name.  The buffer name is taken from the
+keyboard.  Name completion is performed by SPACE and RETURN.  If the buffer has
+changes in it, the user is asked for confirmation.
+
+###82
+Command: Kill Forward Form
+
+Function: kill-forward-form-command
+Key: C-M-K
+Mode: Lisp
+Topic: Lisp
+See Global: Kill Ring
+Action Type: Remove
+
+Kill the next form.  With a command argument kill the next (n>0) or last (n<0)
+|n| forms, where n is the command argument.
+
+###83
+Command: Kill Forward Word
+
+Function: kill-forward-word-command
+Key: M-D
+Topic: Text
+See Global: Kill Ring
+Action Type: Remove
+
+Kill the next word.  With a command argument kill the next (n>0) or last (n<0)
+|n| words, where n is the command argument.
+
+###84
+Command: Kill Line
+
+Function: kill-line
+Key: C-K
+Key: ESC-M
+See Global: Kill Ring
+Action Type: Remove
+
+Kill to end of line, or kill an end of line.  At the end of a line (only blanks
+following) kill through the CRLF.  Otherwise, kill the rest of the line but not
+the CRLF.  With argument (positive or negative), kill specified number of lines
+forward or backward respectively.  An argument of zero means kill to the
+beginning of the ine, nothing if at the beginning.  Killed text is pushed onto
+the kill ring for retrieval.
+
+###85
+Command: Kill Region
+
+Function: kill-region
+Key: C-W
+See Global: Kill Ring
+See Definition: Region
+Action Type: Remove
+
+Kill from point to mark.  Use Control-Y and Meta-Y to get it back.
+
+###86
+Command: Kill Sentence
+
+Function: kill-sentence-command
+Key: M-K
+Topic: Text
+See Global: Kill Ring
+See Definition: Sentence
+Action Type: Remove
+
+Kill forward to end of sentence.  With minus one as an argument it kills back to
+the beginning of the sentence.  Positive or negative arguments mean to kill that
+many sentences forward or backward respectively.
+
+###87
+Command: Kill Some Buffers
+
+Function: kill-some-buffers-command
+Key: M-X Kill Some Buffers
+Topic: Buffers
+Action Type: Remove
+
+Kill Some Buffers: Offer to kill each buffer, one by one.  If the buffer
+contains a modified file and you say to kill it, you are asked for confirmation.
+
+###88
+Command: Lisp Abort
+
+Function: lisp-abort-command
+Key: Lisp-A
+Mode: Lisp
+Topic: Lisp
+Action Type: Escape
+
+This command will pop out of an arbitrarily deep break loop.
+
+###89
+Command: Lisp Backtrace
+
+Function: lisp-backtrace-command
+Key: Lisp-B
+Mode: Lisp
+Topic: Lisp
+Action Type: Inform
+
+This lists all the function calls on the stack. It is a good way to see how the
+offending expression got generated.
+
+###90
+Command: Lisp Continue
+
+Function: lisp-continue-command
+Key: Lisp-C
+Mode: Lisp
+Topic: Lisp
+Action Type: Escape
+
+This causes the expression last printed to be returned as the value of the
+offending expression.  This allows a user to recover from a low level error in
+an involved calculation if they know what should have been returned by the
+offending expression.  This is also often useful as an automatic stub: If an
+expression containing an undefined function is evaluated, a Break loop is
+entered, and this may be used to return the value of the function call.
+
+###91
+Command: Lisp Help
+
+Function: lisp-help-command
+Key: Lisp-?
+Mode: Lisp
+Topic: Lisp
+Action Type: Inform
+
+If in break print:
+    "Lisp break commands: Q-quit;A-abort;R-retry;C-continue;B-backtrace" else
+print:
+    "Lisp commands: E-execute form;Y-yank last output;L-invoke Lisp Listener"
+
+###92
+Command: Lisp Indent Region
+
+Function: lisp-indent-region-command
+Key: C-M-\
+Mode: Lisp
+Topic: Lisp
+
+Indent all lines between point and mark.  With argument, indents each line to
+exactly that column.  Otherwise, lisp indents each line.  A line is processed if
+its first character is in the region.  It tries to preserve the textual context
+of point and mark.
+
+###93
+Command: Lisp Indent sexpr
+
+Function: lisp-indent-sexpr
+Key: C-M-Q
+Mode: Lisp
+Topic: Lisp
+
+Lisp Indent each line contained in the next form.  This command does NOT respond
+to command arguments.
+
+###94
+Command: Lisp Mode
+
+Function: lisp-mode-command
+Key: M-X Lisp Mode
+Topic: Lisp
+Action Type: Change Mode
+
+Set things up for editing Lisp code.  Tab indents for Lisp.  Rubout hacks tabs.
+Lisp execution commands availible.  Paragraphs are delimited only by blank
+lines.
+
+###95
+Command: Lisp Prefix
+
+Function: lisp-prefix
+Key: C-]
+Mode: Lisp
+Topic: Lisp
+Action Type: Subsequent Command Modifier
+
+The command lisp-prefix is an escape-prefix for more commands.  It reads a
+character (subcommand) and dispatches on it.
+
+###96
+Command: Lisp Quit
+
+Function: lisp-quit-command
+Key: Lisp-Q
+Mode: Lisp
+Topic: Lisp
+Action Type: Escape
+
+This exits the current break loop. It only pops up one level, unlike abort.
+
+###97
+Command: Lisp Retry
+
+Function: lisp-retry-command
+Key: Lisp-R
+Mode: Lisp
+Topic: Lisp
+Action Type: Escape
+
+This tries to evaluate the offending expression again, and to continue the
+computation.  This is often useful after defining a missing function, or
+assigning a value to a variable.
+
+###98
+Command: Lisp Tab
+
+Function: lisp-tab-command
+Key: C-M-I
+Key: C-M-TAB
+Key: TAB
+Mode: Lisp
+Topic: Lisp
+See Command: Tab To Tab Stop
+Action Type: Alter Existing Text
+
+ Indent this line for a Lisp-like language.  With arg, moves over and indents
+that many lines.  With negative argument, indents preceding lines.
+ Note that the binding of TAB to this function holds only in Lisp mode.  In text
+mode TAB is bound to the Tab To Tab Stop command and the other keys bound to
+this function are undefined.
+
+###99
+Command: Lowercase Region
+
+Function: lowercase-region-command
+Key: C-X C-L
+See Definition: Region
+Action Type: Alter Existing Text
+
+Convert region to lower case.
+
+###100
+Command: Lowercase Word
+
+Function: lowercase-word-command
+Key: M-L
+Topic: Text
+Action Type: Alter Existing Text
+
+Convert one word to lower case, moving past it.  With arg, applies to that many
+words backward or forward.  If backward, the cursor does not move.
+
+###101
+Command: M-X Prefix
+
+Function: m-x-prefix
+Key: C-M-X
+Key: M-X
+Action Type: Subsequent Command Modifier
+
+Read an extended command from the terminal with completion.  Completion is
+performed by SPACE and RETURN.  This command reads the name of an extended
+command, with completion, then executes that command.  The command may itself
+prompt for input.
+
+###102
+Command: Mark Beginning
+
+Function: mark-beginning-command
+Key: C-<
+Action Type: Mark
+
+Set mark at beginning of buffer.
+
+###103
+Command: Mark Defun
+
+Function: mark-defun-command
+Key: C-M-BACKSPACE
+Key: C-M-H
+Key: M-BACKSPACE
+Mode: Lisp
+Topic: Lisp
+See Definition: Defun
+Action Type: Mark
+
+Put point and mark around this defun (or next).
+
+###104
+Command: Mark End
+
+Function: mark-end-command
+Key: C->
+Action Type: Mark
+
+Set mark at end of buffer.
+
+###105
+Command: Mark Form
+
+Function: mark-form-command
+Key: C-M-@
+Mode: Lisp
+Topic: Lisp
+Action Type: Mark
+
+Set mark after (n>0) or before (n<0) |n| forms from point where n is the command
+argument.
+
+###106
+Command: Mark Paragraph
+
+Function: mark-paragraph-command
+Key: M-H
+Topic: Text
+See Definition: Paragraph
+Action Type: Mark
+Action Type: Move Point
+
+Put point and mark around this paragraph.  In between paragraphs, puts it around
+the next one.
+
+###107
+Command: Mark Whole Buffer
+
+Function: mark-whole-buffer-command
+Key: C-X H
+Action Type: Mark
+Action Type: Move Point
+
+Set point at beginning and mark at end of buffer.  Pushes the old point on the
+mark first, so two pops restore it.
+
+###108
+Command: Mark Word
+
+Function: mark-word-command
+Key: M-@
+Topic: Text
+Action Type: Mark
+
+Set mark after (n>0) or before (n<0) |n| words from point where n is the command
+argument.
+
+###109
+Command: Move Backward Character
+
+Function: move-backward-character-command
+Key: C-B
+Key: ESC-D
+Action Type: Move Point
+
+Move back one character.  With argument, move that many characters backward.
+Negative arguments move forward.
+
+###110
+Command: Move Backward Defun
+
+Function: move-backward-defun-command
+Key: C-M-A
+Key: C-M-[
+Mode: Lisp
+Topic: Lisp
+See Definition: Defun
+Action Type: Move Point
+
+Move to beginning of this or previous defun.  With a negative argument, moves
+forward to the beginning of a defun.
+
+###111
+Command: Move Backward Form
+
+Function: move-backward-form-command
+Key: C-M-B
+Mode: Lisp
+Topic: Lisp
+Action Type: Move Point
+
+Move back one form.  With argument, move that many forms backward.  Negative
+arguments move forward.
+
+###112
+Command: Move Backward List
+
+Function: move-backward-list-command
+Key: C-M-P
+Mode: Lisp
+Topic: Lisp
+Action Type: Move Point
+
+Move back one list.  With argument, move that many lists backward.  Negative
+arguments move forward.
+
+###113
+Command: Move Backward Word
+
+Function: move-backward-word-command
+Key: ESC-4
+Key: M-B
+Topic: Text
+Action Type: Move Point
+
+Move back one word.  With argument, move that many words backward.  Negative
+arguments move forward.
+
+###114
+Command: Move Down
+
+Function: move-down-command
+Key: ESC-B
+See Global: Goal Column
+Action Type: Move Point
+
+Move point down a line.  If a command argument n is given, move point down (n>0)
+or up (n<0) by |n| lines.
+
+###115
+Command: Move Down Extending
+
+Function: move-down-extending-command
+Key: C-N
+See Global: Goal Column
+Action Type: Move Point
+
+Move down vertically to next line.  If given an argument moves down (n>0) or up
+(n<0) |n| lines where n is the command argument.  If given without an argument
+after the last LF in the buffer, makes a new one at the end.
+
+###116
+Command: Move Forward Character
+
+Function: move-forward-character-command
+Key: C-F
+Key: ESC-C
+Action Type: Move Point
+
+Move forward one character.  With argument, move that many characters forward.
+Negative args move backward.
+
+###117
+Command: Move Forward Form
+
+Function: move-forward-form-command
+Key: C-M-F
+Mode: Lisp
+Topic: Lisp
+Action Type: Move Point
+
+Move forward one form.  With argument, move that many forms forward.  Negative
+args move backward.
+
+###118
+Command: Move Forward List
+
+Function: move-forward-list-command
+Key: C-M-N
+Mode: Lisp
+Topic: Lisp
+Action Type: Move Point
+
+Move forward one list.  With argument, move that many lists forward.  Negative
+args move backward.
+
+###119
+Command: Move Forward Word
+
+Function: move-forward-word-command
+Key: ESC-5
+Key: M-F
+Topic: Text
+Action Type: Move Point
+
+Move forward one word.  With argument, move that many words forward.  Negative
+args move backward.
+
+###120
+Command: Move To Buffer End
+
+Function: move-to-buffer-end-command
+Key: ESC-F
+Key: M->
+Action Type: Move Point
+
+Go to end of buffer (leaving mark behind).
+
+###121
+Command: Move To Buffer Start
+
+Function: move-to-buffer-start-command
+Key: ESC-H
+Key: M-<
+Action Type: Move Point
+
+Go to beginning of buffer (leaving mark behind).
+
+###122
+Command: Move To End Of Line
+
+Function: move-to-end-of-line-command
+Key: C-E
+Action Type: Move Point
+
+Move point to end of line.  With positive argument n goes down n-1 lines, then
+to the end of line.  With zero argument goes up a line, then to line end.  With
+negative argument n goes up |n|+1 lines, then to the end of line.
+
+###123
+Command: Move To Screen Edge
+
+Function: move-to-screen-edge-command
+Key: M-R
+Action Type: Move Point
+
+Jump to top or bottom of screen.  Like Control-L except that point is changed
+instead of the window.  With no argument, jumps to the center.  An argument
+specifies the number of lines from the top, (negative args count from the
+bottom).
+
+###124
+Command: Move To Start Of Line
+
+Function: move-to-start-of-line-command
+Key: C-A
+Action Type: Move Point
+
+Move point to beginning of line.  With positive argument n goes down n-1 lines,
+then to the beginning of line.  With zero argument goes up a line, then to line
+beginning.  With negative argument n goes up |n|+1 lines, then to the beginning
+of line.
+
+###125
+Command: Move Up
+
+Function: move-up-command
+Key: C-P
+Key: ESC-A
+See Global: Goal Column
+Action Type: Move Point
+
+Move up vertically to next line.  If given an argument moves up (n>0) or down
+(n<0) |n| lines where n is the command argument.
+
+###126
+Command: Negative Argument
+
+Function: negative-argument
+Key: C--
+Key: C-M--
+Key: M--
+Action Type: Subsequent Command Modifier
+
+Make argument to next command negative.
+
+###127
+Command: Next Screen
+
+Function: next-screen-command
+Key: C-V
+Action Type: Move Point
+
+Move down to display next screenful of text.  With argument, moves window down
+<arg> lines (negative moves up).  Just minus as an argument moves up a full
+screen.
+
+###128
+Command: Nmode Abort
+
+Function: nmode-abort-command
+Key: C-G
+Action Type: Escape
+
+This command provides a way of aborting input requests.
+
+###129
+Command: Nmode Exit To Superior
+
+Function: nmode-exit-to-superior
+Key: C-X C-Z
+Action Type: Escape
+
+Go back to EMACS's superior job.
+
+###130
+Command: Nmode Full Refresh
+
+Function: nmode-full-refresh
+Key: ESC-J
+Action Type: Alter Display Format
+
+This function refreshes the screen after first clearing the display.  It it used
+when the state of the display is in doubt.
+
+###131
+Command: Nmode Gc
+
+Function: nmode-gc
+Key: M-X Make Space
+
+Reclaims any internal wasted space.
+
+###132
+Command: Nmode Invert Video
+
+Function: nmode-invert-video
+Key: C-X V
+Action Type: Alter Display Format
+
+Toggle between normal and inverse video.
+
+###133
+Command: Nmode Refresh
+
+Function: nmode-refresh-command
+Key: C-L
+Action Type: Alter Display Format
+
+Choose new window putting point at center, top or bottom.  With no argument,
+chooses a window to put point at the center.  An argument gives the line to put
+point on;  negative args count from the bottom.
+
+###134
+Command: One Window
+
+Function: one-window-command
+Key: C-X 1
+Action Type: Alter Display Format
+
+Display only one window.  Normally, we display what used to be in the top
+window, but a numeric argument says to display what was in the bottom one.
+
+###135
+Command: Open Line
+
+Function: open-line-command
+Key: C-O
+Key: ESC-L
+Action Type: Insert Constant
+
+Insert a CRLF after point.  Differs from ordinary insertion in that point
+remains before the inserted characters.  With positive argument, inserts several
+CRLFs.  With negative argument does nothing.
+
+###136
+Command: Other Window
+
+Function: other-window-command
+Key: C-X O
+Action Type: Alter Display Format
+Action Type: Move Point
+
+Switch to the other window.  In two-window mode, moves cursor to other window.
+In one-window mode, exchanges contents of visible window with remembered
+contents of (invisible) window two.  An argument means switch windows but select
+the same buffer in the other window.
+
+###137
+Command: Prepend To File
+
+Function: prepend-to-file-command
+Key: M-X Prepend To File
+Topic: Files
+See Definition: Region
+Action Type: Move Data
+
+Append region to start of specified file.
+
+###138
+Command: Previous Screen
+
+Function: previous-screen-command
+Key: M-V
+Action Type: Move Point
+
+Move up to display previous screenful of text.  When an argument is present,
+move the window back (n>0) or forward (n<0) |n| lines, where n is the command
+argument.
+
+###139
+Command: Put Register
+
+Function: put-register-command
+Key: C-X X
+Action Type: Preserve
+
+Put point to mark into register (reads name from keyboard).  With an argument,
+the text is also deleted.
+
+###140
+Command: Query Replace
+
+Function: query-replace-command
+Key: M-%
+Key: M-X Query Replace
+Action Type: Alter Existing Text
+Action Type: Select
+
+Replace occurrences of a string from point to the end of the buffer, asking
+about each occurrence.  Query Replace prompts for the string to be replaced and
+for its potential replacement.  Query Replace displays each occurrence of the
+string to be replaced, you then type a character to say what to do.  Space =>
+replace it with the potential replacement and show the next copy.  Rubout =>
+don't replace, but show next copy.  Comma => replace this copy and show result,
+waiting for next command.  ^ => return to site of previous copy.  ^L =>
+redisplay screen.  Exclamation mark => replace all remaining copys without
+asking.  Period => replace this copy and exit.  Escape => just exit.
+
+###141
+Command: Rename Buffer
+
+Function: rename-buffer-command
+Key: M-X Rename Buffer
+Topic: Buffers
+Action Type: Set Global Variable
+
+Change the name of the current buffer.  The new name is read from the keyboard.
+If the user provides an empty string, the buffer name will be set to a truncated
+version of the filename associated with the buffer.
+
+###142
+Command: Replace String
+
+Function: replace-string-command
+Key: C-%
+Key: M-X Replace String
+Action Type: Alter Existing Text
+Action Type: Select
+
+Replace string with another from point to buffer end.
+
+###143
+Command: Reposition Window
+
+Function: reposition-window-command
+Key: C-M-R
+Mode: Lisp
+Topic: Lisp
+Action Type: Alter Display Format
+
+Reposition screen window appropriately.  Tries to get all of current defun on
+screen.  Never moves the pointer.
+
+###144
+Command: Return
+
+Function: return-command
+Key: RETURN
+Action Type: Insert Constant
+
+Insert CRLF, or move onto empty line.  Repeated by positive argument.  No action
+with negative argument.
+
+###145
+Command: Reverse Search
+
+Function: reverse-search-command
+Key: C-R
+See Command: Incremental Search
+Action Type: Move Point
+Action Type: Select
+
+Incremental Search Backwards.  Like Control-S but in reverse.
+
+###146
+Command: Revert File
+
+Function: revert-file-command
+Key: M-X Revert File
+Topic: Files
+Action Type: Remove
+
+Undo changes to a file.  Reads back the file being edited from disk
+
+###147
+Command: Save All Files
+
+Function: save-all-files-command
+Key: M-X Save All Files
+Topic: Buffers
+Topic: Files
+Action Type: Preserve
+
+Offer to write back each buffer which may need it.  For each buffer which is
+visiting a file and which has been modified, you are asked whether to save it.
+A numeric arg means don't ask;  save everything.
+
+###148
+Command: Save File
+
+Function: save-file-command
+Key: C-X C-S
+Topic: Files
+Action Type: Preserve
+
+Save visited file on disk if modified.
+
+###149
+Command: Scroll Other Window
+
+Function: scroll-other-window-command
+Key: C-M-V
+Action Type: Alter Display Format
+
+Scroll other window up several lines.  Specify the number as a numeric argument,
+negative for down.  The default is a whole screenful up.  Just Meta-Minus as
+argument means scroll a whole screenful down.
+
+###150
+Command: Scroll Window Down Line
+
+Function: scroll-window-down-line-command
+Key: ESC-T
+Action Type: Alter Display Format
+
+Scroll the contents of the window down (n > 0) or up (n < 0) by |n| lines where
+n is the command argument.  The "window position" may be adjusted to keep it
+within the window.  Ding if the window contents does not move.
+
+###151
+Command: Scroll Window Down Page
+
+Function: scroll-window-down-page-command
+Key: ESC-V
+Action Type: Alter Display Format
+
+Scroll the contents of the window down (n > 0) or up (n < 0) by |n| screenfuls
+where n is the command argument.  The "window position" may be adjusted to keep
+it within the window.  Ding if the window contents does not move.
+
+###152
+Command: Scroll Window Left
+
+Function: scroll-window-left-command
+Key: C-X <
+Action Type: Alter Display Format
+
+Scroll the contents of the specified window right (n > 0) or left (n < 0) by |n|
+columns where n is the command argument.
+
+###153
+Command: Scroll Window Right
+
+Function: scroll-window-right-command
+Key: C-X >
+Action Type: Alter Display Format
+
+Scroll the contents of the specified window left (n > 0) or right (n < 0) by |n|
+columns where n is the command argument.
+
+###154
+Command: Scroll Window Up Line
+
+Function: scroll-window-up-line-command
+Key: ESC-S
+Action Type: Alter Display Format
+
+Scroll the contents of the window up (n > 0) or down (n < 0) by |n| lines where
+n is the command argument.  The "window position" may be adjusted to keep it
+within the window.  Ding if the window contents does not move.
+
+###155
+Command: Scroll Window Up Page
+
+Function: scroll-window-up-page-command
+Key: ESC-U
+Action Type: Alter Display Format
+
+Scroll the contents of the window up (n > 0) or down (n < 0) by |n| screenfuls
+where n is the command argument.  The "window position" may be adjusted to keep
+it within the window.  Ding if the window contents does not move.
+
+###156
+Command: Select Buffer
+
+Function: select-buffer-command
+Key: C-X B
+Key: M-X Select Buffer
+Topic: Buffers
+Action Type: Move Point
+
+Select or create buffer with specified name.  Buffer name is read from keyboard.
+Name completion is performed by SPACE and RETURN.
+
+###157
+Command: Select Previous Buffer
+
+Function: select-previous-buffer-command
+Key: C-M-L
+Topic: Buffers
+Action Type: Move Point
+
+Select the previous buffer of the current buffer, if it exists and is
+selectable.  Otherwise, select the MAIN buffer.
+
+###158
+Command: Set Fill Column
+
+Function: set-fill-column-command
+Key: C-X F
+See Global: Fill Column
+Action Type: Set Global Variable
+
+Set fill column to numeric arg or current column.  If there is an argument, that
+is used.  Otherwise, the current position of the cursor is used.  The Fill
+Column variable controls where Auto Fill mode and the fill commands put the
+right margin.
+
+###159
+Command: Set Fill Prefix
+
+Function: set-fill-prefix-command
+Key: C-X .
+See Global: Fill Prefix
+Action Type: Set Global Variable
+
+Defines Fill Prefix from current line.  All of the current line up to point
+becomes the value of Fill Prefix.  Auto Fill Mode inserts the prefix on each
+line;  the Fill Paragraph command assumes that each non-blank line starts with
+the prefix (which is ignored for filling purposes).  To stop using a Fill
+Prefix, do Control-X .  at the front of a line.
+
+###160
+Command: Set Goal Column
+
+Function: set-goal-column-command
+Key: C-X C-N
+Action Type: Set Global Variable
+
+Set (or flush) a permanent goal for vertical motion.  With no argument, makes
+the current column the goal for vertical motion commands.  They will always try
+to go to that column.  With argument, clears out any previously set goal.  Only
+Control-P and Control-N are affected.
+
+###161
+Command: Set Key
+
+Function: set-key-command
+Key: M-X Set Key
+Action Type: Set Global Variable
+
+Put a function on a key.  The function name is a string argument.  The key is
+always read from the terminal (not a string argument).  It may contain metizers
+and other prefix characters.
+
+###162
+Command: Set Mark
+
+Function: set-mark-command
+Key: C-@
+Key: C-SPACE
+Action Type: Mark
+
+Sets or pops the mark.  With no ^U's, pushes point as the mark.  With one ^U,
+pops the mark into point.  With two ^U's, pops the mark and throws it away.
+
+###163
+Command: Set Visited Filename
+
+Function: set-visited-filename-command
+Key: M-X Set Visited Filename
+Topic: Files
+Action Type: Set Global Variable
+
+Change visited filename, without writing file.  The user is prompted for a
+filename.  What NMODE believes to be the name of the visited file associated
+with the current buffer is set from the user's input.  No file's name is
+actually changed.
+
+###164
+Command: Split Line
+
+Function: split-line-command
+Key: C-M-O
+Action Type: Insert Constant
+
+Move rest of this line vertically down.  Inserts a CRLF, and then enough
+tabs/spaces so that what had been the rest of the current line is indented as
+much as it had been.  Point does not move, except to skip over indentation that
+originally followed it. With positive argument, makes extra blank lines in
+between.  No action with negative argument.
+
+###165
+Command: Start Scripting
+
+Function: start-scripting-command
+Key: M-X Start Scripting
+Action Type: Change Mode
+
+This function prompts the user for a buffer name, into which it will copy all
+the user's commands (as well as executing them) until the stop-scripting-command
+is invoked.  This command supercedes any such previous request.  Note that to
+keep the lines of reasonable length, free Newlines will be inserted from time to
+time.  Because of this, and because many file systems cannot represent stray
+Newlines, the Newline character is itself scripted as a CR followed by a TAB,
+since this is its normal definition.  Someday, perhaps, this hack will be
+replaced by a better one.
+
+###166
+Command: Start Timing
+
+Function: start-timing-command
+Key: M-X Start Timing Nmode
+Action Type: Change Mode
+
+This cleans up a number of global variables associated with timing, prompts for
+a file in which to put the timing data (or defaults to a file named "timing", of
+type "txt"), and starts the timing. Information is collected on the total time,
+refresh time, read time, command execution time, total number of cons cells
+built, and total number of garbage collections performed.
+
+###167
+Command: Stop Scripting
+
+Function: stop-scripting-command
+Key: M-X Stop Scripting
+Action Type: Change Mode
+
+This command stops the echoing of user commands into a script buffer.  This
+command is itself echoed before the creation of the script stops.
+
+###168
+Command: Stop Timing
+
+Function: stop-timing-command
+Key: M-X Stop Timing Nmode
+Action Type: Change Mode
+
+This stops the timing, formats the output data, and closes the file into which
+the timing information is going.  Information is collected on the total time,
+refresh time, read time, command execution time, total number of cons cells
+built, and total number of garbage collections performed.  In addition to these
+numbers, some ratios are printed.
+
+###169
+Command: Tab To Tab Stop
+
+Function: tab-to-tab-stop-command
+Key: M-I
+Key: M-TAB
+Key: TAB
+See Command: Lisp Tab
+Action Type: Insert Constant
+
+Insert a tab character.  Note that the binding of TAB to this command only holds
+in text mode, not in lisp mode, where it is bound to the Lisp Tab command. In
+lisp mode, the other keys continue to be bound to this command.
+
+###170
+Command: Text Mode
+
+Function: text-mode-command
+Key: M-X Text Mode
+Topic: Text
+Action Type: Change Mode
+
+Set things up for editing English text.  Tab inserts tab characters.  There are
+no comments.  Auto Fill does not indent new lines.
+
+###171
+Command: Transpose Characters
+
+Function: transpose-characters-command
+Key: C-T
+See Command: Transpose Words
+Action Type: Alter Existing Text
+
+Transpose the characters before and after the cursor.  For more details, see
+Meta-T, reading "character" for "word".  However: at the end of a line, with no
+argument, the preceding two characters are transposed.
+
+###172
+Command: Transpose Forms
+
+Function: transpose-forms
+Key: C-M-T
+Mode: Lisp
+Topic: Lisp
+See Command: Transpose Words
+Action Type: Alter Existing Text
+
+Transpose the forms before and after the cursor.  For more details, see Meta-T,
+reading "Form" for "Word".
+
+###173
+Command: Transpose Lines
+
+Function: transpose-lines
+Key: C-X C-T
+See Command: Transpose Words
+Action Type: Alter Existing Text
+
+Transpose the lines before and after the cursor.  For more details, see Meta-T,
+reading "Line" for "Word".
+
+###174
+Command: Transpose Regions
+
+Function: transpose-regions
+Key: C-X T
+See Definition: Region
+Action Type: Alter Existing Text
+
+Transpose regions defined by cursor and last 3 marks.  To transpose two
+non-overlapping regions, set the mark successively at three of the four
+boundaries, put point at the fourth, and call this function.
+
+###175
+Command: Transpose Words
+
+Function: transpose-words
+Key: M-T
+Topic: Text
+Action Type: Alter Existing Text
+
+Transpose the words before and after the cursor.  With a positive argument it
+transposes the words before and after the cursor, moves right, and repeats the
+specified number of times, dragging the word to the left of the cursor right.
+With a negative argument, it transposes the two words to the left of the cursor,
+moves between them, and repeats the specified number of times, exactly undoing
+the positive argument form.  With a zero argument, it transposes the words at
+point and mark.
+
+###176
+Command: Two Windows
+
+Function: two-windows-command
+Key: C-X 2
+Action Type: Alter Display Format
+
+Show two windows and select window two.  An argument > 1 means give window 2 the
+same buffer as in Window 1.
+
+###177
+Command: Undelete File
+
+Function: undelete-file-command
+Key: M-X Undelete File
+Topic: Files
+Action Type: Move Data
+Action Type: Preserve
+
+This command prompts the user for the name of the file. NMODE will fill in a
+partly specified filename (eg filetype can be defaulted).  If possible, the file
+will then be undeleted, and a message to that effect will be displayed. If the
+operation fails, the bell will sound.
+
+###178
+Command: Universal Argument
+
+Function: universal-argument
+Key: C-U
+Action Type: Subsequent Command Modifier
+
+Sets argument or multiplies it by four.  Followed by digits, uses them to
+specify the argument for the command after the digits.  If not followed by
+digits, multiplies the argument by four.
+
+###179
+Command: Unkill Previous
+
+Function: unkill-previous
+Key: M-Y
+See Global: Kill Ring
+See Definition: Region
+Action Type: Alter Existing Text
+
+Delete (without saving away) the current region, and then unkill (yank) the
+specified entry in the kill ring.  "Ding" if the current region does not contain
+the same text as the current entry in the kill ring.  If one has just retrieved
+the top entry from the kill ring this has the effect of displaying the item just
+beneath it, then the item beneath that and so on until the original top entry
+rotates back into view.
+
+###180
+Command: Upcase Digit
+
+Function: upcase-digit-command
+Key: M-'
+Action Type: Alter Existing Text
+
+Convert last digit to shifted character.  Looks on current line back from point,
+and previous line.  The first time you use this command, it asks you to type the
+row of digits from 1 to 9 and then 0, holding down Shift, to determine how your
+keyboard is set up.
+
+###181
+Command: Uppercase Initial
+
+Function: uppercase-initial-command
+Key: M-C
+Topic: Text
+Action Type: Alter Existing Text
+
+Put next word in lower case, but capitalize initial.  With arg, applies to that
+many words backward or forward.  If backward, the cursor does not move.
+
+###182
+Command: Uppercase Region
+
+Function: uppercase-region-command
+Key: C-X C-U
+See Definition: Region
+Action Type: Alter Existing Text
+
+Convert region to upper case.
+
+###183
+Command: Uppercase Word
+
+Function: uppercase-word-command
+Key: M-U
+Topic: Text
+Action Type: Alter Existing Text
+
+Convert one word to upper case, moving past it.  With arg, applies to that many
+words backward or forward.  If backward, the cursor does not move.
+
+###184
+Command: View Two Windows
+
+Function: view-two-windows-command
+Key: C-X 3
+Action Type: Alter Display Format
+
+Show two windows but stay in first.
+
+###185
+Command: Visit File
+
+Function: visit-file-command
+Key: C-X C-V
+Key: M-X Visit File
+Topic: Files
+Action Type: Move Data
+Action Type: Move Point
+
+Visit new file in current buffer.  The user is prompted for the filename.  If
+the current buffer is modified, the user is asked whether to write it out.
+
+###186
+Command: Visit In Other Window
+
+Function: visit-in-other-window-command
+Key: C-X 4
+Topic: Files
+Topic: Buffers
+Action Type: Move Point
+Action Type: Alter Display Format
+
+Find buffer or file in other window.  Follow this command by B and a buffer
+name, or by F and a file name.  We find the buffer or file in the other window,
+creating the other window if necessary.
+
+###187
+Command: What Cursor Position
+
+Function: what-cursor-position-command
+Key: C-=
+Key: C-X =
+Action Type: Inform
+
+Print various things about where cursor is.  Print the X position, the Y
+position, the octal code for the following character, point absolutely and as a
+percentage of the total file size, and the virtual boundaries, if any.  If a
+positive argument is given point will jump to the line number specified by the
+argument.  A negative argument triggers a jump to the first line in the buffer.
+
+###188
+Command: Write File
+
+Function: write-file-command
+Key: C-X C-W
+Key: M-X Write File
+Topic: Files
+Action Type: Preserve
+
+Prompts for file name.  Stores the current buffer in specified file.  This file
+becomes the one being visited.
+
+###189
+Command: Write Region
+
+Function: write-region-command
+Key: M-X Write Region
+Topic: Files
+See Definition: Region
+Action Type: Preserve
+
+Write region to file.  Prompts for file name.
+
+###190
+Command: Write Screen Photo
+
+Function: write-screen-photo-command
+Key: C-X P
+Topic: Files
+Action Type: Preserve
+
+Ask for filename, write out the screen to the file.
+
+###191
+Command: Yank Last Output
+
+Function: yank-last-output-command
+Key: Lisp-Y
+Mode: Lisp
+Topic: Lisp
+Action Type: Move Data
+
+Insert "last output" typed in the OUTPUT buffer.

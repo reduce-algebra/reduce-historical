@@ -1,0 +1,139 @@
+
+                    NOTES ON THE FILES IN PU:
+                           Cris Perdue
+                             12/17/82
+                       -------------------
+
+PACKAGES BY LOCAL AUTHORS
+
+File			Author		Synopsis
+----------------------------------------------------------------------------
+extended-char.sl	AS		9-bit characters, notably "x-char"
+fast-int.sl		AS		In lieu of declarations
+fast-strings.sl		AS		In lieu of declarations
+fast-vectors.sl		AS		In lieu of declarations
+format.red		Benson		Subset of Common LISP "format"
+hash.sl			Perdue		General hash table pkg.
+history.sl		Lanam		Fancy user-level history pkg.
+if.sl			Perdue		Fancy if-then-else compatible w. "if"
+man.sl			Perdue		Experimental ref. manual browser
+objects.sl		AS		Subset of "flavors"
+program-command-interpreter.sl AS
+pslcomp-main.sl		AS
+ring-buffer.sl		AS
+slow-strings.sl		AS		In lieu of declarations
+slow-vectors.sl		AS		In lieu of declarations
+string-input.sl		Perdue		Fns. for input from strings, e.g. READ
+string-search.sl	Perdue		Functions for searching in strings
+stringx.sl		AS		Miscellaneous string functions
+util.sl			Nancy K		Miscellaneous useful functions
+
+
+"WELL-KNOWN" FILES
+
+The following files implement facilities described in the
+reference manual, except for a few exceptions. BUILD.MIC is a
+support file to aid building of modules in PU:.  It is in PU: for
+the system maintainer's convenience.
+
+Other exceptions are cryptically noted by mention of the logical
+name of the directory they appear to belong in.
+
+addr2id.sl		pnk (autoload)
+backquote.sl		In the USEFUL library
+bigbig.red
+bigface.red
+bind-macros.sl		In the USEFUL library
+build.mic		support for rebuilding modules
+build.red
+chars.lsp		part of strings
+clcomp1.sl		incompatible common lisp fns + reader
+common.sl
+cond-macros.sl		In the USEFUL library
+debug.red
+defstruct.examples-red	defstruct
+defstruct.red
+demo-defstruct.red	defstruct
+destructure.sl
+evalhook.lsp		used by step
+fast-struct.lsp		???
+fast-vector.red
+filedate.mic		p20sup
+find.red
+for-macro.sl
+graph-tree.sl
+gsort.red
+hcons.sl
+help.red		pnk?
+if-system.red		pnk?
+init-file.sl		pnk?  => bare-psl
+iter-macros.sl
+kernel.sl		psup
+macroexpand.sl
+mathlib.red
+mini.demo
+mini.fix
+mini.min
+mini.red
+mini.sl
+mini-patch.red
+misc-macros.sl
+nstruct.ctl
+nstruct.lsp
+package.red
+pathin.sl		pc?
+pr-driv.red
+pr-main.red
+pr2d-driv.red
+pr2d-main.red
+pr2d-text.red
+prettyprint.sl
+prlisp.demo
+prlisp-driver.red
+psl-cref.red
+psl-crefio.red
+read-macros.sl
+read-utils.red		change to read-table-utils?
+rlisp-parser.red
+rlisp-support.red
+rprint.red
+set-macros.sl
+step.lsp
+strings.lsp
+struct.initial		bootstrap for nstruct
+sysbuild.mic		like build, but to connected directory
+test-arith.red		generates pl:arith.b for use in big.
+useful.ctl
+vector-fix.red		pnk -- document this!
+zbasic.lsp		used by zpedit
+zboot.lsp		used by zpedit
+zmacro.lsp		used by zpedit
+zpedit.lsp
+
+"LESS WELL-KNOWN FILES"
+
+The following files are also in PU:, but without documentation
+that appears in the reference manual.  Some have documentation in
+a file on PH:, some have documentation included in the source
+file, some have no documentation.
+
+association.sl
+f-dstruct.red
+inspect.red
+inum.red
+loop.lsp
+parse-command-string.sl
+pathnamex.sl
+pcheck.red
+poly.red
+zfiles.lsp		Obsolete
+zsys.lsp		Obsolete
+
+"MARTIN GRISS'S FILES"
+
+The following are thought to be creations of Martin Griss and we
+need to talk with him about whether or not they belong in PU:.
+
+datetime.red
+parser-fix.red
+sm.red

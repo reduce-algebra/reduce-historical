@@ -1,0 +1,10 @@
+Windows and Buffers in Emode
+----------------------------
+
+Global Variable `WindowNames' is list of (windows.info)
+
+CreateWindow(Wname,Bname,Coord(Left,Top),Coord(Right,Bottom))
+        [Left,Right:1..18, Top,Bottom:1..70]
+
+SelectWindow(Wname); DeselectWindow(Wname); KillWindow(Wname);
+

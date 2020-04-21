@@ -1,0 +1,19 @@
+@Comment{OUTLINE of APOLLO-PASLSP.MSS.35 by Scribe 3C(1250) on 26 February 1982 at 14:47}
+1. Introduction                                           1 APOLLO-PASLSP.MSS.35 line 54
+  1.1. History of PASLSP                                  1 APOLLO-PASLSP.MSS.35 line 82
+  1.2. Acknowledgement                                    2 APOLLO-PASLSP.MSS.35 line 114
+2. Features of PASLSP and relation to Standard LISP       2 APOLLO-PASLSP.MSS.35 line 119
+3. Using PASLSP on the Apollo DOMAIN                      3 APOLLO-PASLSP.MSS.35 line 165
+4. Implementation of PASLSP                               5 APOLLO-PASLSP.MSS.35 line 248
+  4.1. Building PASLSP                                    5 APOLLO-PASLSP.MSS.35 line 249
+  4.2. Internal data structures                           6 APOLLO-PASLSP.MSS.35 line 291
+  4.3. Adding user functions to the kernel                7 APOLLO-PASLSP.MSS.35 line 324
+5. Future work on PASLSP                                  8 APOLLO-PASLSP.MSS.35 line 367
+  5.1. Goals of the Utah PSL Project                      8 APOLLO-PASLSP.MSS.35 line 379
+6. References                                             9 APOLLO-PASLSP.MSS.35 line 439
+APPENDIX A:  A List of Current PASLSP Functions and Glo  10 APOLLO-PASLSP.MSS.35 line 441
+ Table of Contents                                        1 -SCRIBE-SCRATCH-.25-4-1.100025 line 3
+	Alphabetic Listing of Cross-Reference Tags and Labels
+
+Tag or Label Name                    Page   Label Value  Source file Location
+-----------------------------------------------------------------------------

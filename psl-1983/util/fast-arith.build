@@ -1,0 +1,2 @@
+CompileTime load Syslisp;
+in "fast-arith.red"$

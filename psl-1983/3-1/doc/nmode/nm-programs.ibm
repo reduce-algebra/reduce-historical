@@ -1,0 +1,444 @@
+,MOD
+- R 44X (11 April 1983) <PSL.NMODE-DOC>NM-PROGRAMS.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+          201/NMODE Manual (Editing Programs)                                  Page 20-1
+
+
+          202/20.  Editing Programs
+
+            201/Special features for editing lisp programs include automatic indentation,
+          parenthesis  matching,  and  the  ability  to  move  over  and  kill  balanced
+          expressions.
+
+          Lisp mode defines paragraphs to be separated only by blank lines and page
+          boundaries.    This  makes  the  paragraph  commands  useful  for  editing
+          programs.  See Section 13.2 [Paragraphs], page 2.
+
+          Moving over words is useful for editing programs as well as text.  See
+          Section 13.1 [Words], page 1.
+
+          202/20.1  Major Modes
+
+            201/NMODE has many different 202/major modes201/.  Two such modes are Text mode
+          and Lisp mode.  Each of these customizes NMODE, one for text, the other for
+          Lisp programs.  The major modes are mutually exclusive, and one major mode
+          is current at any time.  When at top level, NMODE always says in the mode
+          line which major mode you are in.  These modes tell NMODE to change the
+          meanings of a few commands to become more specifically adapted to the
+          language being edited.  Most commands remain unchanged; the ones which
+          usually change are Tab, Backspace, and Linefeed.  In addition, a few special
+          move and mark commands are turned on in Lisp mode which are not available
+          in text mode.
+
+            Selecting a new major mode can be done with a M-X command.  For example
+          M-X Text Mode (203/text-mode-command201/) enters text mode and M-X Lisp Mode
+          (203/lisp-mode-command201/) enters lisp mode.  As can be seen from these examples,
+          some major mode's names are the same as the invocations of the functions to
+          select those modes.
+
+            Often NMODE enters the correct major mode for a file simply based on the
+          file's extension, and you do not have to worry about selecting a mode.
+
+            Lisp mode specifies that only blank lines separate paragraphs.  This is so
+          that the paragraph commands remain useful.
+
+          202/20.2  Indentation Commands for Code
+
+                  201/Tab        Indents current line.
+                  Linefeed    Equivalent to Return followed by Tab.
+                  M-^        Joins two lines, leaving one space between if appropriate.
+                  C-M-O     Split the current line.
+                  M-\        Deletes all spaces and tabs around point.
+                  M-M        Moves to the first nonblank character on the line.
+
+            Most programming languages have some indentation convention.  For Lisp
+          code, lines are indented according to their nesting in parentheses.
+
+            Whatever the language, to indent a line, use the Tab command.  Each major
+          mode defines this command to perform the sort of indentation appropriate for
+          the particular language.  In Lisp mode, Tab aligns the line according to its
+          201/Page 20-2                    NMODE Manual (Indentation Commands for Code)
+
+
+          depth in parentheses.  No matter where in the line you are when you type
+          Tab, it aligns the line as a whole.
+
+            The command Linefeed (203/indent-new-line-command201/) does a Return and then
+          does a Tab on the next line.  Thus, Linefeed at the end of the line makes a
+          following blank line and supplies it with the usual amount of indentation.
+          Linefeed in the middle of a line breaks the line and supplies the usual
+          indentation in front of the new line.
+
+
+            The inverse of Linefeed is Meta-^ or C-M-^ (203/delete-indentation-command201/).
+          This command deletes the indentation at the front of the current line, and the
+          line separator as well.  They are replaced by a single space, or by no space
+          if before a ")" or after a "(", or at the beginning of a line. With an
+          argument, M-^ joins the current line and the 203/next 201/line, removing indentation
+          at the front of the next line beforehand.  To delete just the indentation of a
+          line,   go   to   the   beginning   of   the   line   and   use   Meta-\
+          (203/delete-horizontal-space-command201/), which deletes all spaces and tabs around
+          the cursor.
+
+            Another command which affects indentation is C-M-O (203/split-line-command201/).
+          It moves the rest of the current line, after point, down vertically.   It
+          indents the new line so that the rest of the line winds up in the same column
+          that it was in before the split.  If this command is given a positive argument,
+          it adds enough empty lines between the old line and the new line that the
+          total number of lines added equals the argument.  The command leaves point
+          unchanged.
+
+            To insert an indented line before the current one, do C-A, C-O, and then
+          Tab.  To make an indented line after the current one, use C-E Linefeed.
+
+            To  move  over  the  indentation  on  a  line,  use  Meta-M  or  C-M-M
+          (203/back-to-indentation-command201/).  These commands move the cursor forward or
+          back to the first nonblank character on the line.
+
+          202/20.3  Automatic Display Of Matching Parentheses
+
+            201/The NMODE parenthesis-matching feature is designed to show automatically
+          how parentheses balance in text as it is typed in.   When this feature is
+          enabled, after a close parenthesis or other close bracket character is inserted
+          (using 203/insert-closing-bracket201/) the cursor automatically moves for an instant to
+          the open bracket which balances the newly inserted character.  The cursor
+          stays at the open parenthesis for a second before returning home, unless you
+          type another command before the second is up.
+
+            It is worth emphasizing that the location of point, the place where your
+          type-in will be inserted, is not affected by the parenthesis matching feature.
+          It stays after the close parenthesis, where it ought to be.  Only the cursor
+          on the screen moves away and back.  You can type ahead freely as if the
+          parenthesis display feature did not exist.  In fact, if you type fast enough,
+          you won't see the cursor move.   You must pause after typing a close
+          parenthesis to let the cursor move to the open parenthesis.
+          201/NMODE Manual (Automatic Display Of Matching Parentheses)         Page 20-3
+
+
+            An additional function is whether NMODE should warn you by ringing the
+          bell if you type an unmatched close parenthesis.  NMODE will warn you if you
+          are editing a language in which parentheses are paramount, such as Lisp, but
+          will not do so for languages in which parentheses are not so crucial.
+
+          202/20.4  Manipulating Comments
+
+                  201/M-;        Insert comment.
+                  M-Z        Fill a block of comments.
+
+            There are two NMODE commands which affect comments.  First there is M-;
+          (203/insert-comment-command201/), which jumps to the end of the current line and
+          inserts a percent sign and a space, thus starting a comment.  Second, there
+          is M-Z (203/fill-comment-command201/), which allows filling of blocks of comments.  It
+          fills a paragraph using whatever text is adjacent to the current line and
+          begins  with  the  same  sequence  of  blank  characters,  nonalphanumeric
+          characters, and more blank characters as the current line.  As a result, it
+          will fill all lines starting with " % ", for instance.  Notice that it will NOT do
+          any filling if the current line differs in indentation from the rest of the
+          paragraph of comments (i.e. if it is an indented first line).
+
+          202/20.5  Lisp Mode
+
+            201/Lisp's simple syntax makes it much easier for an editor to understand; as a
+          result, NMODE can do more for Lisp, and with less work, than for any other
+          language.
+
+            Lisp programs should be edited in Lisp mode.  In this mode, Tab is defined
+          to indent the current line according to the conventions of Lisp programming
+          style.  It does not matter where in the line Tab is used; the effect on the
+          line  is  the  same.    The  function  which  does  the  work  is  called
+          203/lisp-tab-command201/.  Linefeed, as usual, does a Return and a Tab, so it moves
+          to the next line and indents it.
+
+            As in most modes where indentation is likely to vary from line to line,
+          Backspace (203/delete-backward-hacking-tabs-command 201/in Lisp mode) is redefined
+          to treat a tab as if it were the equivalent number of spaces.  This makes it
+          possible to rub out indentation one position at a time without worrying
+          whether it is made up of spaces or tabs.
+
+            Paragraphs are defined to start only with blank lines so that the paragraph
+          commands can be useful.  Auto Fill indents the new lines which it creates.
+          Comments start with "%".
+
+          202/20.5.1  Moving Over and Killing Lists and forms
+
+                  201/C-M-F          Move Forward over form.
+                  C-M-B         Move Backward over form.
+                  C-M-K         Kill form forward.
+                  C-M-Rubout    Kill form backward.
+          201/Page 20-4           NMODE Manual (Moving Over and Killing Lists and forms)
+
+
+                  C-M-U         Move Up and backward in list structure.
+                  C-M-(          Same as C-M-U.
+                  C-(            Same as C-M-U.
+                  C-M-)          Move up and forward in list structure.
+                  C-)            Same as C-M-).
+                  C-M-D         Move Down and forward in list structure.
+                  C-M-N         Move forward over a list.
+                  C-M-P          Move backward over a list.
+                  C-M-T         Transpose forms.
+                  C-M-@          Put mark after form.
+                  M-(            Put parentheses around next form(s).
+                  M-)            Move past next close parenthesis and re-indent.
+
+            By convention, NMODE commands that deal with balanced parentheses are
+          usually Control-Meta- characters.  They tend to be analogous in function to
+          their Control- and Meta- equivalents.  These commands are usually thought of
+          as pertaining to Lisp, but can be useful with any language in which some
+          sort of parentheses exist (including English).  They are, however, only
+          defined in Lisp mode.
+
+            To move forward over a form, use C-M-F (203/move-forward-form-command201/).  If
+          the first significant character after point is an "(", C-M-F moves past the
+          matching ")".  If the first character is a ")", C-M-F just moves past it.  If
+          the character begins an atom, C-M-F moves to the end of the atom.  C-M-F
+          with an argument repeats that operation the specified number of times; with a
+          negative argument, it moves backward instead.
+
+            The command C-M-B (203/move-backward-form-command201/) moves backward over a
+          form;   it is like C-M-F with the argument's sign reversed.  If there are
+          "'"-like characters in front of the form moved over, they are moved over as
+          well.  Thus, with point after " 'FOO ", C-M-B leaves point before the "'",
+          not before the "F".
+
+            These two commands (and the commands in this section) know how to handle
+          comments, string literals, and all other token syntax in (unaltered) PSL.
+          NMODE makes one restriction: it will not handle string literals that extend
+          over multiple lines.
+
+            Two other commands move over lists instead of forms are often useful.
+          They     are     C-M-N     (203/move-forward-list-command201/)     and     C-M-P
+          (203/move-backward-list-command201/).  They act like C-M-F and C-M-B except that
+          they don't stop on atoms; after moving over an atom, they move over the
+          next expression, stopping after moving over a list.  With these commands,
+          you can avoid stopping after all of the atomic arguments to a function.
+
+            Killing   a   form   at   a   time   can   be   done   with   C-M-K
+          (203/kill-forward-form-command201/) and  C-M-Rubout  (203/kill-backward-form-command201/)
+          commands.   C-M-K kills the characters that C-M-F would move over, and
+          C-M-Rubout kills what C-M-B would move over.
+
+            C-M-F and C-M-B stay at the same level in parentheses, when that's
+          possible.    To  move  203/up  201/one  (or  n)  levels,  use  C-M-(  or  C-M-)
+          (203/backward-up-list 201/and 203/forward-up-list-command201/).  C-M-( moves backward up
+          201/NMODE Manual (Moving Over and Killing Lists and forms)           Page 20-5
+
+
+          past one containing "(".  C-M-) moves forward up past one containing ")".
+          Given a positive argument, these commands move up the specified number of
+          levels of parentheses.  C-M-U is another name for C-M-(, which is easier to
+          type, especially on non-Meta keyboards.  If you use that name, it is useful
+          to know that a negative argument makes the command move up forwards, like
+          C-M-). C-M-( and C-M-) are also availible as C-( and C-), respectively,
+          which are easier to type on the hp9836 keyboard.
+
+            To move 203/down 201/in list structure, use C-M-D (203/down-list-command201/).  It is
+          nearly the same as searching for a "(".
+
+            A somewhat random-sounding command which is nevertheless easy to use is
+          C-M-T (203/transpose-forms201/), which drags the previous form across the next
+          one.  An argument serves as a repeat count, and a negative argument drags
+          backwards (thus canceling out the effect of C-M-T with a positive argument).
+          An argument of zero, rather than doing nothing, transposes the forms at the
+          point and the mark.
+
+            To  make  the  region  be  the  next  form  in  the  buffer,  use  C-M-@
+          (203/mark-form-command201/) which sets mark at the same place that C-M-F would
+          move to.   C-M-@ takes arguments like C-M-F.  In particular, a negative
+          argument is useful for putting the mark at the beginning of the previous
+          form.
+
+            The      commands      M-(      (203/make-parens-command201/)      and     M-)
+          (203/move-over-paren-command201/) are designed for a style of editing which keeps
+          parentheses balanced at all times.  M-( inserts a pair of parentheses, either
+          together as in "()", or, if given an argument, around the next several
+          forms, and leaves point after the open parenthesis.   Instead of typing
+          "(FOO)", you can type M-( FOO, which has the same effect except for
+          leaving the cursor before the close parenthesis.  Then you type M-), which
+          moves past the close parenthesis, deleting any indentation preceding it (in
+          this example there is none), and indenting with Linefeed after it.
+
+          202/20.5.2  Commands for Manipulating Defuns
+
+                  201/C-M-[, C-M-A  Move to beginning of defun.
+                  C-M-], C-M-E  Move to end of defun.
+                  C-M-H         Put region around whole defun.
+
+            For historical reasons, an expression at the top level in the buffer is called
+          a 202/defun201/, regardless of what function is actually called by the expression.
+
+            One might imagine that NMODE finds defuns by moving upward a level of
+          parentheses until there were no more levels to go up.  This would require
+          scanning all the way back to the beginning of the file.  To speed up the
+          operation, NMODE assumes that any "(" in column 0 is the start of a defun.
+          This heuristic is nearly always right and avoids the costly scan.
+
+            The commands to move to the beginning and end of the current defun are
+          C-M-[ (203/move-backward-defun-command201/) and C-M-] (203/end-of-defun-command201/).
+          Alternate names for these two commands are C-M-A for C-M-[ and C-M-E for
+          C-M-].  The alternate names are easier to type on many non-Meta keyboards.
+          201/Page 20-6                 NMODE Manual (Commands for Manipulating Defuns)
+
+
+            If   you   wish   to   operate   on   the   current   defun,   use  C-M-H
+          (203/mark-defun-command201/) which puts point at the beginning and mark at the end
+          of the current or next defun.
+
+          202/20.6  Lisp Grinding
+
+            201/The best way to keep Lisp code properly indented ("ground") is to use
+          NMODE to re-indent it when it is changed.  NMODE has commands to indent
+          properly either a single line, a specified number of lines, or all of the lines
+          inside a single form.
+
+                  Tab        In Lisp mode, re-indents line according to parenthesis
+                              depth.
+                  Linefeed    Equivalent to Return followed by Tab.
+                  M-^        Join  two  lines,  leaving  one  space  between  them  if
+                              appropriate.
+                  C-M-Q     Re-indent all the lines within one list.
+
+            The basic indentation function is 203/lisp-tab-command201/, which gives the current
+          line the correct indentation as determined from the previous lines' indentation
+          and parenthesis structure.  This function is placed on Tab in Lisp mode (Use
+          Meta-Tab or C-Q Tab to insert a tab).  If executed at the beginning of a
+          line, it leaves point after the indentation; when given inside the text on the
+          line, it leaves point fixed with respect to the characters around it.
+
+            When   entering   a   large   amount   of   new   code,   use   Linefeed
+          (203/indent-new-line-command201/), which is equivalent to a Return followed by a
+          Tab.  In Lisp mode, a Linefeed creates or moves down onto a blank line, and
+          then gives it the appropriate indentation.
+
+            To join two lines together, use the Meta-^ or Control-Meta-^ command
+          (203/delete-indentation-command201/),  which  is  approximately  the  opposite  of
+          Linefeed.  It deletes any spaces and tabs at the front of the current line,
+          and then deletes the line separator before the line.  A single space is then
+          inserted, if NMODE thinks that one is needed there.  Spaces are not needed
+          before a close parenthesis, or after an open parenthesis.
+
+            If you are dissatisfied about where Tab indents the second and later lines
+          of an form, you can override it.  If you alter the indentation of one of the
+          lines yourself, then Tab will indent successive lines of the same list to be
+          underneath it.   This is the right thing for functions which Tab indents
+          unaesthetically.
+
+            When you wish to re-indent code which has been altered or moved to a
+          different level in the list structure, you have several commands available.
+          You can re-indent a specific number of lines by giving the ordinary indent
+          command (Tab, in Lisp mode) an argument.  This indents as many lines as
+          you say and moves to the line following them. Thus, if you underestimate,
+          you can repeat the process later.
+
+            You can re-indent the contents of a single form by positioning point before
+          the beginning of it and typing Control-Meta-Q (203/lisp-indent-sexpr201/).  The line
+          the form starts on is not re-indented;  thus, only the relative indentation
+          201/NMODE Manual (Lisp Grinding)                                      Page 20-7
+
+
+          with in the form, and not its position, is changed.  To correct the position
+          as well, type a Tab before the C-M-Q.
+
+            Another way to specify the range to be re-indented is with point and mark.
+          The command C-M-\ (203/lisp-indent-region-command201/) applies Tab to every line
+          whose first character is between point and mark.  In Lisp mode, this does a
+          Lisp indent.
+
+            The standard pattern of indentation is as follows: the second line of the
+          expression is indented under the first argument, if that is on the same line
+          as the beginning of the expression; otherwise, the second line is indented
+          two spaces more than the entire expression.  Each following line is indented
+          under the previous line whose nesting depth is the same.
+
+          202/20.7  Lisp Language Interface
+
+            201/The following section contains many commands starting with "Lisp-".  This
+          prefix is equivalent to C-], but can sometimes be typed using a soft key.
+
+          202/20.7.1  Evaluation
+
+            201/NMODE contains a number of facilities to allow the user to  use  the
+          underlying LISP language.  In addition to editing and pretty-printing LISP
+          expressions with the commands in the preceding sections, the user can
+          execute the LISP expressions in the buffer.
+
+                  Lisp-D         Execute the current Defun.
+                  Lisp-E         Execute the form starting on this line.
+                  Lisp-Y         Yanks the last output into current buffer.
+
+          Lisp-D (203/execute-defun-command201/) causes the Lisp reader to read and evaluate
+          the current defun.  If there is no current defun, the Lisp reader will read a
+          form starting at the current location.  We arrange for output to be appended
+          to the end of the output buffer.  The mark is set at the current location in
+          the input buffer, in case user wants to go back.
+
+          Lisp-E (203/execute-form-command201/) causes the Lisp reader to read and evaluate a
+          form starting at the beginning of the current line.  We arrange for output to
+          be appended to the end of the output buffer.  The mark is set at the current
+          location in the input buffer, in case user wants to go back.
+
+          Lisp-Y (203/yank-last-output-command201/) copies the last piece of output from the
+          output buffer back into the current buffer, allowing it to be added to some
+          code or text within the current buffer.
+
+
+          202/20.7.2  Debugging
+
+            201/The commands of the last subsection allow one to use the underlying LISP,
+          provided that no errors  occur  in  the  evaluation  of  expressions.   The
+          commands of this subsection allow recovery from errors in evaluations.  When
+          an error occurs, one enters a "break loop".   This is indicated by the
+          presence of more than one angle bracket on the lisp prompt at the right hand
+          201/Page 20-8                                         NMODE Manual (Debugging)
+
+
+          side of the mode line under the output buffer.  When one is in a break loop,
+          one can still evaluate lisp expressions.  Additional errors at this point will
+          wrap additional break loops around the current one.  Commands available in
+          break loops include:
+
+                  Lisp-A         Abort break loops.
+                  Lisp-Q         Quit current break loop.
+                  Lisp-B         Backtrace function calls.
+                  Lisp-C         Continue execution.
+                  Lisp-R         Retry expression.
+                  Lisp-?          Help command
+
+            Lisp-A (203/lisp-abort-command201/) will pop out of an arbitrarily deep break loop.
+          Lisp-Q (203/lisp-quit-command201/) exits the current break loop. It only pops up one
+          level, unlike abort.
+
+          Lisp-B (203/lisp-backtrace-command201/) lists all the function calls on the stack. The
+          most recently invoked function is listed first.  It is a good way to see how
+          the  offending  expression  got  generated.   Unfortunately,  many  internal
+          functions of Lisp and NMODE are shown, so the list may get somewhat
+          cluttered.
+
+          Lisp-C (203/lisp-continue-command201/) causes the expression last printed to be
+          returned as the value of the offending expression.  This allows a user to
+          recover from a low level error in an involved calculation if they know what
+          should have been returned by the offending expression.  This is also often
+          useful as an automatic stub: If an expression  containing  an  undefined
+          function is evaluated, a Break loop is entered, and this may be used to
+          return the value of the function call.
+
+          Lisp-R (203/lisp-retry-command201/) tries to evaluate the offending expression again,
+          and to continue the computation.   This is often useful after defining a
+          missing function, or assigning a value to a variable.
+
+          Lisp-? (203/lisp-help-command201/) lists the lisp commands available.  When in a
+          break loop it prints:
+              "Lisp break commands: Q-quit;A-abort;R-retry;C-continue;B-backtrace"
+          Otherwise it prints:
+              "Lisp  commands:  E-execute  form;Y-yank  last  output;L-invoke  Lisp
+          Listener"

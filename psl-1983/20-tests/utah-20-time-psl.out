@@ -1,0 +1,21 @@
+PSL Spectral Tests,  DEC-20, standard 3.1 PSL,  4-Mar-83 
+---------------------------------------------------------------
+EmptyTest 10000		19
+SlowEmptyTest 10000	294
+Cdr1Test 100		594
+Cdr2Test 100		380
+CddrTest 100		276
+ListOnlyCdrTest1	1902
+ListOnlyCddrTest1	3334
+ListOnlyCdrTest2	3119
+ListOnlyCddrTest2	4773
+ReverseTest 10		407
+MyReverse1Test 10	271
+MyReverse2Test 10	256
+LengthTest 100		603
+ArithmeticTest 10000	582
+EvalTest 10000		1969
+tak 18 12 6		456
+gtak 18 12 6		1920
+gtsta g0		743
+gtsta g1		822

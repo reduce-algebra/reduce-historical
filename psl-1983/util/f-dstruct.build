@@ -1,0 +1,2 @@
+CompileTime LOAD(DEFSTRUCT,SYSLISP,INUM,FAST!-VECTOR);
+in "f-dstruct.red"$

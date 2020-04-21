@@ -1,0 +1,11 @@
+ZPEDIT: PSL Structure Editor			MLG/ 2 January 1982
+---------------------------- 
+[This short help file needs a LOT of work] 
+
+This is a loadable option (Load ZPEdit).  When loaded, this will
+replace and extend the MiniEditor normally used in the Break Loop and
+by the function Edit.  For information on other Editors see (Help
+Editor).  For more information on the basic commands do (Help
+MiniEditor).  Based on the BBN-Lisp editor, circa 1968, and its
+descendants.  ZPEDIT was modified by IMSSS.  See PD:ZPEDIT.DOC for
+full details.

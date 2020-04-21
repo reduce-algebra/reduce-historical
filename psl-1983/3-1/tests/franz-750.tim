@@ -1,0 +1,22 @@
+(
+("Franz Opus 38, Utah Cs VAX 750 " . " 20-Feb-82")
+(EmptyTest-10000		 . 391)
+(GEmptyTest-10000	 . 3451)
+(Cdr1Test-100		 . 3740)
+(Cdr2Test-100		 . 1309)
+(CddrTest-100		 . 867)
+(ListOnlyCdrTest1	 . 6953)
+(ListOnlyCddrTest1	 . 9435)
+(ListOnlyCdrTest2	 . 21556)
+(ListOnlyCddrTest2	 . 24361)
+(ReverseTest-10		 . 680)
+(MyReverse1Test-10	 . 952)
+(MyReverse2Test-10	 . 714)
+(LengthTest-100		 . 5287)
+(ArithmeticTest-10000	 . 7667)
+(EvalTest-10000		 . 9486)
+(tak-18-12-6		 . 1887)
+(gtak-18-12-6		 . 18853)
+(gtsta-g0		 . 14280)	% Use GTSTB
+(gtsta-g1		 . 24956)    % GC
+)

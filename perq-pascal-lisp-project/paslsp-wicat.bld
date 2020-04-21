@@ -1,0 +1,15 @@
+; Command file to assemble PASn pieces together
+; Wicat version
+;
+COP PAS3.INI PASLSP.INI
+APP PAS1.SLI PASLSP.INI
+APP PAS2.SLI PASLSP.INI
+APP PAS3.SLI PASLSP.INI
+APP USER.SLI PASLSP.INI
+filter w <pas0.pre >s:plw.pas
+append pas1.pas S:PLW.PAS
+append pas2.pas S:PLW.PAS
+append pas3.pas S:PLW.PAS
+append exec.pas S:PLW.PAS
+filter w <pasn.pre >s:plwn.pas
+append S:plwn.pas S:PLW.PAS

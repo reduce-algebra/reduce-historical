@@ -1,0 +1,26 @@
+;; independant compilation a program for the 20
+; MIC MODULE modulename,symbolmname
+@define DSK:, DSK:, P20:, PI:
+@delete 'a.mac
+@delete D'a.mac
+;avoid obnoixous ^Q halts...
+@terminal length 0
+@s:DEC20-cross.exe
+off break;  %kill obnoxious break loops
+off USERMODE ;
+InputSymFile!* := "'B.sym"$
+OutputSymFile!* := "'B.sym"$
+GlobalDataFileName!* := "20-test-global-data.red"$
+ON PCMAC, PGWD$     % see macro expansion
+  !*MAIN := ''NIL;
+  ModName!*:='''A;
+ASMOUT "'A"$
+off StandAlone$     % Should emit SYMFNC inits
+IN "'A.red"$
+off pcmac,pgwd;     % Suppress echo before INIT
+ASMEnd$
+quit$
+@terminal length 24
+@macro
+*'A.rel='A.mac
+*D'A.rel=D'A.mac

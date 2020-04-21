@@ -1,0 +1,8 @@
+; get file names, and write date to a file
+@dir 'a,
+ no heading
+ time write
+ no summary
+ separate
+ output file.dates
+

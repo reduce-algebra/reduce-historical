@@ -1,0 +1,2 @@
+compiletime load zboot;
+in "zboot.lsp"$

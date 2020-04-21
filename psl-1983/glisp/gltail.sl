@@ -1,0 +1,197 @@
+%
+%  GLTAIL.PSL.10               14 Jan. 1983
+%
+%  FILE OF FUNCTIONS FOR COMPATIBILITY WITH PORTABLE STANDARD LISP (PSL)
+%  G. NOVAK     20 OCTOBER 1982
+%
+
+
+(DE GETDDD (X) (CDR (GETD X)))
+
+(DE PUTDDD (FN DEF) (REMD FN) (PUTD FN 'EXPR DEF))
+
+
+(DE LISTGET (L PROP)
+  (COND ((NULL L) NIL)
+        ((EQ (CAR L) PROP) (CADR L))
+        (T (LISTGET (CDDR L) PROP) )) )
+
+
+
+%  NOTE -- THIS VERSION OF NLEFT ONLY WORKS FOR N=2.
+(DE NLEFT (L N)
+  (COND ((NOT (EQN N 2)) (ERROR 0 N))
+        ((NULL L) NIL)
+        ((NULL (CDDR L)) L)
+        (T (NLEFT (CDR L) N) )) )
+
+
+(DE NLISTP (X) (NOT (PAIRP X)))
+(DF COMMENT (X) NIL)
+
+
+%  ASSUME EVERYTHING UPPER-CASE FOR PSL.
+(DE U-CASEP (X) T)
+(de glucase (x) x)
+
+
+%  PARTIAL IMPLEMENTATION OF SUBATOM FOR POSITIVE NUMBERS.
+(DE SUBATOM (ATM N M)
+ (PROG (LST)
+  (COND ((GREATERP M (FLATSIZE2 ATM))(RETURN NIL)))
+A (COND ((GREATERP N M)(RETURN (AND LST (IMPLODE (REVERSIP LST))))))
+  (SETQ LST (CONS (GLNTHCHAR ATM N) LST))
+  (COND ((MEMQ (CAR LST) '(!' !, !!))
+          (RPLACD LST (CONS (QUOTE !!) (CDR LST))) ))
+  (SETQ N (ADD1 N))
+  (GO A) ))
+
+
+%  FIND THE STRING POSITION IN ATOM ATM WHERE A CHARACTER IN THE
+%  BIT TABLE BITTBL OCCURS, STARTING WITH CHARACTER N.
+(DE STRPOSL (BITTBL ATM N)
+ (PROG (NC)
+  (COND ((NULL N)(SETQ N 1)))
+  (SETQ NC (FLATSIZE2 ATM))
+A (COND ((GREATERP N NC)(RETURN NIL))
+        ((INDX GLSEPBITTBL (id2int (GLNTHCHAR ATM N)))(RETURN N)))
+  (SETQ N (ADD1 N))
+  (GO A) ))
+
+%  MAKE A BIT TABLE FROM A LIST OF CHARACTERS.
+(DE MAKEBITTABLE (L)
+ (PROG ()
+  (SETQ GLSEPBITTBL (MkVect 255))
+  (MAPC L (FUNCTION (LAMBDA (X)
+     (PutV GLSEPBITTBL (id2int X) T) )))
+  (RETURN GLSEPBITTBL) ))
+
+
+%  Fexpr for defining GLISP functions.
+(df dg (x)
+   (put (car x) 'gloriginalexpr (cons 'lambda (cdr x)))
+   (put (car x) 'glcompiled nil)
+   (putd (car x) 'macro '(lambda (gldgform)(glhook gldgform))) )
+
+%  Hook for compiling a GLISP function on its first call.
+(de glhook (gldgform) (glcc (car gldgform)) gldgform)
+
+%  Interlisp-style NTHCHAR.
+(de glnthchar (x n)
+  (prog (s l)
+    (setq s (id2string x))
+    (setq l (size s))
+    (cond ((minusp n)(setq n (add1 (plus l n))))
+          (t (setq n (sub1 n))))
+    (cond ((or (minusp n)(greaterp n l))(return nil)))
+    (return (int2id (indx s n)))))
+
+
+%  FIND FIRST ELEMENT OF A LIST FOR WHICH FN IS TRUE
+(DE SOME (L FN)
+  (COND ((NULL L) NIL)
+        ((APPLY FN (LIST (CAR L))) L)
+        (T (SOME (CDR L) FN))))
+
+%  TEST IF FN IS TRUE FOR EVERY ELEMENT OF A LIST
+%  SOME and EVERY switched FN and L
+(DE EVERY (L FN)
+  (COND ((NULL L) T)
+        ((APPLY FN (LIST (CAR L))) (EVERY (CDR L) FN))
+        (T NIL)))
+
+%  SUBSET OF A LIST FOR WHICH FN IS TRUE
+(DE SUBSET (L FN)
+  (PROG (RESULT)
+  A (COND ((NULL L)(RETURN (REVERSIP RESULT)))
+          ((APPLY FN (LIST (CAR L)))
+              (SETQ RESULT (CONS (CAR L) RESULT))))
+    (SETQ L (CDR L))
+    (GO A)))
+
+(DE REMOVE (X L) (DELETE X L))
+
+%  LIST DIFFERENCE   X - Y
+(DE LDIFFERENCE (X Y)
+  (MAPCAN X (FUNCTION (LAMBDA (Z)
+               (COND ((MEMQ Z Y) NIL)
+                     (T (CONS Z NIL)))))))
+
+%  FIRST A FEW FUNCTION DEFINITIONS.
+
+%  GET FUNCTION DEFINITION FOR THE GLISP COMPILER.
+(DE GLGETD (FN)
+  (OR (and (or (null (get fn 'glcompiled))
+               (eq (getddd fn) (get fn 'glcompiled)))
+           (GET FN 'GLORIGINALEXPR))
+      (GETDDD FN)))
+
+(DE GLGETDB (FN) (GLGETD FN))
+
+(DE GLAMBDATRAN (GLEXPR)
+ (PROG (NEWEXPR)
+  (SETQ GLLASTFNCOMPILED FAULTFN)
+  (PUT FAULTFN 'GLORIGINALEXPR GLEXPR)
+  (COND ((SETQ NEWEXPR (GLCOMP FAULTFN GLEXPR NIL))
+           (putddd FAULTFN NEWEXPR)
+           (put faultfn 'glcompiled newexpr) ))
+  (RETURN NEWEXPR) ))
+
+(DE GLERROR (FN MSGLST)
+ (PROG ()
+  (TERPRI)
+  (PRIN2 "GLISP error detected by ")
+  (PRIN1 FN)
+  (PRIN2 " in function ")
+  (PRINT FAULTFN)
+  (MAPC MSGLST (FUNCTION (LAMBDA (X) (PRIN1 X)(SPACES 1))))
+  (TERPRI)
+  (PRIN2 "in expression: ")
+  (PRINT (CAR EXPRSTACK))
+  (TERPRI)
+  (PRIN2 "within expression: ")
+  (PRINT (CADR EXPRSTACK))
+  (COND (GLBREAKONERROR (ERROR 0 (CAR EXPRSTACK))))
+  (RETURN (LIST (LIST 'GLERR (LIST 'QUOTE (CAR EXPRSTACK))))) ))
+
+%  PRINT THE RESULT OF GLISP COMPILATION.
+(DE GLP (FN)
+ (PROG ()
+  (SETQ FN (OR FN GLLASTFNCOMPILED))
+  (TERPRI)
+  (PRIN2 "GLRESULTTYPE: ")
+  (PRINT (GET FN 'GLRESULTTYPE))
+  (PRETTYPRINT (GETDDD FN))
+  (RETURN FN)))
+
+
+%  GLISP STRUCTURE EDITOR 
+(DE GLEDS (STRNAME)
+  (EDITV (GET STRNAME 'GLSTRUCTURE))
+  STRNAME)
+
+%  GLISP PROPERTY-LIST EDITOR
+(DE GLED (ATM) (EDITV (PROP ATM)))
+
+%  GLISP FUNCTION EDITOR
+(DE GLEDF (FNNAME)
+  (EDITV (GLGETD FNNAME))
+  FNNAME)
+
+(DE KWOTE (X)
+  (COND ((NUMBERP X) X)
+        (T (LIST (QUOTE QUOTE) X))) )
+
+
+
+
+%  INITIALIZE
+
+(SETQ GLBASICTYPES '(ATOM INTEGER REAL NUMBER STRING BOOLEAN
+     ANYTHING))
+(SETQ GLTYPENAMES '(CONS LIST RECORD LISTOF ALIST ATOM
+     OBJECT ATOMOBJECT LISTOBJECT))
+(SETQ GLLISPDIALECT 'PSL)
+(GLINIT)
+
+

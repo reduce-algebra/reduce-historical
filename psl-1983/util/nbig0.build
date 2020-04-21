@@ -1,0 +1,36 @@
+% NBIG0.BUILD - MLG, move BUILD info, add MC68000 case
+
+Compiletime<<load syslisp;
+	     Load Fast!-Vector;
+             load inum;
+	     load if!-system>>;
+
+in "nbig0.red"$
+
+% Now install the important globals for this machine
+
+if_system(VAX, 
+      <<
+	BigFloatHi!*:=btimes2(bdifference(btwopower 67, btwopower 11), 
+			btwopower 60);% Largest representable float.
+	BigFloatLow!*:=BMinus BigFloatHi!*>>);
+
+if_system(MC68000, 
+	<<Setbits 30$  %/ Some BUG?
+		% HP9836 sizes, range 10^-308 .. 10 ^308
+			% i GUESS:
+                        % 10^308 = 2 ^1025
+                        % 15.8 digits, IEEE double ~56 bits
+ 	  BigFloatHi!*:=btimes2(BSUB1 BTWOPOWER 56,
+			btwopower 961);% Largest representable float.
+	  BigFloatLow!*:=BMinus BigFloatHi!*>>);
+
+if_system(PDP10,
+	<<
+  	  BigFloatHi!*:=btimes2(bsub1 btwopower 62, btwopower 65);
+	  BigFloatLow!*:=BMinus BigFloatHi!*>>);
+
+  FloatSysHi!* := Float SysHi!*;
+  FloatSysLow!* := Float SysLow!*;
+
+END;

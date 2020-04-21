@@ -1,0 +1,374 @@
+.nd frames 0
+.
+.tr @ @
+.cc x @
+.ec t \	   tab
+.ec a @  text at-sign
+.ec s    text space
+.
+------------------------------------------------------------------------------
+ Sending Macros
+------------------------------------------------------------------------------
+.
+.de send_topic
+.if ~frames
+.setup_file topic
+.wl .silent_index {\0} idx \page_number
+.we
+.en
+.em
+.
+.de send_fnc
+.if ~frames
+.setup_file function
+.wl .silent_index {\0} idx \page_number
+.we
+.en
+.em
+.
+.de send_name
+.if ~frames
+.setup_file command
+.wl .silent_index {\0} idx \page_number
+.we
+.en
+.em
+.
+.de send_key
+.if ~frames
+.setup_file key
+.wl .silent_index {\0} idx \page_number
+.we
+.en
+.em
+.
+.
+------------------------------------------------------------------------------
+ Environment Definitions
+------------------------------------------------------------------------------
+.
+
+ Environments that don't change Filling
+
+.define_environment group         sp    -1  0  0  {ne 3i}  noop
+.define_environment fnc           sp    -1  0  0  {nv font 2} noop
+.define_environment hp9836        sp    -1  0  0  noop     noop
+
+ Filled Environments:
+
+.define_environment cmd_doc       sp     1  1  1  begdoc   enddoc
+.define_environment multiple      sp     1  0  0  noop     noop
+
+ List Environments:
+
+.define_environment description   next   1  0  0  desc     end_list
+.define_environment enumerate     next   1  0  0  enum     end_list
+.define_environment commands      next   1  0  0  cmds     end_list
+.define_environment widecommands  next   1  0  0  wcmds    end_list
+.define_environment doublewidecommands next   1  0  0  dwcmds     end_list
+.define_environment grosscommands next   1  0  0  dwcmds     end_list
+
+ NoFill Environments:
+
+.define_environment quotation     sp     0  1  1  quot     noop
+.define_environment verbatim      sp     0  1  1  noop     noop
+.define_environment format        sp     0  1  1  noop     noop
+.define_environment example       sp     0  1  1  noop     noop
+.define_environment equation      sp     0  1  1  noop     noop
+.define_environment programexample sp    0  1  1  noop     noop
+.define_environment funenv        sp     0  1  1  noop     noop
+.define_environment code          sp     0  1  1  noop     noop
+.define_environment lispexample   sp     0  1  1  noop     noop
+.define_environment center        sp     0  0  0  centst   noop
+
+ Ignored Environments:
+
+.define_environment comment       noop   0  0  0  ignore   end_ignore
+.define_environment info          noop   0  0  0  ignore   end_ignore
+.define_environment twenex        noop   0  0  0  ignore   end_ignore
+.define_environment its           noop   0  0  0  ignore   end_ignore
+.
+.de funstt
+.hv indent 5
+.hv rindent 5
+.em
+.
+.de centst
+.nr adjust 2
+.em
+.
+.de quot
+.hv indent 5
+.ti indent!m
+.em
+.
+.de desc
+.sv list_start
+.ilist 14
+.em
+.
+.de enum
+.sv list_start \\,list_count.\s\t
+.ilist 5
+.em
+.
+.de itmz
+.sv list_start \\list_count.\s\t
+.ilist 5
+.em
+.
+.de cmds
+.sv list_left_margin 8
+.ilist 8 0
+.em
+.
+.de wcmds
+.sv list_left_margin 8
+.ilist 12 0
+.em
+.
+.de dwcmds
+.sv list_left_margin 8
+.ilist 16 0
+.em
+.
+.de begdoc
+.if frames
+.nr adjust 0
+.en
+.em
+.
+.de enddoc
+.if ~frames
+.dashes
+.en
+.ns
+.em
+.
+.de psep
+.sp
+.ns
+.em
+.
+.
+------------------------------------------------------------------------------
+ Cross-Reference Stuff
+------------------------------------------------------------------------------
+.
+.de node
+.label {\0}
+.em
+.
+.de note
+.lbegin
+.sv node \0
+.sv name \1
+.if nargs<2
+.sr name \0
+.en
+See Section ref(\node) [\name], page pageref(\node)
+.en
+.em
+.
+------------------------------------------------------------------------------
+ Sectioning Macros
+------------------------------------------------------------------------------
+.
+.eq old_chapter chapter
+.eq old_section section
+.eq old_subsection subsection
+.
+.de chapter
+.nr indent 0
+.nr rindent 0
+.old_chapter {\:*}
+.em
+.
+.de section
+.ti 0
+.in 0
+.ir 0
+.old_section {\:*}
+.em
+.
+.de subsection
+.ti 0
+.in 0
+.ir 0
+.old_subsection {\:*}
+.em
+.
+------------------------------------------------------------------------------
+ Footnotes
+------------------------------------------------------------------------------
+.
+.de foot  {text}
+\fn
+.sfoot
+\*
+.efoot
+.em
+.
+------------------------------------------------------------------------------
+ Indexes
+------------------------------------------------------------------------------
+.
+.de fncindex
+.send_fnc \*
+.em
+.
+.de keyindex
+.send_key \*
+.em
+.
+.de index
+.send_topic \*
+.em
+.
+.
+------------------------------------------------------------------------------
+ Bibliography
+------------------------------------------------------------------------------
+.
+.de cite
+[\*]
+.em
+.
+.
+------------------------------------------------------------------------------
+ Miscellaneous Macros
+------------------------------------------------------------------------------
+.
+.de traceon
+.nr trace 1
+.em
+.
+.de traceoff
+.nr trace 0
+.em
+.
+.de tabdivide  n
+.if
+.nv n \0
+.nv w ll/n
+.ta w!m 2*w!m 3*w!m 4*w!m 5*w!m 6*w!m 7*w!m 8*w!m 9*w!m 10*w!m
+.en
+.em
+.
+.de include  foo.mss
+.if
+.sv the_filename \0
+.nv i 0
+.sv period .
+.si i period the_filename
+.if i>0
+.sb the_filename the_filename 1 i-1
+.en
+.so \the_filename.r
+.en
+.em
+.
+.de newpage
+.bp
+.em
+.
+.de comment
+.em
+.
+.de blankspace
+.sp \0
+.em
+.
+.de manual
+\*
+.em
+.
+.de w
+\*
+.em
+.
+.de ctl
+^\0
+.em
+.
+.de return1
+<CR>
+.em
+.
+.de return2
+<CR>
+.em
+.
+.de return3
+Return
+.em
+.
+.de cz
+C-C
+.em
+.
+.de cc
+C-Z
+.em
+.
+------------------------------------------------------------------------------
+ Font Specifications
+------------------------------------------------------------------------------
+.
+.de i  italic
+2\**
+.em
+.
+.de r  roman
+0\**
+.em
+.
+.de b  bold
+1\**
+.em
+.
+.de up  superscript
+\*
+.em
+.
+.de down  subscript
+\*
+.em
+.
+.eq c r  small capitals
+.eq k b  capitals?
+.eq ei i
+.eq u b  underline
+.eq dq b
+.eq xxi i
+.eq xxii i
+.eq xxu b
+.eq xxuu b
+.
+.de u_if_we_could  underline
+.if
+.nv ul 1
+.nv ul_space 0
+\*
+.en
+.em
+.
+.eq fnc i
+.eq dfn b
+.
+.nr dashes_page -1
+.nr dashes_vpos -1
+.
+.de dashes
+.if page~=dashes_page|vpos>dashes_vpos+100
+. br
+. if ibm
+4$*
+. ef
+-
+. en
+. br
+. nr dashes_page page
+. nr dashes_vpos vpos
+. en
+.em

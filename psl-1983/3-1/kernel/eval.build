@@ -1,0 +1,15 @@
+%
+% EVAL.BUILD - Files with Eval and Apply in the interpreter
+% 
+% Author:      Eric Benson
+%              Symbolic Computation Group
+%              Computer Science Dept.
+%              University of Utah
+% Date:        19 May 1982
+% Copyright (c) 1982 University of Utah
+%
+
+PathIn "apply-lap.red"$			% low-level function linkage, in LAP
+PathIn "eval-apply.red"$		% interpreter functions
+PathIn "catch-throw.red"$		% non-local GOTO mechanism
+PathIn "prog-and-friends.red"$		% Prog, Go and Return

@@ -1,0 +1,17 @@
+; Command file to assemble PASn pieces together and then compile them.
+def s: <scratch>
+def pl: <griss.PASLSP>
+; produces PERQ  version.
+COP pl:PAS3.INI s:PLPERQ.INI
+APP pl:PAS1.SLI s:PLPERQ.INI
+APP pl:PAS2.SLI s:PLPERQ.INI
+APP pl:PAS3.SLI s:PLPERQ.INI
+APP pl:USER.SLI s:PLPERQ.INI
+pl:filter p  <pl:pas0.pre >s:PlPerq.pas
+pl:filter p  <pl:pasn.pre >s:PlPerqn.pas
+append pl:pas1.pas S:PLPERQ.pas
+append pl:pas2.pas S:PLPERQ.pas
+append pl:pas3.pas S:PLPERQ.pas
+append pl:exec.pas S:PLPERQ.pas
+append s:PlPerqN.pas S:PLPERQ.pas
+; Send S:PlPerq.ini S:PlPerq.pas

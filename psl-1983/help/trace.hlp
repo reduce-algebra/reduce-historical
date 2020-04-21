@@ -1,0 +1,4 @@
+There are two  possible trace packages  to use in  PSL.  The  built-in
+functions  are   described  as   the  Mini-Trace   package  (do   Help
+MiniTrace;).  Those in the more powerful Debug package are  described
+separately (do Help Debug;).

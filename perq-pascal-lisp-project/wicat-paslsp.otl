@@ -1,0 +1,19 @@
+@Comment{OUTLINE of WICAT-PASLSP.MSS.1 by Scribe 3C(1250) on 1 March 1982 at 15:57}
+1. Introduction                                           1 WICAT-PASLSP.MSS.1 line 54
+  1.1. History of PASLSP                                  1 WICAT-PASLSP.MSS.1 line 82
+  1.2. Acknowledgement                                    2 WICAT-PASLSP.MSS.1 line 114
+2. Features of PASLSP and relation to Standard LISP       2 WICAT-PASLSP.MSS.1 line 119
+3. Using PASLSP on the Wicat 100                          3 WICAT-PASLSP.MSS.1 line 165
+4. Implementation of PASLSP                               5 WICAT-PASLSP.MSS.1 line 244
+  4.1. Building PASLSP                                    5 WICAT-PASLSP.MSS.1 line 245
+  4.2. Internal data structures                           6 WICAT-PASLSP.MSS.1 line 287
+  4.3. Adding user functions to the kernel                7 WICAT-PASLSP.MSS.1 line 320
+5. Future work on PASLSP                                  8 WICAT-PASLSP.MSS.1 line 364
+  5.1. Goals of the Utah PSL Project                      8 WICAT-PASLSP.MSS.1 line 376
+6. References                                             9 WICAT-PASLSP.MSS.1 line 437
+APPENDIX A:  A List of Current PASLSP Functions and Glo  10 WICAT-PASLSP.MSS.1 line 439
+ Table of Contents                                        1 -SCRIBE-SCRATCH-.13-27-1.100013 line 3
+	Alphabetic Listing of Cross-Reference Tags and Labels
+
+Tag or Label Name                    Page   Label Value  Source file Location
+-----------------------------------------------------------------------------

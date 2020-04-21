@@ -1,0 +1,21 @@
+
+
+; FULL-RESTORE.CTL.5 & FULL-RESTORE.CTL.4  3-Apr-83 1015	PAGE 1
+
+
+
+LINE 22, PAGE 1
+1)	*restore <*>*.*.* p20K:*.*.*
+1)	*restore <*>*.*.* pl:*.*.*
+LINE 22, PAGE 1
+2)	*restore <*>*.*.* p20:*.*.*
+2)	*restore <*>*.*.* pl:*.*.*
+
+
+LINE 28, PAGE 1
+1)	*restore <*>*.*.* p20T:*.*.*
+1)	*restore <*>*.*.* pu:*.*.*
+LINE 28, PAGE 1
+2)	*restore <*>*.*.* pT20:*.*.*
+2)	*restore <*>*.*.* pu:*.*.*
+

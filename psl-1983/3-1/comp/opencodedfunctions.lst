@@ -1,0 +1,47 @@
+These functions where tagged as open coded in the Dec20 PSL.
+
+ADDRESSAPPLY0
+ADDRESSAPPLY1
+ADDRESSAPPLY2
+ADDRESSAPPLY3
+ADDRESSAPPLY4
+ 
+CODEAPPLY0
+CODEAPPLY1
+CODEAPPLY2
+CODEAPPLY3
+CODEAPPLY4
+
+IDAPPLY0
+IDAPPLY1
+IDAPPLY2
+IDAPPLY3
+IDAPPLY4
+
+% These represent the interface tothe users float capability.
+
+!*FEQ
+!*FGREATERP
+!*WFIX
+!*WFLOAT
+!*FDIFFERENCE
+!*FASSIGN
+!*FLESSP
+!*FPLUS2
+!*FQUOTIENT
+!*FTIMES2
+
+%These are for standard division.
+
+WREMAINDER
+WQUOTIENT
+
+% These arethe primitives for dealing with the machine words of various sizes.
+
+BYTE
+HALFWORD
+BITTABLE
+PUTBYTE
+PUTHALFWORD
+PUTBITTABLE
+

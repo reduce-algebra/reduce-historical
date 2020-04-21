@@ -1,0 +1,24 @@
+FIND.RED - Recognition and search OBLIST functions
+-------------------------------------------------
+This is a loadable option  [Load Find; in RLISP, (Load Find) in LISP].
+These functions take a string or id, and map the Symbol Table to
+collect a list of ids with Prefix or Suffix as given:
+
+FindPrefix(Key:{Id, String}):id-list	Scan Symbol Table for prefix
+FindSuffix(Key:{Id, String}):id-list	Scan Symbol Table for suffix
+Find(Pattern:{Id,String}):id-list       Scan Symbol Table for matching string
+
+Thus  X:=FindPrefix '!*;                 Finds all ids starting with *
+
+The 'GSORT' package is used to sort the list.
+
+The Pattern is a string, with special characters, prefixed by %, like the
+format string in PrintF; StringMatch(pattern,subject) is called:
+
+	%%       Match a % in subject string
+	%?       Match any one character
+	%*	 Match any series of characters (0..n)
+
+Thus Find "*%*";  is equivalent to FindPrefix "*";
+     Find "%**";  is equivalent to FindSuffix "*";
+     Find "A%*B"; matches any string starting with A and ending with B.

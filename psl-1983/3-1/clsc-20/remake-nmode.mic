@@ -1,0 +1,28 @@
+@connect scrtch:<psl.3-1.clsc-20>
+@define s: scrtch:<scratch>
+@psl:pslcomp
+*(FASLOUT "VT52NX") (DSKIN "VT52NX.SL") (FASLEND)
+*(FASLOUT "HAZELTINE-1500") (DSKIN "HAZELTINE-1500.SL") (FASLEND)
+*(FASLOUT "TELEVIDEO") (DSKIN "TELEVIDEO.SL") (FASLEND)
+*(FASLOUT "WINDOWS-20") (DSKIN "WINDOWS-EX-20.SL") (FASLEND)
+*(FASLOUT "EXTENDED-INPUT") (DSKIN "EXTENDED-INPUT.SL") (FASLEND)
+*(FASLOUT "MODE-DEFS") (DSKIN "MODE-DEFS.SL") (FASLEND)
+*(FASLOUT "NMODE-20") (DSKIN "NMODE-EX-20.SL") (FASLEND)
+*(QUIT)
+@reset .
+@set file generation-retention-count pwb:windows-20.b.* 0
+@set file generation-retention-count pnb:extended-input.b.* 0
+@set file generation-retention-count pnb:mode-defs.b.* 0
+@set file generation-retention-count pnb:nmode-20.b.* 0
+@copy vt52nx.b.0 pwb:vt52nx.b.-1
+@copy hazeltine-1500.b.0 pwb:hazeltine-1500.b.-1
+@copy televideo.b.0 pwb:televideo.b.-1
+@copy windows-20.b.0 pwb:windows-20.b.-1
+@copy extended-input.b.0 pnb:extended-input.b.-1
+@copy mode-defs.b.0 pnb:mode-defs.b.-1
+@copy nmode-20.b.0 pnb:nmode-20.b.-1
+@copy psl:psl.exe s:bare-psl.exe
+@do make-nmode.mic
+@set file generation-retention-count psl:nmode.exe.* 0
+@rename s:nmode.exe.0 psl:nmode.exe.-1
+@kmic

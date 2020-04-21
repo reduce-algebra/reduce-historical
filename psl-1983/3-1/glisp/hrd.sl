@@ -1,0 +1,19 @@
+%  HRD.SL.2                                     07 April 83
+
+%  Programs to interface to Methius  high-resolution display on HP 9836.
+%  G. Novak   07 April 83
+
+(DE M-MOVEP1 (X Y)
+  (M_MOVEP1 X (DIFFERENCE 551 Y)))
+
+(DE M-CHAR (ASCIIN)
+  (M_CHAR ASCIIN))
+
+(DE M-ERASE (X1 Y1 X2 Y2)
+  (M_ERASE X1 (DIFFERENCE 551 Y1) X2 (DIFFERENCE 551 Y2)))
+
+(DE M-RECT-OUTLINE (X1 Y1 X2 Y2)
+  (M_RECT_OUTLINE X1 (DIFFERENCE 551 Y1) X2 (DIFFERENCE 551 Y2)))
+
+(DE M-VECTOR (X1 Y1 X2 Y2)
+  (M_VECTOR X1 (DIFFERENCE 551 Y1) X2 (DIFFERENCE 551 Y2)))

@@ -1,0 +1,969 @@
+
+                         THE REDUCE DEBUGGING PACKAGE
+
+                                 A. C. Norman
+                                D. F. Morrison
+
+                        Last updated 19 February 1981.
+
+                                   ABSTRACT
+
+A  library  of  routines  useful  for  program  development  and  debugging  in
+Reduce/Rlisp is described.
+
+                               Table of Contents
+1. Introduction                                                               1
+     1.1. Use                                                                 1
+     1.2. Functions which depend on redefining user functions                 1
+     1.3. Special considerations for compiled functions                       1
+     1.4. A few known deficiencies                                            1
+2. Tracing function execution                                                 1
+     2.1. Saving trace output                                                 1
+     2.2. Making tracing more selective                                       2
+     2.3. Turning off tracing                                                 2
+     2.4. Automatic tracing of newly defined functions                        2
+3. A heavy handed backtrace facility                                          2
+4. Embeded Functions                                                          2
+5. Counting function invocations                                              2
+6. Stubs                                                                      3
+7. Functions for printing useful information                                  3
+8. Printing circular and shared structures                                    3
+9. Safe List Access Functions                                                 3
+10. Library of Useful Functions                                               3
+11. Internals and cusomization                                                3
+     11.1. User Hooks                                                         3
+     11.2. Functions used for printing/reading                                3
+     11.3. Flags                                                              3
+APPENDIX A:  Example                                                          4
+
+1. Introduction
+     The REDUCE debugging package contains a selection of functions that can be
+used  to  aid  program  development  and  to  investigate  faulty programs.  It
+contains the following facilities.
+
+   - A trace package.  This allows the user to see the arguments passed to
+     and the values returned by selected functions.  It is  also  possible
+     to  have  traced interpreted functions print all the assignments they
+     make with SETQ (see section 2).
+
+   - A backtrace facility.  This allows one to  see  which  of  a  set  of
+     selected functions were active when an error occurred (section 3).
+
+   - Embedded  functions  make it possible to do everything that the trace
+     package can do, and much more besides (section 4).
+
+   - Some primitive statistics gathering (section 5).
+
+   - Generation of simple stubs.   When  invoked,  procedures  defined  as
+     stubs simply print their argument and read a value to return (section
+     6).
+
+   - Some  functions  for  printing  useful  information, such as property
+     lists, in an intelligible format (section 7).
+
+   - PRINTX is a function that can print circular  and  re-entrant  lists,
+     and  so  can sometimes allow debugging to proceed even in the face of
+     severe damage caused by the wild use of RPLACA  and  RPLACD  (section
+     8).
+
+   - A   set  of  functions  !:CAR,...,!:CDDDDR,  !:RPLACA,  !:RPLACD  and
+     !:RPLACW that behave exactly as the corresponding functions with  the
+     !:  removed, except that they explicitly check that they are not used
+     improperly on atomic arguments (section 9).
+
+   - A collection of utility  functions,  not  specifically  intended  for
+     examining or debugging code, but often useful (section 10).
+
+
+
+1.1. Use
+     To use load <REDUCE.UTAH>DEBUG.FAP 
+
+    FLOAD <REDUCE.UTAH>DEBUG.FAP;
+
+
+
+1.2. Functions which depend on redefining user functions
+     A  number  of  facilities in Debug depend on redefining user functions, so
+that they may log or print behavior when called.  The Debug  package  tries  to
+redefine  user  functions  once and for all, and then keep specific information
+about what is required at run time  in  a  table.    This  allows  considerable
+flexibility,   and  is  used  for  a  number  different  facilities,  including
+trace/traceset (section 2), a backtrace facility (section 3),  some  statistics
+gathering (section 5)and EMB functions (section 4).
+
+     Some,  like trace and EMB, only take effect if further action is requested
+on specific user functions.  Others, like backtrace and  statistics  are  of  a
+more  global nature.  Once one of these global facilities is enabled it applies
+to all functions which have been made "known" to Debug.    To  undo  this,  use
+RESTR (section 2.3).
+
+
+
+1.3. Special considerations for compiled functions
+     All functions in Debug which depend on redefining user functions must make
+some  assumptions  about the number of arguments.  The Debug package is able to
+find the correct names for the arguments of interpreted functions, and also for
+functions loaded from FAP files and generated with an argument  naming  option.
+This option is enabled by setting the switch 
+
+    ON ARGNAMES; % for full names of all arguments
+
+or 
+
+    ON ARGCOUNT; % args will be printed with names A1,A2,...
+
+before  compiling the relevant functions.  If Debug can not find out for itself
+how many arguments a function has, it will interactively  ask  for  assistance.
+In reply to the question 
+
+    HOW MANY ARGUMENTS DOES xxxx HAVE?
+
+it is possible to reply one of:
+
+?               ask for assistance
+
+UNKNOWN         give up
+
+<number>        specify the number of arguments
+
+(name ...)      give the names of arguments.
+
+     If  you give an incorrect answer to the question, the system may misbehave
+in an arbitrary manner. There can be problems if the answer  UNKNOWN  is  given
+and  subsequently  functions  get  redefined or recompiled - if at all possible
+find out how many arguments are taken by the function that you wish to trace.
+
+     It is possible to suppress the argument number query with 
+
+    ON TRUNKNOWN
+
+This is equivalent to always answering "UNKNOWN".
+
+
+
+1.4. A few known deficiencies
+
+   - An attempt to trace certain system functions  (e.g.CONS)  will  cause
+     the  trace package to overwrite itself.  Given the names of functions
+     that cause this sort of trouble it is fairly easy to change the trace
+     package to deal gracefully with them - so report trouble to a  system
+     expert.
+
+   - Once  fast  links are established trace can not work.  Fast links are
+     turned off when Debug is loaded, and even if they are  restored  they
+     are  turned  off  each  time  TR or a related function is called.  In
+     Standard Lisp 1.6 on the PDP10/20 the statement 
+
+         ON NOUUO;
+
+     will also suppress fast links.  Thus either load Debug or do ON NOUUO
+     prior to any attempt to execute code that will need to be traced.
+
+   - The portable Lisp compiler uses  information  about  which  registers
+     certain  system  functions destroy.  Tracing these functions may make
+     the optimizations based thereon invalid.  The correct way of handling
+     this problem is currently under consideration.  In the mean time  you
+     should  avoid  tracing any functions with the ONEREG or TWOREG flags.
+     On the PDP10/20 these currently include
+      UPBV        FLOATP      FLOAT       NUMVAL      LPOSN       NCONS
+      POSN        FIXP        GET         EXAMINE     SCANSET     SETPCHAR
+      EJECT       TYO         BINI        BIGP        PRINC       ABS
+      CODEP       LINELENGTH  STRINGP     MINUS       PAIRP       RECLAIM
+      TERPRI      XCONS       UNTYI       *BOX        CONS        MKVECT
+      GETD        ATSOC       CLOSE       GCTIME      MKCODE      REVERSE
+      ASCII       BINO        LENGTH      FILEP       PUTV        SPEAK
+      DELIMITER   PAGELENGTH  RDSLSH      TIME        REMD        FIX
+      CONSTANTP   INUMP       ATOM        VECTORP     GETV        IDP
+      REMPROP     EXCISE      NUMBERP     PUT         LETTER
+
+   - The current implementation does not handle MACROs correctly.   It  is
+     not  possible  to  expand  a  MACRO  and  not  evaluate the resulting
+     expansion.  This deficiency will be remedied shortly.   In  the  mean
+     time do not use any traced MACROs under the influence of ON DEFN.
+
+2. Tracing function execution
+     To  see  when  a function gets called, what arguments it is given and what
+value it returns, do 
+
+    TR functionname;
+
+or if several functions are of interest, 
+
+    TR name1,name2,...;
+
+If the specified functions are defined (as EXPR,  FEXPR  or  MACRO),  and  fast
+links  to  them  have  not  yet  been  established  (section  1.4), this REDUCE
+statement modifies the function definition to  include  print  statements.  The
+following example shows the style of output produced by this sort of tracing:
+
+     The input...
+
+    SYMBOLIC PROCEDURE XCDR A;
+      CDR A; % A very simple function;
+    TR XCDR;
+    XCDR '(P Q R);
+
+gives output...
+
+    XCDR entered
+       A: (P Q R)
+    XCDR = (Q R)
+
+Interpreted functions can also be traced at a deeper level.  
+
+    TRST name1,name2...;
+
+causes  the  body  of  an  interpreted  function  to  be  redefined so that all
+assignments (made with SETQ) in its body  are  printed.    Calling  TRST  on  a
+function  automatically  has the effect of doing a TR on it too, and the use of
+UNTR automatically does an UNTRST if necessary (section 2.3), so that it is not
+possible to have a function subject to TRST but not TR.
+
+     Trace output will often appear mixed up with output from the program being
+studied, and to avoid too much confusion TR arranges to preserve the column  in
+which  printing  was taking place across any output that it generates. If trace
+output is produced when part of a line has been printed, the trace data will be
+enclosed in markers '<' and '>', and these symbols will be placed on  the  line
+so  as  to  mark  out the amount of printing that had occurred before trace was
+entered.
+
+
+
+2.1. Saving trace output
+     The trace facility makes it possible to discover  in  some  detail  how  a
+function  is  used,  but  in  certain  cases  its direct use will result in the
+generation of vast amounts of (mostly useless) print-out.   There  are  several
+options.    One  is  to  make tracing more selective (section 2.2).  The other,
+discussed here, is to either print only the most recent information, or dump it
+all to a file to be perused at leisure.
+
+     Debug  has  a  ring  buffer in which it saves information to reproduce the
+most recent information printed by the trace facility (both TR and TRST).    To
+see the contents of this buffer use TR without any arguments 
+
+    TR;
+
+To set the number of entries retained to n use 
+
+    NEWTRBUFF(n);
+
+It is initially set to 5.
+
+     Turning off the TRACE flag 
+
+    OFF TRACE;
+
+will  suppress the printing of any trace information at run time; it will still
+be saved in the ring buffer.    Thus  a  useful  technique  for  isolating  the
+function  in  which  an  error  occurs  is to trace a large number of candidate
+functions, do OFF TRACE  and  after  the  failure  look  at  the  latest  trace
+information by calling TR with no arguments.
+
+     Normally trace information is directed to the standard output, rather than
+the currently selected output.  To send it elsewhere use the statement 
+
+    TROUT filename;
+
+The statement 
+
+    STDTRACE;
+
+Will  close  that file and cause future trace output to be sent to the standard
+output.  Note that output saved in the ring buffer is  sent  to  the  currently
+selected output, not that selected by TROUT.
+
+
+
+2.2. Making tracing more selective
+     The function TRACECOUNT(n) can be used to switch off trace output. If n is
+a  positive  number,  after  a  call to TRACECOUNT(n) the next n items of trace
+output that are generated will not be printed.  TRACECOUNT(n) with  n  negative
+or zero switches all trace output back on. TRACECOUNT(NIL) returns the residual
+count, i.e. the number of additional trace entries that will be suppressed.
+
+     Thus  to  get detailed tracing in the stages of a calculation that lead up
+to an error, try
+
+    TRACECOUNT 1000000; % or some other suitable large number
+    TR ....; % as required
+    % run the failing problem
+    TRACECOUNT NIL;
+
+It is now possible to calculate how many  trace  entries  occurred  before  the
+error,  and so the problem can now be re-run with TRACECOUNT set to some number
+slightly less than that.
+
+     An alternative to the direct of TRACECOUNT is TRIN. To use TRIN, establish
+tracing for a collection of functions, using TR in the normal way. Then do TRIN
+on some small collection of other functions. The effect  is  just  as  for  TR,
+except  that  trace output will be inhibited except when control is dynamically
+within the TRIN functions. This makes it possible to use  TR  on  a  number  of
+heavily  used  general  purpose  functions, and then only see the calls to them
+that occur within some specific sub-part of your entire program.   UNTR  undoes
+the effect of TRIN (section 2.3).
+
+     The  global variables TRACEMINLEVEL!* and TRACEMAXLEVEL!* (which should be
+non-negative integers) are the minimum and maximum depths of recursion at which
+to print trace information.  Thus if you only want to see top level calls of  a
+highly recursive function (like a simple-minded version of LENGTH) simply do 
+
+    TRACEMAXLEVEL!* := 1;
+
+
+
+2.3. Turning off tracing
+     When a particular function no longer needs tracing, do 
+
+    UNTR functionname;
+
+or 
+
+    UNTR name1,name2...;
+
+This  merely suppresses generation of trace output.  Other information, such as
+invocation counts,  bactrace  information,  and  the  number  of  arguments  is
+retained.    Thus  UNTR followed later by TR will not have to enquire about the
+number of arguments.
+
+     To completely destroy information about a function use 
+
+    RESTR name1,name2...;
+
+This returns the function to it's original state.
+
+     To suppress traceset output without suppressing normal trace output use 
+
+    UNTRST name1,name2...;
+
+UNTRing a TRSTed function also UNTRST's it.
+
+     TRIN (section 2.2) is undone by UNTR (but not by UNTRST).
+
+
+
+2.4. Automatic tracing of newly defined functions
+     Under the influence of 
+
+    ON TRACEALL;
+
+any functions successfully defined by PUTD will be traced.  Note that  if  PUTD
+fails (as might happen under the influence of the LOSE flag) no attempt will be
+made to trace the function.
+
+     To  enable  those facilities (such as BTR (section 3) and TRCOUNT (section
+5)) which require redefinition, but without tracing, use 
+
+    ON INSTALL;
+
+     Thus, a common scenario might look like
+
+    ON INSTALL;
+    IN MYFNS.RED$
+    OFF INSTALL;
+
+which would enable the backtrace and statistics routines to work with  all  the
+functions defined in MYFNS.RED.
+
+     Warning:  if  you  intend to use ON TRACEALL or ON INSTALL, make sure that
+fast links are suppressed before you define ANY functions, even those you  will
+never trace (section 1.4).
+
+3. A heavy handed backtrace facility
+
+    BTR f1,f2,...;
+
+     arranges  that  a  stack  of functions entered but not left is kept - this
+stack records the names of functions and the arguments that  they  were  called
+with.  If  a  function  returns  normally  the stack is unwound. If however the
+function fails, the stack is left alone  by  the  normal  LISP  error  recovery
+processes.
+
+     To print this information call BTR without any arguments 
+
+    BTR;
+
+Calling  BTR  on  new  functions  resets  the  stack.  This may also be done by
+explicitly calling RESBTR 
+
+    RESBTR;
+
+     The disposition of information about  functions  which  failed  within  an
+ERRORSET  is  controlled by the BTRSAVE.  ON BTRSAVE will cause them to be save
+separately, and printed when the stack is printed; OFF BTRSAVE will cause  them
+to be thrown away.
+
+     OFF BTR will suppress saving of any BTR information.  Note that any traced
+function will have its invocations pushed and popped by the BTR maechanism.
+
+4. Embeded Functions
+     EMBEDDING  means  redefining  a  function  in terms of its old definition,
+usually with the intent that the new version will do some  tests  or  printing,
+use the old one, do some more printing and then return.  If ff is a function of
+two arguments, it can be embedded using a statement of the form:
+
+    SYMBOLIC EMB PROCEDURE ff(A1,A2);
+      << PRINT A1;
+         PRINT A2;
+         PRINT ff(A1,A2) >>;
+
+The  effect of this particular use of embed is broadly similar to a call TR ff,
+and arranges that whenever ff is called it prints both its  arguments  and  its
+result.    After a function has been embedded, the embedding can be temporarily
+removed by the use of 
+
+    UNEMBED ff;
+
+and it can be reinstated by 
+
+    EMBED ff;
+
+5. Counting function invocations
+     Whenever the flag TRCOUNT is ON the number of times user  functions  known
+to Debug are entered is counted.  The statement 
+
+    ON TRCOUNT;
+
+also resets that count to zero.  The statement 
+
+    OFF TRCOUNT;
+
+causes a simple histogram of function invocations to be printed.  To make Debug
+aware of a function use 
+
+    TRCNT name1,name2,...;
+
+See also section 2.4.
+
+6. Stubs
+     The statement 
+
+    STUB FOO(U,V);
+
+defines  an  EXPR, FOO, of two arguments.  When executed such a stub will print
+its arguments and read a value to return.  FSTUB is  used  to  define  FEXPR's.
+This is often useful when developing programs in a top down fashion.
+
+     At  present  the currently (i.e. when the stub is executed) selected input
+and output are used.  This may  be  changed  in  the  future.    Algebraic  and
+possibly MACRO stubs may be implemented in the future.
+
+7. Functions for printing useful information
+
+    PLIST id1,id2,...;
+
+     prints the property lists of the specified id's.  
+
+    PPF fn1,fn2,...;
+
+prints  the  definitions  and  other  useful  information  about  the specified
+functions.
+
+8. Printing circular and shared structures
+     Some LISP programs rely on parts of their datastructures being shared,  so
+that  an  EQ  test  can be used rather than the more expensive EQUAL one. Other
+programs (either deliberately or by accident) construct circular lists  through
+the use of RPLACA or RPLACD. Such lists can be displayed by use of the function
+PRINTX.  If  given  a  normal list the behaviour of this function is similar to
+that of PRINT - if it is given a looped or re-entrant datastructure  it  prints
+it  in  a  special  format.    The representation used by PRINTX for re-entrant
+structures is based on the idea of labels for those nodes in the structure that
+are referenced more than once. Consider the list created by the operations:
+
+    A:=NIL . NIL; % make a node
+    RPLACA(A,A); RPLACD(A,A); % point it at itself
+
+If PRINTX is called on the list A it will discover that the node is  referenced
+repeatedly,  and  will invent the label %L1 for it.  The structure will then be
+printed as 
+
+    %L1: (%L1 . %L1)
+
+where %L1: sets the label, and the other instances of %L1  refer  back  to  it.
+Labelled  sublists can appear anywhere within the list being printed.  Thus the
+list B := 'X . A; could be printed as 
+
+    (X . %L1: (%L1 . %L1))
+
+This use of dotted  pair  representation  is  often  clumsy,  and  so  it  gets
+contracted to 
+
+    (X %L1, %L1 . %L1)
+
+where  a  label set with a comma (rather than a colon) is a label for part of a
+list, not for the sublist.
+
+9. Safe List Access Functions
+     The functions !:CAR, ... !:CDDDDR, !:RPLACA,  !:RPLACD  and  !:RPLACW  all
+contain  explicit  checks to ensure that they are not used improperly on atomic
+arguments.
+
+     The user can either edit source files  systematically  changing  CAR  into
+!:CAR  etc  and  recompile  everything  to  use  these, or use !:REDEFINE.  The
+function !:REDEFINE (of no arguments) redefines CAR, CDR,  etc.  to  be  !:CAR,
+etc.    It  leaves  the  original, "dangerous" definitions under !%CAR, etc.  A
+second call on !:REDEFINE undoes the process.  Warning:  the  second  technique
+will  not  normally  work  with  compiled functions, as CAR, CDR, etc are often
+compiled inline.
+
+10. Library of Useful Functions
+     Debug contains a library of utility functions which may be useful to those
+debugging code.  The collection is as yet very small.  Suggestions for  further
+functions to be in corporated are definitely solicited.
+
+     Those currently available:
+
+REDEFINE(nam,old,new)
+                redefines the function named <nam> to be the same as that named
+                <new>.    If  <old> is non-nil, the former definition is stored
+                under the name <old>.  For example, 
+
+                    REDEFINE('EVAL,'!%EVAL,'MYEVAL)
+
+                saves the definition of EVAL as %EVAL, and redfines  it  to  be
+                MYEVAL.
+
+COPY U          returns  a  freshly cons'd together copy of U, often usefull in
+                debugging functions which use RPLACA/RPLACD.
+
+VCOPY U         Like COPY, but copies vectors, non-unique numbers, and strings,
+                too.
+
+11. Internals and cusomization
+     This section describes some internal details of the  Debug  package  which
+may be useful in customizing it for specific applications.
+
+     The reader is urged to consult the source (section <REDUCE.UTAH>DEBUG.RED)
+for further details.
+
+
+
+11.1. User Hooks
+     These  are  all  global variables whose value is normally NIL.  If non-nil
+they should be exprs taking the number of  variables  specified,  and  will  be
+called as specified.
+
+PUTDHOOK!*      takes  one argument, the function name.  It is called after the
+                function has been defined, and any tracing under the  influence
+                of  TRACEALL  or  INSTALL has taken place.  It is not called if
+                the function cannot be  defined  (as  might  happen  under  the
+                influence of the LOSE flag).
+
+TRACENTRYHOOK!* takes two arguments, the function name and a list of the actual
+                arguments.  It is called by the trace package whenever a traced
+                function  is entered, but before it is executed.  The execution
+                of a surrounding EMB function takes place after TRACENTRYHOOK!*
+                is called.  This is useful when you need to call special  user-
+                provided print routines to display critical data structures, as
+                are TRACEXITHOOK!* and TRACEXPANDHOOK!*.
+
+TRACEXITHOOK!*  takes  two  arguments,  the function name and the value.  It is
+                called after the function has been evaluated.
+
+TRACEXPANDHOOK!*
+                takes two arguments, the function name and the macro expansion.
+                It is only called for macros, and is called after the macro  is
+                expanded, but before the expansion has been evaluated.
+
+TRINSTALLHOOK!* takes  one  argument, a function name.  It is called whenever a
+                function is redefined by the Debug package, as for example when
+                it is first traced.  It is called before the redefinition takes
+                place.
+
+
+
+11.2. Functions used for printing/reading
+     These should all contain EXPRS taking the specified number  of  arguments.
+The initial values are given in square brackets.
+
+PPFPRINTER!* [RPRINT]
+                takes  one argument.  It is used by PPF to print the body of an
+                interpreted function.
+
+PROPERTYPRINTER!* [PRETTYPRINT]
+                takes one argument.  It is used by PLIST to print the values of
+                properties.
+
+STUBPRINTER!* [PRINTX]
+                takes one argument.  Stubs defined with STUB/FSTUB  use  it  to
+                print their arguments.
+
+STUBREADER!* [XREAD(NIL)]
+                takes  no  arguments.   Stubs defined with STUB/FSTUB use it to
+                read their return value.
+
+TREXPRINTER!* [RPRINT]
+                takes one argument.  It is used  to  print  the  expansions  of
+                traced macros.
+
+TRPRINTER!* [PRINTX]
+                takes  one  argument.    It  is used to print the arguments and
+                values of traced functions.
+
+
+
+11.3. Flags
+     These are all  flags  which  can  be  set  with  the  Reduce/Rlisp  ON/OFF
+statements.  Their initial setting is given in square brackets.  Many have been
+described above, but are collected here for reference.
+
+BTR [on]        enables  backtracing  of  functions which the Debug package has
+                been told about.
+
+BTRSAVE [on]    causes backtrace information leading up to an error  within  an
+                errorset to be saved.
+
+INSTALL [off]   causes all Debug to know about all functions defined with PUTD.
+
+SAVENAMES [off] causes names assigned to substructures by PRINTX to be retained
+                from  one  use  to  the  next.    Thus  substurctures common to
+                different items will be show as the same.
+
+TRACE [on]      enables runtime printing of  trace  information  for  functions
+                which have been traced.
+
+TRACEALL [off]  causes all functions defined with PUTD to be traced.
+
+TRUNKNOWN [off] instead  of  querying the user for the number of arguments to a
+                compiled EXPR, just assumes the user will say "UNKNOWN".
+
+TRCOUNT [on]    enables counting invocations of functions known to Debug.  Note
+                that ON TRCOUNT resets the count,  and  OFF  TRCOUNT  prints  a
+                simple histogram of the available counts.
+
+APPENDIX A:  Example
+     This contrived example demonstrates many of the available features.  It is
+a transcript of an actual Reduce session.
+REDUCE 2 (Dec-1-80) ...
+FOR HELP, TYPE HELP<ESCAPE>
+
+1: CORE 80;
+
+2: FLOAD <MORRISON>NUDBUG.FAP;
+
+3: SYMBOLIC PROCEDURE FOO N;
+3: BEGIN SCALAR A;
+3:   IF REMAINDER(N,2) NEQ 0 AND N < 0 THEN
+3:     A := !:CAR N; % Should err out if N is a number
+3:   IF N = 0 THEN
+3:     RETURN 'BOTTOM;
+3:   N := N-2;
+3:   A := BAR N;
+3:   N := N-2;
+3:   RETURN LIST(A,BAR N,A)
+3: END FOO;
+
+FOO
+
+4: SYMBOLIC PROCEDURE FOOBAR N;
+4: << FOO N; NIL>>;
+
+FOOBAR
+
+5: SYMBOLIC OPERATOR FOOBAR;
+
+NIL
+
+6: TR FOO,FOOBAR;
+
+(FOO FOOBAR)
+
+7: PPF FOOBAR,FOO;
+
+
+EXPR procedure FOOBAR(N) [Traced;Invoked 0 times;Flagged: OPFN]:
+<<FOO N; NIL>>;
+
+EXPR procedure FOO(N) [Traced;Invoked 0 times]:
+BEGIN SCALAR A;
+   IF NOT REMAINDER(N,2)=0 AND N<0 THEN A := !:CAR N;
+   IF N=0 THEN RETURN 'BOTTOM;
+   N := N - 2;
+   A := BAR N;
+   N := N - 2;
+   RETURN LIST(A,BAR N,A)
+ END;
+
+FOOBAR(FOO)
+
+8: ON COMP;
+
+9: SYMBOLIC PROCEDURE BAR N;
+9: IF REMAINDER(N,2)=0 THEN FOO(2*(N/4)) ELSE FOO(2*(N/4)-1);
+
+*** BAR 164896 BASE 20 WORDS 63946 LEFT
+
+BAR
+
+10: OFF COMP;
+
+11: FOOBAR 8;
+FOOBAR being entered
+   N:   8
+  FOO being entered
+     N: 8
+    FOO (level 2) being entered
+       N:       2
+      FOO (level 3) being entered
+         N:     0
+      FOO (level 3) = BOTTOM
+      FOO (level 3) being entered
+         N:     0
+      FOO (level 3) = BOTTOM
+    FOO (level 2) = (BOTTOM BOTTOM BOTTOM)
+    FOO (level 2) being entered
+       N:       2
+      FOO (level 3) being entered
+         N:     0
+      FOO (level 3) = BOTTOM
+      FOO (level 3) being entered
+         N:     0
+      FOO (level 3) = BOTTOM
+    FOO (level 2) = (BOTTOM BOTTOM BOTTOM)
+  FOO = (%L1: (BOTTOM BOTTOM BOTTOM) (BOTTOM BOTTOM BOTTOM)
+%L1)
+FOOBAR = NIL
+
+0
+
+12: % Notice how in the above PRINTX printed the return values
+12: % to show shared structure
+12: TRST FOO;
+
+(FOO)
+
+13: FOOBAR 8;
+FOOBAR being entered
+   N:   8
+  FOO being entered
+     N: 8
+  N := 6
+    FOO (level 2) being entered
+       N:       2
+    N := 0
+      FOO (level 3) being entered
+         N:     0
+      FOO (level 3) = BOTTOM
+    A := BOTTOM
+    N := -2
+      FOO (level 3) being entered
+         N:     0
+      FOO (level 3) = BOTTOM
+    FOO (level 2) = (BOTTOM BOTTOM BOTTOM)
+  A := (BOTTOM BOTTOM BOTTOM)
+  N := 4
+    FOO (level 2) being entered
+       N:       2
+    N := 0
+      FOO (level 3) being entered
+         N:     0
+      FOO (level 3) = BOTTOM
+    A := BOTTOM
+    N := -2
+      FOO (level 3) being entered
+         N:     0
+      FOO (level 3) = BOTTOM
+    FOO (level 2) = (BOTTOM BOTTOM BOTTOM)
+  FOO = (%L1: (BOTTOM BOTTOM BOTTOM) (BOTTOM BOTTOM BOTTOM)
+%L1)
+FOOBAR = NIL
+
+0
+
+14: TR BAR;
+
+*** How many arguments does BAR take ?  1
+
+(BAR)
+
+15: FOOBAR 8;
+FOOBAR being entered
+   N:   8
+  FOO being entered
+     N: 8
+  N := 6
+    BAR being entered
+       A1:      6
+      FOO (level 2) being entered
+         N:     2
+      N := 0
+        BAR (level 2) being entered
+           A1:  0
+          FOO (level 3) being entered
+             N: 0
+          FOO (level 3) = BOTTOM
+        BAR (level 2) = BOTTOM
+      A := BOTTOM
+      N := -2
+        BAR (level 2) being entered
+           A1:  -2
+          FOO (level 3) being entered
+             N: 0
+          FOO (level 3) = BOTTOM
+        BAR (level 2) = BOTTOM
+      FOO (level 2) = (BOTTOM BOTTOM BOTTOM)
+    BAR = (BOTTOM BOTTOM BOTTOM)
+  A := (BOTTOM BOTTOM BOTTOM)
+  N := 4
+    BAR being entered
+       A1:      4
+      FOO (level 2) being entered
+         N:     2
+      N := 0
+        BAR (level 2) being entered
+           A1:  0
+          FOO (level 3) being entered
+             N: 0
+          FOO (level 3) = BOTTOM
+        BAR (level 2) = BOTTOM
+      A := BOTTOM
+      N := -2
+        BAR (level 2) being entered
+           A1:  -2
+          FOO (level 3) being entered
+             N: 0
+          FOO (level 3) = BOTTOM
+        BAR (level 2) = BOTTOM
+      FOO (level 2) = (BOTTOM BOTTOM BOTTOM)
+    BAR = (BOTTOM BOTTOM BOTTOM)
+  FOO = (%L1: (BOTTOM BOTTOM BOTTOM) (BOTTOM BOTTOM BOTTOM)
+%L1)
+FOOBAR = NIL
+0
+
+16: OFF TRACE;
+
+17: FOOBAR 8;
+
+0
+
+18: TR;
+*** Start of saved trace information ***
+        BAR (level 2) = BOTTOM
+      FOO (level 2) = (BOTTOM BOTTOM BOTTOM)
+    BAR = (BOTTOM BOTTOM BOTTOM)
+  FOO = (%L1: (BOTTOM BOTTOM BOTTOM) (BOTTOM BOTTOM BOTTOM)
+%L1)
+FOOBAR = NIL
+*** End of saved trace information ***
+
+19: FOOBAR 13;
+
+***** -1 illegal CAR
+
+20: TR;
+*** Start of saved trace information ***
+    BAR being entered
+       A1:      11
+      FOO (level 2) being entered
+         N:     3
+      N := 1
+        BAR (level 2) being entered
+           A1:  1
+          FOO (level 3) being entered
+             N: -1
+*** End of saved trace information ***
+
+21: BTR;
+*** Backtrace: ***
+These functions were left abnormally:
+  FOO
+     N: -1
+  BAR
+     A1:        1
+  FOO
+     N: 3
+  BAR
+     A1:        11
+  FOO
+     N: 13
+  FOOBAR
+     N: 13
+*** End of backtrace ***
+
+22: SYMBOLIC EMB PROCEDURE FOO N;
+22: IF N < 0 THEN <<
+22:   LPRIM "FOO would have failed";
+22:   NIL >>
+22: ELSE
+22:   FOO N;
+
+FOO
+
+23: RESBTR;
+
+24: FOOBAR 13;
+
+*** FOO WOULD HAVE FAILED
+
+*** FOO WOULD HAVE FAILED
+
+*** FOO WOULD HAVE FAILED
+
+*** FOO WOULD HAVE FAILED
+
+0
+
+25: TR;
+*** Start of saved trace information ***
+        BAR (level 2) = NIL
+      FOO (level 2) = (NIL NIL NIL)
+    BAR = (NIL NIL NIL)
+  FOO = (%L1: (NIL NIL NIL) (NIL NIL NIL) %L1)
+FOOBAR = NIL
+*** End of saved trace information ***
+
+26: BTR;
+*** No traced functions were left abnormally ***
+
+27: UNEMBED FOO;
+
+(FOO)
+
+28: FOOBAR 13;
+
+***** -1 illegal CAR
+
+29: STUB FOO N;
+
+*** FOO REDEFINED
+
+30: FOOBAR 13;
+ Stub FOO called
+
+N: 13
+Return? :
+30: BAR(N-2);
+ Stub FOO called
+
+N: 3
+Return? :
+30: BAR(N-2);
+ Stub FOO called
+
+N: -1
+Return? :
+30: 'ERROR;
+
+0
+
+31: TR;
+*** Start of saved trace information ***
+  BAR being entered
+     A1:        11
+    BAR (level 2) being entered
+       A1:      1
+    BAR (level 2) = ERROR
+  BAR = ERROR
+FOOBAR = NIL
+*** End of saved trace information ***
+
+32: OFF TRCOUNT;
+
+
+FOOBAR(8)           ****************
+BAR(24)             ************************************************
+
+
+
+33: QUIT;

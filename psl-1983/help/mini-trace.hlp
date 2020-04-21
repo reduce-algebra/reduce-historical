@@ -1,0 +1,25 @@
+The Mini-Trace Package:
+-----------------------
+
+The following 4 functions (all FEXPRs) are defined:
+ (they each redefine the functions, saving an old definition)
+
+TR ([F:id])             Cause TRACE message to be printed on entry to
+                         and exit from calls to the functions F1 ... Fn.
+UNTR ([F:id])           Restore original definitions
+
+BR ([F:id])             Cause BREAK on entry and on exit from functions,
+                         permitting arguments and results to be examined
+                         and modified.
+UNBR ([F:id])           Restore original definitions of the functions
+			 F1 ... Fn.
+
+Fluids:
+-------
+TrSpace!*                Controls indentation, may need to be reset to 0
+                         in "funny" cases.
+!*NoTrArgs               Set to T to suppress printing of arguments of
+                         traced functions.
+
+[See also the Full DEBUG package (do Help Debug; in RLISP, (Help
+Debug) in LISP).]

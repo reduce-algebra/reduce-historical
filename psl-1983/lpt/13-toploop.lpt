@@ -1,0 +1,399 @@
+PSL Manual                    7 February 1983                User Interface
+section 13.0                                                      page 13.1
+
+                                CHAPTER 13                                CHAPTER 13                                CHAPTER 13
+                              USER INTERFACE                              USER INTERFACE                              USER INTERFACE
+
+
+
+
+     13.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    13.1
+     13.2. Stopping PSL and Saving a New Executable Core Image .  .    13.1
+     13.3. Init Files.  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    13.3
+     13.4. Changing the Default Top Level Function .  .  .  .  .  .    13.3
+     13.5. The General Purpose Top Loop Function.  .  .  .  .  .  .    13.4
+     13.6. The HELP Mechanism .  .  .  .  .  .  .  .  .  .  .  .  .    13.7
+     13.7. The Break Loop  .  .  .  .  .  .  .  .  .  .  .  .  .  .    13.8
+     13.8. Terminal Interaction Commands in RLISP  .  .  .  .  .  .    13.8
+
+
+
+
+13.1. Introduction13.1. Introduction13.1. Introduction
+
+  In  this  chapter  those functions are presented relating directly to the
+user interface; for example, the general purpose  Top  Loop  function,  the
+History mechanism, and changing the default Top Level function.
+
+
+
+13.2. Stopping PSL and Saving a New Executable Core Image13.2. Stopping PSL and Saving a New Executable Core Image13.2. Stopping PSL and Saving a New Executable Core Image
+
+                                                        Quit                                                        Quit  The  normal  way to stop PSL execution is to call the Quit function or to
+strike <Ctrl-C> on the DEC-20 or <Ctrl-Z> on the VAX.
+
+
+ Quit Quit    _________                                                     ____(Quit ): Undefined                                                     expr
+
+     Return from LISP to superior process.
+
+  After either of these actions, PSL may be re-entered by typing  START  or
+CONTINUE to the EXEC on the DEC-20.  After exiting, the core image may also
+be  saved  using  the Tops-20 monitor command "SAVE filename".  On the VAX,
+QuitQuitQuit causes a stop signal to be sent, so that PSL may be continued from the
+shell.  If you  desire  that  the  process  be  killed,  use  the  function
+ExitLispExitLispExitLisp.
+
+
+ ExitLisp ExitLisp    _________                                                 ____(ExitLisp ): Undefined                                                 expr
+
+                                       Quit                                       Quit     To  be  used  on  the  VAX.  Like Quit except that the process is
+              ExitLisp              ExitLisp     killed.  ExitLisp calls the Unix library routine exit().
+
+  A better way to exit and save the core image  is  to  call  the  function
+SaveSystemSaveSystemSaveSystem.User Interface                7 February 1983                    PSL Manual
+page 13.2                                                      section 13.2
+
+ SaveSystem SaveSystem ___ ______ ____ ______ _____ ____ ____   _________         ____(SaveSystem MSG:string FILE:string FORMS:form-list): Undefined         expr
+
+     This  records the welcome message (after attaching a date) in the
+                                              StandardLisp                                              StandardLisp     global variable  LISPBANNER!*  used  by  StandardLisp's  call  on
+     TopLoop                    DumpLisp     TopLoop                    DumpLisp     TopLoop,  and  then  calls DumpLisp to compact the core image and
+     write it out as a machine dependent executable file with the name
+     ____     ____     FILE.    FILE  should  have  the  appropriate  extension  for  an
+                       SaveSystem                       SaveSystem     executable file.  SaveSystem also sets USERMODE!* to T.
+
+                             _____     The  forms  in the list FORMS will be evaluated when the new core
+     image is started.  For example 
+
+        (SaveSystem "PSL 3.1" "PSL.EXE" '((Read-Init-File "PSL")
+             (InitializeInterrupts)))
+
+                               SaveSystem                               SaveSystem     If RLISP has been loaded, SaveSystem will have been redefined  to
+                                                                  Main                                                                  Main     save the message in the global variable DATE!*, and redefine Main
+               RlispMain                            Begin1               RlispMain                            Begin1     to  call  RlispMain,  which  uses  DATE!*  in  Begin1.  The older
+     SaveSystem                               LispSaveSystem     SaveSystem                               LispSaveSystem     SaveSystem will be saved as the function LispSaveSystem.
+
+
+ DumpLisp DumpLisp ____ ______   _________                                      ____(DumpLisp FILE:string): Undefined                                      expr
+
+                Reclaim                Reclaim     This calls Reclaim to compact the heap,  and  unmaps  the  unused
+     pages  (DEC-20)  or  moves  various  segment  pointers  (VAX)  to
+     decrease the core image.  The core image is then  written  as  an
+                                    ____     executable file, with the name FILE.
+
+
+ Reset Reset    _________                                                    ____(Reset ): Undefined                                                    expr
+
+     Return to top level of LISP.  Equivalent to <Ctrl-C> and Start on
+     DEC-20.
+
+
+ Time Time    _______                                                       ____(Time ): integer                                                       expr
+
+     CPU time in milliseconds since login time.
+
+
+ Date Date    ______                                                        ____(Date ): string                                                        expr
+
+     The date in the form 16-Dec-82.
+
+
+              __________                                             ______LISPBANNER!* [Initially: ]                                           global
+
+                                                       SaveSystem                                                       SaveSystem     Records  the  welcome  message given by a call to SaveSystem from
+                                                         Date                                                         Date     PSL.  Also contains the date, given by the function Date.PSL Manual                    7 February 1983                User Interface
+section 13.2                                                      page 13.3
+
+        __________                                                   ______DATE!* [Initially: Nil]                                              global
+
+                                                       SaveSystem                                                       SaveSystem     Records  the  welcome  message given by a call to SaveSystem from
+     RLISP.
+
+
+
+13.3. Init Files13.3. Init Files13.3. Init Files
+
+  Init files are available to make it easier for the user to customize  PSL
+to  his/her  own needs.  When PSL, RLISP, or PSLCOMP is executed, if a file
+PSL.INIT, RLISP.INIT, or PSLCOMP.INIT (.pslrc, rlisprc,  or  .pslcomprc  on
+the  VAX)  is  on  the  home  directory,  it  will  be  read and evaluated.
+Currently all init files must be written in LISP  syntax.    They  may  use
+FASLIN    LOADFASLIN    LOADFASLIN or LOAD as needed.
+
+  The  following  functions  are  used  to implement init files, and can be
+accessed by LOADing the INIT-FILE module.
+
+
+ User-HomeDir-String User-HomeDir-String    ______                                         ____(User-HomeDir-String ): string                                         expr
+
+     Returns a full pathname for the user's home directory.
+
+
+ Init-File-String Init-File-String ___________ ______   ______                          ____(Init-File-String PROGRAMNAME:string): string                          expr
+
+     Returns the full pathname of the user's init file for the program
+     ___________     PROGRAMNAME.
+
+        (Init-File-String  "PSL")
+
+
+ Read-Init-File Read-Init-File ___________ ______   ___                               ____(Read-Init-File PROGRAMNAME:string): Nil                               expr
+
+                                                          ___________     Reads  and  evaluates  the  init  file  with  name   PROGRAMNAME.
+     Read-Init-File        Init-File-String     Read-Init-File        Init-File-String               ___________     Read-Init-File  calls Init-File-String with argument PROGRAMNAME.
+     
+
+        (Read-Init-File "PSL")
+
+
+
+13.4. Changing the Default Top Level Function13.4. Changing the Default Top Level Function13.4. Changing the Default Top Level Function
+
+  As PSL starts up, it first sets  the  stack  pointer  and  various  other
+                                        Main          While                                        Main          Whilevariables,  and then calls the function Main inside a While loop, protected
+     Catch               Main         StandardLisp     Catch               Main         StandardLispby a Catch.  By default, Main calls a StandardLisp top loop, defined  using
+              TopLoop              TopLoopthe  general  TopLoop function, described in the next Section.  In order to
+                                                               Main                                                               Mainhave a saved PSL come up in a different top loop, the function Main  should
+be appropriately redefined by the user (e.g. as is done to create RLISP).User Interface                7 February 1983                    PSL Manual
+page 13.4                                                      section 13.4
+
+ Main Main    _________                                                     ____(Main ): Undefined                                                     expr
+
+     Initialization  function, called after setting the stack.  Should
+                                                    TopLoop                                                    TopLoop     be redefined by the user to change the default TopLoop.
+
+
+
+13.5. The General Purpose Top Loop Function13.5. The General Purpose Top Loop Function13.5. The General Purpose Top Loop Function
+
+  PSL provides a general purpose Top Loop that allows the user  to  specify
+         Read  Eval     Print         Read  Eval     Printhis  own Read, Eval and Print functions and otherwise obtain a standard set
+of services, such as Timing, History, Break Loop interface,  and  Interface
+to Help system.
+
+
+               __________                                            ______TOPLOOPEVAL!* [Initially: NIL]                                       global
+
+         Eval         Eval     The Eval used in the current Top Loop.
+
+
+                __________                                           ______TOPLOOPPRINT!* [Initially: NIL]                                      global
+
+         Print         Print     The Print used in the current Top Loop.
+
+
+               __________                                            ______TOPLOOPREAD!* [Initially: NIL]                                       global
+
+         Read         Read     The Read used in the current Top Loop.
+
+
+ TopLoop TopLoop ___________   ________  ____________   ________(TopLoop TOPLOOPREAD!*:function  TOPLOOPPRINT!*:function
+___________   ________  ___________   __  _____________ ______   ___   ____TOPLOOPEVAL!*:function  TOPLOOPNAME!*:id  WELCOMEBANNER:string): NIL   expr
+
+     This  function  is  called to establish a new Top Loop (currently
+              Standard  LISP                Break              Standard  LISP                Break     used for Standard  LISP,  RLISP,  and  Break).    It  prints  the
+                                          Read-Eval-Print     _____________                        Read-Eval-Print     WELCOMEBANNER  and  then  invokes a "Read-Eval-Print" loop, using
+                                      ___________     the given functions.  Note that  TOPLOOPREAD!*,  etc.  are  FLUID
+     variables,  and  so  may  be  examined  (and  changed) within the
+                          TopLoop                          TopLoop     executing Top Loop.  TopLoop  provides  a  standard  History  and
+                                        ____  ___________     timing  mechanism,  retaining on a list (HISTORYLIST!*) the input
+                     ____    ____     and output as a list of pairs.   A  prompt  is  constructed  from
+     ___________     TOPLOOPNAME!*  and is printed out, prefixed by the History count.
+     As a convention, the name is  followed  by  a  number  of  ">"'s,
+     indicating the loop depth.
+
+
+               __________                                            ______TOPLOOPNAME!* [Initially: ]                                          global
+
+     Short name to put in prompt.PSL Manual                    7 February 1983                User Interface
+section 13.5                                                      page 13.5
+
+                __________                                           ______TOPLOOPLEVEL!* [Initially: ]                                         global
+
+     Depth of top loop invocations.
+
+
+         __________                                                  ______!*EMSGP [Initially: ]                                                switch
+
+     Whether to print error messages.
+
+
+          __________                                                 ______GCTIME!* [Initially: ]                                               global
+
+     Time spent in garbage collection.
+
+
+             __________                                              ______INITFORMS!* [Initially: ]                                            global
+
+     Forms to be evaluated at startup.
+
+
+         __________                                                  ______!*PECHO [Initially: NIL]                                             switch
+
+                                           StandardLisp                                           StandardLisp     Causes  parsed  form read in top-loop StandardLisp to be printed,
+     if T.
+
+
+        __________                                                   ______!*PVAL [Initially: T]                                                switch
+
+                                        StandardLisp                                        StandardLisp     Causes values computed in top-loop StandardLisp to be printed, if
+     T.
+
+
+        __________                                                   ______!*TIME [Initially: NIL]                                              switch
+
+     If on, causes a step evaluation time to  be  printed  after  each
+     command.
+
+
+ Hist Hist  _ _______    ___                                               _____(Hist [N:integer]): NIL                                               nexpr
+
+     This  function  does not work with the Top Loop used by PSL:RLISP
+     or by (beginrlisp); it does work with LISP and with RLISP  if  it
+                                                        Hist                                                        Hist     is  started  from  LISP using the RLISP function.  Hist is called
+     with 0, 1 or 2 integers, which control how much history is to  be
+     printed out:
+
+
+     (HIST)    Display full history.
+     (HIST n m)
+               Display history from n to m. 
+     (HIST n)  Display history from n to present.
+     (HIST -n) Display last n entries.User Interface                7 February 1983                    PSL Manual
+page 13.6                                                      section 13.5
+
+  [??? Add more info about what a history is. ???]  [??? Add more info about what a history is. ???]  [??? Add more info about what a history is. ???]
+
+  The  following  functions permit the user to access and resubmit previous
+expressions, and to re-examine previous results.
+
+
+ Inp Inp _ _______   ___                                                   ____(Inp N:integer): any                                                   expr
+
+     Return N'th input at this level.
+
+
+ ReDo ReDo _ _______   ___                                                  ____(ReDo N:integer): any                                                  expr
+
+     Reevaluate N'th input.
+
+
+ Ans Ans _ _______   ___                                                   ____(Ans N:integer): any                                                   expr
+
+     Return N'th result.
+
+
+                __________                                           ______HISTORYCOUNT!* [Initially: 0]                                        global
+
+     Number of entries read so far.
+
+
+               __________                                            ______HISTORYLIST!* [Initially: Nil]                                       global
+
+     List of entries read and evaluated.
+
+  TopLoop                                       StandardLisp  TopLoop                                       StandardLisp  TopLoop has been used to define the following StandardLisp and RLISP  top
+loops.
+
+
+ StandardLisp StandardLisp    ___                                                   ____(StandardLisp ): NIL                                                   expr
+
+     Interpreter LISP syntax top loop, defined as:
+
+        (De StandardLisp Nil
+           (Prog (CurrentReadMacroIndicator!* CurrentScanTable!*)
+               (Setq CurrentReadMacroIndicator!* 'LispReadMacro)
+               (Setq CurrentScanTable!* LispScanTable!*)
+               (Toploop 'Read 'Print 'Eval "LISP"
+                                       "PORTABLE STANDARD LISP")))
+
+     Note that the scan tables are modified.
+
+
+ RLisp RLisp    ___                                                          ____(RLisp ): NIL                                                          expr
+
+     Alternative interpreter RLISP syntax top loop, defined as:  PSL Manual                    7 February 1983                User Interface
+section 13.5                                                      page 13.7
+
+       [??? xread described in RLISP Section ???]       [??? xread described in RLISP Section ???]       [??? xread described in RLISP Section ???]
+
+        (De RLisp Nil
+        (Toploop 'XRead 'Print 'Eval "RLISP" "PSL RLISP"))
+
+     Note  that  for  the  moment,  the default RLISP loop is not this
+     (though this may  be  used  experimentally);  instead  a  similar
+                                              BeginRlisp                                              BeginRlisp     (special  purpose  hand coded) function, BeginRlisp, based on the
+           Begin1           Begin1     older Begin1 is used.  It is hoped to change the RLISP  top-level
+     to use the general purpose capability.
+
+
+ BeginRLisp BeginRLisp    ____ ________                                           ____(BeginRLisp ): None Returned                                           expr
+
+     Starts  RLISP  from  PSL:PSL only if RLISP is loaded.  The module
+     RLISP is present if you started in RLISP and then entered PSL.
+
+
+
+13.6. The HELP Mechanism13.6. The HELP Mechanism13.6. The HELP Mechanism
+
+  PSL provides a general purpose Help mechanism,  that  is  called  in  the
+TopLoop               HelpTopLoop               HelpTopLoop  by  invoking Help sometimes a ? may be used, as for example in the
+break loop.
+
+
+ Help Help  ______ __    ___                                               _____(Help [TOPICS:id]): NIL                                               fexpr
+
+     If no arguments are given, a message describing Help  itself  and
+                                                       __     known  topics is printed.  Otherwise, each of the id arguments is
+     checked to see if any help information is available.  If it has a
+     value  under  the  property  list  indicator  HelpFunction,  that
+     function  is  called.    If  it  has  a value under the indicator
+     HelpString, the value is printed.  If it has a  value  under  the
+     indicator  HelpFile,  the  file  is displayed on the terminal. By
+     default, a file called "topic.HLP" on the Logical  device,  "PH:"
+     is looked for, and printed if found.
+
+     Help     Help     Help  also  prints  out  the  values  of  the TopLoop fluids, and
+     finally searches the current Id-Hash-Table for loaded modules.
+
+
+          __________                                                 ______HELPIN!* [Initially: NIL]                                            global
+
+                                       Help                                       Help     The channel used for input by the Help mechanism.
+
+
+           __________                                                ______HELPOUT!* [Initially: NIL]                                           global
+
+                                        Help                                        Help     The channel used for output by the Help mechanism.User Interface                7 February 1983                    PSL Manual
+page 13.8                                                      section 13.7
+
+13.7. The Break Loop13.7. The Break Loop13.7. The Break Loop
+
+  The  Break  Loop  is described in detail in Chapter 14.  For information,
+look there.
+
+
+
+13.8. Terminal Interaction Commands in RLISP13.8. Terminal Interaction Commands in RLISP13.8. Terminal Interaction Commands in RLISP
+
+  Two commands are available in RLISP for use in interactive computing.
+
+
+ Pause Pause    ___                                                          ____(Pause ): Nil                                                          expr
+
+     The command PAUSE; may be inserted at any point in an input file.
+     If this command is encountered on input, the  system  prints  the
+                                                               YesP                                                               YesP     message CONT? on the user's terminal and halts by calling YesP.
+
+
+ YesP YesP _______ ______   _______                                         ____(YesP MESSAGE:string): boolean                                         expr
+
+                                    YesP                                    YesP     If the user responds Y or Yes, YesP returns T and the calculation
+     continues from that point in the file.  If the user responds N or
+         YesP         YesP     No, YesP returns NIL and control is returned to the terminal, and
+     the  user can type in further commands.  However, later on he can
+     use the command CONT; and control is then transferred back to the
+     point in the file after the last PAUSE was encountered.   If  the
+     user  responds  B,  one  enters a break loop.  After quitting the
+     break loop, one still must respond Y, N, Yes, or No.

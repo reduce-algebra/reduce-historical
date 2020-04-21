@@ -1,0 +1,41 @@
+
+LINK FROM KESSLER, TTY 101
+
+[DO: Execution of PS:<PSL.KERNEL.20>MAKE-UTAH-PSL.CTL.1 started at 7-Mar-83 09:26:47]
+
+ TOPS-20 Command processor 5(712)-1
+@; This file constructs a new PSL containing many useful things, including:
+@; It creates a new executable file S:PSL.EXE, first deleting any previous
+@; versions and expunging.  When approved, this file should be renamed to
+@;
+@psl:bare-psl random-argument-to-get-a-new-fork
+?Unrecognized command - File not found - "psl:bare-psl"
+@
+[DO: End of control file while searching for %ERR::]
+[DO: Execution aborted at 7-Mar-83 09:26:59]
+
+LINK FROM KESSLER, TTY 101
+
+[DO: Execution of PS:<PSL.KERNEL.20>MAKE-UTAH-PSL.CTL.2 started at 7-Mar-83 09:27:25]
+
+ TOPS-20 Command processor 5(712)-1
+@; This file constructs a new PSL containing many useful things, including:
+@; It creates a new executable file S:PSL.EXE, first deleting any previous
+@; versions and expunging.  When approved, this file should be renamed to
+@;
+@s:bare-psl random-argument-to-get-a-new-fork
+Bare PSL 3.1, 7-Mar-83 
+1 lisp> (load init-file homedir)
+NIL
+2 lisp> (savesystem "PSL 3.1" "s:psl.exe" '((read-init-file "psl")))
+*** Garbage collection starting
+*** GC 2: time 443 ms
+*** 139 recovered, 32 stable, 789 active, 89179 free
+NIL
+3 lisp> (quit)
+@reset .
+@set file autokeep s:psl.exe
+?Does not match switch or keyword - "autokeep"
+@
+[DO: End of control file while searching for %ERR::]
+[DO: Execution aborted at 7-Mar-83 09:27:48]

@@ -1,0 +1,86 @@
+DEFSTRUCT - "Structure" definition facility.
+--------------------------------------------
+
+A more complete description, including examples, is in Defstruct.Doc.
+
+Defstruct( name-and-options:{id,list}, [slot-descs:{id,list}] ): id    fexpr
+	   ----------------  -- ----    ----------  -- ----	 --    -----
+      Defines a record-structure data type.  A general call to defstruct
+      looks like this: (in RLISP syntax)
+
+	    defstruct( struct-name( option-1, option-2, ... ),
+		       slot-description-1,
+		       slot-description-2,
+		       ...
+		     );	    % (The name of the defined structure is returned.)
+
+      where slot-descriptions are:
+
+	    slot-name( default-init, slot-option-1, slot-option-2, ... )
+
+      Option lists and default-init forms are optional and may be omitted.
+      Some options have optional argument lists.
+
+      A call to a Constructor macro has the form:
+
+	    MakeThing( slot-name-1 value-expr-1,
+		       slot-name-2 value-expr-2,
+		       ... );
+
+      The Alterant macro calls have a similar form:
+
+	    AlterThing( thing,
+		        slot-name-1 value-expr-1,
+		        slot-name-2 value-expr-2,
+		        ... );
+
+      A call to a Creator macro has the form:
+
+	    CreateThing( slot-value-1, slot-value-2, ... );
+
+
+Structure Options and arguments:
+
+      Structure macro renaming, arg of NIL to suppress macro definition.
+	!:Constructor name	% Default: MakeThing
+	!:Alterant name		% Default: AlterThing
+	!:Predicate name	% Default: ThingP
+	!:Creator name		% Default: CreateThing
+
+      Common prefix on selector/depositor names.
+	!:Prefix idOrString	% Dedfault: ""
+	!:Prefix		% If no arg, Struct name is prefix.
+
+      Inclusion of substructures.
+	 !:Include structName	% Starts with slot defns of subtype.
+	 !:IncludeInit initList % slot-name(default-init) list to merge
+				% with default-init forms of subtype.
+
+  Slot Options:
+
+	!:Type typeId		% Asserts the type of the slot.
+
+      Override selectors/depositors with user-supplied fns.
+	!:UserGet		% fn name is [prefix]slot-name.
+	!:UserPut		% fn name is Put[prefix]slot-name.
+
+
+Miscellaneous functions on types:
+
+DefstructP( NAME:id ): extra-boolean				        expr
+	    ---- --    -------------					---- 
+      is a predicate that returns non-NIL (the Defstruct definition) if NAME
+      is a structured type which has been defined using Defstruct, or NIL if
+      it is not.
+
+DefstructType( S:struct ): id						expr
+	       - ------    --						----
+      returns the type name field of an instance of a structured type, or
+      NIL if S cannot be a defstruct type.
+
+SubTypeP( NAME1:id, NAME2:id ): boolean					expr
+      	  ----- --  ----- --    -------					----
+      returns true if NAME1 is a structured type which has been !:Included in
+      the definition of structured type NAME2, possibly through intermediate
+      structure definitions.  (In other words, the selectors of NAME1 can be
+      applied to NAME2.)

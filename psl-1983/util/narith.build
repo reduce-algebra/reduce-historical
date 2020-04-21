@@ -1,0 +1,4 @@
+% NARITH.BUILD - Changes built-in arith to include BIGNUM hooks
+%/ Should later install as basic BIGNUM package
+
+in "narith.red"$

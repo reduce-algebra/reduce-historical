@@ -1,0 +1,6 @@
+This directory contains the sources and non-loadable binaries for the Window
+package used by NMode.  The window package consists of two loadable modules:
+WINDOWS and DISPLAY-CHAR.  WINDOWS is the main module and is essential.
+DISPLAY-CHAR is a module that defines some macros for manipulating "display
+characters", which are used in the Window Package.  Load this module at
+compile time if you use any of these macros.

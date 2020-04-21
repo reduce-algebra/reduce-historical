@@ -1,0 +1,70 @@
+SLATE help file:
+---------------
+
+Slate is built upon EMODE, so behaves like a 3 window EMACS.  Horizontal
+and vertical scrolling and positioning correctly scroll the LineNumber and
+ColumnNumber windows, and stepping commands move in 2 char cell positions.
+
+[Note that lowercase will always behave as Upper case]
+
+SLA symbols overwrite themselves and move to next position:
+        1 0 + @ # * R S P D 
+        .               clears a cell location
+Row and Column Breaks are Toggles:
+        M-R M-C 
+
+<RUBOUT>        BackwardEraseCell
+
+%    C-Q                GoToExec  (not yet implemented)
+
+EMACS like Cursor Positioning Commands:
+        M-<             BeginningOfSLA
+        M->             EndOfSLA
+        C-A             BeginningOfRow
+        C-E             EndOfRow
+        C-F             forwardCell
+        <BLANK>         ForwardCell
+        C-B             BackwardCell
+        C-U             Iterate
+        C-P             UpwardCell
+        C-D             DownwardCell
+        C-N             DownwardCell
+        C-V             PageDown
+        M-V             PageUp
+
+        C-X >           PageRight
+        C-X <           PageLeft
+
+Command to Move to a specific location
+        C-X P           CntrlXMoveToPos
+Command to set a mark at a given cell.
+        C-X @           CntrlXMark
+
+Make a SLA grid of size ROWS by COLS
+        C-X M           CntrlXMakeSLA
+
+%Character Commands for Reading and Writing Files
+        C-X R           CntrlXreadSLA
+        C-X W           CntrlXwriteSLA
+
+%M-I            MetaInsertSla [Not yet implemented]
+
+Commands for Defining and Retrieving Segments and Objects
+        C-X O           CntrlXDefineObject
+        C-X S           CntrlXDefineSeg
+        C-X I           CntrlXInsertObject
+        C-X G           CntrlXInsertSeg
+        C-X X           DefineRegionAsObject
+
+Commands for Querying Object and Segment Data
+        C-X D           CntrlXObjectDesc
+        C-X F           CntrlXSegDesc
+        M-O             MetaEvalObjectList
+        M-S             MetaEvalSegList
+        
+Macros [currently unimplemented:]
+        C-W             ExecuteMacro
+        C-X (           MakeMacro
+        C-X )           EndMacro
+
+

@@ -1,0 +1,10 @@
+% user LISP init for PASLSP
+
+(PRINT  "User Init Start")
+(DN LIST (AA) AA)
+(SETQ INITFORM!* '(RDEVPR))
+(DF ON (X) (SET (CAR X) T))
+(DF OFF (X) (SET (CAR X) NIL))
+(ON !*RAISE)
+(OFF !*ECHO)
+(PRINT  "User Init End")

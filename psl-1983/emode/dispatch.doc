@@ -1,0 +1,82 @@
+              Notes on Defining Commands and Modes
+                           Cris Perdue
+                             8/9/82
+                      File: pe:dispatch.doc
+
+These notes should be of use to anyone wishing to customize EMODE
+by defining commands (keystrokes) or new modes.  Most of the
+current mode and keystroke definitions are contained in
+PE:DISPCH.SL.  Read it for examples and the keystroke-function
+associations.
+
+define_prefix_character(char, prompt)
+
+Char must be a single character, possibly with Control and/or
+Meta turned on.  This is used for "true prefix characters" such
+as CTRL-X and META-X, not prefixes for obtaining control or meta
+through multiple keystrokes.  Those are defined using
+AddToKeyList and EstablishCurrentMode.
+
+AddToKeyList(listname, char, opr)
+
+Adds a keystroke-operation association to a "key list", whose
+name, an atom, is passed in.  The value of the atom must be the
+actual list.  See the information on CharSequence, below, for the
+format of the chr parameter.  The opr must be a function of no
+arguments.  Its value is ignored.  AddToKeyList may also be used
+to change an association in a keylist.  Three existing lists are
+BasicDispatchList, ReadOnlyTextDispatchList, and
+TextDispatchList.
+
+BasicDispatchList includes commands that do not modify the buffer
+  and do not have to do with manipulating text in any way.
+
+ReadOnlyTextDispatchList contains the commands that have to do
+  with manipulating text, but that do not modify the buffer.
+  This list is for support of read-only buffers.
+
+TextDispatchList contains commands that modify the buffer.
+
+CharSequence([char])
+
+This is a macro analogous to "char".  Where char takes a single
+"character specification", CharSequence takes a sequence.  Both
+char and CharSequence forms may be used in the specification of
+KeyLists.  At present two characters is the maximum sequence, due
+to the implementation of the actual dispatcher used when the user
+types commands to EMODE.
+
+SetKey(char opr)
+
+It is generally a mistake to use this function directly, but it
+is used internally be EstablishCurrentMode to activate a keylist.
+
+Takes a character as produced by "char" or a character sequence
+as produced by "CharSequence" and installs it in the (global)
+command key lookup tables.  The first character of any character
+sequence must be defined as a prefix character.  If the specified
+character is upper case, the corresponding lower case character
+is also defined.
+
+Does not add the definition to any mode, nor permanently to the
+buffer, so use things like AddToKeyList at user level.
+
+MODES
+
+AlterBufferEnv(BufferName, 'ModeEstablishExpressions, Exprs)
+
+Every buffer carries around an environment, which includes a list
+of PSL expressions that set up its current mode.  To change
+modes, alter the ModeEstblishExpressions part of the buffer's
+environment as shown.  The expressions will be evaluated in
+reverse order (first one last) immediately and then whenever the
+mode is "established" with EstablishCurrentMode.  See
+PE:DISPCH.SL for examples of modes, including FundamentalTextMode.
+Expressions of the form (SetKeys <variable>) set up the
+keystroke-operation associations in a keylist.
+
+EstablishCurrentMode()
+
+Activates the current mode with its keylists.  Key definitions
+made by AddToKeyList don't take effect until this is performed
+even if the keylist changed is part of the current mode.

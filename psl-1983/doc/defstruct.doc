@@ -1,0 +1,330 @@
+DEFSTRUCT - "Structure" definition facility.
+--------------------------------------------
+
+Defstruct is similar to the Spice (Common) Lisp/Lisp machine/Maclisp flavor
+of struct definitions, and is expected to be subsumed by the Mode package.
+It is implemented in PSL as a function which builds access macros and fns
+for "typed" vectors, including constructor and alterant macros, a type
+predicate for the structure type, and individual selector/assignment fns
+for the elements.  Defstruct understands a keyword-option oriented
+structure specification.
+
+
+First a few miscellaneous functions on types, before we get into the depths
+of defining Defstructs:
+
+
+DefstructP( NAME:id ): extra-boolean				        expr
+	    ---- --    -------------					---- 
+
+      is a predicate that returns non-NIL (the Defstruct definition) if NAME
+      is a structured type which has been defined using Defstruct, or NIL if
+      it is not.
+
+
+DefstructType( S:struct ): id						expr
+	       - ------    --						----
+
+      returns the type name field of an instance of a structured type, or
+      NIL if S cannot be a defstruct type.
+
+
+SubTypeP( NAME1:id, NAME2:id ): boolean					expr
+      	  ----- --  ----- --    -------					----
+
+      returns true if NAME1 is a structured type which has been !:Include'd in
+      the definition of structured type NAME2, possibly through intermediate
+      structure definitions.  (In other words, the selectors of NAME1 can be
+      applied to NAME2.)
+
+
+
+Now the function which defines the beasties, in all its gory glory:
+
+Defstruct( name-and-options:{id,list}, [slot-descs:{id,list}] ): id    fexpr
+	   ----------------  -- ----    ----------  -- ----	 --    -----
+
+      Defines a record-structure data type.  A general call to defstruct
+      looks like this: (in Rlisp syntax)
+
+	    defstruct( struct-name( option-1, option-2, ... ),
+		       slot-description-1,
+		       slot-description-2,
+		       ...
+		     );	    % (The name of the defined structure is returned.)
+
+      where slot-descriptions are:
+
+	    slot-name( default-init, slot-option-1, slot-option-2, ... )
+
+      Struct-name and slot-name are id's.  If there are no options following
+      a name in a spec, it can be a bare id with no option argument list.
+      The default-init form is optional and may be omitted.  The default-init
+      form is evaluated EACH TIME a structure is to be constructed and the
+      value is used as the initial value of the slot.  Options are either a
+      keyword id, or the keyword followed by its argument list.  Options are
+      described below.
+
+      A call to a Constructor macro has the form:
+
+	    MakeThing( slot-name-1( value-expr-1 ),
+		       slot-name-2( value-expr-2 ),
+		       ... );
+
+      where the slot-name:value lists override the default-init values
+      which were part of the structure definition.  Note that the
+      slot-names look like unary functions of the value, so the parens can
+      be left off.  A call to MakeThing with no arguments of course takes
+      all of the default values.  The order of evaluation of the
+      default-init forms and the list of assigned values is undefined, so
+      code should not depend upon the ordering.
+
+		Implementors Note: Common/LispMachine Lisps define it this
+		way, but Is this necessary?  It wouldn't be too tough to
+		make the order be the same as the struct defn, or the
+		argument order in the constructor call.  Maybe they think
+		such things should not be advertized and thus constrained
+		in the future.  Or perhaps the theory is that constucts
+		such as this can be compiled more efficiently if the
+		ordering is flexible??  Also, should the overridden
+		default-init forms be evaluated or not?  I think not.
+
+      The Alterant macro calls have a similar form:
+
+	    AlterThing( thing,
+			slot-name-1 value-expr-1,
+		        slot-name-2 value-expr-2,
+		        ... );
+
+      where the first argument evaluates to the struct to be altered.  (The
+      optional parens were left off here.)  This is just a
+      multiple-assignment form, which eventually goes through the slot
+      depositors.  Remember that the slot-names are used, not the depositor
+      names.  (See !:Prefix, below.)  The altered structure instance
+      is returned as the value of an Alterant macro.
+
+		Implementators note:  Common/LispMachine Lisp defines this
+		such that all of the slots are altered in parallel AFTER
+		the new value forms are evaluated, but still with the order
+		of evaluation of the forms undefined.  This seemed to lose
+		more than it gained, but arguments for its worth will be
+		entertained. 
+
+  Options:
+      Structure options appear as an argument list to the struct-name.  Many
+      of the options themselves take argument lists, which are sometimes
+      optional.  Option id's all start with a colon (!:), on the theory that
+      this distinguishes them from other things.
+
+      By default, the names of the constructor, alterant and predicate
+      macros are MakeName, AlterName and NameP, where "Name" is the
+      struct-name.  The !:Constructor, !:Alterant, and !:Predicate options
+      can be used to override the default names.  Their argument is the
+      name to use, and a name of NIL causes the respective macro not to be
+      defined at all.
+
+      The !:Creator option causes a different form of constructor to be
+      defined, in addition to the regular "Make" constructor (which can be
+      suppressed.)  As in the !:Constructor option above, an argument
+      supplies the name fo the macro, but the default name in this case is
+      CreateName.  A call to a Creator macro has the form:
+
+	    CreateThing( slot-value-1, slot-value-2, ... );
+
+      where ALL of the slot-values of the structure MUST BE PRESENT, in the
+      order they appear in the structure definition.  No checking is done,
+      other than assuring that the number of values is the same as the
+      number of slots.  For obvous reasons, constructors of this form ARE
+      NOT RECOMMENDED for structures with many fields, or which may be
+      expanded or modified.
+
+      Slot selector macros may appear on either the LHS or the RHS of an
+      assignment.  They are by default named the same as the slot-names,
+      but can be given a common prefix by the !:Prefix option.  If
+      !:Prefix does not have an argument, the structure name is the
+      prefix.  If there is an argument, it should be a string or an id
+      whose printname is the prefix.
+
+      The !:Include option allows building a new structure definition as an
+      extension of an old one.  The required argument is the name of a
+      previously defined structure type.  The access functions for the
+      slots of the source type will also work on instances of the new type.
+      This can be used to build hierarchies of types, where the source
+      types contain generic information in common to the more specific
+      subtypes which !:Include them.  
+
+      The !:IncludeInit option takes an argument list of
+      "slot-name(default-init)" pairs, like slot-descriptors without
+      slot-options, and files them away to modify the default-init values for
+      fields inherited as part of the !:Include'd structure type.
+
+
+  Slot Options:
+
+      Slot-options include the !:Type option, which has an argument
+      declaring the type of the slot as a type id or list of permissible
+      type id's.  This is not enforced now, but anticipates the Mode system
+      structures.
+
+      The !:UserGet and !:UserPut slot-options allow overriding the simple
+      vector reference and assignment semantics of the generated selector
+      macros with user-defined functions.  The !:UserGet fn name is a
+      combination of the slot-name and a !:Prefix if applicable.  The
+      !:UserPut fn name is the same, with "Put" prefixed.  One application
+      of this capability is building depositors which handle the
+      incremental maintenance of parallel datastructures as a side effect,
+      such as automatically maintaining display file representations of
+      objects which are resident in a remote display processor in parallel
+      with modifications to the Lisp structures which describe the objects.
+      The Make and Create macros bypass the depositors, while Alter uses them.
+
+
+  A simple example:  (Input lines have a "> " prompt at the beginning.)
+
+      > % (Do definitions twice to see what functions were defined.)
+      > macro procedure TWICE u; list( 'PROGN, second u, second u );
+      TWICE
+
+      > % A definition of Complex, structure with Real and Imaginary parts.
+      > % Redefine to see what functions were defined.  Give 0 Init values.
+      > TWICE
+      > Defstruct( Complex( !:Creator(Complex) ), R(0), I(0) );
+      *** Function `MAKECOMPLEX' has been redefined
+      *** Function `ALTERCOMPLEX' has been redefined
+      *** Function `COMPLEXP' has been redefined
+      *** Function `COMPLEX' has been redefined
+      *** Function `R' has been redefined
+      *** Function `PUTR' has been redefined
+      *** Function `I' has been redefined
+      *** Function `PUTI' has been redefined
+      *** Defstruct `COMPLEX' has been redefined
+      COMPLEX
+
+
+      > C0 := MakeComplex();                % Constructor with default inits.
+      [COMPLEX 0 0]
+
+      > ComplexP C0;                        % Predicate.
+      T
+
+      > C1:=MakeComplex( R 1, I 2 );   % Constructor with named values.
+      [COMPLEX 1 2]
+
+      > R(C1); I(C1);                  % Named selectors.
+      1
+      2
+
+      > C2:=Complex(3,4)	       % Creator with positional values.
+      [COMPLEX 3 4]
+
+      > AlterComplex( C1, R(2), I(3) );     % Alterant with named values.
+      [COMPLEX 2 3]
+
+      > C1;
+      [COMPLEX 2 3]
+
+      > R(C1):=5; I(C1):=6;	       % Named depositors.
+      5
+      6
+
+      > C1;
+      [COMPLEX 5 6]
+
+      > % Show use of Include Option.  (Again, redef to show fns defined.)
+      > TWICE
+      > Defstruct( MoreComplex( !:Include(Complex) ), Z(99) );
+      *** Function `MAKEMORECOMPLEX' has been redefined
+      *** Function `ALTERMORECOMPLEX' has been redefined
+      *** Function `MORECOMPLEXP' has been redefined
+      *** Function `Z' has been redefined
+      *** Function `PUTZ' has been redefined
+      *** Defstruct `MORECOMPLEX' has been redefined
+      MORECOMPLEX
+
+
+      > M0 := MakeMoreComplex();
+      [MORECOMPLEX 0 0 99]
+
+      > M1 := MakeMoreComplex( R 1, I 2, Z 3 );
+      [MORECOMPLEX 1 2 3]
+
+      > R C1;
+      5
+
+      > R M1;
+      1
+
+      > % A more complicated example: The structures which are used in the
+      > % Defstruct facility to represent defstructs.  (The EX prefix has
+      > % been added to the names to protect the innocent...)
+      > TWICE				% Redef to show fns generated.
+      > Defstruct(
+      >     EXDefstructDescriptor( !:Prefix(EXDsDesc), !:Creator ),
+      >            DsSize(      !:Type int ),   % (Upper Bound of vector.)
+      >            Prefix(      !:Type string ),
+      >            SlotAlist(   !:Type alist ), % (Cdrs are SlotDescriptors.)
+      >            ConsName(    !:Type fnId ),
+      >            AltrName(    !:Type fnId ),
+      >            PredName(    !:Type fnId ),
+      >            CreateName(  !:Type fnId ),
+      >            Include(     !:Type typeid ),
+      >            InclInit(    !:Type alist )
+      > );
+      *** Function `MAKEEXDEFSTRUCTDESCRIPTOR' has been redefined
+      *** Function `ALTEREXDEFSTRUCTDESCRIPTOR' has been redefined
+      *** Function `EXDEFSTRUCTDESCRIPTORP' has been redefined
+      *** Function `CREATEEXDEFSTRUCTDESCRIPTOR' has been redefined
+      *** Function `EXDSDESCDSSIZE' has been redefined
+      *** Function `PUTEXDSDESCDSSIZE' has been redefined
+      *** Function `EXDSDESCPREFIX' has been redefined
+      *** Function `PUTEXDSDESCPREFIX' has been redefined
+      *** Function `EXDSDESCSLOTALIST' has been redefined
+      *** Function `PUTEXDSDESCSLOTALIST' has been redefined
+      *** Function `EXDSDESCCONSNAME' has been redefined
+      *** Function `PUTEXDSDESCCONSNAME' has been redefined
+      *** Function `EXDSDESCALTRNAME' has been redefined
+      *** Function `PUTEXDSDESCALTRNAME' has been redefined
+      *** Function `EXDSDESCPREDNAME' has been redefined
+      *** Function `PUTEXDSDESCPREDNAME' has been redefined
+      *** Function `EXDSDESCCREATENAME' has been redefined
+      *** Function `PUTEXDSDESCCREATENAME' has been redefined
+      *** Function `EXDSDESCINCLUDE' has been redefined
+      *** Function `PUTEXDSDESCINCLUDE' has been redefined
+      *** Function `EXDSDESCINCLINIT' has been redefined
+      *** Function `PUTEXDSDESCINCLINIT' has been redefined
+      *** Defstruct `EXDEFSTRUCTDESCRIPTOR' has been redefined
+      EXDEFSTRUCTDESCRIPTOR
+
+
+      > TWICE				% Redef to show fns generated.
+      > Defstruct(
+      >     EXSlotDescriptor( !:Prefix(EXSlotDesc), !:Creator ),
+      >            SlotNum(     !:Type int ),
+      >            InitForm(    !:Type form ),
+      >            SlotFn(      !:Type fnId ),       % Selector/Depositor id.
+      >            SlotType(    !:Type type ),       % Hm...
+      >            UserGet(     !:Type boolean ),
+      >            UserPut(     !:Type boolean )
+      > );
+      *** Function `MAKEEXSLOTDESCRIPTOR' has been redefined
+      *** Function `ALTEREXSLOTDESCRIPTOR' has been redefined
+      *** Function `EXSLOTDESCRIPTORP' has been redefined
+      *** Function `CREATEEXSLOTDESCRIPTOR' has been redefined
+      *** Function `EXSLOTDESCSLOTNUM' has been redefined
+      *** Function `PUTEXSLOTDESCSLOTNUM' has been redefined
+      *** Function `EXSLOTDESCINITFORM' has been redefined
+      *** Function `PUTEXSLOTDESCINITFORM' has been redefined
+      *** Function `EXSLOTDESCSLOTFN' has been redefined
+      *** Function `PUTEXSLOTDESCSLOTFN' has been redefined
+      *** Function `EXSLOTDESCSLOTTYPE' has been redefined
+      *** Function `PUTEXSLOTDESCSLOTTYPE' has been redefined
+      *** Function `EXSLOTDESCUSERGET' has been redefined
+      *** Function `PUTEXSLOTDESCUSERGET' has been redefined
+      *** Function `EXSLOTDESCUSERPUT' has been redefined
+      *** Function `PUTEXSLOTDESCUSERPUT' has been redefined
+      *** Defstruct `EXSLOTDESCRIPTOR' has been redefined
+      EXSLOTDESCRIPTOR
+
+
+      > END;
+      NIL

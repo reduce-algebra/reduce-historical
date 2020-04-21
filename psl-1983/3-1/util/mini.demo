@@ -1,0 +1,24 @@
+% ----- A simple DEMO of MINI -------
+%       Use after IN "/utah/psl/mini.build"
+
+MINI 'ROOT;                         % starts the mini parser generator
+ 
+ROOT: STMT* / 'QUIT ;         % Define ROOT
+
+STMT: ID '= EXP @; +(SETQ #2  #1) 
+      .(PRINT #1)  .(NEXT!-TOK) ;    % Define STMT
+
+EXP:  TERM < '+ EXP +(PLUS #2 #1) /  
+             '- EXP +(DIFFERENCE #2 #1)>;
+
+TERM: NUM / ID /  '( EXP ') ;
+
+FIN
+
+% To run it, use
+
+% INVOKE 'ROOT;
+
+
+END;
+

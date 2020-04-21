@@ -1,0 +1,41 @@
+	radix 10
+	extern SYMNAM
+	extern SYMVAL
+	extern SYMFNC
+	extern SYMPRP
+	extern L0001
+	extern L0002
+	extern L0003
+	extern BPS
+	extern HEAP
+	extern HEAP2
+L1080:	HEAP+0
+	intern L1080
+L1081:	HEAP+0
+	intern L1081
+L1082:	HEAP+262000
+	intern L1082
+L1083:	0
+	intern L1083
+L1084:	HEAP2+0
+	intern L1084
+L1085:	HEAP2+262000
+	intern L1085
+L1086:	HEAP+262000
+	intern L1086
+L1087:	HEAP2+262000
+	intern L1087
+L1088:	0
+	intern L1088
+	extern L1110
+	extern L1111
+	extern L1254
+	extern L1255
+	extern L1256
+L1257:	0
+	intern L1257
+L1258:	0
+	intern L1258
+L1259:	0
+	intern L1259
+	end

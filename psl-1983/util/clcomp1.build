@@ -1,0 +1,5 @@
+CompileTime <<
+load Useful, Common;
+off UserMode;
+>>;
+in "clcomp1.sl"$

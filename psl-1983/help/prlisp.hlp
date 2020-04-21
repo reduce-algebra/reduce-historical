@@ -1,0 +1,339 @@
+PRLISP.HLP
+---------- 
+Picture RLISP is an Algol-like graphics language, for Teleray, HP2648a
+and Tektronix, in which graphics Model primitives are combined into
+complete Models for display.  It is a loadable option (Load PRLISP).
+Model primitives include:
+
+P:={x,y,z};             A point  (y, and z may be omitted, default to 0)
+
+PS:=P1_ P2_ ... Pn;      A Point Set is an ordered set of Points (Polygon)
+
+G := PS1 & PS2 & ... PSn; A Group of Polygons.
+
+Point Set Modifiers alter the interpretation of Point Sets within their scope. 
+
+BEZIER() causes the point-set to be interpreted as the specification points
+  for a BEZIER curve, open pointset.
+BSPLINE() does the same for a Bspline curve, closed pointset
+
+TRANSFORMS: Mostly return a transformation matrix
+
+Translation:  Move the specified amount along the  specified axis.
+  XMOVE (deltaX) ; YMOVE (deltaY) ; ZMOVE (deltaZ)
+  MOVE (deltaX, deltaY, deltaZ)
+
+Scale : Scale the Model SCALE (factor)
+ XSCALE (factor) ; YSCALE (factor) ; ZSCALE (factor)
+ SCALE1 (x.scale.factor, y.scale.factor, z.scale.factor)
+ SCALE <Scale factor>.  Scale along all axes.
+
+Rotation: 
+ ROT (degrees) ; ROT (degrees, point.specifying.axis)
+ XROT (degrees) ; YROT (degrees) ; ZROT (degrees)
+
+Window (z.eye,z.screen):
+ The WINDOW primitives assume that the viewer is located along the z
+ axis looking in the positive z direction, and that the viewing window is to
+ be centered on both the x and y axis.
+
+Vwport(leftclip,rightclip,topclip,bottomclip):
+ The VWPORT, which specifies the region of the screen which is used for
+ display.
+
+REPEATED (number.of.times, my.transform),
+ The section of the Model which is contained within the scope of the Repeat
+ Specification is replicated.  Note that REPEATED is intended to duplicate a
+ sub-image in several different places on the screen; it was not designed
+ for animation.
+
+Identifiers of other Models,
+ the Model referenced is
+ displayed as if it were part of the current Model for dynamic display.
+
+Calls to PictureRLISP Procedures
+ This Model primitive allows procedure calls to be imbedded within Models.
+ When the Model interpreter reaches the procedure identifier it calls it,
+ passing it the portion of the Model below the procedure as an argument.
+ The current transformation matrix and the current pen position are available
+ to such procedures as the values of the global identifiers
+ GLOBAL!.TRANSFORM and HEREPOINT.
+ If normal procedure call syntax, i.e. proc.name@ (parameters), is used
+ then the procedure is called at Model-building time, but if only the
+ procedure's identifier is used then the procedure is imbedded in the Model.
+
+ERASE()  Clears the screen and leaves the  cursor at the origin.
+
+
+SHOW (pict) Takes a picture and display it on the screen
+
+ESHOW (pict)     Erases the whole screen and display "pict"
+
+HP!.INIT(), TEK!.INIT(), TEL!.INIT()
+         Initializes the operating system's (TOPS-20) view 
+         of the characteristics of HP2648A terminal, TEKTRONIX 4006-1
+         (also ADM-3A with Retrographics board, and Teleray-1061
+
+HP!.BUILDP()  Picture construction on the screen 
+
+For example, the Model
+
+(A _ B _ C  &  {1,2} _ B)  |  XROT (30)  |  'TRAN ;
+
+%
+% PictureRLISP Commands to SHOW lots of Cubes 
+% 
+% Outline is a Point Set defining the 20 by 20 
+%   square which will be part of the Cubeface
+%
+Outline := { 10, 10} _ {-10, 10} _
+          {-10,-10} _ { 10,-10} _ {10, 10};
+
+% Cubeface will also have an Arrow on it
+%
+Arrow := {0,-1} _ {0,2}  &  {-1,1} _ {0,2} _ {1,1};
+
+% We are ready for the Cubeface
+
+Cubeface   :=   (Outline & Arrow)  |  'Tranz;
+
+% Note the use of static clustering to keep objects
+%  meaningful as well as the quoted Cluster
+%  to the as yet undefined transformation Tranz,
+%  which will result in its evaluation being
+%  deferred until SHOW time
+
+% and now define the Cube
+
+Cube   :=   Cubeface   
+        &  Cubeface | XROT (180)  % 180 degrees
+        &  Cubeface | YROT ( 90)
+        &  Cubeface | YROT (-90)
+        &  Cubeface | XROT ( 90)
+        &  Cubeface | XROT (-90);
+% In order to have a more pleasant look at 
+% the picture shown on the screen we magnify
+% cube by 5 times.
+BigCube := Cube | SCALE 5;
+
+% Set up initial Z Transform for each cube face
+%
+Tranz   :=   ZMOVE (10);  % 10 units out
+
+%
+% GLOBAL!.TRANSFORM has been treated as a global variable.
+% GLOBAL!.TRANSFORM should be initialized as a perspective 
+% transformation matrix so that a viewer can have a correct 
+% look at the picture as the viewing location changed.  
+% For instance, it may be set as the desired perspective 
+% with a perspective window centered at the origin and 
+% of screen size 60, and the observer at -300 on the z axis.
+% Currently this has been set as default perspective transformation.
+
+% Now draw cube
+%
+SHOW  BigCube;
+
+%@hinge
+% Draw it again rotated and moved left
+%
+SHOW  (BigCube | XROT 20 | YROT 30 | ZROT 10);
+
+% Dynamically expand the faces out 
+%
+Tranz   :=   ZMOVE 12;
+%
+SHOW  (BigCube | YROT 30 | ZROT 10);
+
+% Now show 5 cubes, each moved further right by 80
+%
+Tranz   :=    ZMOVE 10;
+%
+SHOW (Cube | SCALE 2.5 | XMOVE (-240) | REPEATED(5, XMOVE 80));
+
+%
+% Now try pointset modifier.
+% Given a pointset (polygon) as control points either a BEZIER or a
+% BSPLINE curve can be drawn.
+%
+Cpts := {0,0} _ {70,-60} _ {189,-69} _ {206,33} _ {145,130} _ {48,130}
+       _ {0,84} $
+%
+% Now draw Bezier curve
+% Show the polygon and the Bezier curve
+%
+SHOW (Cpts & Cpts | BEZIER());
+
+% Now draw Bspline curve
+% Show the polygon and the Bspline curve
+%
+SHOW (Cpts & Cpts | BSPLINE());
+
+% Now work on the Circle
+% Given a center position and a radius a circle will be drawn
+%
+SHOW ( {10,10} | CIRCLE(50));
+
+%
+% Define a procedure which returns a model of
+% a Cube when passed the face to be used
+%
+Symbolic Procedure Buildcube;
+ List 'Buildcube;
+% put the name onto the property list
+Put('buildcube, 'pbintrp, 'Dobuildcube); 
+Symbolic Procedure Dobuildcube Face$
+       Face  &  Face | XROT(180)
+             &  Face | YROT(90)
+             &  Face | YROT(-90)
+             &  Face | XROT(90)
+             &  Face | XROT(-90) ;
+% just return the value of the one statement
+
+% Use this procedure to display 2 cubes, with and
+%  without the Arrow - first do it by calling
+%  Buildcube at time the Model is built
+%
+P := Cubeface | Buildcube() | XMOVE(-15) &
+     (Outline | 'Tranz) | Buildcube() | XMOVE 15;
+%
+SHOW (P | SCALE 5);
+
+% Now define a procedure which returns a Model of
+%   a cube when passed the half size parameter
+
+Symbolic Procedure Cubemodel;
+ List 'Cubemodel;
+%put the name onto the property list
+Put('Cubemodel,'Pbintrp, 'Docubemodel);
+Symbolic Procedure Docubemodel  HSize;
+ << if idp HSize then HSize := eval HSize$
+    { HSize,  HSize,  HSize}  _
+    {-HSize,  HSize,  HSize}  _
+    {-HSize, -HSize,  HSize}  _  
+    { HSize, -HSize,  HSize}  _
+    { HSize,  HSize,  HSize}  _  
+    { HSize,  HSize, -HSize}  _
+    {-HSize,  HSize, -HSize}  _  
+    {-HSize, -HSize, -HSize}  _
+    { HSize, -HSize, -HSize}  _  
+    { HSize,  HSize, -HSize}  &
+    {-HSize,  HSize, -HSize}  _  
+    {-HSize,  HSize,  HSize}  &
+    {-HSize, -HSize, -HSize}  _  
+    {-HSize, -HSize,  HSize}  &
+    { HSize, -HSize, -HSize}  _  
+    { HSize, -HSize,  HSize} >>;
+
+% Imbed the parameterized cube in some Models
+%
+His!.cube :=  'His!.size | Cubemodel();
+Her!.cube :=  'Her!.size | Cubemodel();
+R  :=  His!.cube | XMOVE (60)  &
+      Her!.cube | XMOVE (-60) ;
+
+% Set up some sizes and SHOW them
+
+His!.size := 50;
+Her!.size := 30;
+%
+SHOW   R ;
+
+%
+% Set up some different sizes and SHOW them again
+%
+His!.size := 35;
+Her!.size := 60;
+%
+SHOW R;
+
+%
+% Now show a triangle rotated 45 degree about the z axis.
+Rotatedtriangle  :=  {0,0} _ {50,50} _ 
+                       {100,0} _ {0,0} | Zrot (45);
+%
+SHOW Rotatedtriangle;
+
+%
+% Define a procedure which returns a model of a Pyramid
+% when passed 4 vertices of a pyramid.
+% Procedure Second,Third, Fourth and Fifth are primitive procedures 
+% written in the source program which return the second, the third, 
+% the fourth and the fifth element of a list respectively. 
+% This procedure simply takes 4 points and connects the vertices to
+% show a pyramid.
+Symbolic Procedure Pyramid (Point4); %.point4 is a pointset
+       Point4 & 
+            Third Point4 _ 
+            Fifth Point4 _
+            Second Point4 _
+            Fourth Point4 ;
+
+% Now give a pointset indicating 4 vertices build a pyramid
+% and show it
+%
+My!.vertices := {-40,0} _ {20,-40} _ {90,20} _ {70,100};
+My!.pyramid := Pyramid Vertices;
+%
+SHOW ( My!.pyramid | XROT 30);
+
+%
+%  A procedure that makes a wheel with "count"
+%  spokes rotated around the z axis.
+%  where "count" is the number specified.
+Symbolic Procedure Dowheel(spoke,count)$ 
+    begin scalar rotatedangle$               
+          count := first count$              
+          rotatedangle := 360.0 / count$
+         return (spoke | REPEATED(count, ZROT rotatedangle))
+    end$
+%  
+% Now draw a wheel consisting of 8 cubes
+%
+Cubeonspoke :=  (Outline | ZMOVE 10 | SCALE 2) | buildcube();
+Eight!.cubes := Cubeonspoke | XMOVE 50 | WHEEL(8);
+%
+SHOW Eight!.cubes;
+
+%
+%Draw a cube where each face consists of just
+% a wheel of 8 Outlines
+%
+Flat!.Spoke := outline | XMOVE 25$
+A!.Fancy!.Cube := Flat!.Spoke | WHEEL(8) | ZMOVE 50 | Buildcube()$
+%
+SHOW A!.Fancy!.Cube;
+
+%
+% Redraw the fancy cube, after changing perspective by
+% moving the observer farther out along Z axis
+%
+GLOBAL!.TRANSFORM := WINDOW(-500,60);
+%
+SHOW A!.Fancy!.Cube;
+
+%
+% Note the flexibility resulting from the fact that
+% both Buildcube and Wheel simply take or return any
+% Model as their argument or value
+
+How to Run PictureRLISP on HP2648A and TEKTRONIX 4006-1
+computer display terminal
+
+The current version of PictureRLISP runs on HP2648A graphics terminal and
+TEKTRONIX 4006-1 computer display terminal.  The screen of the HP terminal
+is 720 units long in the X direction, and 360 units high in the Y
+direction.  The coordinate system used in HP terminal places the origin in
+approximately the center of the screen, and uses a domain of -360 to 360
+and a range of -180 to 180.  Similarly, the screen of the TEKTRONIX
+terminal is 1024 units long in the X direction, and 780 units high in the Y
+direction.  The same origin is used but the domain is -512 to 512 in the X
+direction and the range is -390 to 390 in the Y direction.
+
+Procedures HP!.INIT and TEK!.INIT were used to set the terminals to graph
+mode and initiate the lower level procedures on HP and TEKTRONIX terminals
+respectively.  Basically, INIT procedures were written for different
+terminals depending on their specific characteristics.  Using INIT
+procedures keeps terminal device dependence at the user's level to a
+mininum.
+

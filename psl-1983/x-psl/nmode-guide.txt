@@ -1,0 +1,255 @@
+NMODE for EMODE users
+Alan Snyder
+28 October 1982
+-------------------------------------------------------------------------------
+
+NMODE is a new PSL text editor installed at HP.
+
+This note describes the NMODE editor in terms of its differences from EMODE,
+the previous PSL text editor.  NMODE is a new editor that retains much of the
+basic structure and algorithms of EMODE.  However, there are many differences
+between NMODE and EMODE, of interest to both users and experts.
+
+For experts, the differences can be summed up very easily: NMODE is a complete
+rewrite of EMODE.  Virtually no EMODE function or fluid variable is present in
+NMODE.  Thus, any code that interacts with the insides of EMODE must be
+rewritten to run in NMODE.  Even code to define new function keys must be
+changed.  In many cases, it is only necessary to change function names.
+However, code that accesses EMODE fluid variables probably requires greater
+revision, since many EMODE fluid variables have no counterparts in NMODE.  In
+particular, there are no fluid variables containing information about the
+current buffer or the current window.  Information describing how to customize
+NMODE by redefining keys or defining new commands may be found in the file
+"PSL:NMODE-CUSTOMIZING.TXT".
+
+For users, the differences between NMODE and EMODE can be divided into a number
+of categories:
+
+  * New Lisp Interaction
+  * Incompatible Changes
+  * Limitations
+  * Extension of existing commands to conform to EMACS
+  * New EMACS commands implemented
+  * Bug Fixes
+  * Miscellaneous Improvements
+
+These categories are described below:
+
+-------------------------------------------------------------------------------
+* New Lisp Interaction
+
+NMODE provides a new set of editor commands for executing forms from a buffer
+and interacting with the Break Handler.  These commands use a new prefix
+character, C-], which echoes as "Lisp-".  In the remainder of this document,
+the notation "Lisp-X" will be used to refer to the command sequence C-] X
+(where X is an arbitrary character).  The "Lisp-" commands are available only
+in Lisp Mode.
+
+Three "Lisp-" commands are always available in Lisp mode:
+
+  Lisp-E executes a form in the current buffer beginning at the start of the
+current line.  (This command was invoked as M-E in EMODE.)  Output produced by
+the execution of a Lisp form is written to an output buffer (called "OUTPUT" in
+NMODE), which will pop up automatically in the "other" window if it is not
+exposed when output occurs.  As in EMODE, this automatic pop-up can be
+suppressed by setting the global variable *OutWindow to NIL; however, in NMODE,
+this flag will be ignored when a Break occurs.  In NMODE, output is always
+written at the END of the output buffer, even if the input is coming from the
+same buffer.  Thus, when you execute a form from the output buffer, the cursor
+will jump to the end of the buffer when the output is printed.  However, the
+mark is set at the point where you did the Lisp-E, so you can get back using
+C-X C-X.
+
+  Lisp-Y will yank the output from the previous Lisp-E into the current buffer.
+(This command was invoked as C-M-Y in EMODE.)  The output is obtained from the
+output buffer.  Only the starting and ending positions of the last output text
+are saved, so that if the output buffer has been modified, Lisp-Y may get the
+wrong text.
+
+  Lisp-L will transfer to a "normal" PSL Lisp Listener.  (This command was
+invoked as C-M-Z in EMODE.)  To return to NMODE, evaluate the form (NMODE).
+
+In NMODE, the Lisp prompt is displayed as part of the window label when the
+OUTPUT buffer is displayed, as opposed to permanently reserving a separate line
+on the screen for the Lisp prompt as EMODE does.
+
+NMODE does not use a break menu.  However, NMODE does provide a set of special
+commands that can be used when a Lisp evaluation has entered a break loop.
+These commands are:
+
+	Lisp-B: print a backtrace
+	Lisp-Q: quit out of current break loop
+	Lisp-A: abort to top-level (restarts NMODE)
+	Lisp-R: retry (from a continuable error)
+		(existing ErrorForm is re-evaluated)
+	Lisp-C: continue (from a continuable error)
+		(value of the last form executed is used for the value)
+	Lisp-?: Brief help on above commands.
+
+Lisp-C is used to return a new value as the result value of the offending form
+(in the case of a continuable error).  The value is specified by executing a
+form using Lisp-E; Lisp-C then "returns" the most recent result of execution.
+
+Lisp-B by itself prints the normal backtrace.  C-U Lisp-B will in addition
+print the names of "interpreter" functions, such as COND and PROG.  C-U C-U
+Lisp-B will print a verbose backtrace that displays the entire contents of the
+stack.
+
+The PSL function YesP has been redefined in NMODE to use NMODE prompted string
+input.  It requires that the user type "Yes" or "No".
+
+-------------------------------------------------------------------------------
+* Incompatible Changes
+
+A number of existing EMODE functions are performed using different commands
+in NMODE, leaving their original commands either undefined or doing something
+different.  These are:
+
+C-X C-R (Visit File): now C-X C-V (to conform with EMACS)
+M-E (Execute Form): now Lisp-E (typed as: C-] E)
+C-M-Y (Yank Last Output): now Lisp-Y (typed as: C-] Y)
+C-M-Z (Exit NMode): now Lisp-L (typed as: C-] L)
+C-X 2 (View Two Windows): now C-X 3 (to conform with EMACS)
+C-M-O (Forward Up List): now C-M-) (same as EMACS)
+
+-------------------------------------------------------------------------------
+* Limitations
+
+There are limitations imposed by NMODE that are not present in EMODE:
+
+* Currently, NMODE can be used only with HP terminals and with the 9836
+  running an extended VT52 emulator (the extensions are to support display
+  enhancements).
+
+* Currently, NMODE runs only on TOPS-20.
+
+-------------------------------------------------------------------------------
+* Extension of existing commands to conform to EMACS
+
+A large number of existing EMODE commands have been extended in NMODE to
+conform either exactly or more closely to the EMACS definitions.  Many of these
+changes relate to the use of command arguments (specified by C-U).  In EMODE,
+C-U simply defines a positive repetition count and repetitively executes the
+definition of the following command character.  In NMODE, C-U works as in
+EMACS: it can accept either a positive or negative argument, which is
+interpreted in arbitrary ways by the following command.
+
+The following EMODE commands have been extended in notable ways:
+
+C-@		With an argument, pops a ring of marks (which is per-buffer).
+C-K		Is unaffected by trailing white space at the end of the line.
+C-L		Now repositions the current window.  Accepts C-U argument.
+C-N and C-P	Now remember the "goal column".
+C-V and M-V	Scroll by lines or screenfuls, according to C-U argument.
+C-X 1		With an argument, expands the bottom window instead of the top.
+C-X 2		Now makes the bottom window current (use C-X 3 for top window).
+C-X C-S		Now won't save an unmodified buffer.
+C-X C-V		Now offers to save a modified buffer.
+C-X D		Obeys command argument (without arg, uses current directory).
+C-X K		Now asks for the name of the buffer to kill.
+C-X O		Now works even in 1-window mode.
+M-< and M->	Now set the mark.
+Return		Now will move "into" a region of blank lines.
+
+-------------------------------------------------------------------------------
+* New EMACS commands implemented
+
+The following EMACS commands are newly implemented in NMODE:
+
+BackSpace	Move Backward Character
+C-%		Replace String
+C-<		Mark Beginning
+C->		Mark End
+C-G		Aborts commands that request string input
+C-M-(		Backward Up List
+C-M-)		Forward Up List
+C-M-O		Split Line
+C-M-R		Reposition Window (for Lisp DEFUNs only)
+C-M-Return	Same as M-M
+C-M-T		Transpose Forms
+C-M-Tab		Lisp Tab (also C-M-I)
+C-M-V		Scroll other window
+C-M-W		Append Next Kill
+C-Rubout	Delete Backward Hacking Tabs
+C-Space		Same as C-@
+C-X 3		View Two Windows
+C-X 4		Visit in Other Window (Find File or Select Buffer)
+C-X A		Append to Buffer
+C-X C-N		Set Goal Column
+C-X C-T		Transpose Lines
+C-X G		Get Register
+C-X T		Transpose Regions
+C-X X		Put Register
+C-^		The "control prefix" (used to type things like C-%)
+M-0 thru M-9	Define a numeric argument (also C-0, C-M-0, etc.)
+M-Hyphen	Defines a numeric argument (also C-Hyphen, C-M-Hyphen, etc.)
+M-R		Move to Screen Edge
+M-Return	Same as M-M
+M-T		Transpose Words
+M-Tab		inserts a "Tab" (also M-I)
+M-~		Buffer Not Modified
+
+-------------------------------------------------------------------------------
+* Bug Fixes
+
+In the process of writing NMODE, a number of bugs in EMODE were fixed.
+These include:
+
+* M-Y has been made "safe".  It checks that the contents of the region equal
+  the contents of the current kill buffer before killing the region.
+* Dired SORT commands no longer throw away all user-specified changes.
+* The interaction between NMODE and the Lisp Environment is much more
+  robust.  It is much more difficult to get NMODE "screwed up".
+  In NMODE, it is possible to Quit out of an "Unexpected EOF" error.
+* NMODE does not allow the user to select one of its internal buffers.
+* In NMODE, string input can be terminated only by Return or C-G (C-G
+  aborts the command).
+* The M-? command now accepts any syntactically valid command, including
+  character sequences using prefix characters.
+* NMODE will not screw up if the cursor is moved into a part of a line that
+  does not show on the display.
+* The window position indicator ("--68%--") now works reasonably.
+* EMODE always advances to the next line after a M-E; NMODE suppresses
+  this action in two cases where it is spurious: (1) when NMODE is starting
+  up, (2) when the buffer pointer is at the beginning of the line, such as
+  after "executing" a number.
+
+-------------------------------------------------------------------------------
+  * Miscellaneous Improvements
+
+* NMODE supports INIT files.  When first started up, NMODE will execute
+  the file "NMODE.INIT" on the user's home directory, if the file exists.
+  The file should contain a sequence of Lisp forms.
+* Completion of buffer names is implemented in NMODE.  Completion is
+  requested using the Space character.
+* File names now always expand to the full "true" file name (as in EMACS).
+  As a result, Find File will always find a file in an existing buffer if
+  possible, regardless of the exact string typed by the user.  In addition,
+  file names specified by the user now MERGE with the default file name.
+* Find File now creates a reasonable buffer name, instead of using the
+  exact string typed by the user.  The buffer name will not be displayed
+  on the mode line, if it is completely redundant.
+* "Lisp" and "Text" modes are now available; the choice is based on file name.
+  In "Text" mode, the Lisp related commands (both C-M-* and Lisp-*) are
+  undefined, Tab is self-inserting, and Rubout does not "hack tabs".
+* The M-X extended command interface has been implemented.  The following
+  M-X commands are defined: "M-X Lisp Mode" and "M-X Text Mode", which
+  set the mode of the current buffer.
+* Display Refresh is interruptible, allowing faster type-ahead.  Parenthesis
+  matching is also interruptible, which is especially important in the case
+  of inserting an unmatched parenthesis.
+* Prompting has been improved.
+* Horizontal scrolling is supported.  Two new commands, C-X < and C-X >,
+  are provided to scroll the window horizontally.  They accept a C-U argument.
+* The buffer display now shows a '!' at the end of any line that extends
+  past the right edge of the screen.
+* Displaying one buffer in two windows now works reasonably.
+* Each buffer has a modified flag which indicates whether the contents of
+  the buffer have been changed since the buffer was last read or written.
+* The "mode line" now uses inverse video and is much more like EMACS.
+* Display enhancements are supported in a general fashion.  A new command
+  C-X V has been implemented to switch between normal and inverse video.
+* When entering string input, C-R will yank the default string into the input
+  buffer.
+
+-------------------------------------------------------------------------------

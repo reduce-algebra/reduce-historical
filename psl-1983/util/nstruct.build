@@ -1,0 +1,3 @@
+compiletime load clcomp,strings;
+in "nstruct.lsp"$
+in "fast-struct.lsp"$

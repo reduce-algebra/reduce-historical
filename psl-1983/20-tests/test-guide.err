@@ -1,0 +1,5 @@
+@Comment{ErrLog of TEST-GUIDE.MSS.17 by Scribe 3C(1254) on 24 July 1982 at 13:19}
+
+Error in MAINN command found while processing the manuscript.
+TEST-GUIDE.MSS.17 line 287:  @@EX @MAINn.CMD
+The name @MAINN is not defined in document type article.

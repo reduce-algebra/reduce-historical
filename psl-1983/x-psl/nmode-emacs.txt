@@ -1,0 +1,207 @@
+NMODE for EMACS users - A quick comparison 
+Alan Snyder (2 February 1983)
+--------------------------------------------------------------------------------
+Introduction
+
+If you are familiar with EMACS on the Dec-20, then you should have little
+trouble using NMODE, since NMODE is largely compatible with EMACS.  If you are
+using an HP terminal or the 9836 VT52 emulator, then you can use the cursor
+keys and other special function keys with NMODE.  There are some differences
+between NMODE and EMACS, and these are described below.  What you are most
+likely to find is that there are some EMACS commands that have not (yet) been
+implemented in NMODE; section I below lists the most significant of these.  (We
+are not promising to implement all EMACS commands, but if there is some command
+you just can't live without, let us know, or volunteer to implement it
+yourself!)  Section II describes areas of inconsistency between NMODE and
+EMACS; some of these are deficiencies in NMODE that may someday be fixed,
+others are regarded as features of NMODE, and others are just plain differences
+which are not likely to go away.  Section III lists other known deficiencies in
+NMODE, many of which we hope to fix.  Section IV summarizes those features of
+NMODE that EMACS doesn't have.
+
+--------------------------------------------------------------------------------
+I. Things that EMACS has that NMODE doesn't (an incomplete list)
+
+* Auto Save
+* Help Character (C-_)
+* Many 'options' variables (NMODE has almost none)
+* Most Minor Modes, including:
+   Word Abbrev Mode
+   Auto Arg Mode
+   Atom Word Mode
+   Overwrite Mode
+   Indent Tabs Mode
+* The Tags Package
+   M-. (find tag)
+   M-X Visit Tag Table
+   M-X Tags Search
+* Local Modes specification in files
+* Syntax Table
+* Miscellaneous commands:
+   C-M-G (grind form)
+   M-= (count lines region)
+   C-M-Z (exit recursive edit)
+   M-Esc (Execute Minibuffer)
+   C-X Esc (ReExecute Minibuffer)
+* Mail Commands:
+   C-X M (Send Mail)
+   C-X R (Read Mail)
+   M-X Check Mail
+* Comment commands:
+   C-; (indent for comment)
+   C-M-; (kill comment)
+   Return (skip trailing comment terminator)
+   C-X ; (set comment column)
+   M-N (down comment line)
+   M-P (up comment line)
+   M-J or M-Linefeed (indent new comment line)
+* Indentation commands:
+   C-X Tab (indent rigidly)
+* Text-Processor commands:
+   M-# (change font word)
+   M-_ (underline word)
+   C-X # (change font region)
+   C-X _ (underline region)
+* File commands:
+   C-X C-D (directory display)
+   C-X C-Q (set file read only)
+   M-X Clean Directory
+   M-X Copy File
+   M-X List Files
+   M-X Reap File
+   M-X Rename File
+   M-X View Directory
+   M-X View File
+* Page commands:
+   C-X [ (previous page)
+   C-X ] (next page)
+   C-X L (count lines page)
+   C-X C-P (mark page)
+   M-X What Page
+* Many M-X commands, including:
+   M-X Compare Windows
+   M-X List Matching Lines
+   M-X Occur
+   M-X Tabify
+   M-X Untabify
+   M-X View Buffer
+* Keyboard macros
+   C-X (
+   C-X )
+   C-X E
+   C-X Q
+   M-X Name Kbd Macro
+   M-X Write Kbd Macro
+* Command Libraries
+   M-X Kill Libraries
+   M-X List Library
+   M-X List Loaded Libraries
+   M-X Load Library
+   M-X Run Library
+* Spelling Correction (M-$)
+* Narrowing:
+   C-X N (Narrow Bounds to Region)
+   C-X P (Narrow Bounds to Page)
+   C-X W (Widen Bounds)
+
+--------------------------------------------------------------------------------
+II. Inconsistencies between NMODE and EMACS
+
+  A. NMODE Features
+
+* NMODE DIRED 'E' and 'V' commands allow editing of the file.  These commands
+  do not use "recursive editing": arbitrary switching between buffers and
+  windows is allowed; C-M-L returns to the previous buffer (not C-M-Z).
+* NMODE has a separate ring of marks for each buffer.
+* NMODE C-X C-B brings up a buffer browser, instead of just listing the buffers.
+* NMODE's Lisp parsing commands recognize comments, string literals,
+  character literals, etc.  For this reason, the commands C-M-N (Forward
+  List) and C-M-P (Backward List) are not really needed, although they
+  are presently still provided.
+* When the fill prefix is non-null, NMODE treats lines not beginning with the
+  fill prefix as delimiting a paragraph (ZMACS does this, too).  EMACS will
+  treat a single preceding line without the fill prefix as the first line of the
+  paragraph and will insert the prefix onto that line when you do M-Q.
+* NMODE's incremental search allows you to rubout the old search string
+  (inserted by an immediate C-S or C-R) one character at a time, instead of
+  all at once (like EMACS).
+
+  B. NMODE Deficiencies (may be fixed someday)
+
+* NMODE Query-Replace does not alter the case of the replacement string,
+  does not support word search, does not support recursive edit.
+* NMODE does not have a ring buffer of buffers; the default buffer for C-X B
+  may be different than in EMACS.
+* NMODE's incremental search does not escape to a non-incremental search,
+  does not do word searches, always ignores case.
+* No completion on File Name input.
+* NMODE doesn't set the Mode from the first line of a file.
+* In NMODE, M-digit does not enter autoarg mode (i.e., if you then type a
+  digit (without Meta), the digit is inserted.
+* NMODE search commands never set the Mark.
+* NMODE lacks true read-only buffers.
+* NMODE's Dired does not support C, H, or N.  Dired commands do not take
+  a command argument.
+* NMODE's Kill Buffer commands ask for confirmation rather than offering
+  to write out the buffer.
+* NMODE's C-M-Q command does not use the command argument.
+* NMODE's C-X H command does not use the command argument.
+* NMODE's M-< command does not use the command argument.
+* NMODE's M-> command does not use the command argument.
+* NMODE's C-X C-Z command does not save any files.
+* NMODE's M-X Make Space command does not offer to delete buffers, kill
+  rings, etc.
+* NMODE's C-M-R command works only in Lisp mode (it doesn't do paragraphs).
+* NMODE's Return command doesn't delete blanks and tabs when moving onto
+  a new line.
+* NMODE's Return command is not changed in Auto Fill mode.
+* NMODDE's LineFeed command is quite a bit different: (1) it doesn't delete
+  spaces before the inserted CRLF; (2) it doesn't use the fill prefix to
+  indent; (3) it passes the command argument to the Return command, rather
+  than to the Tab command.
+* NMODE's C-X T command doesn't try to readjust the marks.
+* NMODE's C-X 4 command recognizes only B and F as options (not C-B or C-F).
+
+  C. Just Plain Differences
+
+* NMODE customization is completely different than EMACS customization.
+* NMODE M-X commands always prompt for their arguments; Escape is not a
+  terminator for the command name.
+* Find File in NMODE creates a buffer whose name is of the form "foo.bar",
+  rather than "foo".
+* In NMODE, the various Lisp-related commands (C-M-B, etc.) are defined
+  only in Lisp mode.
+* NMODE's "defun" commands don't set the mark.
+* C-M-L means "return to previous buffer" instead of "insert formfeed".
+* C-] is a prefix character (in Lisp mode) instead of meaning "abort".
+* C-X P means "write screen photo" instead of "narrow bounds to page".
+* NMODEs text filling commands compress non-leading tabs into spaces;
+  EMACS leaves them alone.
+
+--------------------------------------------------------------------------------
+III. Known deficiencies of NMODE
+
+* During prompted character input, the cursor remains in the edit window.
+* Printing to the OUTPUT buffer is slow.
+* Quitting out of NMODE to the standard break handler won't restore echoing.
+* NMODE does not provide a good way to interrupt a Lisp-E execution or printout.
+  (The only way is to ^C NMODE and then START it.)
+* "Typeout" is clumsy.
+* If you type ^^x to get C-X, the prompt string is sort of strange.
+
+--------------------------------------------------------------------------------
+IV. Things that NMODE has that EMACS doesn't
+
+* Miscellaneous Commands:
+  M-Z - format comment (automatically sets the fill prefix)
+  C-X V - toggle between normal and inverse-video
+  C-X < - scroll window left
+  C-X > - scroll window right
+  C-X P - write screen photograph to file
+  C-X E - exchange windows
+* Lisp Interface Commands
+* Buffer Browser
+* Split Screen option for Dired (and the Buffer Browser)
+* Two-Screen option (on 9836 with auxiliary color monitor)
+
+-------------------------------------------------------------------------------

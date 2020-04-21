@@ -1,0 +1,566 @@
+PSL Manual                    7 February 1983                    Data Types
+section 4.0                                                        page 4.1
+
+                                 CHAPTER 4                                 CHAPTER 4                                 CHAPTER 4
+                                DATA TYPES                                DATA TYPES                                DATA TYPES
+
+
+
+
+     4.1. Data Types and Structures Supported in PSL  .  .  .  .  .     4.1
+          4.1.1. Data Types.  .  .  .  .  .  .  .  .  .  .  .  .  .     4.1
+          4.1.2. Other Notational Conventions.  .  .  .  .  .  .  .     4.4
+          4.1.3. Structures.  .  .  .  .  .  .  .  .  .  .  .  .  .     4.4
+     4.2. Predicates Useful with Data Types  .  .  .  .  .  .  .  .     4.5
+          4.2.1. Functions for Testing Equality .  .  .  .  .  .  .     4.6
+          4.2.2. Predicates for Testing the Type of an Object  .  .     4.7
+          4.2.3. Boolean Functions  .  .  .  .  .  .  .  .  .  .  .     4.8
+     4.3. Converting Data Types  .  .  .  .  .  .  .  .  .  .  .  .     4.9
+
+
+
+
+4.1. Data Types and Structures Supported in PSL4.1. Data Types and Structures Supported in PSL4.1. Data Types and Structures Supported in PSL
+
+
+4.1.1. Data Types4.1.1. Data Types4.1.1. Data Types
+
+  Data objects in PSL are tagged with their type.  This means that the type
+declarations  required  in many programming languages are not needed.  Some
+functions are "generic" in that the result they return depends on the types
+                                                    ____                ___of the arguments.  A tagged PSL object is called an item,  and  has  a  tag
+                                                     ____field  (9 bits on the DEC-20, 5 bits on the VAX), an info field (18 bits on
+the DEC-20, 27 bits on  the  VAX),  and  possibly  some  bits  for  garbage
+                 ____collection.  The info field is either immediate data or an index or address
+                                               __into some other structure (such as the heap or id space).  For the purposes
+                        ____of  input and output of items, an appropriate notation is used (see Chapter
+12 for  full  details  on  syntax,  restrictions,  etc.).    More  explicit
+implementation details can be found in Chapters 20 and 21.
+
+  The  basic  data  types  supported in PSL and a brief indication of their
+representations are described below.
+
+
+_______           _______integer       The integers are also called "fixed" numbers.  The  magnitude
+                  _______              of  integers  is essentially unrestricted if the "big number"
+                                                                   _______              module, BIG, is loaded (LOAD BIG).  The notation for integers
+              is a sequence of digits in an appropriate radix (radix 10  is
+              the  default, which can be overridden by a radix prefix, such
+              as  2#,  8#,  16#   etc).      There   are   three   internal
+                                       _______              representations    of    integers,   chosen   to   suit   the
+              implementation:
+
+
+              ____               ______              ____    ____              inum      A signed number fitting into info.   Inums  do  not
+                        require  dynamic storage and are represented in theData Types                    7 February 1983                    PSL Manual
+page 4.2                                                        section 4.1
+
+                        same  form as machine integers.  (19 bit [-2^18 ...
+                        2^18 - 1] on the DEC-20, 28 bit on the VAX.)
+              ______           ____        _______              fixnum    A full-word signed integer, allocated in the  heap.
+                        (36  bit on the DEC-20, fitting into a register; 32
+                        bit on the VAX.)  
+
+                          [??? Do we need fixnums, and if yes  how  large                          [??? Do we need fixnums, and if yes  how  large                          [??? Do we need fixnums, and if yes  how  large
+                          ???]                          ???]                          ???]
+
+              ______              _______              bignum    A  signed integer of arbitrary precision, allocated
+                                       _______    ______                        as a vector of integers.  Bignums are currently not
+                        installed by default; to use them, do (LOAD BIG).
+
+
+_____            ________  _____float         A  floating  point  number,  allocated  in  the  heap.    The
+                               _____              precision   of   floats   is   determined   solely   by   the
+              implementation, and is 72-bit double precision on the DEC-20,
+                                                     _____              64-bit on the VAX.  The notation for a float is a sequence of
+              digits with the addition of a single floating point ( . ) and
+              optional exponent  (E  <integer>).    (No  spaces  may  occur
+              between  the  point  and  the  digits).  Radix 10 is used for
+              representing the mantissa and the  exponent  of  dty(floating
+              point) numbers.
+
+__               __________     __        ____id            An identifier (or id) is an item whose info field points to a
+              five-item structure containing the print name, property cell,
+              value  cell, function cell, and package cell.  This structure
+                                                                 __              is contained in the id space.  The notation for an id is  its
+              print  name, an alphanumeric character sequence starting with
+                                                           __              a letter.  One always refers to a particular id by giving its
+              print name.  When presented with an appropriate  print  name,
+                                                   __              the  PSL  reader  will find a unique id to associate with it.
+                                                            __              See Chapters 6 and 12 for more information on ids  and  their
+                                                        __              syntax.  NIL and T are treated as special ids in PSL.
+
+____                            ____pair          A  primitive  two-item  structure  which has a left and right
+                                       ___ ________              part.  A notation called dot-notation is used, with the form:
+              (<left-part> . <right-part>).  The <left-part>  is  known  as
+                  Car                                     Cdr                  Car                                     Cdr              the Car portion and the <right-part> as the Cdr portion.  The
+                               ____              parts may be any item.  (Spaces are used to resolve ambiguity
+                   _____              with floats; see Chapter 12).
+
+______                                           ____      _______vector        A  primitive  uniform structure of items; an integer index is
+              used  to  access  random  values  in  the  structure.     The
+                                         ______        ___ ____              individual  elements  of a vector may be any item.  Access to
+              ______              vectors is by means of  functions  for  indexing,  sub-vector
+              extraction and concatenation, defined in Section 8.3.  In the
+                           ______                     ______              notation for vectors, the elements of a vector are surrounded
+                                   ____   ____       ____              by square brackets: [item-0 item-1 ... item-n].
+
+______                  ______          ______string        A  packed vector (or byte vector) of characters; the elements
+                        _______              are small integers  representing  the  ASCII  codes  for  thePSL Manual                    7 February 1983                    Data Types
+section 4.1                                                        page 4.3
+
+                                   ____              characters  (usually inums).  The elements may be accessed by
+              indexing, substring and concatenation functions,  defined  in
+                              ______              Chapter   8.    String  notation  consists  of  a  series  of
+              characters enclosed in  double  quotes,  as  in  "THIS  IS  A
+              STRING".  A quote is included by doubling it, as in "HE SAID,
+                                      ______              ""LISP""".      (Input  strings  may  cross  the  end-of-line
+              boundary, but a warning is given.)   See  !*EOLINSTRINGOK  in
+              chapter 12.
+
+____ ______      ______                     ____word-vector   A  vector  of  machine-sized  words,  used  to implement such
+                        ______    ______              things as fixnums,  bignums,  etc.    The  elements  are  not
+                                 ____              considered  to  be items, and are not examined by the garbage
+              collector.  
+
+                           ____ ______                           ____ ______                           ____ ______                [???  The  word-vector  could  be   used   to   implement                [???  The  word-vector  could  be   used   to   implement                [???  The  word-vector  could  be   used   to   implement
+                machine-code blocks on some machines. ???]                machine-code blocks on some machines. ???]                machine-code blocks on some machines. ???]
+
+____ ______     ______                         ____ ______Byte-Vector   A vector of bytes.  Internally a byte-vector is the same as a
+              ______              string, but it is printed differently as a vector of integers
+              instead of characters.
+
+________ ______Halfword-Vector
+                ______              A vector of machine-sized halfwords.
+
+____ _______        ____code-pointer  This  item  is  used  to refer to the entry point of compiled
+                         _____  ______  ______                         _____  ______  ______                         _____  ______  ______                         exprs  fexprs  macros                         exprs  fexprs  macros              functions (exprs, fexprs, macros, etc.), permitting  compiled
+              functions to be renamed, passed around anonymously, etc.  New
+                                                             Lap Fasl              ____ _______                                   Lap Fasl              code-pointers  are  created  by  the  loader  (Lap,Fasl)  and
+              associated functions.  They  can  be  printed;  the  printing
+              function  prints  the number of arguments expected as well as
+              the entry point.  The value appears in the convention of  the
+              implementation (#<Code a nnnn> on the DEC-20 and VAX, where a
+              is the number of arguments and nnnn is the entry point).
+
+                                                                        ___                                                                        ___                                                                        ___                                                                       [not___ _______                                                            [notenv-pointer   A  data  type  used  to  support  a  funarg capability.  [not
+              ___________ ___              ___________ ___              ___________ ___              implemented yet]              implemented yet]              implemented yet]
+
+
+4.1.2. Other Notational Conventions4.1.2. Other Notational Conventions4.1.2. Other Notational Conventions
+
+  Certain functional arguments can be any  of  a  number  of  types.    For
+convenience,  we  give  these commonly used sets a name.  We refer to these
+sets as "classes" of primitive data  types.    In  addition  to  the  types
+described  above and the names for classes of types given below, we use the
+following conventions in the manual.  {XXX, YYY} indicates that either data
+type XXX or data type YYY will do.  {XXX}-{YYY} indicates that  any  object
+of  type  XXX  can be used except those of type YYY; in this case, YYY is a
+                              _______   _____subset of XXX.  For example, {integer,  float}  indicates  that  either  an
+_______         _____                 ___   ______integer  or  a  float is acceptable; {any}-{vector} means any type except a
+______vector.Data Types                    7 February 1983                    PSL Manual
+page 4.4                                                        section 4.1
+
+___                                            _ __________any            Any  of  the types given above. S-expression is another term
+                   ___               for any.  All PSL entities have some value unless  an  error
+               occurs during evaluation.
+____                      ___   ____atom           The class {any}-{pair}.
+_______boolean        The  class of global variables {T, NIL}, or their respective
+               values, {T, NIL}.  (See Chapter 6.7).
+_________      _______character      Integers in  the  range  of  0  to  127  representing  ASCII
+               character  codes.   These are distinct from single-character
+               __               ids.
+________                     _______  _____  ______  ______  ____ _______constant       The class of {integer, float, string, vector, code-pointer}.
+                                                                       Eval                 ________                                              Eval               A constant evaluates to itself (see the definition  of  Eval
+               in Chapter 11).
+_____ _______extra-boolean  Any  value  in the system.  Anything that is not NIL has the
+               _______               boolean interpretation T.
+_____                                                                   __ftype          The class of definable function  types.    The  set  of  ids
+                ____  _____  _____  _____                ____  _____  _____  _____                ____  _____  _____  _____                expr  fexpr  macro  nexpr                expr  fexpr  macro  nexpr               {expr, fexpr, macro, nexpr}.
+                    _____                           __________               The  ftype  is  ONLY an attribute of identifiers, and is not
+                                                         ____ _______               associated with either executable  code  (code-pointers)  or
+               ______               lambda expressions.
+__ _______             _______io-channel     A small integer representing an io channel.
+______                       _______  _____number         The class of {integer, float}.
+_ ______                     ______         ______  ______  ____ ______x-vector       Any  kind  of vector; i.e. a string, vector, word-vector, or
+               ____               word.
+_________Undefined      An implementation-dependent value returned by some low-level
+               functions; i.e. the user should not depend on this value.
+____ ________None Returned  A notational convenience used to indicate control  functions
+               that  do not return directly to the calling point, and hence
+                                             Go                                             Go               do not return a value.  (e.g. Go)
+
+
+4.1.3. Structures4.1.3. Structures4.1.3. Structures
+
+                                        ____    ____  Structures are entities created using pairs.  Lists are  structures  very
+                                                        ____commonly  required  as  parameters  to functions.  If a list of homogeneous
+                                                                  ____entities is required by a function, this class is denoted by  xxx-list,  in
+                                                                       ____which  xxx is the name of a class of primitives or structures.  Thus a list
+   __        __ ____    ____    _______        _______ ____of ids is an id-list, a list of integers is an integer-list, and so on.
+
+
+____        ____                                      ____  ___   ____list      A list is recursively defined as NIL or the pair (any . list).  A
+                                  ____ ________                      ____          special notation called list-notation is used to represent lists.
+          List-notation eliminates the extra parentheses and dots  required
+          by   dot-notation,  as  illustrated  below.    List-notation  and
+          dot-notation may be mixed, as  shown  in  the  second  and  third
+          examples.  (See section 3.3.3.)
+
+
+              ____________             _____________              dot-notation             list-notation
+              (a . (b . (c . NIL)))    (a b c)
+              (a . (b . c))            (a b . c)
+              (a . ((b . c) . (d . NIL)))PSL Manual                    7 February 1983                    Data Types
+section 4.1                                                        page 4.5
+
+          Note: () is an alternate input representation of NIL.
+
+_ ____        _ ____      ___________ ____a-list    An  a-list,  or association list, is a list in which each element
+                         Car               ____      Car          is a pair, the Car part being a key associated with the value  in
+              Cdr              Cdr          the Cdr part.
+
+____         ____form      A  form  is  an S-expression (any) which is legally acceptable to
+          Eval          Eval          Eval; that is, it is syntactically and semantically  accepted  by
+          the  interpreter  or  the  compiler.    (See  Chapter 11 for more
+          details.)
+
+______lambda    A lambda  expression  must  have  the  form  (in  list-notation):
+                                                                 __ ____          (LAMBDA  parameters  .    body).    "Parameters" is an id-list of
+                                                    ____          formal parameters for "body", which is a  form  to  be  evaluated
+                               ProgN                               ProgN          (note  the  implicit ProgN).  The semantics of the evaluation are
+                         Eval                         Eval          defined by the Eval function (see chapter 11).
+
+________    ______       ____ _______function  A lambda, or a code-pointer.  A function is always  evaluated  as
+          Eval  Spread          Eval  Spread          Eval, Spread.
+
+
+
+4.2. Predicates Useful with Data Types4.2. Predicates Useful with Data Types4.2. Predicates Useful with Data Types
+
+  Most  functions  in this Section return T if the condition defined is met
+and NIL if it is not.  Exceptions are noted.    Defined  are  type-checking
+functions and elementary comparisons.
+
+
+4.2.1. Functions for Testing Equality4.2.1. Functions for Testing Equality4.2.1. Functions for Testing Equality
+
+  Functions  for  testing  equality  are listed below.  For other functions
+comparing arithmetic values see Chapter 5.
+
+
+ Eq Eq _ ___   _ ___   _______                             ____ ________  ____(Eq U:any   V:any): boolean                             open-compiled, expr
+
+                  _                              _     Returns T if U points to the same object as V, i.e. if  they  are
+                       Eq               ____    Eq    ___     identical items.  Eq is not a reliable comparison between numeric
+     arguments.    This  function  should  only  be  used  in  special
+                                                                Equal                                                                Equal     circumstances.  Normally, equality should be tested  with  Equal,
+     described below.
+
+
+ EqN EqN _ ___   _ ___   _______                                           ____(EqN U:any   V:any): boolean                                           expr
+
+                                 Eq                     _     _     Eq       _     _     Returns  T  if  U and V are Eq or if U and V are numbers and have
+     the same value and type.  
+
+       [??? Should numbers of different type be EqN?  e.g. 0 vs. 0.0       [??? Should numbers of different type be EqN?  e.g. 0 vs. 0.0       [??? Should numbers of different type be EqN?  e.g. 0 vs. 0.0
+       ???]       ???]       ???]Data Types                    7 February 1983                    PSL Manual
+page 4.6                                                        section 4.2
+
+ Equal Equal _ ___   _ ___   _______                                         ____(Equal U:any   V:any): boolean                                         expr
+
+                     _       _                     ____     Returns  T  if  U  and  V  are  the  same.    Pairs  are compared
+                                                         ______     recursively to the bottom levels of their trees.    Vectors  must
+                                       Equal                                       Equal     have  identical  dimensions  and  Equal  values in all positions.
+     ______     Strings must have identical characters, i.e. all characters  must
+                                                     Eq                             ____ _______            Eq     be  of  the same case.  Code-pointers must have Eq values.  Other
+                   Eqn     ____          Eqn     atoms must be Eqn equal.  A usually valid heuristic  is  that  if
+                                                                Print                                                                Print     two  objects  look  the  same if printed with the function Print,
+              Equal                                           Equal              Equal                                     ____  Equal     they are Equal.  If one argument is known to be an atom, Equal is
+                      Eq                      Eq     open-compiled as Eq.
+
+         For example, if
+             (Setq X '(A B C)) and (Setq Y X) have been executed, then
+             (EQ X Y) is T
+             (EQ X '(A B C)) is NIL
+             (EQUAL X '(A B C)) is T
+             (EQ 1 1) is T
+             (EQ 1.0 1.0) is NIL
+             (EQN 1.0 1.0) is T
+             (EQN 1 1.0) is NIL
+             (EQUAL 0 0.0) is NIL
+
+
+ Neq Neq _ ___   _ ___   _______                                          _____(Neq U:any   V:any): boolean                                          macro
+
+      Not  Equal      Not  Equal _ _     (Not (Equal U V)).
+
+
+ Ne Ne _ ___   _ ___   _______                             ____ ________  ____(Ne U:any   V:any): boolean                             open-compiled, expr
+
+      Not  Eq      Not  Eq _ _     (Not (Eq U V)).
+
+
+ EqStr EqStr _ ___   _ ___   _______                                         ____(EqStr U:any   V:any): boolean                                         expr
+
+                 ______     Compare two strings, for exact (Case sensitive)  equality.    For
+     case-INsensitive  equality  one must load the STRINGS module (see
+                    EqStr                          Eq                    EqStr              _     _     Eq        _       _     Section 8.7).  EqStr returns T if U and V are Eq or if  U  and  V
+     are equal strings.
+
+
+ EqCar EqCar _ ___   _ ___   _______                                         ____(EqCar U:any   V:any): boolean                                         expr
+
+                      Eq   Car                      Eq   Car _  _     Tests  whether  (Eq  (Car U) V)).  If the first argument is not a
+           EqCar           EqCar     pair, EqCar returns NIL.PSL Manual                    7 February 1983                    Data Types
+section 4.2                                                        page 4.7
+
+4.2.2. Predicates for Testing the Type of an Object4.2.2. Predicates for Testing the Type of an Object4.2.2. Predicates for Testing the Type of an Object
+
+
+ Atom Atom _ ___   _______                                   ____ ________  ____(Atom U:any): boolean                                   open-compiled, expr
+
+                  _          ____     Returns T if U is not a pair.
+
+
+ CodeP CodeP _ ___   _______                                  ____ ________  ____(CodeP U:any): boolean                                  open-compiled, expr
+
+                  _      ____ _______     Returns T if U is a code-pointer.
+
+
+ ConstantP ConstantP _ ___   _______                                             ____(ConstantP U:any): boolean                                             expr
+
+                  _      ________                     ____        __     Returns T if U is a constant (that is, neither a pair nor an id).
+               ______                 ________     Note that vectors are considered constants.
+
+       [??? Should Eval U Eq U if U is a constant? ???]       [??? Should Eval U Eq U if U is a constant? ???]       [??? Should Eval U Eq U if U is a constant? ???]
+
+
+ FixP FixP _ ___   _______                                   ____ ________  ____(FixP U:any): boolean                                   open-compiled, expr
+
+                     _       _______     Returns  T  if  U is an integer.  If BIG is loaded, this function
+     also returns T for bignums.
+
+
+ FloatP FloatP _ ___   _______                                 ____ ________  ____(FloatP U:any): boolean                                 open-compiled, expr
+
+                  _      _____     Returns T if U is a float.
+
+
+ IdP IdP _ ___   _______                                    ____ ________  ____(IdP U:any): boolean                                    open-compiled, expr
+
+                  _       __     Returns T if U is an id.
+
+
+ Null Null _ ___   _______                                   ____ ________  ____(Null U:any): boolean                                   open-compiled, expr
+
+                                                                  Not                  _                                               Not     Returns T if U is NIL.  This is exactly the same function as Not,
+     defined in Section 4.2.3.  Both are available solely to  increase
+     readability.  
+
+
+ NumberP NumberP _ ___   _______                                ____ ________  ____(NumberP U:any): boolean                                open-compiled, expr
+
+                  _      ______  _______    _____     Returns T if U is a number (integer or float).Data Types                    7 February 1983                    PSL Manual
+page 4.8                                                        section 4.2
+
+ PairP PairP _ ___   _______                                  ____ ________  ____(PairP U:any): boolean                                  open-compiled, expr
+
+                  _      ____     Returns T if U is a pair.
+
+
+ StringP StringP _ ___   _______                                ____ ________  ____(StringP U:any): boolean                                open-compiled, expr
+
+                  _      ______     Returns T if U is a string.
+
+
+ VectorP VectorP _ ___   _______                                ____ ________  ____(VectorP U:any): boolean                                open-compiled, expr
+
+                  _      ______     Returns T if U is a vector.
+
+
+4.2.3. Boolean Functions4.2.3. Boolean Functions4.2.3. Boolean Functions
+
+  Boolean functions return NIL for "false"; anything non-NIL is taken to be
+true,  although a conventional way of representing truth is as T. Note that
+T always evaluates to itself.  NIL may also be represented  as  '().    The
+                  And  Or      Not                  And  Or      NotBoolean functions And, Or, and Not can be applied to any LISP type, and are
+                          And     Or                          And     Ornot  bitwise  functions.  And and Or are frequently used in LISP as control
+structures as well as Boolean connectives (see Section 9.2).  For  example,
+the following two constructs will give the same result:  
+
+   (COND ((AND A B C) D))
+
+   (AND A B C D)
+
+Since  there  is  no  specific  Boolean  type  in LISP and since every LISP
+expression has a value which may be used freely in conditionals,  there  is
+no  hard  and  fast distinction between an arbitrary function and a Boolean
+function.  However, the three functions presented here are by far the  most
+useful in constructing more complex tests from simple predicates.
+
+
+ Not Not _ ___   _______                                    ____ ________  ____(Not U:any): boolean                                    open-compiled, expr
+
+                     _     Returns  T  if  U  is  NIL.  This is exactly the same function as
+     Null     Null     Null, defined in Section 4.2.2.  Both  are  available  solely  to
+     increase readability.
+
+
+ And And  _ ____    _____ _______                          ____ ________  _____(And [U:form]): extra-boolean                          open-compiled, fexpr
+
+     And     And                 _     And  evaluates each U until a value of NIL is found or the end of
+         ____     the list is encountered.  If a non-NIL value is the  last  value,
+                                                            And                                                            And     it  is returned; otherwise NIL is returned.  Note that And called
+     with zero arguments returns T.PSL Manual                    7 February 1983                    Data Types
+section 4.2                                                        page 4.9
+
+ Or Or  _ ____    _____ _______                           ____ ________  _____(Or [U:form]): extra-boolean                           open-compiled, fexpr
+
+     _     U  is  any  number of expressions which are evaluated in order of
+     their appearance.  If one is found to be non-NIL, it is  returned
+                      Or                      Or     as  the value of Or.  If all are NIL, NIL is returned.  Note that
+        Or        Or     if Or is called with zero arguments, it returns NIL.
+
+
+
+4.3. Converting Data Types4.3. Converting Data Types4.3. Converting Data Types
+
+  The following functions are used in converting data items from  one  type
+to  another.    They  are  grouped according to the type returned.  Numeric
+                                               Fix     Float                                               Fix     Floattypes may be converted using functions such as Fix and Float, described  in
+Section 5.2.
+
+
+ Intern Intern _  __ ______    __                                             ____(Intern U:{id,string}): id                                             expr
+
+                                 Intern               ______      __    Intern              __ ____ _____     Converts  string  to  id.   Intern searches the id-hash-table (or
+             __ ____ _____                                          __     current id-hash-table if the package system is loaded) for an  id
+                                       _                     __     with  the  same  print  name  as  U  and  returns  the  id on the
+     __ ____ _____     id-hash-table if a  match  is  found.    (See  Chapter  6  for  a
+                       __ ____ _____     discussion of the id-hash-table. Any properties and GLOBAL values
+                                      _               _     associated  with  the uninterned U are lost.  If U does not match
+                                                       _     any entry, a new one is created and returned.  If U has more than
+     the maximum number of characters permitted by the  implementation
+     (???), an error is signalled:  
+
+     ***** Too many characters to INTERN 
+
+       [??? Rewrite for package system; include search path, global,       [??? Rewrite for package system; include search path, global,       [??? Rewrite for package system; include search path, global,
+       local, intern, etc.  See Chapter 6. ???]       local, intern, etc.  See Chapter 6. ???]       local, intern, etc.  See Chapter 6. ???]
+
+     The maximum number of characters in any token is 5000.
+
+
+ NewId NewId _ ______   __                                                   ____(NewId S:string): id                                                   expr
+
+                                    __               _____ ____     Allocates  a  new  uninterned  id, and sets its print-name to the
+     ______ _       ______    ___     string S.  The string is not copied.
+
+        (Setq New (NewId "NEWONE")) returns  NEWONE
+
+                                             __     Note that if one refers directly to the id NEWONE, it will become
+     interned and a new position in the id space will be allocated  to
+                                          __                        __     it.    One  has  to refer to the new id indirectly through the id
+     New.Data Types                    7 February 1983                    PSL Manual
+page 4.10                                                       section 4.3
+
+ Int2Id Int2Id _ _______   __                                                 ____(Int2Id I:integer): id                                                 expr
+
+                   _______       __                     _    __     Converts  an  integer to an id; this refers to the I'th id in the
+                                                                Int2Id     __                                                         Int2Id     id space.  Since 0 ... 127 correspond to ASCII characters, Int2Id
+     with an argument in this range converts  an  ASCII  code  to  the
+                                    __     corresponding single character id.
+
+        (Int2Id 250)  returns QUOTIENT
+
+
+ Id2Int Id2Int _ __   _______                                                 ____(Id2Int D:id): integer                                                 expr
+
+                 __                   _           _______     Returns the id space position of D as a LISP integer.
+
+        (Id2Int 'String) returns 182
+
+
+ Id2String Id2String _ __   ______                                               ____(Id2String D:id): string                                               expr
+
+                               Id2String             Print                    __         Id2String             Print     Get  name from id space.  Id2String returns the Print name of its
+                   ______     argument as a string.    This  is  not  a  copy,  so  destructive
+                                                            CopyString                                                            CopyString     operations should not be performed on the result.  See CopyString
+     in Chapter 8.  
+
+       [??? Should it be a copy? ???]       [??? Should it be a copy? ???]       [??? Should it be a copy? ???]
+
+        (Id2String 'String)  returns "STRING"
+
+
+ String2List String2List _ ______   ____ ____                                      ____(String2List S:string): inum-list                                      expr
+
+                          Length  Add1  Size                 ____     Length  Add1  Size _     Creates  a  list  of Length (Add1 (Size S)), converting the ASCII
+                           _______     characters into small integers.
+
+       [??? What of 0/1 base for length vs length -1.  What  of  the       [??? What of 0/1 base for length vs length -1.  What  of  the       [??? What of 0/1 base for length vs length -1.  What  of  the
+       NUL char added ???]       NUL char added ???]       NUL char added ???]
+
+        (String2List "STRING")  returns (83 84 82 73 78 71)
+
+
+ List2String List2String _ ____ ____   ______                                      ____(List2String L:inum-list): string                                      expr
+
+                                      Size                   ______             Size    _               ____     Allocates  a  string of the same Size as L, and converts inums to
+                                                    ____     characters according to their ASCII code.  The inums must  be  in
+     the range 0 ... 127.  
+
+       [??? Check if 0 ... 127, and signal error ???]       [??? Check if 0 ... 127, and signal error ???]       [??? Check if 0 ... 127, and signal error ???]
+
+        (List2String '(83 84 82 73 78 71))  returns "STRING"PSL Manual                    7 February 1983                    Data Types
+section 4.3                                                       page 4.11
+
+ String String  _ ____    ______                                             _____(String [I:inum]): string                                             nexpr
+
+                           ______                    ____     Creates and returns a string containing all the inums given.
+
+        (String 83 84 82 73 78 71)  returns "STRING"
+
+
+ Vector Vector  _ ___    ______                                              _____(Vector [U:any]): vector                                              nexpr
+
+                           ______                    _     Creates and returns a vector containing all the Us given.
+
+        (Setq X (Vector 83 84 82 73 78 71))  returns
+         [83 84 82 73 78 71]
+
+
+ Vector2String Vector2String _ ______   ______                                       ____(Vector2String V:vector): string                                       expr
+
+                      _______         ______        ______     Pack  the  small integers in the vector into a string of the same
+     Size     Size            _______     Size, using the integers as ASCII values.
+
+       [??? check for integer in range 0 ... 127 ???]       [??? check for integer in range 0 ... 127 ???]       [??? check for integer in range 0 ... 127 ???]
+
+        (Vector2String X)  where X is defined as above returns
+               "STRING"
+
+
+ String2Vector String2Vector _ ______   ______                                       ____(String2Vector S:string): vector                                       expr
+
+                                                 Size                ______        ______             Size     Unpack the string into a vector of the same Size.   The  elements
+              ______     of  the  vector are small integers, representing the ASCII values
+                          _     of the characters in S.
+
+        (String2Vector "VECTOR") returns [V E C T O R]
+
+
+ Vector2List Vector2List _ ______   ____                                           ____(Vector2List V:vector): list                                           expr
+
+                               Size                Length  Upbv              ____             Size    _           Length  Upbv _     Create a list of the same Size as V (i.e. of  Length  Upbv(V)+1),
+                                              Upbv                                              Upbv _     copying the elements in order 0, 1, ..., Upbv(V).
+
+        (Vector2List [L I S T])  returns (L I S T)
+
+
+ List2Vector List2Vector _ ____   ______                                           ____(List2Vector L:list): vector                                           expr
+
+                                                             Size                              ____        ______             Size     Copy the elements of the list into a vector of the same Size.
+
+        (List2Vector '(V E C T O R)) returns [V E C T O R]

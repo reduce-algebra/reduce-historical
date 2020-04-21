@@ -1,0 +1,1457 @@
+PSL Manual                    7 February 1983                        EDITOR
+section 16.0                                                      page 16.1
+
+                                CHAPTER 16                                CHAPTER 16                                CHAPTER 16
+                                  EDITORS                                  EDITORS                                  EDITORS
+
+
+
+
+     16.1. A Mini-Structure Editor  .  .  .  .  .  .  .  .  .  .  .    16.1
+     16.2. The EMODE Screen Editor  .  .  .  .  .  .  .  .  .  .  .    16.3
+          16.2.1. Windows and Buffers in Emode  .  .  .  .  .  .  .    16.5
+     16.3. Introduction to the Full Structure Editor  .  .  .  .  .    16.6
+     16.4. User Entry to Editor  .  .  .  .  .  .  .  .  .  .  .  .    16.6
+     16.5. Editor Command Reference .  .  .  .  .  .  .  .  .  .  .    16.8
+
+
+
+
+16.1. A Mini Structure-Editor16.1. A Mini Structure-Editor16.1. A Mini Structure-Editor
+
+  PSL  and  RLISP  provide  a fairly simple structure editor, essentially a
+subset   of   the   structure   editor   described   below    in    section
+FULL-STRUCTURE-EDITOR.    This  mini  editor is usually resident in PSL and
+RLISP, or can be LOADed.  It is useful  for  correcting  errors  in  input,
+often  via  the  E  option  in  the  BREAK  loop.  Do HELP(EDITOR) for more
+information.
+
+                                           Edit                                           Edit  To edit an expression, call the function Edit with the expression  as  an
+argument.    The  edited  copy  is  returned.   To edit the definition of a
+               EditF               EditFfunction, call EditF with the function name as an argument.
+
+  In the editor, the  following  commands  are  available  (N  indicates  a
+             _______non-negative integer):
+
+
+PP                                                                      ____P                                                                      edit
+
+     Prints  the subexpression under consideration.  On entry, this is
+     the entire expression.  This  only  prints  down  PLEVEL  levels,
+     replacing  all edited subexpressions by ***.  PLEVEL is initially
+     3.
+
+
+PLPL  _                                                                  ____PL (N)                                                                 edit
+
+                       _     Changes PLEVEL to N.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______N                                                              edit-commandN _______                                                      edit-commandN:integer                                                      edit-command
+
+
+     Sets  the  subexpression  under  consideration  to  be  the   nth
+     subexpression  of the current one.  That is, walk down to the nth
+     subexpression.EDITOR                        7 February 1983                    PSL Manual
+page 16.2                                                      section 16.1
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______-N                                                             edit-command-N _______                                                     edit-command-N:integer                                                     edit-command
+
+
+                                                    Cdr                                                    Cdr     Sets  the  current subexpression to be the nth Cdr of the current
+     one.
+
+
+UPUP                                                                     ____UP                                                                     edit
+
+     Go to the subexpression you were in just before this one.
+
+
+TT                                                                      ____T                                                                      edit
+
+     Go to the top of the original expression.
+
+
+FF  _                                                                   ____F (S)                                                                  edit
+
+                                                   _     Find the first occurrence of the S-expression S.    The  test  is
+                    Equal        Eq                    Equal        Eq     performed  by  Equal,  not  Eq.   The current level is set to the
+                          _     first level in which S was found.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______ N                                                             edit-command N _______                                                     edit-command(N:integer)                                                    edit-command
+
+
+     Delete the Nth element of the current expression.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______ N                                                             edit-command N _______  ___                                                edit-command(N:integer [ARG])                                              edit-command
+
+
+                                ___     Replace the Nth element by ARGs.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______ -N                                                            edit-command -N _______  ___                                               edit-command(-N:integer [ARG])                                             edit-command
+
+
+                         ___     Insert the elements ARGs before the nth element.
+
+
+ R R __ __                                                               ____(R S1 S2)                                                              edit
+
+     Replace all occurrences of S1 (in the tree you are placed at)  by
+     S2.
+
+
+BB                                                                      ____B                                                                      edit
+
+             Break             Break     Enter a Break loop under the editor.PSL Manual                    7 February 1983                        EDITOR
+section 16.1                                                      page 16.3
+
+OKOK                                                                     ____OK                                                                     edit
+
+     Leave the editor, returning the edited expression.
+
+
+HELPHELP                                                                   ____HELP                                                                   edit
+
+     Print an explanatory message.
+
+                                   Break                                   Break  If  the  editor is called from a Break loop, the edited value is assigned
+back to ERRORFORM!*.
+
+
+
+16.2. The EMODE Screen Editor16.2. The EMODE Screen Editor16.2. The EMODE Screen Editor
+
+  EMODE is an EMACS-like screen editor, written entirely in PSL.  To invoke
+EMODE, call the function EMODE after LOADing the EMODE module.    EMODE  is
+modeled after EMACS, so use that fact as a guide.
+
+  After  starting  up  EMODE,  you can use one of the following commands to
+exit.
+
+
+<Ctrl-X Ctrl-Z>
+          "quits" to the EXEC (you can continue or start again).
+<Ctrl-Z Ctrl-Z>
+          goes back into "normal" I/O mode.
+
+
+EMODE is built to run on a Teleray terminal as the default.   To  use  some
+other  terminal  you must LOAD in a set of different driver functions after
+loading EMODE.  The following drivers are currently available:
+
+
+   - HP2648A
+   - TELERAY
+   - VT100
+   - VT52
+   - AAA [Ann Arbor Ambassador]
+
+
+The sources for these files are on <PSL.EMODE>  (logical  name  PE:).    It
+should be quite easy to modify one of these files for other terminals.  See
+the  file  PE:TERMINAL-DRIVERS.TXT  for  some  more information on how this
+works.
+
+  An important (but currently somewhat bug-ridden) feature of EMODE is  the
+ability  to  evaluate expressions that are in your buffer.  Use <Meta-E> to
+evaluate the expression starting on the current line.  <Meta-E>  (normally)
+automatically  enters  two  window  mode  if  anything  is "printed" to the
+OUT_WINDOW buffer, which is shown in the lower window.  If you  don't  wantEDITOR                        7 February 1983                    PSL Manual
+page 16.4                                                      section 16.2
+
+to  see things being printed to the output window, you can set the variable
+!*OUTWINDOW to NIL.  (Or use the RLISP command  "OFF  OUTWINDOW;".)    This
+prevents  EMODE  from automatically going into two window mode if something
+is printed to OUT_WINDOW.  You must still use the "<Ctrl-X> 1"  command  to
+enter one window mode initially.
+
+  You  may  also  find the <Ctrl-Meta-Y> command useful.  This inserts into
+the current buffer the text printed as a result of the last <Meta-E>.
+
+  The function "PrintAllDispatch" prints out the  current  dispatch  table.
+You must call EMODE before this table is set up.
+
+  While  in  EMODE,  the <Meta-?> (meta-question mark) character asks for a
+command character and tries to print information about it.
+
+  The basic dispatch table is (roughly) as follows:
+
+
+Character          Function                Comments
+
+<Ctrl-@>           SETMARK
+<Ctrl-A>           !$BEGINNINGOFLINE
+<Ctrl-B>           !$BACKWARDCHARACTER
+<Ctrl-D>           !$DELETEFORWARDCHARACTER
+<Ctrl-E>           !$ENDOFLINE
+<Ctrl-F>           !$FORWARDCHARACTER
+Linefeed           !$CRLF                  Acts like carriage return
+<Ctrl-K>           KILL_LINE
+<Ctrl-L>           FULLREFRESH
+Return             !$CRLF
+<Ctrl-N>           !$FORWARDLINE
+<Ctrl-O>           OPENLINE
+<Ctrl-P>           !$BACKWARDLINE
+<Ctrl-R>                                   Backward search for string, type
+                                           a carriage return to terminate
+                                           the string
+<Ctrl-S>                                   Forward search for string
+<Ctrl-U>                                   Repeat a command.  Asks for
+                                           count (terminate with a carriage
+                                           return), then it asks for the
+                                           command character
+<Ctrl-V>           DOWNWINDOW
+<Ctrl-W>           KILL_REGION
+<Ctrl-X>           !$DOCNTRLX              As in EMACS, <Ctrl-X> is a
+                                           prefix for "fancier" commands
+<Ctrl-Y>           INSERT_KILL_BUFFER      Yanks back killed text
+<Ctrl-Z>           DOCONTROLMETA           As in EMACS, acts like
+                                           <Ctrl-Meta->
+escape             ESCAPEASMETA            As in EMACS, escape acts like
+                                           the <Meta-> key
+rubout             !$DELETEBACKWARDCHARACTER
+<Ctrl-Meta-B>      BACKWARD_SEXPRPSL Manual                    7 February 1983                        EDITOR
+section 16.2                                                      page 16.5
+
+<Ctrl-Meta-F>      FORWARD_SEXPR
+<Ctrl-Meta-K>      KILL_FORWARD_SEXPR
+<Ctrl-Meta-Y>      INSERT_LAST_EXPRESSION  Insert the last "expression"
+                                           typed as the result of a
+                                           <Meta-E>
+<Ctrl-Meta-Z>      OLDFACE                 Leave EMODE, go back to
+                                           "regular" RLISP
+<Meta-Ctrl-rubout> KILL_BACKWARD_SEXPR
+<Meta-<>           !$BEGINNINGOFBUFFER     As in EMACS, move to beginning
+                                           of  buffer
+<Meta->>           !$ENDOFBUFFER           As in EMACS, move to end of
+                                           buffer
+<Meta-?>           !$HELPDISPATCH          Asks for a character, tries to
+                                           print information about it
+<Meta-B>           BACKWARD_WORD
+<Meta-D>           KILL_FORWARD_WORD
+<Meta-E>                                   Evaluate an expression
+<Meta-V>           UPWINDOW                As in EMACS, move up a window
+<Meta-W>           COPY_REGION
+<Meta-X>           !$DOMETAX               As in EMACS, <Meta-X> is another
+                                           prefix for "fancy" stuff
+<Meta-Y>           UNKILL_PREVIOUS         As in EMACS
+<Meta-Rubout>      KILL_BACKWARD_WORD
+<Ctrl-X> <Ctrl-B>  PRINTBUFFERNAMES        Prints a list of buffers
+<Ctrl-X> <Ctrl-R>  CNTRLXREAD              Read a file into the buffer
+<Ctrl-X> <Ctrl-W>  CNTRLXWRITE             Write the buffer out to a file
+<Ctrl-X> <Ctrl-X>  EXCHANGEPOINTANDMARK
+<Ctrl-X> <Ctrl-Z>                          As in EMACS, exits to the EXEC
+<Ctrl-X> 1         ONEWINDOW               Go into one window mode
+<Ctrl-X> 2         TWOWINDOWS              Go into two window mode
+<Ctrl-X> B         CHOOSEBUFFER            EMODE asks for a buffer name,
+                                           and then puts you in that buffer
+<Ctrl-X> O         OTHERWINDOW             Select other window
+<Ctrl-X> P         WRITESCREENPHOTO        Write a "photograph" of the
+                                           screen to a file
+
+
+16.2.1. Windows and Buffers in Emode16.2.1. Windows and Buffers in Emode16.2.1. Windows and Buffers in Emode
+
+  [??? This section to be completed at a later date. ???]  [??? This section to be completed at a later date. ???]  [??? This section to be completed at a later date. ???]
+
+
+
+16.3. Introduction to the Full Structure Editor16.3. Introduction to the Full Structure Editor16.3. Introduction to the Full Structure Editor
+
+                                                                   1
+  PSL  also  provides  an  extremely  powerful form-oriented editor .  This
+_______________
+
+  1
+   This version of the UCI LISP editor was translated to to  Standard  LISP
+by  Tryg  Ager  and Jim MacDonald of IMSSS, Stanford, and adapted to PSL by
+E. Benson.  The UCI LISP editor is derived from the INTERLISP editor.EDITOR                        7 February 1983                    PSL Manual
+page 16.6                                                      section 16.3
+
+facility  allows  the  user  to easily alter function definitions, variable
+values and property list entries.  It thereby makes it entirely unnecessary
+for the user to employ a conventional text editor  in  the  maintenance  of
+programs.   This document is a guide to using the editor.  Certain features
+of the UCI LISP editor have not been incorporated in the translated editor,
+and we have tried to mark all such differences.
+
+
+16.3.1. Starting the Structure Editor16.3.1. Starting the Structure Editor16.3.1. Starting the Structure Editor
+
+                                                                     EditF                                                                     EditF  This section describes normal user entry to the editor (with  the  EditF,
+EditP       EditVEditP       EditVEditP  and  EditV fuunctions) and the editing commands which are available.
+This section is by no means complete.   In  particular,  material  covering
+programmed  calls  to  the editor routines is not treated.  Consult the UCI
+LISP manual for further details.
+
+  To edit a function named FOO do 
+
+
+*(EDITF FOO)
+
+
+To edit the value of an atom named BAZ do 
+
+
+*(EDITV BAZ)
+
+
+To edit the property list of an atom named FOOBAZ do 
+
+
+*(EDITP FOOBAZ)
+
+
+These functions are described later in the chapter.
+
+  Warning:  Editing the property list of an atom may position  pointers  at
+unprintable  structures.    It  is  best to use the F (find) command before
+trying to print property lists.  This editor capability  is  variable  from
+implementation to implementation.
+
+  The editor prompts with 
+
+
+-E-
+*
+
+
+  You  can  then  input  any editor command.  The input scanner is not very
+smart.  It terminates its  scan  and  begins  processing  when  it  sees  a
+printable  character immediately followed by a carriage return.  Do not use
+escape to terminate  an  editor  command.    If  the  editor  seems  to  bePSL Manual                    7 February 1983                        EDITOR
+section 16.3                                                      page 16.7
+
+repeatedly  requesting  input type P<ret> (print the current expression) or
+some other command that ordinarily does no damage, but terminates the input
+solicitation.
+
+  The following set of topics makes a good "first glance" at the editor.
+
+
+    Entering the editor:  EDITF, EDITV.
+    Leaving the editor:   OK.
+    Editor's attention:   CURRENT-EXP.
+    Changing attention:   POS-INTEGER, NEG-INTEGER, 0, ^, NX, BK.
+    Printing:             P, PP.
+    Modification:         POS-INTEGER, NEG-INTEGER, A, B, :, N.
+    Changing parens:      BI, BO.
+    Undoing changes:      UNDO.
+
+
+For the more discriminating user, the next topics  might  be  some  of  the
+following.
+
+
+Searches:             PATTERN, F, BF.
+Complex commands:     R, SW, XTR, MBD, MOVE.
+Changing parens:      LI, LO, RI, RO.
+Undoing changes:      TEST, UNBLOCK, !UNDO.
+
+
+  Other  features  should  be skimmed but not studied until it appears that
+they may be useful.
+
+
+16.3.2. Structure Editor Commands16.3.2. Structure Editor Commands16.3.2. Structure Editor Commands
+
+  Note that arguments contained in angle brackets <> are optional.
+
+
+AA   ___                                                                ____A ([ARG])                                                              edit
+
+                              ___                                _     This command inserts the ARGs (arbitrary LISP expressions)  After
+                                                                UP                                                                UP     the  current expression.  This is accomplished by doing an UP and
+     a (-2 exp1 exp2 ... expn) or  an  (N  exp1  exp2  ...  expn),  as
+     appropriate.    Note  the  way in which the current expression is
+                    UP                    UP     changed by the UP.
+
+
+BB   ___                                                                ____B ([ARG])                                                              edit
+
+                              ___                          _     This command inserts the ARGs (arbitrary LISP forms)  Before  the
+                                                           UP                                                           UP     current expression.  This is accomplished by doing an UP followed
+     by  a (-1 exp1 exp2 ... expn).  Note the way in which the current
+                                  UP                                  UP     expression is changed by the UP.EDITOR                        7 February 1983                    PSL Manual
+page 16.8                                                      section 16.3
+
+BELOWBELOW  ___   _                                                         ____BELOW (COM, <N>)                                                       edit
+
+     This  command  changes  the  current  expression in the following
+                               ___                     ___     manner.  The edit command COM is executed.    If  COM  is  not  a
+                                  ___     recognized  command, then (_ COM) is executed instead.  Note that
+     ___     COM should cause  ascent  in  the  edit  chain  (i.e.  should  be
+                                                  BELOW                                                  BELOW     equivalent  to  some  number  of  zeros).    BELOW then evaluates
+     (note!) N and descends N links in the resulting edit chain.  That
+         BELOW         BELOW     is, BELOW ascends the edit chain (does repeated 0s)  looking  for
+                           ___     the link specified by COM and stops N links below that (backs off
+     N 0s).  If N is not given, 1 is assumed.
+
+
+BFBF  ___   ___                                                          ____BF (PAT, <FLG>)                                                        edit
+
+     Also can be used as: 
+
+
+     BF PAT
+
+
+                                 _         _                   ___     This  command  performs  a  Backwards Find, searching for PAT (an
+     edit pattern).  Search begins  with  the  expression  immediately
+     before  the  current  expression  and  proceeds  in reverse print
+     order.  (If the current expression is the top  level  expression,
+     the  entire  expression  is  searched  in  reverse  print order.)
+     Search begins at the end of each list,  and  descends  into  each
+     element  before  attempting  to match that element.  If the match
+     fails, proceed to the previous element, etc. until the  front  of
+                                              BF                                              BF     the  list  is  reached.   At that point, BF ascends and backs up,
+     etc.
+
+     The search algorithm may be slightly modified by use of a  second
+                         ___     argument.  Possible FLGs and their meanings are as follows.
+
+
+     T         begins  search  with the current expression rather than
+               with the preceding expression at this level.
+                                    BF                                    BF ___     NIL       or missing - same as BF PAT.
+
+
+     NOTE:  if the variable UPFINDFLG is non-NIL, the editor  does  an
+     UP     UP                                 ___     UP  after  the expression matching PAT is located.  Thus, doing a
+     BF     BF     BF for a function name yields a current expression which  is  the
+     entire  function  call.  If this is not desired, UPFINDFLG may be
+     set to NIL.  UPFINDFLG is initially T. 
+
+     BF     BF     BF is protected from circular searches by the variable  MAXLEVEL.
+                                 Car       Cdr                                 Car       Cdr     If  the  total  number  of  Cars  and Cdrs descended into reaches
+     MAXLEVEL (initially 300), search  of  that  tail  or  element  is
+     abandoned exactly as though a complete search had failed.PSL Manual                    7 February 1983                        EDITOR
+section 16.3                                                      page 16.9
+
+BIBI  __  __                                                             ____BI (N1, N2)                                                            edit
+
+     This  command  inserts  a  pair  of  parentheses  in  the current
+                              _        _     expression; i.e. it is a Balanced Insert.  (Note that parentheses
+     are ALWAYS balanced, and  hence  must  be  added  or  removed  in
+     pairs.)   A left parenthesis is inserted before element N1 of the
+     current expression.    A  right  parenthesis  is  inserted  after
+     element N2 of the current expression.  Both N1 and N2 are usually
+     integers, and element N2 must be to the right of element N1.
+
+     (BI n1) is equivalent to (BI n1 n1).
+
+          NTH          NTH     The  NTH  command is used in the search, so that N1 and N2 may be
+     any location specifications.  The expressions used are the  first
+     element  of the current expression in which the specified form is
+     found at any level.
+
+
+BINDBIND   ___                                                             ____BIND ([COM])                                                           edit
+
+     This command provides the user with temporary variables  for  use
+     during  the  execution  of  the  sequence  of edit commands coms.
+     There are three variables available: #1, #2 and #3.  The  binding
+                        BIND                        BIND     is  recursive  and BIND may be executed recursively if necessary.
+     All variables are initialized to NIL.   This  feature  is  useful
+     chiefly in defining edit macros.
+
+
+BKBK                                                                     ____BK                                                                     edit
+
+     The   current   expression  becomes  the  expression  immediately
+                                                     _     _     preceding the present current expression; i.e.  Back  Up.    This
+     command generates an error if the current expression is the first
+     expression in the list.
+
+
+BOBO  _                                                                  ____BO (N)                                                                 edit
+
+         BO         BO     The BO command removes a pair of parentheses from the Nth element
+                                                 _           _     of  the  current  expression;  i.e. it is a Balanced Remove.  The
+                                             NTH                                             NTH     parameter N is usually an integer.  The NTH command  is  used  in
+     the  search,  however,  so that any location specification may be
+     used.  The expression referred to is the  first  element  of  the
+     current  expression  in  which the specified form is found at any
+     level.
+
+
+ CHANGE CHANGE ___ __  ___                                                    ____(CHANGE LOC To [ARG])                                                  edit
+
+     This command replaces the current expression after executing  the
+                            ___    ___     location specification LOC by ARGs.EDITOR                        7 February 1983                    PSL Manual
+page 16.10                                                     section 16.3
+
+ COMS COMS  ___                                                             ____(COMS [ARG])                                                           edit
+
+                                    ___     This  command  evaluates  its  ARGs  and  executes  them  as edit
+     commands.
+
+
+ COMSQ COMSQ  ___                                                            ____(COMSQ [ARG])                                                          edit
+
+                                ___     This command executes each ARG as an edit command.
+
+  At any given time, the attention of the editor is  focused  on  a  single
+expression  or  form.    We  call that form the current expression.  Editor
+commands may be divided into two  broad  classes.    Those  commands  which
+change  the  current  expression  are  called attention- changing commands.
+Those commands which modify structure  are  called  structure  modification
+commands.
+
+
+DELETEDELETE                                                                 ____DELETE                                                                 edit
+
+     This  command  deletes  the  current  expression.  If the current
+     expression is a tail, only the first element is  deleted.    This
+     command is equivalent to (:).
+
+
+ E E ____  _                                                             ____(E FORM <T>)                                                           edit
+
+                            ____     This command evaluates FORM.  This may also be typed in as:
+
+
+     E FORM
+
+
+     but  is  valid only if typed in from the TTY.  (E FORM) evaluates
+     ____     FORM and prints the value on the terminal.  The form (E  FORM  T)
+               ____     evaluates FORM but does not print the result.
+
+
+ EditF EditF __ __   ___                                                     ____(EditF FN:id): any                                                     expr
+
+                                                                   __     This function initiates editing of the function whose name is FN.
+
+
+ EditFns EditFns __ ____ __ ____  ____ ____   ___                             _____(EditFns FN-LIST:id-list, COMS:form): NIL                             fexpr
+
+                                                              ____     This  function  applies the sequence of editor commands, COMS, to
+                                               __ ____     each of several functions.  The argument  FN-LIST  is  evaluated,
+                                                       ____     and should evaluate to a list of function names.  COMS is applied
+                             __ ____     to  each  function  in  FN-LIST,  in turn.  Errors in editing one
+     function do not affect editing of others.  The editor call is via
+     EditF     EditF     EditF, so that values may also be edited in this way.PSL Manual                    7 February 1983                        EDITOR
+section 16.3                                                     page 16.11
+
+ EditP EditP __ __  ____ ____ ____   ___                                    _____(EditP AT:id, COMS:form-list): any                                    fexpr
+
+     This  function initiates editing of the property list of the atom
+                                     ____     whose name is at.  The argument COMS is a possibly null  sequence
+     of  edit commands which is executed before calling for input from
+     the terminal.
+
+
+ EditV EditV __ __  ____ _____ ____   ___                                   _____(EditV AT:id, COMS:forms-list): NIL                                   fexpr
+
+     This function initiates editing of the value of  the  atom  whose
+               __                  ____     name  is  AT.    The argument COMS is a possibly null sequence of
+     edit commands which is executed before calling for input from the
+     terminal.
+
+
+ EMBED EMBED ___ __ ___                                                      ____(EMBED LOC In ARG)                                                     edit
+
+     This command replaces the expression which would be current after
+                                          ___     executing the location specification LOC  by  another  expression
+     which  has  that  expression  as a sub-expression.  The manner in
+     which the transformation is carried out depends on  the  form  of
+     ___        ___      ____     ARG.    If ARG is a list, then each occurrence of the atom '*' in
+     ___     ARG is replaced by the expression which would  be  current  after
+            ___     doing  LOC.   (NOTE: a fresh copy is used for each substitution.)
+        ___     If ARG is atomic, the result is equivalent to:
+
+
+     (EMBED loc IN (arg *))
+
+
+     A call of the form 
+
+
+     (EMBED loc IN exp1 exp2 ... expn)
+
+
+     is equivalent to:  
+
+
+     (EMBED loc IN (exp1 exp2 ... expn *))
+
+
+                                                    EMBED                                   ___              EMBED     If the expression after doing LOC is a  tail,  EMBED  behaves  as
+     though the expression were the first element of that tail.
+
+
+ EXTRACT EXTRACT ____ ____ ____                                                ____(EXTRACT LOC1 From LOC2)                                               edit
+
+     This command replaces the expression which would be current after
+                                          ____     doing  the  location  specification  LOC2 by the expression which
+                                  ____     would be current after doing LOC1.  The expression  specified  byEDITOR                        7 February 1983                    PSL Manual
+page 16.12                                                     section 16.3
+
+     ____                                               ____     LOC1 must be a sub-expression of that specified by LOC2.
+
+
+ F F ___  ___                                                            ____(F PAT <FLG>)                                                          edit
+
+     Also can be used as: 
+
+
+     F PAT
+
+
+                                           ___     This command causes the next command, PAT, to be interpreted as a
+     pattern.    The  current  expression  is  searched  for  the next
+                   ___        _         ___     occurrence of PAT; i.e.  Find.  If PAT is a top level element  of
+                                        ___     the   current   expression,  then  PAT  matches  that  top  level
+     occurrence  and  a  full  recursive  search  is  not   attempted.
+     Otherwise, the search proceeds in print order.  Recursion is done
+                  Car                 Cdr                  Car                 Cdr     first in the Car and then in the Cdr direction.
+
+     The  form  (F  PAT  FLG) of the command may be used to modify the
+                                                ___     search algorithm according to the value of FLG.  Possible  values
+     and their actions are:
+
+
+     N         suppresses  the  top-level  check.   That is, finds the
+                                              ___               next print order occurrence of PAT  regardless  of  any
+               top level occurrences.
+
+     T         like  N,  but  may succeed without changing the current
+               expression.  That is,  succeeds  even  if  the  current
+                                                           ___               expression itself is the only occurrence of PAT.
+
+     positive integer
+                                              ___               finds  the  nth place at which PAT is matched.  This is
+               equivalent to (F PAT T) followed by n-1 (F PAT N)s.  If
+               n occurrences are not found, the current expression  is
+               unchanged.
+
+     NIL or missing
+               Only   searches  top  level  elements  of  the  current
+               expression.  May succeed without changing  the  current
+               expression.
+
+
+     NOTE:    If the variable UPFINDFLG is non-NIL, F does an UP after
+     locating a match.  This ensures that F  fn,  in  which  fn  is  a
+     function  name,  results  in  a  current  expression which is the
+     entire function call.  If this is undesirable, set  UPFINDFLG  to
+     NIL.  Its initial value is T. 
+
+     As  protection  against  searching  circular lists, the search is
+                                       Car-Cdr                                       Car-Cdr     abandoned if the total number of  Car-Cdr  descents  exceeds  thePSL Manual                    7 February 1983                        EDITOR
+section 16.3                                                     page 16.13
+
+     value of the variable MAXLEVEL.  (The initial value is 300.)  The
+     search   fails   just   as   if   the  entire  element  had  been
+     unsuccessfully searched.
+
+
+ FS FS  ___                                                               ____(FS [PAT])                                                             edit
+
+         FS         FS                                     _    _     The FS command does sequential finds; i.e. Find Sequential.  That
+                                                            ___     is, it searches (in print order) first for the  first  PAT,  then
+                       ___     for  the  second  PAT,  etc.    If  any search fails, the current
+     expression is left  at  that  form  which  matched  in  the  last
+     successful  search.   This command is, therefore, equivalent to a
+                 F                 F     sequence of F commands.
+
+
+ F= F= ___ ___                                                            ____(F= EXP FLG)                                                           edit
+
+                                                                   Eq                                                             _     Eq     This command is equivalent to (F (== exp)  flg);  i.e.  Find  Eq.
+                                                       ___     That  is, it searches, in the manner specified by FLG, for a form
+              Eq              Eq    ___     which is Eq to EXP.  Note that for keyboard type-ins, this always
+                  ___     fails unless EXP is atomic.
+
+
+HELPHELP                                                                   ____HELP                                                                   edit
+
+     This command provides an easy way of  invoking  the  HELP  system
+     from the editor.
+
+
+ I I ___  ___                                                            ____(I COM [ARG])                                                          edit
+
+                                ___               ___     This command evaluates the ARGs and executes COM on the resulting
+     values.   This command is thus equivalent to:  (com val1 val2 ...
+     valn), Each vali is equal to (EVAL argi).
+
+
+ IF IF ___                                                                ____(IF ARG)                                                               edit
+
+     This command, useful in  edit  macros,  conditionally  causes  an
+     editor  error.    If  (EVAL  arg) is NIL (or if evaluation of arg
+                                IF                                IF     causes a LISP error), then IF generates an editor error.
+
+
+ INSERT INSERT  ___                                                           ____(INSERT [EXP ARG LOC])                                                 edit
+
+         INSERT                                          A   B       :         INSERT                                          A   B       :     The INSERT command  provides  equivalents  of  the  A,  B  and  :
+                                                      ___   ___     commands incorporating a location specification, LOC.  ARG can be
+                                                    ___     AFTER,  BEFORE,  or FOR.  This command inserts EXPs AFTER, BEFORE
+     or FOR (in place  of)  the  expression  which  is  current  after
+               ___     executing LOC.  Note, however, that the current expression is not
+     changed.EDITOR                        7 February 1983                    PSL Manual
+page 16.14                                                     section 16.3
+
+ LC LC ___                                                                ____(LC LOC)                                                               edit
+
+     This   command,   which   takes   as   an   argument  a  location
+     specification,  explicitly  invokes  the  location  specification
+                    _ _     search;  i.e.  Locate.  The current expression is changed to that
+                                      ___     which is current after executing LOC.
+
+                                                   ___     See LOC-SPEC for details on the definition of LOC and the  search
+     method in question.
+
+
+ LCL LCL ___                                                               ____(LCL LOC)                                                              edit
+
+     This   command,   which   takes   as   an   argument  a  location
+     specification,  explicitly  invokes  the  location  specification
+     search.  However, the search is limited to the current expression
+                    _ _    _     itself;  i.e.  Locate Limited.  The current expression is changed
+                                              ___     to that which is current after executing LOC.
+
+
+ LI LI _                                                                  ____(LI N)                                                                 edit
+
+     This command inserts  a  left  parenthesis  (and,  of  course,  a
+                                         _                _     matching  right  parenthesis); i.e. Left Parenthesis Insert.  The
+     left parenthesis is  inserted  before  the  Nth  element  of  the
+     current  expression  and  the right parenthesis at the end of the
+     current expression.  Thus, this command is equivalent  to  (BI  n
+     -1).
+
+          NTH          NTH     The  NTH  command  is  used  in  the  search, so that N, which is
+     usually an integer, may  be  any  location  specification.    The
+     expression  referred  to  is  the  first  element  of the current
+     expression which contains the form specified at any level.
+
+
+ LO LO _                                                                  ____(LO N)                                                                 edit
+
+     This command removes a left parenthesis  (and  a  matching  right
+     parenthesis,  of  course)  from  the  Nth  element of the current
+                       _                   _     expression; i.e.  Left Parenthesis Remove.   All  elements  after
+     the Nth are deleted.
+
+                            NTH                            NTH     The  command  uses the NTH command for the search.  The parameter
+     N,  which  is  usually  an   integer,   may   be   any   location
+     specification.   The expression actually referred to is the first
+     element of the current expression which  contains  the  specified
+     form at any depth.
+
+  Many  of  the  more  complex edit commands take as an argument a location
+                           ___specification (abbreviated LOC  throughout  this  document).    A  location
+specification  is  a list of edit commands, which are, with two exceptions,
+executed in the normal way.  Any command not recognized by  the  editor  isPSL Manual                    7 February 1983                        EDITOR
+section 16.3                                                     page 16.15
+
+                                             F                                             Ftreated  as  though  it  were  preceded  by  F.  Furthermore, if one of the
+commands causes an error and the current expression  has  been  changed  by
+prior  commands,  the  location  operation  continues rather than aborting.
+This is a sort of back-up operation.  For  example,  suppose  the  location
+                                                                   Cond                                                                   Condspecification  is  (COND  2  3), and the first clause of the first Cond has
+only 2 forms.  The location operation proceeds by searching  for  the  next
+CondCondCond and trying again.  If a point were reached in which there were no more
+CondCondConds, the location operation would then fail.
+
+
+ LP LP ____                                                               ____(LP COMS)                                                              edit
+
+                                                               ____     This  command,  useful  in  macros,  repeatedly  executes COMS (a
+     sequence of edit commands) until an  editor  error  occurs;  i.e.
+               LP     _  _      LP     Loop.  As LP exits, it prints the number of OCCURRENCES; that is,
+                             ____     the  number  of  times  COMS  was  successfully  executed.  After
+     execution of the command, the current expression is left at  what
+                                                            ____     it was after the last complete successful execution of COMS.
+
+     The  command  terminates  if the number of iterations exceeds the
+     value of the variable MAXLOOP (initially 30).
+
+
+ LPQ LPQ ____                                                              ____(LPQ COMS)                                                             edit
+
+                                                              ____     This command, useful  in  macros,  repeatedly  executes  COMS  (a
+     sequence  of  edit  commands)  until an editor error occurs; i.e.
+     _  _ _     Loop Quietly.   After  execution  of  the  command,  the  current
+     expression  is  left  at  what  it  was  after  the last complete
+                             ____     successful execution of COMS.
+
+     The command terminates if the number of  iterations  exceeds  the
+     value of the variable MAXLOOP (initially 30).
+
+                                    LP                                    LP     This  command is equivalent to LP, except that OCCURRENCES is not
+     printed.
+
+
+ M M  ___    ___                                                         ____(M (NAM) ([EXP) COMS)])                                                edit
+
+     This can also be used as:  
+
+
+     (M NAM COMS)
+
+
+     or as: 
+
+
+     (M (NAM) ARG COMS)EDITOR                        7 February 1983                    PSL Manual
+page 16.16                                                     section 16.3
+
+                                                               _     The  editor provides the user with a macro facility; i.e. M.  The
+     user may define frequently used  command  sequences  to  be  edit
+     macros, which may then be invoked simply by giving the macro name
+                                    M                                    M     as  an  edit  command.    The  M command provides the user with a
+     method of defining edit macros.
+
+     The first alternate form of the command defines an atomic command
+                                             ___     which takes no arguments.  The argument NAM is the atomic name of
+                              ___     the macro.  This defines NAM to be an edit  macro  equivalent  to
+                                        ____      ___     the  sequence  of  edit  commands  COMS.  If NAM previously had a
+     definition as an edit macro, the new definition replaces the old.
+     NOTE:  Edit command names take precedence over macros.  It is not
+     possible to redefine edit command names.
+
+     The main form of the M command as  given  above  defines  a  list
+     command,  which takes a fixed number of arguments.  In this case,
+     ___     NAM is defined to be an edit macro equivalent to the sequence  of
+                     ____     edit  commands  COMS.    However,  as (nam exp1 exp2 ... expn) is
+     executed, the expi are substituted for the corresponding argi  in
+     ____        ____     COMS before COMS are executed.
+
+     The second alternate form of the M command defines a list command
+     which  may  take  an arbitrary number of arguments.  Execution of
+               ___     the macro NAM is accomplished  by  substituting  (exp1  exp2  ...
+                             Cdr                             Cdr     expn)  (that  is,  the  Cdr  of the macro call (nam exp1 exp2 ...
+                                             ___      ____     expn)) for all occurrences of the atom  ARG  in  COMS,  and  then
+               ____     executing COMS.
+
+
+ MAKEFN MAKEFN  ___ ____  ____ __  __                                         ____(MAKEFN (NAM VARS) ARGS N1 <N2>)                                       edit
+
+     This  command  defines  a  portion of the current expression as a
+     function and replaces that portion of the expression by a call to
+                        ____ _      _              ___  ____     the function; i.e. Make Function.  The form  (NAM  VARS)  is  the
+                             __           __     call which replaces the N1st through N2nd elements of the current
+                        ___     expression.  Thus, NAM is the name of the function to be defined.
+     ____     VARS   is   a   sequence  of  local  variables  (in  the  current
+                      ____     expression), and ARGS is a list of dummy variables.  The function
+     definition is formed by replacing each occurrence of  an  element
+                    Cdr                    Cdr     ___ ____     in  vars  (the Cdr of (NAM VARS)) by the corresponding element of
+     ____         ____     ARGS.  Thus, ARGS are the names of the formal parameters  in  the
+     newly defined function.
+
+        __                                          __     If N2 is omitted, it is assumed to be equal to N1.
+
+
+MARKMARK                                                                   ____MARK                                                                   edit
+
+     This command saves the current position within the form in such a
+     way that it can later be returned to.  The return is accomplished
+     via _ or __.PSL Manual                    7 February 1983                        EDITOR
+section 16.3                                                     page 16.17
+
+MBDMBD  ___                                                               ____MBD (ARG)                                                              edit
+
+     This  command  replaces the current expression by some form which
+                                                            ___     has the current expression as a sub-expression.    If  ARG  is  a
+            MBD     ____   MBD     list,  MBD substitutes a fresh copy of the current expression for
+                                        ___      ___     each occurrence of the atom '*' in ARG.  If ARG is a sequence  of
+     expressions, as:  
+
+
+     (MBD exp1 exp2 ... expn)
+
+
+     then the call is equivalent to one of the form:  
+
+
+     (MBD (exp1 exp2 ... expn *))
+
+
+     The same is true if arg is atomic:  
+
+
+     (MBD atom) = (MBD (atom *))
+
+
+ MOVE MOVE  ____  __ ___  ____                                              ____(MOVE <LOC1> To COM <LOC2>)                                            edit
+
+          MOVE          MOVE                               ____     The  MOVE  command  allows  the user to Move a structure from one
+     point to another.  The user may specify the form to be moved (via
+     ____     LOC1, the first location specification), the position to which it
+                         ____     is to be moved (via LOC2, the second location specification)  and
+                                           ___                 ___     the action to be performed there (via COM).  The argument COM may
+     be BEFORE, AFTER or the name of a list command (e.g. :, N, etc.).
+     This  command performs in the following manner.  Take the current
+                                ____     expression after executing LOC1 (or its first element, if it is a
+                                    ____     tail); call it expr.  Execute  LOC2  (beginning  at  the  current
+     expression  AS OF ENTRY TO MOVE -- NOT the expression which would
+                                   ____                     ___     be current after execution of LOC1), and then execute (COM expr).
+     Now go back and delete expr from  its  original  position.    The
+     current expression is not changed by this command.
+
+         ____     If  LOC1  is  NIL  (that  is, missing), the current expression is
+     moved.  In this case, the current expression becomes  the  result
+                          ___     of the execution of (COM expr).
+
+         ____     If  LOC2  is  NIL  (that  is  missing)  or HERE, then the current
+                                                               ____     expression specifies the point to which the form given by LOC2 is
+     to be moved.EDITOR                        7 February 1983                    PSL Manual
+page 16.18                                                     section 16.3
+
+ N N  ___                                                                ____(N [EXP])                                                              edit
+
+                            ___     This  command adds the EXPs to the end of the current expression;
+                  _     i.e. Add at End.  This compensates for the fact that the negative
+     integer command does not allow insertion after the last element.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______ -N:integer                                                    edit-command -N:integer  ___                                               edit-command(-N:integer [EXP])                                             edit-command
+
+
+     Also can be used as: 
+
+
+     -N
+
+
+     This is really two separate commands.   The  atomic  form  is  an
+     attention  changing  command.  The current expression becomes the
+     nth form from the end of the old  current  expression;  i.e.  Add
+              _     Before  End.    That  is,  -1  specifies the last element, -2 the
+     second from last, etc.
+
+     The list form of the command is a structure modification command.
+     This command inserts exp1 through expn (at least one expi must be
+     present) before the nth element (counting from the BEGINNING)  of
+     the  current  expression.    That is, -1 inserts before the first
+     element, -2 before the second, etc.
+
+
+ NEX NEX ___                                                               ____(NEX COM)                                                              edit
+
+     Also can be used as: 
+
+
+     NEX
+
+
+                                    BELOW                  NX                                    BELOW ___              NX     This command is equivalent to (BELOW COM) followed by NX.    That
+     is,  it  does repeated 0s until a current expression matching com
+                                                      NX                                                      NX     is found.  It then backs off by one 0 and does a NX.
+
+     The atomic form of the command is equivalent to (NEX _).  This is
+                                                            MARK                                                            MARK     useful if the user is doing repeated (NEX x)s.  He can MARK at  x
+     and then use the atomic form.
+
+
+ NTH NTH ___                                                               ____(NTH LOC)                                                              edit
+
+                                         LCL        BELOW     UP                                         LCL ___    BELOW     UP     This  command effectively performs (LCL LOC), (BELOW <), UP.  The
+     net effect is to search the current expression only for the  form
+                                              ___     specified  by the location specification LOC.  From there, return
+     to the initial level and set the current  expression  to  be  thePSL Manual                    7 February 1983                        EDITOR
+section 16.3                                                     page 16.19
+
+                                                                ___     tail  whose  first  element contains the form specified by LOC at
+     any level.
+
+
+ NX NX _                                                                  ____(NX N)                                                                 edit
+
+     Also can be used as: 
+
+
+     NX
+
+
+     The atomic form of this command makes the current expression  the
+     expression  following the present current expression (at the same
+                  _ _     level); i.e. Next.
+
+     The list form of the command  is  equivalent  to  n  (an  integer
+                            NX                            NX     number) repetitions of NX.  If an error occurs (e.g. if there are
+          _     not  N expressions following the current expression), the current
+     expression is unchanged.
+
+
+OKOK                                                                     ____OK                                                                     edit
+
+     This command causes normal exit from the editor.
+
+     The state of the edit is saved on property LASTVALUE of the  atom
+     EDIT.  If the next form edited is the same, the edit is restored.
+     That  is,  it is (with the exception of a BLOCK on the undo-list)
+     as though the editor had never been exited.
+
+     It is possible to save edit states for  more  than  one  form  by
+                                     SAVE                                     SAVE     exiting from the editor via the SAVE command.
+
+
+ ORF ORF  ___                                                              ____(ORF [PAT])                                                            edit
+
+     This command searches the current expression, in print order, for
+                                                                 ___     the  first  occurrence of any form which matches one of the PATs;
+                                            UP                 __    _                    UP     i.e.  Print Order Final.  If found, an UP is  executed,  and  the
+     current  expression  becomes  the  expression so specified.  This
+     command is equivalent to (F (*ANY* pat1 pat2 ... patn) N).   Note
+     that the top level check is not performed.
+
+
+ ORR ORR  ____                                                             ____(ORR [COMS])                                                           edit
+
+                                                             ____     This  command  operates  in the following manner.  Each COMS is a
+                             ORR                             ORR                          ____     list of edit commands.  ORR first executes the first COMS.  If no
+                   ORR                   ORR     error occurs, ORR terminates, leaving the current  expression  as
+                                     ____     it  was at the end of executing COMS.  Otherwise, it restores the
+     current expression to what it  was  on  entry  and  repeats  thisEDITOR                        7 February 1983                    PSL Manual
+page 16.20                                                     section 16.3
+
+                                ____              ____     operation  on  the  second COMS, etc.  If no COMS is successfully
+                             ORR                             ORR     executed without error, ORR generates an error  and  the  current
+     expression is unchanged.
+
+
+ P P __  __                                                              ____(P N1 <N2>)                                                            edit
+
+     Also can be used as: 
+
+
+     P
+
+
+                                                           _     This  command  prints  the  current  expression; i.e. Print.  The
+     atomic form of the command prints the  current  expression  to  a
+     depth of 2.  More deeply nested forms are printed as &.
+
+                                __     The form (P N1) prints the N1st element of the current expression
+                                    __     to a depth of 2.  The argument N1 need not be an integer.  It may
+                                                NTH                                                NTH     be  a general location specification.  The NTH command is used in
+     the search, so that the expression printed is the  first  element
+     of  the current expression which contains the desired form at any
+     level.
+
+                                                __     The third form of the command prints  the  N1st  element  of  the
+                                       __          __     current  expression to a depth of N2.  Again, N1 may be a general
+     location specification.
+
+        __     If N1 is 0, the current expression is printed.
+
+     Many of the editor commands,  particularly  those  which  search,
+                                                  ___     take  as  an argument a pattern (abbreviated PAT).  A pattern may
+     be any combination of literal list structure and special  pattern
+     elements.
+
+     The special elements are as follows.
+
+
+     &         this matches any single element.
+
+     *ANY*     if  (CAR pat) is the atom *ANY*, then (CDR pat) must be
+                                    ___               a list of patterns.  PAT matches any form which matches
+                                       Cdr                                       Cdr ___               any of the patterns in (Cdr PAT).
+
+     @         if an element of pat  is  a  literal  atom  whose  last
+               character  is  @, then that element matches any literal
+               atom  whose  initial  characters  match   the   initial
+               characters  of  the  element.    That  is,  VER matches
+               VERYLONGATOM.
+
+     --        this matches any tail of a list or any interior segment
+               of a list.PSL Manual                    7 February 1983                        EDITOR
+section 16.3                                                     page 16.21
+
+                   Car                                     Cdr                   Car ___              ___                Cdr ___     ==        if (Car PAT) is ==, then PAT matches X iff (Cdr PAT) is
+               Eq               Eq               Eq to X.
+
+                                                 Cdr                   ___                           Cdr    ___     :::       if  PAT  begins  with  :::,  the  Cdr of PAT is matched
+               against tails of the expression.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______ N:integer                                                     edit-command N:integer  ___                                                edit-command(N:integer [EXP])                                              edit-command
+
+
+     Also can be used as: 
+
+
+     N:integer
+
+
+     This command, a  strictly  positive  integer  N,  is  really  two
+     commands.      The   atomic   form   of   the   command   is   an
+     attention-changing command.  The current expression  becomes  the
+     nth element of the current expression.
+
+     The list form of the command is a structure modification command.
+     It  replaces  the  Nth  element  of the current expression by the
+           ___     forms EXP.  If no forms are given, then the Nth  element  of  the
+     current expression is deleted.
+
+
+PPPP                                                                     ____PP                                                                     edit
+
+                  _      _     This command Pretty-Prints the current expression.
+
+
+ R R ____ ____                                                           ____(R EXP1 EXP2)                                                          edit
+
+                    _                              ____    ____     This  command  Replaces  all  occurrences  of EXP1 by EXP2 in the
+     current expression.
+
+               ____     Note that EXP1 may be  either  the  literal  s-expression  to  be
+     replaced,  or  it may be an edit pattern.  If a pattern is given,
+     the form which first matches that pattern is replaced throughout.
+     All forms which match the pattern are NOT replaced.
+
+
+ REPACK REPACK ___                                                            ____(REPACK LOC)                                                           edit
+
+     Also can be used as: 
+
+
+     REPACK
+
+
+     This command allows the editing of long strings (or  atom  names)EDITOR                        7 February 1983                    PSL Manual
+page 16.22                                                     section 16.3
+
+                                REPACK                                REPACK     one  character at a time.  REPACK calls the editor recursively on
+     UNPACK     UNPACK     UNPACK of the specified  atom.    (In  the  atomic  form  of  the
+     command,  the  current  expression  is  used unless it is a list;
+     then, the first element is  used.    In  the  list  form  of  the
+     command,  the  form  specified  by  the location specification is
+                                                                   OK                                                                   OK     treated in the same way.)  If the lower editor is exited via  OK,
+                                                                  STOP                                                                  STOP     the  result  is repacked and replaces the original atom.  If STOP
+     is used, no replacement is done.  The new atom is always printed.
+
+
+ RI RI __ __                                                              ____(RI N1 N2)                                                             edit
+
+     This command moves a right parenthesis.  The parenthesis is moved
+                             __     from the end of the the N1st element of the current expression to
+                 __                      __                      _     after  the  N2nd  element  of  the  N1st  element;   i.e.   Right
+                  _                                   __     Parenthesis  Insert.   Remaining elements of the N1st element are
+     raised to the top level of the current expression.
+
+                    __       __     The arguments, N1  and  N2,  are  normally  integers.    However,
+                   NTH                   NTH     because  the  NTH  command is used in the search, they may be any
+     location specifications.  The expressions  referred  to  are  the
+     first  element  of  the current expression in which the specified
+     form is found at  any  level,  and  the  first  element  of  that
+                                                    __     expression  in  which  the  form  specified by N2 is found at any
+     level.
+
+
+ RO RO _                                                                  ____(RO N)                                                                 edit
+
+     This command moves the right parenthesis from the end of the  nth
+     element  of  the  current  expression  to  the end of the current
+                        _                   _     expression;  i.e.  Right  Parenthesis  Remove.     All   elements
+     following the Nth are moved inside the nth element.
+
+                   NTH                   NTH                                              _     Because  the  NTH command is used for the search, the argument N,
+     which is normally an integer, may be any location  specification.
+     The  expression  referred  to is the first element of the current
+     expression in which the specified form is found at any depth.
+
+
+ S S ___ ___                                                             ____(S VAR LOC)                                                            edit
+
+                            SetQ                  _         SetQ                               ___     This command Sets (via SetQ) the variable whose name  is  VAR  to
+     the current expression after executing the location specification
+     ___     LOC.  The current expression is not changed.
+
+
+SAVESAVE                                                                   ____SAVE                                                                   edit
+
+     This  command  exits  normally from the editor.  The state of the
+     edit is saved on the property EDIT-SAVE of the atom being edited.
+     When the same atom is next edited,  the  state  of  the  edit  isPSL Manual                    7 February 1983                        EDITOR
+section 16.3                                                     page 16.23
+
+     restored  and (with the exception of a BLOCK on the undo-list) it
+     is as if the editor had never been exited.  It is  not  necessary
+                   SAVE                   SAVE     to  use  the  SAVE command if only a single atom is being edited.
+             OK             OK     See the OK command.
+
+
+ SECOND SECOND ___                                                            ____(SECOND LOC)                                                           edit
+
+     This command changes the current expression to what it  would  be
+                                          ___     after  the  location  specification  LOC  is executed twice.  The
+                                                            ___     current expression is unchanged if either execution of LOC fails.
+
+
+STOPSTOP                                                                   ____STOP                                                                   edit
+
+                                                         ____     This command exits abnormally from the editor; i.e. Stop Editing.
+                                                        TTY:                                                        TTY:     This command is useful mainly in conjunction with  TTY:  commands
+     which  the  user  wishes  to  abort.  For example, if the user is
+     executing 
+
+
+     (MOVE 3 TO AFTER COND TTY:)
+
+
+                                               OK        MOVE                                               OK        MOVE     and he exits from the lower  editor  via  OK,  the  MOVE  command
+     completes  its  operation.  If, on the other hand, the user exits
+         STOP  TTY:                       MOVE         STOP  TTY:                       MOVE     via STOP, TTY: produces an error and MOVE aborts.
+
+
+ SW SW __ __                                                              ____(SW N1 N2)                                                             edit
+
+                  __        __        __     This command Swaps the N1st and  N2nd  elements  of  the  current
+     expression.    The  arguments  are  normally  but not necessarily
+                SW       NTH                SW       NTH     integers.  SW uses  NTH  to  perform  the  search,  so  that  any
+     location  specifications  may  be  used.  In each case, the first
+     element of the current expression which  contains  the  specified
+     form at any depth is used.
+
+
+TESTTEST                                                                   ____TEST                                                                   edit
+
+     This  command  adds  an  undo-block to the undo-list.  This block
+                         UNDO     !UNDO                         UNDO     !UNDO     limits the scope of UNDO and !UNDO commands to changes made after
+                                                           UNBLOCK                                                           UNBLOCK     the block was inserted.  The block may be removed via UNBLOCK.
+
+
+ THIRD THIRD ___                                                             ____(THIRD LOC)                                                            edit
+
+     This command executes the location specification loc three times.
+                                                    LC                                                    LC  ___     It is equivalent  to  three  repetitions  of  (LC  LOC).    Note,
+     however,  that  if  any of the executions causes an editor error,
+     the current expression remains unchanged.EDITOR                        7 February 1983                    PSL Manual
+page 16.24                                                     section 16.3
+
+      THROUGH ____ THROUGH ____                                                     ____(LOC1 THROUGH LOC2)                                                    edit
+
+     This  command  makes  the current expression the segment from the
+                       ____     form specified by LOC1 through (including) the form specified  by
+                                  LC        UP   BI     ____                         LC ____   UP   BI   ____     LOC2.   It is equivalent to (LC LOC1), UP, (BI 1 LOC2), 1.  Thus,
+     it makes a single element of the  specified  elements  and  makes
+     that the current expression.
+
+     This  command  is  meant  for  use in the location specifications
+                  DELETE, EMBED, EXTRACT     REPLACE                  DELETE, EMBED, EXTRACT     REPLACE     given to the DELETE, EMBED, EXTRACT and REPLACE commands, and  is
+                                                    THROUGH                                                    THROUGH     not  particularly  useful  by  itself.  Use of THROUGH with these
+     commands sets a special flag so that the editor removes the extra
+                            THROUGH                            THROUGH     set of parens added by THROUGH.
+
+
+      TO ____ TO ____                                                          ____(LOC1 TO LOC2)                                                         edit
+
+     This command makes the current expression the  segment  from  the
+                          ____     form  specified  by  LOC1  up  to  (but  not  including) the form
+                                               LC          UP    BI                  ____                         LC  ____    UP    BI     specified by LOC2.  It is equivalent to  (LC  LOC1),  UP,  (BI  1
+             RI             RI     loc),  (RI  1  -2),  1.    Thus, it makes a single element of the
+     specified elements and makes that the current expression.
+
+     This command is meant for  use  in  the  location  specifications
+                   DELETE, EMBED, EXTRACT     REPLACE                   DELETE, EMBED, EXTRACT     REPLACE     given  to the DELETE, EMBED, EXTRACT and REPLACE commands, and is
+                                                TO                                                TO     not particularly useful by itself.  Use of TO with these commands
+     sets a special flag so that the editor removes the extra  set  of
+                     TO                     TO     parens added by TO.
+
+
+TTY:TTY:                                                                   ____TTY:                                                                   edit
+
+     This  command  calls  the  editor  recursively, invoking a 'lower
+     editor.'  The user may execute any and all edit commands in  this
+                         TTY:                         TTY:     lower  editor.  The TTY: command terminates when the lower editor
+                   OK    STOP                   OK    STOP     is exited via OK or STOP.
+
+     The form being edited in the lower editor is  the  same  as  that
+     being  edited  in  the  upper  editor.    Upon entry, the current
+     expression in the lower is the same as that in the upper editor.
+
+
+UNBLOCKUNBLOCK                                                                ____UNBLOCK                                                                edit
+
+     This command removes an undo-block from the  undo-list,  allowing
+     UNDO       !UNDO     UNDO       !UNDO     UNDO  and  !UNDO to operate on changes which were made before the
+     block was inserted.
+
+                                                                  TEST                                                                  TEST     Blocks may be inserted by exiting from the editor and by the TEST
+     command.PSL Manual                    7 February 1983                        EDITOR
+section 16.3                                                     page 16.25
+
+UNDOUNDO  ___                                                              ____UNDO (COM)                                                             edit
+
+     Also can use as: 
+
+
+     UNDO
+
+
+     This  command  undoes  editing  changes.  All editing changes are
+     undoable, provided that  the  information  is  available  to  the
+     editor.    (The  necessary information is always available unless
+                                            SAVE                                            SAVE     several forms are being edited and the SAVE command is not used.)
+     Changes made in the current editing session are ALWAYS undoable.
+
+     The short form of the command  undoes  the  most  recent  change.
+                            UNDO       !UNDO                            UNDO       !UNDO     Note,  however,  that  UNDO  and  !UNDO changes are skipped, even
+     though they are themselves undoable.
+
+     The long form of the command allows the user to undo an arbitrary
+                                                 UNDO       !UNDO                                                 UNDO       !UNDO     command, not necessarily the most recent.   UNDO  and  !UNDO  may
+     also be undone in this manner.
+
+
+UPUP                                                                     ____UP                                                                     edit
+
+     If   the  current  expression  is  a  tail  of  the  next  higher
+                 UP                 UP     expression, UP has no effect.  Otherwise the  current  expression
+     becomes   the  form  whose  first  element  is  the  old  current
+     expression.
+
+
+ XTR XTR ___                                                               ____(XTR LOC)                                                              edit
+
+     This command replaces  the  current  expression  by  one  of  its
+                                                   ___     subexpressions.   The location specification, LOC, gives the form
+     to be used.  Note that only the current expression  is  searched.
+     If  the current expression is a tail, the command operates on the
+     first element of the tail.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______                                                               edit-command                                                               edit-command0                                                              edit-command
+
+
+     This  command  makes  the  current  expression  the  next  higher
+     expression.    This  usually,  but  not  always,  corresponds  to
+     returning to the next higher left parenthesis.  This command  is,
+     in  some  sense,  the inverse of the POS-INTEGER and NEG- INTEGER
+     atomic commands.
+
+
+                                                        _____  ____ _______                                                        _____  ____ _______                                                        _____  ____ _______##                                                      fexpr, edit-command##   ___ ____    ___                                    fexpr, edit-command## ([COM:form]): any                                    fexpr, edit-commandEDITOR                        7 February 1983                    PSL Manual
+page 16.26                                                     section 16.3
+
+     The  value  of  this  fexpr,  useful  mainly  in  macros,  is the
+                                                                  ___     expression which would be current after executing all of the COMs
+     in sequence.  The current expression is not changed.
+
+                                                      CHANGE   INSERT                                                      CHANGE   INSERT  Commands in which this fexpr might be  used  (e.g.  CHANGE,  INSERT,  and
+REPLACEREPLACEREPLACE) make special checks and use a copy of the expression returned.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______^                                                              edit-command^                                                              edit-command^                                                              edit-command
+
+
+     This   command   makes  the  top  level  expression  the  current
+     expression.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______?                                                              edit-command?                                                              edit-command?                                                              edit-command
+
+
+     This command prints the current expression to a level of 100.  It
+     is equivalent to (P 0 100).
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______??                                                             edit-command??                                                             edit-command??                                                             edit-command
+
+
+     This command displays the entries on the undo-list.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ ________                                                              edit-command_                                                              edit-command_                                                              edit-command
+
+
+     This command returns to the position indicated by the most recent
+     MARK               MARK     MARK               MARK     MARK command.  The MARK is not removed.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______ _                                                             edit-command _ ___                                                         edit-command(_ PAT)                                                        edit-command
+
+
+     This command ascends (does  repeated  0s),  testing  the  current
+                                                     ___     expression  at  each  ascent  for  a match with PAT.  The current
+     expression becomes the first  form  to  match.    If  pattern  is
+     atomic,  it is matched with the first element of each expression;
+     otherwise, it is matched against the entire form.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _________                                                             edit-command__                                                             edit-command__                                                             edit-command
+
+
+     This command returns to the position indicated by the most recent
+     MARK                         MARK     MARK                         MARK     MARK command and removes the MARK.PSL Manual                    7 February 1983                        EDITOR
+section 16.3                                                     page 16.27
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______ :                                                             edit-command :  ___                                                        edit-command(: [EXP])                                                      edit-command
+
+
+     Also can be used as: 
+
+
+     (:)
+
+
+                                                                  ___     This  command  replaces  the current expression by the forms EXP.
+     If no forms are given (as in the second form of the command), the
+     current expression is deleted.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______     ::                                                        edit-command ___ :: ___                                                    edit-command(PAT :: LOC)                                                   edit-command
+
+
+     This command sets the current expression to the  first  form  (in
+                                ___     print order) which matches PAT and contains the form specified by
+                                   ___     the  location  specification  LOC  at  any level.  The command is
+                    F          LCL                    F ___      LCL ___      ___     equivalent to (F PAT N), (LCL LOC), (_ PAT).
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______\                                                              edit-command\                                                              edit-command\                                                              edit-command
+
+
+     This command returns to the expression which was  current  before
+     the last 'big jump.'  Big jumps are caused by these commands:  ^,
+     _, __, !NX, all commands which perform a search or use a location
+     specification,  \  itself,  and  \P.    NOTE:  \  is shift-L on a
+     teletype.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______\P                                                             edit-command\P                                                             edit-command\P                                                             edit-command
+
+
+     This command returns to the expression which was  current  before
+     the  last print operation (P, PP or ?).  Only the two most recent
+     locations are saved.  NOTE: \ is shift-L on a teletype.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______!NX                                                            edit-command!NX                                                            edit-command!NX                                                            edit-command
+
+
+     This command makes the next expression  at  a  higher  level  the
+     current expression.  That is, it goes through any number of right
+     parentheses to get to the next expression.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______!UNDO                                                          edit-command!UNDO                                                          edit-command!UNDO                                                          edit-commandEDITOR                        7 February 1983                    PSL Manual
+page 16.28                                                     section 16.3
+
+     This  command  undoes  all  changes  made  in the current editing
+     session (back to  the  most  recent  block).    All  changes  are
+     undoable.
+
+                                                                  TEST                                                                  TEST     Blocks  may  be  inserted  by  exiting  the editor or by the TEST
+                                            UNBLOCK                                            UNBLOCK     command.  They may be removed with the UNBLOCK command.
+
+
+                                                               ____ _______                                                               ____ _______                                                               ____ _______!0                                                             edit-command!0                                                             edit-command!0                                                             edit-command
+
+
+     This command does repeated 0s  until  it  reaches  an  expression
+     which  is  not  a  tail  of  the  next  higher  expression.  That
+     expression becomes the new current expression.    That  is,  this
+     command  returns  to the next higher left parenthesis, regardless
+     of intervening tails.

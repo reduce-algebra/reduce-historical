@@ -1,0 +1,4 @@
+contents_entry(0 16 {Using Multiple Buffers} 16-1)
+contents_entry(1 16.1 {Creating and Selecting Buffers} 16-1)
+contents_entry(1 16.2 {Using Existing Buffers} 16-2)
+contents_entry(1 16.3 {Killing Buffers} 16-2)

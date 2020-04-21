@@ -1,0 +1,50 @@
+The Manual
+---------- 
+
+The PSL manual is now fairly complete.  It consists of 26 chapters,
+residing as Topic.mss on <reduce.syslisp.manual>.  Each topic is
+described in a separate major chapter.  The chapters are available as
+files n-Topic.xxx, where "n" is the Chapter number (used in Index),
+and .xxx is .LPT (on <psl.lpt>) for offline perusal.  To read the
+chapters in Emacs, there is a function which one can use to clean
+up the .LPT:
+<Meta-X> Load Library$uem:clean-files
+will make the function available; the functin itself is
+<Meta-X> Clean LPT File$
+Please do not change the version on PLPT:!
+
+Suggestions for additions and modifications should be sent to
+Griss@Utah-20 and B-Morrison@Utah-20.
+
+The chapters and their status is as follows:
+
+0-TITLEPAGE				[Intro]
+00-PREFACE				[Intro]
+000-CONTENTS				[Complete]
+01-INTRODUCTION				[Complete]
+02-GETSTART				[Complete]
+03-RLISP				[Complete]
+04-DATATYPES				[Complete]
+05-NUMBERS				[Complete]
+06-IDS					[Complete]
+07-LISTS				[Complete]
+08-STRINGS				[Complete]
+09-FLOWOFCONTROL			[Complete]
+09-IDS					[Complete]
+10-FUNCTIONS				[Complete]
+11-INTERP				[Complete]
+12-GLOBALS				[Complete]
+13-IO					[Complete]
+14-TOPLOOP				[Complete]
+15-ERRORS				[Complete]
+16-DEBUG				[Rough]
+17-EDITOR				[Rough]
+18-UTILITIES				[Rough]
+19-COMPLR				[Very Rough]
+20-DEC20				[Rough]
+21-SYSLISP				[InComplete]
+22-IMPLEMENTATION			[InComplete]
+23-PARSER				[InComplete]
+24-BIBLIO				[Rough]
+25-FUNCTION-INDEX			[Complete]
+26-CONCEPT-INDEX			[Incomplete]

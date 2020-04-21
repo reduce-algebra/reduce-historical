@@ -1,0 +1,2 @@
+See PU:-FILES-NOTES.TXT for synopses of some of the packages not
+documented in the reference manual.

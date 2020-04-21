@@ -1,0 +1,33 @@
+STEP(Form:any):any						      EXPR
+--------------------------------------------------------------------------
+Step is a loadable option (Load Step).  Evaluates form,
+single-stepping.  Form is printed, preceded by -> on entry, <-> for
+macro expansions.  After evaluation, Form is printed preceded by <-
+and followed by the result of evaluation.  A single character is read
+at each step to determine the action to be taken:
+
+Control-N (Next)
+	Step to the Next thing.  The stepper continues until the next thing
+	to print out, and it accepts another command.
+Space	Go to the next thing at this level.  In other words, continue to
+	evaluate at this level, but don't step anything at lower levels.
+	This is a good way to skip over parts of the evaluation that don't
+	interest you.
+Control-U (Up)
+	Continue evaluating until we go up one level.  This is like the
+	space command, only more so; it skips over anything on the current
+	level as well as lower levels.
+Control-X (eXit)
+	Exit; finish evaluating without any more stepping.
+Control-G, Control-P (Grind)
+	Grind (i.e. prettyprint) the current form.
+Control-R
+	Grind the form in Rlisp syntax.
+Control-E (Editor)
+	Invoke the structure editor on the current form.
+Control-B (Break)
+	Enter a break loop from which you can examine the values of
+	variables and other aspects of the current environment.
+Control-L
+	Redisplay the last 10 pending forms.
+?	Display this help file.

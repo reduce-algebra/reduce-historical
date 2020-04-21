@@ -1,0 +1,67 @@
+
+			 7-Mar-83 16:19:52
+
+BATCON Version	104(4133)			GLXLIB Version	1(527)
+
+	    Job SYSIO Req #267 for KESSLER in Stream 0
+
+	OUTPUT:	 Nolog				TIME-LIMIT: 0:20:00
+	UNIQUE:	 Yes				BATCH-LOG:  Supersede
+	RESTART: No				ASSISTANCE: Yes
+						SEQUENCE:   805
+
+	Input from => PS:<PSL.KERNEL.20>SYSIO.CTL.2
+	Output to  => PS:<PSL.KERNEL.20>SYSIO.LOG
+
+
+
+16:19:53 MONTR	 Univ of Utah Computer Science KL-20, TOPS-20AN Monitor 5.3(1500)
+16:19:53 MONTR	@SET TIME-LIMIT 1200
+16:19:54 MONTR	@LOGIN KESSLER SMALL
+16:19:57 MONTR	 Job 13 on TTY225 7-Mar-83 16:19:56
+16:19:57 MONTR	 Previous login at 7-Mar-83 16:16:23
+16:19:57 MONTR	 There is 1 other job logged in as user KESSLER
+16:20:06 MONTR	@
+16:20:06 MONTR	[PS Mounted]
+16:20:06 MONTR	
+16:20:06 MONTR	[CONNECTED TO PS:<PSL.KERNEL.20>]
+16:20:06 MONTR	define DSK: DSK:, P20:, PI:
+16:20:08 MONTR	@S:DEC20-CROSS.EXE
+16:20:09 USER	Dec 20 cross compiler
+16:20:10 USER	[8] ASMOut "sysio";
+16:20:11 USER	ASMOUT: IN files; or type in expressions
+16:20:11 USER	When all done execute ASMEND;
+16:21:12 USER	[9] in "sysio.build";
+16:21:13 USER	%
+16:21:13 USER	% SYSIO.BUILD - Files for system-dependent input and output
+16:21:13 USER	% 
+16:21:13 USER	% Author:      Eric Benson
+16:21:13 USER	%              Symbolic Computation Group
+16:21:13 USER	%              Computer Science Dept.
+16:21:13 USER	%              University of Utah
+16:21:13 USER	% Date:        19 May 1982
+16:21:14 USER	% Copyright (c) 1982 University of Utah
+16:21:14 USER	%
+16:21:14 USER	
+16:21:14 USER	PathIn "system-io.red"$                 % system dependent IO functions
+16:21:28 USER	PathIn "scan-table.red"$
+16:21:29 USER	*** GLOBAL `LISPSCANTABLE!*' cannot become FLUID
+16:21:31 USER	                % change scan table for system
+16:21:31 USER	[10] ASMEnd;
+16:22:00 USER	*** Garbage collection starting
+16:22:16 USER	*** GC 4: time 3296 ms
+16:22:16 USER	*** 72563 recovered, 564 stable, 16873 active, 72563 free
+16:22:44 USER	NIL
+16:22:44 USER	[11] quit;
+16:22:46 MONTR	@compile sysio.mac, dsysio.mac
+16:22:51 USER	MACRO:  .MAIN
+16:23:03 USER	MACRO:  .MAIN
+16:23:04 USER	
+16:23:04 USER	EXIT
+16:23:07 MONTR	@delete sysio.mac, dsysio.mac
+16:23:08 MONTR	 SYSIO.MAC.1 [OK]
+16:23:08 MONTR	 DSYSIO.MAC.1 [OK]
+16:23:08 MONTR	@
+16:23:11 MONTR	Killed by OPERATOR, TTY 221
+16:23:11 MONTR	Killed Job 13, User KESSLER, Account SMALL, TTY 225,
+16:23:11 MONTR	  at  7-Mar-83 16:23:13,  Used 0:01:12 in 0:03:17

@@ -1,0 +1,181 @@
+FOR is a general iteration construct similar in many ways to the Lisp
+Machine LOOP construct, and the earlier InterLISP CLISP iteration
+construct.  FOR, however, is considerably simpler, far more "lispy",
+and somewhat less powerful.  FOR is loaded as part of the USEFUL
+package.  It is hoped that eventuall the RLISP parser will be modified
+to emit calls on this new FOR macro instead of the old one.
+
+The arguments to FOR are clauses; each clause is itself a list of a
+keyword and one or more arguments.  The clauses may introduce local
+variables, specify return values, have side-effects, when the iteration
+should cease, and so on.  Before
+going further, it is probably best to give an example.  The following
+function will zip together three lists into a list of three element
+lists.
+
+(de zip3 (x y z) (for (in u x) (in v y) (in w z) (collect (list u v w))))
+
+The three IN clauses specify that their first argument should take
+successive elements of the respective lists, and the COLLECT clause specifies
+that the answer should be a list built out of its argument.  For
+example, (zip3 '(1 2 3 4) '(a b c d) '(w x y z)) is 
+((1 a w)(2 b x)(3 c y)(4 d z)).
+
+Following are described all the possible clauses.  The first few
+introduce iteration variables.  Most of these also give some means of
+indicating when iteration should cease.  For example, when a list being
+mapped over by an IN clause is exhausted, iteration must cease.  If
+several such clauses are given in FOR expression, iteration will cease
+whenever on of the clauses indicates it should, whether or not the
+other clauses indicate that it should cease.
+
+
+
+(in v1 v2) assigns the variable v1 successive elements of the list v2.
+
+This may take an additional, optional argument:
+a function to be applied to the extracted element or sublist  before
+it is assigned to the variable.   The following returns the sum of  the
+lengths of all the elements of L. [rather a kludge -- not sure why this
+is here.  Perhaps it should come out again.]
+
+  (de SumLengths (L) (for (in N L length) (sum N)))
+      
+For example, (SumLengths '((1 2 3 4 5)(a b c)(x y))) is 10.
+
+
+
+(on v1 v2) assigns the varaible v1 successive cdrs of the list v2.
+
+
+
+(from var init final step) is a numeric clause.  The variable is first
+assigned init, and then incremented by step until it is larger than
+final.  Init, final, and step are optional.  Init and step both default
+to 1, and if final is omitted the iteration will continue until
+stopped by some other means.  To specify a step with init or final
+omitted, or a final with init omitted place nil (the constant -- it
+cannot be an expression) in the appropriate slot to be omitted.
+Final and step are only evaluated once.
+
+
+
+(for var init next) assigns the variable init first, and subsequently
+the value of the expression next.  Init and next may be omitted.  Note
+that this is identical to the behaviour of iterators in a DO.
+
+
+
+(with v1 v2 ... vN) introduces N locals, initialized to nil.  In
+addition, each vi may also be of the form (var init), in which case it
+will be initialized to init.
+
+
+
+There are two clauses which allow arbitrary code to be executed before
+the first iteration, and after the last.  (initially s1 s2 ... sN) will
+cause the si's to be evaluated in the new environment (i.e. with the
+iteration variables bound to their initial values) before the first
+iteration.  (finally s1 s2 ... sN) causes the si's to be evaluated just
+before the function returns.
+
+
+
+(do s1 s2 ... sN) causes the si's to be evaluated at each iteration.
+
+
+
+The next few clauses build up return types.  Except for the
+RETURNS/RETURNING clause, they may each take an additional argument
+which specifies that instead of returning the appropriate value, it is
+accumulated in the specified variable.  For example, an unzipper might
+be defined as 
+
+(de unzip3 (L)
+  (for (u in L) (with X Y Z)
+    (collect (car U) X)
+    (collect (cadr U) Y)
+    (collect (caddr U) Z)
+    (returns (list X Y Z))))
+
+This is essentially the opposite of zip3.  Given a list of three element
+lists, it unzips them into three lists, and returns a list of those
+three lists.  For example, (unzip '((1 a w)(2 b x)(3 c y)(4 d z)))
+is ((1 2 3 4)(a b c d)(w x y z)).
+
+
+
+(returns exp) causes the given expression  to be the value of the  FOR.
+Returning is  synonymous  with returns.   It  may be  given  additional
+arguments, in which case they are  evaluated in order and the value  of
+the last is returned (implicit PROGN).
+
+
+
+(collect exp) causes the succesive values of the expression to be
+collected into a list.
+
+
+
+(union exp) is similar, but only adds an element to the list if it is
+not equal to anything already there.
+
+
+
+(conc exp) causes the succesive values to be nconc'd together.
+
+
+
+(join exp) causes them to be appended.
+
+
+
+(count exp) returns the number of times exp was non-nil.
+
+
+
+(sum exp), (product exp), (maximize exp), and (minimize exp) do the obvious.
+Synonyms are summing, maximizing, and minimizing.
+
+
+
+(always exp) will return t if exp is non-nil on each iteration.  If exp
+is ever nil, the loop will terminate immediately, no epilogue code,
+such as that introduced by finally will be run, and nil will be
+returned.  (never exp) is equivlent to (always (not exp)).
+
+
+
+Explicit tests for the end of the loop may be given using (while exp).
+The loop will terminate if exp becomes nil at the beginning of an
+iteration.  (until exp) is equivalent to (while (not exp)).
+Both while and until may be given additional arguments;
+(while e1 e2 ... eN) is equivalent to (while (and e1 e2 ... eN))
+and (until  e1 e2 ... eN) is equivalent to (until (or e1 e2 ... eN)).
+
+
+
+
+(when exp) will cause a jump to the next iteration if exp is nil.
+(unless exp) is equivalent to (when (not exp)).
+
+
+
+Unlike MACLISP and clones' LOOP, FOR does all variable binding/updating
+in  parallel.   There  is  a   similar  macro,  FOR*,  which  does   it
+sequentially.  All variable binding/updating  still preceeds any  tests
+or other code.  Also note that all WHEN or UNLESS clauses apply to  all
+action  clauses,  not  just  subsequent  ones.   This  fixed  order  of
+evaluation makes  FOR  less  powerful  than LOOP,  but  also  keeps  it
+considerably simpler.  The basic order of evaluation is 
+
+  1) bind variables to initial values (computed in the outer environment)
+  2) execute prologue (i.e. INITIALLY clauses)
+  3) while none of the termination conditions are satisfied:
+     4) check conditionalization clauses (WHEN and UNLESS), and start next
+	iteration if all are not satisfied.
+     5) perform body, collecting into variables as necessary
+     6) next iteration
+  7) (after a termination condition is satisfied) execute the epilogue (i. e.
+     FINALLY clauses)
+

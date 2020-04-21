@@ -1,0 +1,7 @@
+This directory contains (short) help files describing modules in
+Portable Standard LISP.  These are accessed by the (HELP) command.
+
+Look at PSL.HLP, RLISP.HLP, and HELP.HLP to get started.  (These are
+mostly hints to someone familiar with LISP, and slightly familiar with
+PSL; for more detail, see the information in <PSL.DOC>xxxx.DOC or
+<psl.lpt>xxxx.LPT).

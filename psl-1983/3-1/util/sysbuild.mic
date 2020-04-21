@@ -1,0 +1,7 @@
+@def pl: dsk:,plap:
+@PSL:RLISP
+*LOAD BUILD;
+*BUILD '''A;
+*QUIT;
+@def pl: plap:
+@reset .

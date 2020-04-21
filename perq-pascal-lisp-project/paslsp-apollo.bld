@@ -1,0 +1,15 @@
+; Command file to assemble PASn pieces together
+; Apollo version
+;
+COP PAS3.INI PASLSP.INI
+APP PAS1.SLI PASLSP.INI
+APP PAS2.SLI PASLSP.INI
+APP PAS3.SLI PASLSP.INI
+APP USER.SLI PASLSP.INI
+filter a <pas0.pre >s:plA.pas
+append pas1.pas S:PLA.PAS
+append pas2.pas S:PLA.PAS
+append pas3.pas S:PLA.PAS
+append exec.pas S:PLA.PAS
+filter a <pasn.pre >s:plAn.pas
+append S:plAn.pas S:PLA.PAS

@@ -1,0 +1,160 @@
+                     Random LAP and CMACRO Notes
+                     ---------------------------
+
+In LAP-TO-ASM, LoadTime and StartupTime have ASMpreEVAL property.
+Assumes certain things are WCONST's, like UNBOUND, HEAPSIZE,
+
+
+Collect ASMPSEUDOOPs
+	(FLOAT x)
+	(FULLWORD x Y z ...)
+	(BYTE x y ... z)
+	(HALFWORD x y ...)
+	(STRING s)
+
+Collect	OPERANDPRINTFUNCTIONS
+	(REG n)
+	(ENTRY id)
+	(INTERNALENTRY id)
+	(ExtraREG n)  -> A macro actually
+	(WVAR v)
+	(WARRAY v)
+	(WSTRING v)
+	(FLUID id)
+	($FLUID id)
+	(GLOBAL id)
+	($GLOBAL id)
+
+Collect ASMExpressionFunction
+	(INTERNALENTRY id)
+	(WCONST x)
+
+Collect WCONSTREFORMPSEUDO
+	(INTERNALENTRY id)
+	(QUOTE sexp)
+	(LOC m)
+	(IDLOC id)
+
+BinaryASMOP and UnaryAsmOP -> For Parens/rename
+
+	  (Plus2 !+)
+	  (WPlus2 !+)
+	  (Difference !-)
+	  (WDifference !-)
+	  (Times2 !*)
+	  (WTimes2 !*)
+	  (Quotient !/)
+	  (WQuotient !/)), 'BinaryASMOp);
+
+	  (Minus !-)
+	  (WMinus !-)), 'UnaryASMOp);
+
+
+ASMExpressionFormat and ASMExpressionFunction
+
+---------DEC20--------------------
+LAND,LOR,LXOR,LSH known BinaryASMOP
+LNOT UnaryASMOP
+MkItem is ASMEXPRESSIONFORMAT
+
+OperandPrintFunctions:
+	(INDIRECT exp)
+	(INDEXED exp)
+	(IMMEDIATE exp) -> A macro
+	(FIELDPOINTER x y z)
+
+CERROR is AsmPseudoOP, and !*CERROR is CMACRO
+
+
+-------------VAX----------------------------
+BINARYOP: Remainder LAND LOR LXOR LSH
+UNARY:    Lnot
+ASMEXPRESSIONFormat: MkItem
+
+OPERANDPRINTFUNCTION:
+	(DEFFERED x)
+	(DISPLACEMENT x)
+	(INDEXED x)
+	(IMMEDIATE x)
+	(AUTOINCREMENT x)
+	(AUTODECREMENT x)
+	(ABSOLUTE x)
+	(FOREIGNENTRY x)
+
+Also Cerror and !*Cerror
+
+
+-------------------------------------------------------
+
+
+Current set of ALM modes:
+  TERMINALOPERAND, passed as is to LAP, unchanged in recrusive CMACROS
+	(FLUID id)
+	(!$FLUID id)
+	(GLOBAL id)
+	(!$GLOBAL id)
+	(EXTRAREG r)
+
+	(LABEL l)
+	(INDEXED a) ? or TLM
+	(INDIRECT a) ? TLM
+	(LIT x)      ? TLM
+
+	(UNIMMEDIATE x)
+
+
+  ANYREG's just for OPEN-code
+	(CAR exp)
+	(CDR exp)
+
+  SPECIALANYREGS, can sometimes (always?) be used recursively
+		  provide the ANYREG table simplifies and re-installs
+		  same TAG, or some other TAG.
+	(FRAME i)
+	(FRAMESIZE)
+	(LABLEGEN l)
+	(LABELREF l)
+	(MEMORY a c)
+	(QUOTE sexp)	 % Not TEMINALOPERAND too; ANYREG table "clever"
+	(REG r)
+	(WCONST w)
+	(WVAR v)
+	(WARRAY v)    ? only in ASM
+
+Why are InternalEntry, ForeignEntry and Entry not in the
+above LIST. SHould they not be TERMINALOPERAND?
+
+Note that when in doubt, WCONST evaluable adds (IMMEDIATE...); is this
+a good idea?
+
+What are legal ALM addressing modes in each CMACRO,
+remember !*JUMP is allowed MEMORY; how about !*CALL
+
+
+Add CERROR and !*CERROR to COMMON-CMACROS; avoid FALL-THRU, rather
+ALWAYs have an ERROR clause as default. Ie, Writer of CMACROs must
+put in (ANY.. as default).
+
+How to turn off INTERNAL function for debugging.
+	Needs a flag, but can redefine INTERNALLYCALLABLEP to be NIL
+	in COMPILER being used (either CROSS or RESIDENT or FASL)
+
+	(de InternallyCallableP (x) NIL)
+
+What is difference between 'FASTLINK and INTERNALFUNCTION flag
+(see common-predicates)
+
+Check what can be loaded as .SL and .LAP to simplify BOOT.
+Ie how to ue MACRO's for compilation and INTERP. Perhaps
+change model of CMACRO to be REAL macro, seen by compiler.
+What is INTERP compatibility package? Need combine
+INTERP-SYSLISP, INUM, etc.
+
+
+To simplify debugging, can we make some "inessential" CMACRO's just
+refer to associated OPENCODE or HANDCODED routine (eg, xxxFIELD).
+Which CMACRO's are ESSENTIAL to COMPILER, which only appear in
+the COMP-DECLS, and which are "pure" optimizations?
+
+SRCCOM the various DECL files, perhaps can be made more common (for
+the moment).

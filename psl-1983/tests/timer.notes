@@ -1,0 +1,97 @@
+            Some notes on the PSL "spectral" timing Tests
+
+                           Martin L. Griss
+
+                            March 17 1982
+
+
+The tests in the file PT:PSL-TIMER.SL (which is compiled and then
+driven by calls in PT:TIME-PSL.SL) have been gathered by us, with
+assistance/requests/suggestions from Fateman and Foderaro at Berkeley,
+JONL White and George Charrette at MIT, and Gabriel at Stanford as
+part of hist tests for the analysis of different LISP systems.  They
+range over a number of LISP fundamentals, such as function calling
+speed, compiler quality, simple EVAL speed, INUM/FIXNUM arithmetic,
+CAR/CDR speeds, CONS speed, Type-testing predicates, etc.  In most
+cases, the times quoted are for N iterations of some basic loop, with
+N fixed at some convenient quantity; the current N is given.
+
+The tests first set up some lists, which are then used for CDR'ing
+and counting loops. These are:
+
+	LONGLIST	1664 elements
+	TESTLIST	1002 elements
+	TESTLIST2	2002 elements
+
+TEST  N         Description and comments
+
+Empty 10k      	Fastest Empty loop, using INUM or FIXNUM arithmetic
+		as measure of overhead.
+
+SlowEmpty 10k	Empty loop using generic arithmetic, usually
+                much slower than Empty because of subroutine call.
+		The loop indices are still in INUM range, and some
+		implementations may opencode part of the arithmetic.
+
+Cdr1 100        Cdr down LONGLIST N times, using ATOM to terminate.
+                The loop is done using INUM arithmetic
+		If there is no INUM/FIXNUM arithmetic, this time is
+                swamped by arithmetic time. 
+
+		In PSL, ATOM test requires TAG extraction, while 
+		NULL test is just an EQ with NIL. In some implementations
+		CAR and CDR require the TAG to be masked off with an
+		extra instruction, while in others the hardware ignores
+		the tag field in addressing operations, speed this up.
+
+Cdr2 100	Cdr down LONGLIST N times, using NULL to terminate.
+		Compare with CDR1 tests.
+
+Cddr 100	Cddr down LONGLIST N times, using NULL to terminate
+		Note that some time CDDR is done better than just CDR
+		since addressing modes may help.
+
+
+ListOnlyCdr1    Cdr down TESTLIST, length TESTLIST times, using NULL
+	        These LISTONLY... tests do not use arithmetic to loop.		
+
+ListOnlyCddr    Cddr down TESTLIST, length TESTLIST times, using NULL
+
+ListOnlyCdr2    Cdr down TESTLIST, length TESTLIST, using ATOM
+	        This does not use arithmetic to loop.
+
+ListOnlyCddr    Cddr down TESTLIST2, length TESTLIST times, using ATOM.
+
+
+
+
+Reverse 10	Call system reverse on LONGLIST, N times.
+                This CONS's a lot, also some SYSTEM reverse's
+                handcoded, e.g. LISP 1.6.
+
+MyReverse1 10	Reverse compiled, using ATOM to terminate
+
+MyReverse2 10	Reverse compiled, using NULL to terminate
+
+Length 100     	Built-in length, on LONGLIST.
+
+Arithmetic 10k	Call FACTORIAL 9, N times, generic arithmetic.
+                Looping as in EMPTYtest.
+
+Eval 10k        EVAL EvalForm N times.
+                EvalForm is (SETQ FOO (CADR '(1 2 3))) .
+
+tak 18 12 6	Gabriel's test function that has been used
+                on MANY LISP systems. Using INUM/FIXNUM arithmetic.
+
+gtak 18 12 6    As above, using Generic arithmetic.
+
+gtsta g0        Charrete's FUNCALL/APPLY test. 100000 loops on
+                (APPLY F (list I)) or (FUNCALL F I), whichever
+                exists and is fastest in system. [PSL converts
+                (APPLY F (list I)) into a fast-apply].
+	        g0 is a NOOP.
+
+gtsta g1        g1 calls ADD1
+
+

@@ -1,0 +1,591 @@
+PSL Manual                    7 February 1983                List Structure
+section 7.0                                                        page 7.1
+
+                                 CHAPTER 7                                 CHAPTER 7                                 CHAPTER 7
+                              LIST STRUCTURE                              LIST STRUCTURE                              LIST STRUCTURE
+
+
+
+
+     7.1. Introduction to Lists and Pairs .  .  .  .  .  .  .  .  .     7.1
+     7.2. Basic Functions on Pairs  .  .  .  .  .  .  .  .  .  .  .     7.2
+     7.3. Functions for Manipulating Lists.  .  .  .  .  .  .  .  .     7.4
+          7.3.1. Selecting List Elements  .  .  .  .  .  .  .  .  .     7.4
+          7.3.2. Membership and Length of Lists .  .  .  .  .  .  .     7.6
+          7.3.3. Constructing, Appending, and Concatenating Lists .     7.6
+          7.3.4. Lists as Sets.  .  .  .  .  .  .  .  .  .  .  .  .     7.7
+          7.3.5. Deleting Elements of Lists  .  .  .  .  .  .  .  .     7.8
+          7.3.6. List Reversal.  .  .  .  .  .  .  .  .  .  .  .  .     7.9
+     7.4. Functions for Building and Searching A-Lists.  .  .  .  .    7.10
+     7.5. Substitutions .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    7.11
+
+
+
+
+7.1. Introduction to Lists and Pairs7.1. Introduction to Lists and Pairs7.1. Introduction to Lists and Pairs
+
+       ____  The  pair  is  a  fundamental  PSL  data  type,  and  is one of the major
+                                    ____                   ____attractions of LISP programming.  A pair consists of a two-item  structure.
+                                       Car                    Cdr                                       Car                    CdrIn PSL the first element is called the Car and the second the Cdr; in other
+LISPs,  the  physical  relationship  of  the  parts  may  be different.  An
+                                                                        Car                                                                        Carillustration of the tree structure is given below as a box diagram; the Car
+        Cdr        Cdrand the Cdr are each represented as a portion of the box.
+
+
+                             -----------------
+                             || Car  | Cdr  ||
+                             -----------------
+
+
+  As an example, a tree written as ((A . B) . (C . D)) in  dot-notation  is
+drawn below as a box diagram.
+
+
+                             -----------------
+                             ||   /  |  \   ||
+                             ----/-------\----
+                                /         \
+                  -----------------       -----------------
+                  ||  A   |   B  ||       ||  C    |   D ||
+                  -----------------       -----------------
+
+
+  The  box  diagrams are tedious to draw, so dot-notation is normally used.
+                                                                 ____Note that a space is left on each side of the . to ensure  that  pairs  are
+                  _____not confused with floats.  Note also that in RLISP a dot may be used as theList Structure                7 February 1983                    PSL Manual
+page 7.2                                                        section 7.1
+
+                                  Cons                                  Consinfix  operator  for the function Cons, as in the expression x := 'y . 'z;,
+                               ____or as part of the notation for pairs, as in the  expression  x := '(y . z);
+(see Section 3.3.3).
+
+  An  important special case occurs frequently enough that it has a special
+                     ____notation.  This is a list of items, terminated by convention  with  the  id
+NIL.    The  dot  and  surrounding  parentheses are omitted, as well as the
+trailing NIL.  Thus 
+
+
+    (A . (B . (C . NIL)))
+
+
+can be represented in list-notation as 
+
+
+    (A B C)
+
+
+
+7.2. Basic Functions on Pairs7.2. Basic Functions on Pairs7.2. Basic Functions on Pairs
+
+                                            ____  The following are elementary functions on pairs.  All functions  in  this
+Chapter  which  require pairs as parameters signal a type mismatch error if
+the parameter given is not a pair.
+
+
+ Cons Cons _ ___ _ ___   ____                                               ____(Cons U:any V:any): pair                                               expr
+
+                                 Eq               ____              Eq                          _     Returns a pair which is not Eq to anything else and has U as  its
+     Car                   Cdr     Car          _        Cdr     Car part and V as its Cdr part.  In RLISP syntax the dot, ".", is
+                                   Cons                                   Cons     an  infix  operator  meaning  Cons.  Thus (A . (B . fn C) . D) is
+                   Cons     Cons  Cons                   Cons     Cons  Cons     equivalent to Cons (A, Cons (Cons (B, fn C), D)).    See  Section
+     3.3.3 for more discussion of how dot is read.
+
+
+ Car Car _ ____   ___                                       ____ ________  ____(Car U:pair): any                                       open-compiled, expr
+
+                       _     The  left part of U is returned.  A type mismatch error occurs if
+     _          ____              _     U is not a pair, except when U is NIL.   Then  NIL  is  returned.
+      Car  Cons      Car  Cons     (Car (Cons a  b)) ==> a.
+
+
+ Cdr Cdr _ ____   ___                                       ____ ________  ____(Cdr U:pair): any                                       open-compiled, expr
+
+                       _     The right part of U is returned.  A type mismatch error occurs if
+     _              ____              _     U  is  not  a  pair, except when U is NIL.  Then NIL is returned.
+      Cdr  Cons      Cdr  Cons     (Cdr (Cons a  b)) ==> b.
+
+                    Car     Cdr                    Car     Cdr  The composites of Car and Cdr are supported up to four levels.PSL Manual                    7 February 1983                List Structure
+section 7.2                                                        page 7.3
+
+                 Car                                   Cdr                 Car                                   Cdr                 Car                                   Cdr
+       Caar               Cdar               Cadr               Cddr       Caar               Cdar               Cadr               Cddr       Caar               Cdar               Cadr               Cddr
+   Caaar  Cdaar       Cadar  Cddar       Caadr  Cdadr       Caddr  Cdddr   Caaar  Cdaar       Cadar  Cddar       Caadr  Cdadr       Caddr  Cdddr   Caaar  Cdaar       Cadar  Cddar       Caadr  Cdadr       Caddr  Cdddr
+  Caaaar  Cadaar     Caadar  Caddar     Caaadr  Cadadr     Caaddr  Cadddr  Caaaar  Cadaar     Caadar  Caddar     Caaadr  Cadadr     Caaddr  Cadddr  Caaaar  Cadaar     Caadar  Caddar     Caaadr  Cadadr     Caaddr  Cadddr
+  Cdaaar  Cddaar     Cdadar  Cdddar     Cdaadr  Cddadr     Cdaddr  Cddddr  Cdaaar  Cddaar     Cdadar  Cdddar     Cdaadr  Cddadr     Cdaddr  Cddddr  Cdaaar  Cddaar     Cdadar  Cdddar     Cdaadr  Cddadr     Cdaddr  Cddddr
+
+                      ____                      ____                      ____                      expr                      expr     These  are  all  exprs of one argument.  They may return any type
+     and are generally open-compiled.  An example of their use is that
+     Cddar                    Cdr Cdr Car             Car      Cdr     Cddar                    Cdr Cdr Car             Car      Cdr     Cddar p is equivalent to Cdr Cdr Car p.  As with Car and  Cdr,  a
+     type  mismatch  error occurs if the argument does not possess the
+     specified component.
+
+  As an alternative to  employing  chains  of  CxxxxR  to  obscure  depths,
+                                              ____particularly  in  extracting  elements  of  a list, consider the use of the
+          First  Second  Third  Fourth     Nth          First  Second  Third  Fourth     Nthfunctions First, Second, Third, Fourth, or Nth (Section 7.3.1), or possibly
+even the Defstruct package (Section 17.6).
+
+
+ NCons NCons _ ___   ____                                     ____ ________  ____(NCons U:any): pair                                     open-compiled, expr
+
+                   Cons                   Cons  _     Equivalent to Cons (U, NIL).
+
+
+ XCons XCons _ ___ _ ___   ____                               ____ ________  ____(XCons U:any V:any): pair                               open-compiled, expr
+
+                   Cons                   Cons  _  _     Equivalent to Cons (V, U).
+
+
+ Copy Copy _ ___   ___                                                      ____(Copy X:any): any                                                      expr
+
+                ____       _     Copies all pairs  in  X,  but  does  not  make  copies  of  atoms
+     (including vectors and strings).  For example, if A is 
+
+        ([2 5] "ATOM")
+
+     and B is the result of (Copy A), then
+
+
+                (Eq A B) is NIL
+           but  (Eq (Car A) (Car B)) is T
+           and  (Eq (Cadr A) (Cadr B)) is T
+
+
+          TotalCopy                              Copy          TotalCopy                              Copy     See  TotalCopy  in  Section 8.5.  Note that Copy is recursive and
+     will not terminate if its argument is a circular list.
+
+  See Chapter 8 for other relevant functions.
+
+  The following functions are known  as  "destructive"  functions,  because
+they  change  the  structure  of  the  pair  given  as  their argument, and
+consequently change the structure of the object containing the pair.   They
+are  most  frequently  used  for  various  "efficient"  functions (e.g. theList Structure                7 February 1983                    PSL Manual
+page 7.4                                                        section 7.2
+
+            ReverseIP     NConc                            DeleteIP            ReverseIP     NConc                            DeleteIPnon-copying ReverseIP and NConc functions, and destructive DeleteIP) and to
+build  structures  that  have  deliberately shared sub-structure.  They are
+also capable of creating  circular  structures,  which  create  havoc  with
+                                                  careful                                                  carefulnormal printing and list traversal functions.  Be careful using them.
+
+
+ RplacA RplacA _ ____ _ ___   ____                             ____ ________  ____(RplacA U:pair V:any): pair                             open-compiled, expr
+
+          Car          Car                _                _                   _     The  Car  of  the  pair U is replaced by V, and the modified U is
+                    _                  _     returned.  (If U is (a . b) then (V .b) is  returned).    A  type
+                              _     mismatch error occurs if U is not a pair.
+
+
+ RplacD RplacD _ ____ _ ___   ____                             ____ ________  ____(RplacD U:pair V:any): pair                             open-compiled, expr
+
+          Cdr          Cdr                _                _                   _     The  Cdr  of  the  pair U is replaced by V, and the modified U is
+                    _                      _     returned.  (If U is (a . b) then (a . V) is returned).    A  type
+                              _     mismatch error occurs if U is not a pair.
+
+
+ RplacW RplacW _ ____ _ ____   ____                                           ____(RplacW A:pair B:pair): pair                                           expr
+
+                                     Car                           Car                                     Car    _                      Car     Replaces  the  whole pair:  the Car of A is replaced with the Car
+                   Cdr               Cdr        _          Cdr    _          Cdr    _                    _     of B, and the Cdr of A with the Cdr of B.    The  modified  A  is
+     returned.
+
+  [???  Should  we  add  some  more functions here someday?  Probably the  [???  Should  we  add  some  more functions here someday?  Probably the  [???  Should  we  add  some  more functions here someday?  Probably the
+  RLISP guys that do arbitrary depth member type stuff. ???]  RLISP guys that do arbitrary depth member type stuff. ???]  RLISP guys that do arbitrary depth member type stuff. ???]
+
+
+
+7.3. Functions for Manipulating Lists7.3. Functions for Manipulating Lists7.3. Functions for Manipulating Lists
+
+                                                    ____             ____  The following functions are meant for the special pairs which are  lists,
+as  described in Section 7.1.  Note that the functions described in Chapter
+8 can also be used on lists.
+
+  [??? Make some mention of mapping with  FOR...COLLECT  and  such  like.  [??? Make some mention of mapping with  FOR...COLLECT  and  such  like.  [??? Make some mention of mapping with  FOR...COLLECT  and  such  like.
+  ???]  ???]  ???]
+
+
+7.3.1. Selecting List Elements7.3.1. Selecting List Elements7.3.1. Selecting List Elements
+
+
+ First First _ ____   ___                                                   _____(First L:pair): any                                                   macro
+
+                   Car                   Car _     A synonym for Car L.PSL Manual                    7 February 1983                List Structure
+section 7.3                                                        page 7.5
+
+ Second Second _ ____   ___                                                  _____(Second L:pair): any                                                  macro
+
+                   Cadr                   Cadr _     A synonym for Cadr L.
+
+
+ Third Third _ ____   ___                                                   _____(Third L:pair): any                                                   macro
+
+                   Caddr                   Caddr _     A synonym for Caddr L.
+
+
+ Fourth Fourth _ ____   ___                                                  _____(Fourth L:pair): any                                                  macro
+
+                   Cadddr                   Cadddr _     A synonym for Cadddr L.
+
+
+ Rest Rest _ ____   ___                                                    _____(Rest L:pair): any                                                    macro
+
+                   Cdr                   Cdr _     A synonym for Cdr L.
+
+
+ LastPair LastPair _ ____   ___                                                 ____(LastPair L:pair): any                                                 expr
+
+           ____        ____     Last  pair  of  a list.  It is often useful to think of this as a
+     pointer to the last element for use  with  destructive  functions
+               RplacA               RplacA                _     such  as  RplacA.  Note that if L is atomic a type mismatch error
+     occurs.  
+
+        (De LastPair (L)
+              (Cond ((Null (Rest L)) L)
+                    (T (LastPair (Rest L)))))
+
+
+ LastCar LastCar _ ___   ___                                                   ____(LastCar L:any): any                                                   expr
+
+                                     ____ _     Returns the last element of the list L.  A  type  mismatch  error
+                                                First LastPair                _                               First LastPair _     results if L is not a list.  Equivalent to First LastPair L.
+
+
+ Nth Nth _ ____ _ _______   ___                                            ____(Nth L:pair N:integer): any                                            expr
+
+                                          ____  _       _     Returns  the  Nth  element  of  the  list  L.   If L is atomic or
+                         _     contains fewer than N elements, an out  of  range  error  occurs.
+                    First  PNth                    First  PNth     Equivalent to (First (PNth L N)).
+
+
+ PNth PNth _ ____ _ _______   ___                                           ____(PNth L:list N:integer): any                                           expr
+
+              ____                                       ____ _     Returns  list  starting  with  the Nth element of a list L.  Note
+     that it is often useful to view this as  a  pointer  to  the  Nth
+                                                               RplacA                  _                                            RplacA     element  of  L for use with destructive functions such as RplacA.
+        _                                  _     If L is atomic or contains fewer than N elements, an out of range
+     error occurs.      List Structure                7 February 1983                    PSL Manual
+page 7.6                                                        section 7.3
+
+        (De PNth (L N)
+                (Cond ((Leq N 1) L)
+                      (T (PNth (Cdr L) (Sub1 N)))))
+
+
+7.3.2. Membership and Length of Lists7.3.2. Membership and Length of Lists7.3.2. Membership and Length of Lists
+
+
+ Member Member _ ___ _ ____   _____ _______                                   ____(Member A:any L:list): extra-boolean                                   expr
+
+                               Equal                      _        Equal                              ____     Returns  NIL  if A is not Equal to some top level element of list
+     _                                        _     L; otherwise it returns the remainder of L whose first element is
+     _     A.
+
+        (De Member (A L)
+                (Cond((Null L) Nil)
+                     ((Equal A (First L)) L)
+                     (T (Member A (Rest L)))))
+
+
+ MemQ MemQ _ ___ _ ____   _____ _______                                     ____(MemQ A:any B:list): extra-boolean                                     expr
+
+             Member         Eq             Member         Eq     Same as Member, but an Eq check is used for comparison.
+
+        (De Memq (A L)
+                (Cond((Null L) Nil)
+                     ((Eq A (First L)) L)
+                     (T (Memq A (Rest L)))))
+
+
+ Length Length _ ___   _______                                                ____(Length X:any): integer                                                expr
+
+                                 ____ _     The top level length of the list X is returned.
+
+        (De Length (X)
+                (Cond((Atom X) 0)
+                     (T (Plus (Length X) 1))))
+
+
+7.3.3. Constructing, Appending, and Concatenating Lists7.3.3. Constructing, Appending, and Concatenating Lists7.3.3. Constructing, Appending, and Concatenating Lists
+
+
+ List List  _ ___    ____                                                  _____(List [U:any]): list                                                  fexpr
+
+                 ____                                    ____     Construct a list of the evaluated  arguments.    A  list  of  the
+                                   _     evaluation of each element of U is returned.
+
+
+ Append Append _ ____ _ ____   ____                                           ____(Append U:list V:list): list                                           expr
+
+                              ____                                _     Returns  a  constructed  list  in  which the last element of U is
+                                      _       ____ _                 _     followed by the first element of V.  The list U is copied, but  VPSL Manual                    7 February 1983                List Structure
+section 7.3                                                        page 7.7
+
+     is not.    
+
+        (De Append (U V)
+                (Cond ((Null U) V)
+                      (T (Cons (Car U) (Append (Cdr U) V)))))
+
+
+ NConc NConc _ ____ _ ____   ____                                            ____(NConc U:list V:list): list                                            expr
+
+                               Append                               Append                   _    _     Destructive  version  of  Append.    Concatenates  V to U without
+                          Cdr             _            Cdr    _                         _     copying U.  The last Cdr of U is modified to point to V.  See the
+     warning on page 7.3 about the use of destructive functions.     
+
+        (De Nconc (U V)
+                 (Cond ((Null U) V)
+                       (T (Rplacd (Lastcdr U V)))))
+
+
+ AConc AConc _ ____ _ ___   ____                                             ____(AConc U:list V:any): list                                             expr
+
+                                _                ____ _     Destructively adds element V to the tail of list U.
+
+
+ LConc LConc ___ ____ ____ ____   ____                                       ____(LConc PTR:list ELEM:list): list                                       expr
+
+                 NConc                 NConc     Effectively NConc, but avoids scanning from the front to the  end
+                     RPLACD         ___         RPLACD ___  ____     of  PTR for the RPLACD(PTR, ELEM) by maintaining a pointer to end
+                                      LastPair            ____ ___   ___     ____   LastPair ____     of the list PTR.  PTR is (list . LastPair list).  Returns updated
+     ___   ___     PTR.  PTR should be initialized to NIL . NIL before  calling  the
+                                ____     first time.  Used to build lists from left to right.
+
+
+ TConc TConc ___ ____ ____ ___   ____                                        ____(TConc PTR:list ELEM:any): list                                        expr
+
+                  AConc                  AConc     Effectively  AConc, but avoids scanning from the front to the end
+                    RPLACD      List        ___         RPLACD ___  List ____     of PTR for the RPLACD(PTR, List(ELEM)) by maintaining  a  pointer
+                                              LastPair                    ____ ___   ___     ____   LastPair ____     to  end of the list PTR.  PTR is (list . LastPair list).  Returns
+             ___   ___     updated PTR.  PTR  should  be  initialized  to  NIL . NIL  before
+                                            ____     calling the first time.  Used to build lists from left to right.
+
+
+7.3.4. Lists as Sets7.3.4. Lists as Sets7.3.4. Lists as Sets
+
+                 ____  A  set  is  a  list  in  which  each  element occurs only once.  Order of
+elements does not matter, so these functions may not preserve order.
+
+
+ Adjoin Adjoin _______ ___ ___ ____   ____                                    ____(Adjoin ELEMENT:any SET:list): list                                    expr
+
+                                                                 Equal         _______    ___                                          Equal     Add ELEMENT to SET if it is not already on the top level.   Equal
+     is used to test for equality.List Structure                7 February 1983                    PSL Manual
+page 7.8                                                        section 7.3
+
+ AdjoinQ AdjoinQ _______ ___ ___ ____   ____                                   ____(AdjoinQ ELEMENT:any SET:list): list                                   expr
+
+     Adjoin       Eq     Adjoin       Eq                      _______               ___     Adjoin using Eq for the test whether ELEMENT is already in SET.
+
+
+ Union Union _ ____ _ ____   ____                                            ____(Union X:list Y:list): list                                            expr
+
+     Set union.
+
+
+ UnionQ UnionQ _ ____ _ ____   ____                                           ____(UnionQ X:list Y:list): list                                           expr
+
+     Eq            Union     Eq            Union     Eq version of Union.
+
+
+ InterSection InterSection _ ____ _ ____   ____                                     ____(InterSection U:list V:list): list                                     expr
+
+     Set intersection.
+
+
+ InterSectionQ InterSectionQ _ ____ _ ____   ____                                    ____(InterSectionQ U:list V:list): list                                    expr
+
+     Eq            InterSection     Eq            InterSection     Eq version of InterSection.
+
+
+ List2Set List2Set ___ ____   ____                                              ____(List2Set SET:list): list                                              expr
+
+                                                               Equal                                                     ___       Equal     Remove redundant elements from the top level of SET using Equal.
+
+
+ List2SetQ List2SetQ ___ ____   ____                                             ____(List2SetQ SET:list): list                                             expr
+
+                                                               Eq                                                     ___       Eq     Remove redundant elements from the top level of SET using Eq.
+
+
+7.3.5. Deleting Elements of Lists7.3.5. Deleting Elements of Lists7.3.5. Deleting Elements of Lists
+
+                                                 xxxIP               xxx                                                 xxxIP               xxx  Note  that  functions  with  names of the form xxxIP indicate that xxx is
+done InPlace.
+
+
+ Delete Delete _ ___ _ ____   ____                                            ____(Delete U:any V:list): list                                            expr
+
+             _                                        _     Returns V with the first top level occurrence of U  removed  from
+                               _                                  _     it.    That  portion  of  V  before  the first occurrence of U is
+     copied.    
+
+        (De Delete (U V)
+                (Cond((Null V) Nil)
+                     ((Equal (First V) U) (Rest V))
+                     (T (Cons (First V) (Delete U (Rest V))))))PSL Manual                    7 February 1983                List Structure
+section 7.3                                                        page 7.9
+
+ Del Del _ ________ _ ___ _ ____   ____                                    ____(Del F:function U:any V:list): list                                    expr
+
+                 Delete                 Delete               _     Generalized Delete function with F as the comparison function.
+
+
+ DeletIP DeletIP _ ___ _ ____   ____                                           ____(DeletIP U:any V:list): list                                           expr
+
+                  Delete                   RplacD                  Delete           _       RplacD                    _     Destructive  Delete; modifies V using RplacD.  Do not depend on V
+                                   ____     itself correctly referring to list.
+
+
+ DelQ DelQ _ ___ _ ____   ____                                              ____(DelQ U:any V:list): list                                              expr
+
+                            Eq            _      _        Eq     Delete U from V, using Eq for comparison.
+
+
+ DelQIP DelQIP _ ___ _ ____   ____                                            ____(DelQIP U:any V:list): list                                            expr
+
+                            DelQ      DeletIP                            DelQ      DeletIP     Destructive version of DelQ; see DeletIP.
+
+
+ DelAsc DelAsc _ ___ _ _ ____   _ ____                                        ____(DelAsc U:any V:a-list): a-list                                        expr
+
+                   _             _     Remove first (U . xxx) from V.
+
+
+ DelAscIP DelAscIP _ ___ _ _ ____   _ ____                                      ____(DelAscIP U:any V:a-list): a-list                                      expr
+
+                 DelAsc                 DelAsc     Destructive DelAsc.
+
+
+ DelatQ DelatQ _ ___ _ _ ____   _ ____                                        ____(DelatQ U:any V:a-list): a-list                                        expr
+
+                                          Eq                   _             _        Eq                        _     Delete first (U . xxx) from V, using Eq to check equality with U.
+
+
+ DelatQIP DelatQIP _ ___ _ _ ____   _ ____                                      ____(DelatQIP U:any V:a-list): a-list                                      expr
+
+                 DelatQ                 DelatQ     Destructive DelatQ.
+
+
+7.3.6. List Reversal7.3.6. List Reversal7.3.6. List Reversal
+
+
+ Reverse Reverse _ ____   ____                                                 ____(Reverse U:list): list                                                 expr
+
+                                        _     Returns a copy of the top level of U in reverse order.List Structure                7 February 1983                    PSL Manual
+page 7.10                                                       section 7.3
+
+        (De Reverse (U)
+                 (Prog (W)
+                   (While U
+                     (ProgN
+                       (Setq W (Cons (Car U) W))
+                       (Setq U (Cdr U))))
+                   (Return W)))
+
+
+ ReversIP ReversIP _ ____   ____                                                ____(ReversIP U:list): list                                                expr
+
+                 Reverse                 Reverse     Destructive Reverse.
+
+
+
+7.4. Functions for Building and Searching A-Lists7.4. Functions for Building and Searching A-Lists7.4. Functions for Building and Searching A-Lists
+
+
+ Assoc Assoc _ ___ _ _ ____    ____  ___                                     ____(Assoc U:any V:a-list): {pair, NIL}                                    expr
+
+                        Car        _               Car                              _ ____ _     If U occurs as the Car portion of an element of the a-list V, the
+     ____             _     pair  in  which  U  occurred  is  returned, else NIL is returned.
+     Assoc     Assoc                                     _ ____     Assoc might not detect a  poorly  formed  a-list  so  an  invalid
+                                     Car    Cdr                                     Car    Cdr     construction may be detected by Car or Cdr.
+
+        (De Assoc (U V)
+                (Cond ((Null V) Nil)
+                      ((Atom (Car V))
+                       (Error 000 (List V "is a poorly formed alis
+                      ((Equal U (Caar V)) (Car V))
+                      (T (Assoc U (Cdr V)))))
+
+
+ Atsoc Atsoc __ ___ __ ___   ___                                             ____(Atsoc R1:any R2:any): any                                             expr
+
+                           Car Eq      Eq            Assoc          __     ____      Car Eq __   Eq            Assoc     Scan R2 for pair with Car Eq R1.  Eq version of Assoc.
+
+
+ Ass Ass _ ________ _ ___ _ _ ____    ____  ___                            ____(Ass F:function U:any V:a-list): {pair, NIL}                           expr
+
+     Ass                      Assoc     Ass                      Assoc               _     Ass  is  a  generalized  Assoc  function.    F  is the comparison
+     function.
+
+
+ SAssoc SAssoc _ ___ _ _ ____ __ ________   ___                               ____(SAssoc U:any V:a-list FN:function): any                               expr
+
+                  _ ____ _                      _      _     Searches the a-list V for an occurrence of U.  If U is not in the
+     _ ____                             __     a-list, the evaluation of function FN is returned.PSL Manual                    7 February 1983                List Structure
+section 7.4                                                       page 7.11
+
+        (De SAssoc (U V FN)
+                (Cond ((Null V) (FN))
+                      ((Equal U (Caar V)) (Car V))
+                      (T (SAssoc U (Cdr V) FN))))
+
+
+ Pair Pair _ ____ _ ____   _ ____                                           ____(Pair U:list V:list): a-list                                           expr
+
+     _       _       ____     U  and  V  are  lists  which  must  have  an  identical number of
+                                                        ____     elements.  If not, an error occurs.  Returned is a list in  which
+                                  Car                        ____      Car        ____            _     each  element is a pair, the Car of the pair being from U and the
+     Cdr     Cdr                                      _     Cdr being the corresponding element from V.
+
+        (De Pair (U V)
+               (Cond ((And U V)(Cons (Cons (Car U)(Car V))
+                                     (Pair (Cdr U)(Cdr V))))
+                     ((Or U V)(Error 000 "Different length lists i
+                     (T Nil)))
+
+
+
+7.5. Substitutions7.5. Substitutions7.5. Substitutions
+
+
+ Subst Subst _ ___ _ ___ _ ___   ___                                         ____(Subst U:any V:any W:any): any                                         expr
+
+                                        _                        _     Returns the result of substituting U for all occurrences of V  in
+     _                 _                          _     W.  Copies all of W which is not replaced by U.  The test used is
+     Equal     Equal     Equal.
+
+        (De Subst (U V W)
+                 (Cond ((Null W) Nil)
+                       ((Equal V W) U)
+                       ((Atom W) W)
+                       (T (Cons (Subst U V (Car W))(Subst U V (Cdr
+
+
+ SubstIP SubstIP _ ___ _ ___ _ ___   ___                                       ____(SubstIP U:any V:any W:any): any                                       expr
+
+                 Subst                 Subst     Destructive Subst.
+
+
+ SubLis SubLis _ _ ____ _ ___   ___                                           ____(SubLis X:a-list Y:any): any                                           expr
+
+                               Subst                               Subst     This performs a series of Substs in parallel.  The value returned
+                                            Cdr                                            Cdr     is  the  result  of  substituting  the Cdr of each element of the
+                                          Car     _ ____ _                             Car     a-list X for every occurrence of the Car part of that element  in
+     _     Y.List Structure                7 February 1983                    PSL Manual
+page 7.12                                                       section 7.5
+
+        (De SubLis (X Y)
+          (Cond
+            ((Null X) Y)
+            (T
+              (Prog (U)
+                (Setq U (Assoc Y X))
+                (Return
+                  (Cond
+                    (U (Cdr U))
+                    ((Atom Y) Y)
+                    (T (Cons (SubLis X (Car Y)) (SubLis X (Cdr Y))
+
+
+ SublA SublA _ _ ____ _ ___   ___                                            ____(SublA U:a-list V:any): any                                            expr
+
+     Eq            SubLis     Eq            SubLis     Eq version of SubLis; replaces atoms only.

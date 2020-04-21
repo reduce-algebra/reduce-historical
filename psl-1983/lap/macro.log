@@ -1,0 +1,98 @@
+
+			 7-Mar-83 16:04:44
+
+BATCON Version	104(4133)			GLXLIB Version	1(527)
+
+	    Job MACRO Req #264 for KESSLER in Stream 0
+
+	OUTPUT:	 Nolog				TIME-LIMIT: 0:20:00
+	UNIQUE:	 Yes				BATCH-LOG:  Supersede
+	RESTART: No				ASSISTANCE: Yes
+						SEQUENCE:   802
+
+	Input from => PS:<PSL.KERNEL.20>MACRO.CTL.2
+	Output to  => PS:<PSL.KERNEL.20>MACRO.LOG
+
+
+
+16:04:44 MONTR	 Univ of Utah Computer Science KL-20, TOPS-20AN Monitor 5.3(1500)
+16:04:44 MONTR	@SET TIME-LIMIT 1200
+16:04:45 MONTR	@LOGIN KESSLER SMALL
+16:04:48 MONTR	 Job 13 on TTY225 7-Mar-83 16:04:48
+16:04:48 MONTR	 Previous login at 7-Mar-83 15:55:36
+16:04:48 MONTR	 There is 1 other job logged in as user KESSLER
+16:04:57 MONTR	@
+16:04:57 MONTR	[PS Mounted]
+16:04:57 MONTR	
+16:04:57 MONTR	[CONNECTED TO PS:<PSL.KERNEL.20>]
+16:04:57 MONTR	define DSK: DSK:, P20:, PI:
+16:04:58 MONTR	@S:DEC20-CROSS.EXE
+16:05:00 USER	Dec 20 cross compiler
+16:05:03 USER	[8] ASMOut "macro";
+16:05:07 USER	ASMOUT: IN files; or type in expressions
+16:05:07 USER	When all done execute ASMEND;
+16:06:20 USER	[9] in "macro.build";
+16:06:21 USER	%
+16:06:21 USER	% MACRO.BUILD - Files of macros defined in the interpreter
+16:06:21 USER	% 
+16:06:21 USER	% Author:      Eric Benson
+16:06:21 USER	%              Symbolic Computation Group
+16:06:21 USER	%              Computer Science Dept.
+16:06:21 USER	%              University of Utah
+16:06:21 USER	% Date:        19 May 1982
+16:06:21 USER	% Copyright (c) 1982 University of Utah
+16:06:21 USER	%
+16:06:21 USER	
+16:06:21 USER	%  <PSL.KERNEL>MACRO.BUILD.2,  2-Feb-83 15:36:40, Edit by PERDUE
+16:06:21 USER	%  Removed char.red.  It is now pnk:char-macro.red
+16:06:21 USER	
+16:06:21 USER	PathIn "eval-when.red"$
+16:06:22 USER	*** Function `COMMENTOUTCODE' has been redefined
+16:06:26 USER	                        % control evaluation time
+16:06:26 USER	PathIn "cont-error.red"$
+16:06:31 USER	*** Function `CONTERROR' has been redefined
+16:06:44 USER	                % macro for ContinuableError
+16:06:44 USER	PathIn "lisp-macros.red"$
+16:06:56 USER	*** Function `SETF' has been redefined
+16:06:57 USER	                % Various macros for readability
+16:06:58 USER	PathIn "onoff.red"$
+16:07:01 USER	*** Function `ON' has been redefined
+16:07:02 USER	*** Function `OFF' has been redefined
+16:07:02 USER	*** Garbage collection starting
+16:07:27 USER	*** GC 4: time 3242 ms
+16:07:27 USER	*** 73050 recovered, 564 stable, 16385 active, 73051 free
+16:07:37 USER	                        % (on xxx yyy) and (off xxx yyy)
+16:07:37 USER	PathIn "define-smacro.red"$
+16:07:57 USER	*** Function `DS' has been redefined
+16:08:15 USER	
+16:08:15 USER	PathIn "defconst.red"$
+16:08:16 USER	*** Function `DEFCONST' has been redefined
+16:08:18 USER	*** Function `CONST' has been redefined
+16:08:19 USER	
+16:08:19 USER	PathIn "string-gensym.red"$
+16:08:23 USER	PathIn "loop-macros.red"$
+16:08:25 USER	*** Function `FOREACH' has been redefined
+16:08:31 USER	*** Function `EXIT' has been redefined
+16:08:32 USER	*** Function `NEXT' has been redefined
+16:08:32 USER	*** Function `WHILE' has been redefined
+16:08:34 USER	*** Function `REPEAT' has been redefined
+16:08:43 USER	*** Function `FOR' has been redefined
+16:08:44 USER	*** Garbage collection starting
+16:09:04 USER	*** GC 5: time 2950 ms
+16:09:04 USER	*** 70120 recovered, 16605 stable, 3275 active, 70120 free
+16:09:13 USER	                % Various macros for readability
+16:09:14 USER	[10] ASMEnd;
+16:10:31 USER	NIL
+16:10:32 USER	[11] quit;
+16:10:33 MONTR	@compile macro.mac, dmacro.mac
+16:10:37 USER	MACRO:  .MAIN
+16:10:51 USER	MACRO:  .MAIN
+16:10:52 USER	
+16:10:52 USER	EXIT
+16:10:52 MONTR	@delete macro.mac, dmacro.mac
+16:10:56 MONTR	 MACRO.MAC.1 [OK]
+16:10:56 MONTR	 DMACRO.MAC.1 [OK]
+16:10:56 MONTR	@
+16:10:58 MONTR	Killed by OPERATOR, TTY 221
+16:10:58 MONTR	Killed Job 13, User KESSLER, Account SMALL, TTY 225,
+16:10:58 MONTR	  at  7-Mar-83 16:10:58,  Used 0:01:27 in 0:06:10

@@ -1,0 +1,553 @@
+A number of useful options can be defined by Loading Useful.
+Descriptions follow.
+
+BACKQUOTE and friends
+------------------
+
+(Note that the  special symbols decribed  here will only  work in  LISP
+syntax,  not  RLISP.   In  RLISP  you  may  simply  use  the  functions
+BACKQUOTE, UNQUOTE, UNQUOTEL, and UNQUOTED)
+
+The backquote symbol  "`" is  a read  macro which  introduces a  quoted
+expression  which  may  contain  the  unquote  symbols  comma  ","  and
+comma-atsign ",@".   Any  appropriate form consisting  of the  unquoted
+expression, calls  to the  function cons,  and quoted  expressions  are
+produced so  that the  resulting expression  looks like  the quoted one
+except that the values of the unquote expressions are substitued in the
+appropriate place.   ",@"  splices  in  the  value  of  the  subsequent
+expression (i.e. strips off the outer layer of parentheses).  Thus
+
+  `(a (b ,x) c d ,@x e f)
+
+is equivalent to
+ 
+  (cons 'a (cons (list 'b x) (append '(c d) (append x '(e f)))))
+
+In particular, if x is bound to (1 2 3) this will evaluate to
+
+  (a (b (1 2 3)) c d 1 2 3 e f)
+
+",." is like  ",@", except  it may  use destructive  operations on  its
+argument.
+
+
+
+DESETQ
+------
+
+DESETQ is a destructuring setq.  That is, the first argument is a piece
+of list  structure whose  atoms are  all ids.   Each is  setq'd to  the
+corresponding part of the second argument.  For instance
+
+  (desetq (a (b) . c) '((1) (2) (3) 4))
+ 
+setq's a to (1), b to 2, and c to ((3) 4).
+
+
+
+DEFMACRO
+--------
+
+DEFMACRO is a useful tool for  defining macros.  A DEFMACRO form  looks
+like
+
+  (defmacro <name> <pattern> <s1> <s2> ... <sN>)
+
+The <pattern> is an S-expression made of pairs and ids.  It is  matched
+against the arguments  of the  macro much  like the  first argument  to
+desetq.  All of the non-nil ids in <pattern> are local variables  which
+may be used freely in  the body (the <si>).   When the macro is  called
+the <si>  are evaluated  as in  a  progn with  the local  variables  in
+<pattern> appropriately  bound,  and the  value  of <sN>  is  returned.
+DEFMACRO is often used with backquote.
+
+
+
+DEFLAMBDA
+---------
+
+Another macro defining  macro similar  to DEFMACRO  is DEFLAMBDA.   The
+arguments to DEFLAMBDA are  identical to those  for DE.  The  resulting
+macro is simply application  of a lambda  expression.  Thus a  function
+defined with  DEFLAMBDA will  have  semantics identical  to that  of  a
+function defined with  DE, modulo the  ability to dynamically  redefine
+the function.  This is a convenient  way to cause functions to be  open
+compiled.
+
+For example, if (NEW-FOO X Y) should return (LIST X Y (LIST X Y)) we do
+not want it to be a simple substitution style macro, in case one of the
+actual arguments has side effects, or  is expensive to compute.  If  we
+define it by
+
+  (DEFLAMBDA NEW-FOO (X Y) (LIST X Y (LIST X Y)))
+
+then we will have the desired behaviour.  In particular,
+
+  (NEW-FOO (BAR) (SETQ BAZ (BOOZE)))
+
+will expand to
+
+  ((LAMBDA (X Y) 
+     (LIST X Y (LIST X Y)) )
+   (BAR)
+   (SETQ BAZ (BOOZE)) )
+
+
+
+
+
+PROG1
+-----
+
+PROG1 evaluates its  arguments in  order, like PROGN,  but returns  the
+value of the first. 
+
+
+LET and LET*
+------------
+
+LET is  a macro  giving  a more  perspicuous  form for  writing  lambda
+expressions.  The basic form is
+
+  (let ((v1 i1) (v2 i2) ...(vN iN))
+    s1
+    s2
+    ...
+    sN)
+
+The i's are evaluated (in an  unspecified order), and then the v's  are
+bound to these values, the s's   evaluated, and the value of the   last
+is returned.  Note that the i's are evaluated in  the outer environment
+before the v's are bound. 
+
+LET!*  is  just  like  LET,  except  that  it  makes  the   assignments
+sequentially.  That is, the first binding is made before the  value
+for the second one is computed. 
+
+
+MACROEXPAND
+-----------
+
+MACROEXPAND is a useful tool for debugging macro definitions.  If given
+one argument, MACROEXPAND will all expand all the macros in that  form.
+Often we wish more control over this process.  For example, if a  macro
+expands into a let, we may not wish to see the LET itself expanded to a
+lambda expression.   Therefor  additional  arguments may  be  given  to
+MACROEXPAND.  If these are  supplied, only they  should be macros,  and
+only those specified will be expanded.
+
+
+
+PUSH and POP
+------------
+
+These are convenient macros  for adding and  deleting things from  the
+head of a list.  (push item stack) is equivalent to (setq stack  (cons
+item stack)),  and  (pop stack)  does  (setq stack  (cdr  stack))  and
+returns the  item popped  off stack.   An additional  argument may  be
+supplied to pop, in which case it is a variable which is setq'd to the
+popped value.
+
+
+
+INCR and DECR
+-------------
+
+These are convenient macros  for incrementing and decrementing  numeric
+variables.  (incr i) is equivalent to (setq i (add1 i)) and (decr i) to
+(setq i (sub1  i)).  Additional  arguments may be  supplied, which  are
+summed and used as the amounts by to increment or decrement.
+
+
+
+DO, DO*, DO-LOOP, and DO-LOOP*
+------------------------------
+
+The DO macro is a general iteration construct similar to that of  LISPM
+and friends.  However, it does differ in some details; in particular it
+is not compatible with the "old style DO" of MACLISP (which is a  crock
+anyway), nor  does  it  support  the "no  end  test  means  once  only"
+convention (which was just an ugly kludge to get an initialized  prog).
+DO has the form
+
+(do (i1 i2 ... iN)
+    (test r1 r2 ... rK)
+    s1
+    s2
+    ...
+    sM)
+
+where there may be zero   or more i's, r's,  and  s's.  In general  the
+i's will have the form
+
+(var init step)
+
+On entry  to  the  DO form,  all  the  inits are  evaluated,  then  the
+variables are bound to their respective inits.  The test is  evaluated,
+and if non-nil the form evaluates the r's and returns the value of  the
+last one.  If none are supplied it returns nil.  If the test  evaluates
+to nil the s's are evaluated, the variables are assigned the values  of
+their respective steps in parallel, and the test evaluated again.  This
+iteration continues until test evaluates to a non-nil value.  Note that
+the inits are evaluated in the surrounding environment, while the steps
+are evaluated in  the new environment.  The body of the DO (the s's) is
+a prog,  and  may  contain labels  and  GO's,  though use  of  this  is
+discouraged.  It may be changed at a later date.  RETURN used within a
+DO will return immediately  without evaluating the  test or exit  forms
+(r's).
+
+There are alternative forms for the i's:  If the step is  omitted,  the
+variable's value is left  unchanged.  If  both the  init and  step  are
+omitted  or  if the  i is  an id  it is  initialized to  nil, and  left
+unchanged.  This is particularly useful for introducing dummy variables
+which will be setq'd inside the body.
+
+DO* is like DO,  expcept the variable bindings  and updatings are  done
+sequentially instead of in parallel.
+
+DO-LOOP is like  Do, except  that it  takes an  additional argument,  a
+prologue.  The general form is
+
+(do-loop (i1 i2 ... iN)
+    (p1 p2 ... pJ)
+    (test r1 r2 ... rK)
+    s1
+    s2
+    ...
+    sM)
+
+This is executed just like the corresponding DO, except that after  the
+bindings are established  and initial values  assigned, but before  the
+test is first executed the pi's are evaluated, in order.  Note that the
+pi's are all evaluated exactly once (assuming that none of the pi's err
+out, or otherwise throw to  a surrounding context).  DO-LOOP* does  the
+variable bindings and undates sequentially instead of in parallel.
+
+
+
+IF, WHEN, and UNLESS for If and Only If Statements
+--------------------------------------------------
+
+IF is a macro to  simplify the writing of a  common form of COND  where
+there are only two clauses and the antecedent of the second is t.
+
+  (if <test> <then-clause> <else1>...<elseN>)
+
+The <then-clause> is  evaluated if  and only  if the  test is  non-nil,
+otherwise the elses are evaluated, and the last returned.  There may be
+zero elses.
+
+Related macros for common COND forms are WHEN and UNLESS.
+
+  (when <test> s1 s2 ... sN)
+
+evaluates the si and returns the value  of sN if and only if <test>  is
+non-nil.  Otherwise WHEN returns nil.
+
+  (unless <test> s1 s2 ... sN) <=> (when (not <test>) s1 s2 ... sN).
+
+
+
+
+PSETQ and PSETF
+---------------
+
+(psetq var1  val1 var2  val2 ...  varN  valN) setq's  the vars  to  the
+corresponding vals.  The vals are all evaluated before any  assignments
+are made.  That is, this is a parallel setq.
+
+PSETF is to SETF as PSETQ is to SETQ.
+
+
+
+
+
+SETF
+----
+
+USEFUL contains an expanded  version of the  standard SETF macro.   The
+principal difference from  the default  is that it  always returns  the
+the thing assigned (i.e. the right hand side).  For example,
+
+  (setf (cdr foo) '(x y z))
+
+returns  '(x  y  z).   In  the   default  SETF  the  return  value   is
+indeterminate.
+
+USEFUL also makes several more functions known to SETF.  All the  c...r
+functions are  included.   LIST and  CONS  are also  include,  and  are
+similar to desetq.  For example,
+
+  (setf (list (cons a b) c (car d)) '((1 2) 3 4 5))
+
+sets a to  1, b to  (2), c to 3, and  rplaca's the car of d  to 4.   It
+returns ((1 2) 3 4 5). 
+
+
+
+
+SHARP-SIGN MACROS
+------------------
+
+USEFUL defines several MACLISP style sharp sign read macros.  Note that
+these only  work with  the  LISP reader,  not RLISP.   Those  currently
+included are
+
+  #' :  this is like  the quote mark ' but  is for FUNCTION instead  of
+	QUOTE.
+
+  #/ :	this returns the numeric form of the following character
+	read without raising it.  For example #/a is 97 while
+	#/A is 65.
+  #\ :  This is a  read macro for the CHAR  macro, described in the PSL
+	manual.  Not that the argument is raised, if *RAISE it non-nil.
+	For example, #\a = #\A = 65, while #\!a = #\(lower a) = 97.
+	Char has been redefined in USEFUL to be slightly
+	more table driven -- users can now add new "prefixes" such as 
+	META or CONTROL: just hang the appropriate function (from integers
+	to integers) off the char-prefix-function property of the "prefix".
+	A LARGE number of additional alias for various characters have been
+	added, including all the "standard" ASCII names like NAK and DC1.
+
+  #. :	this causes the  following expression to  be evaluated at  read
+	time.  For example, `(1 2 #.(plus 1 2) 4) reads as (1 2 3 4)
+  
+  #+ :  this reads  two expressions, and passes  them to the  if_system
+	macro.   That is, the first should be a system name, and if
+	that is the current system the second argument is returned by
+	the reader.  If not, nil is returned.  #- is similar, but
+	causes the second arg to be returned only if it is NOT the
+	current system.  Note that this does NOT use splice macros,
+	since PSL doesn't have them (I don't really know why not -- at
+	the very least there ought to be a way to tell the reader
+	"ignore this", even if splice macros are thought to be a
+	kludge).
+
+
+
+
+
+FOR
+---
+
+FOR is a general iteration construct  similar in many ways to the  Lisp
+Machine LOOP  construct,  and  the earlier  InterLISP  CLISP  iteration
+construct.  FOR, however,  is considerably simpler,  far more  "lispy",
+and somewhat less  powerful.  FOR will  only work in  LISP syntax.   In
+fact, loading  FOR will,  for  the time  being,  "break" RLISP,  as  it
+redefines the FOR macro.  It is hoped that eventually the RLISP  parser
+will be modified to emit calls on this new FOR macro instead of the old
+one.
+
+The arguments to FOR  are clauses; each  clause is itself  a list of  a
+keyword and one  or more  arguments.  The clauses  may introduce  local
+variables, specify return values, have side-effects, when the iteration
+should cease, and so on.  Before going further, it is probably best  to
+give an example.  The following function will zip together three  lists
+into a list of three element lists.
+
+(de zip3 (x y z) (for (in u x) (in v y) (in w z) (collect (list u v w))))
+
+The three IN clauses specify that their first argument should take
+successive elements of the respective lists, and the COLLECT clause specifies
+that the answer should be a list built out of its argument.  For
+example, (zip3 '(1 2 3 4) '(a b c d) '(w x y z)) is 
+((1 a w)(2 b x)(3 c y)(4 d z)).
+
+Following are described all the possible clauses.  The first few
+introduce iteration variables.  Most of these also give some means of
+indicating when iteration should cease.  For example, when a list being
+mapped over by an IN clause is exhausted, iteration must cease.  If
+several such clauses are given in FOR expression, iteration will cease
+whenever on of the clauses indicates it should, whether or not the
+other clauses indicate that it should cease.
+
+
+
+(in v1 v2) assigns the variable v1 successive elements of the list v2.
+
+This may take an additional, optional argument:
+a function to be applied to the extracted element or sublist  before
+it is assigned to the variable.   The following returns the sum of  the
+lengths of all the elements of L. [rather a kludge -- not sure why this
+is here.  Perhaps it should come out again.]
+
+  (de SumLengths (L) (for (in N L length) (sum N)))
+      
+For example, (SumLengths '((1 2 3 4 5)(a b c)(x y))) is 10.
+
+
+
+(on v1 v2) assigns the varaible v1 successive cdrs of the list v2.
+
+
+
+(from var init final step) is a numeric clause.  The variable is first
+assigned init, and then incremented by step until it is larger than
+final.  Init, final, and step are optional.  Init and step both default
+to 1, and if final is omitted the iteration will continue until
+stopped by some other means.  To specify a step with init or final
+omitted, or a final with init omitted place nil (the constant -- it
+cannot be an expression) in the appropriate slot to be omitted.
+Final and step are only evaluated once.
+
+
+
+(for var init next) assigns the variable init first, and subsequently
+the value of the expression next.  Init and next may be omitted.  Note
+that this is identical to the behaviour of iterators in a DO.
+
+
+
+(with v1 v2 ... vN) introduces N locals, initialized to nil.  In
+addition, each vi may also be of the form (var init), in which case it
+will be initialized to init.
+
+
+
+There are two clauses which allow arbitrary code to be executed before
+the first iteration, and after the last.  (initially s1 s2 ... sN) will
+cause the si's to be evaluated in the new environment (i.e. with the
+iteration variables bound to their initial values) before the first
+iteration.  (finally s1 s2 ... sN) causes the si's to be evaluated just
+before the function returns.
+
+
+
+(do s1 s2 ... sN) causes the si's to be evaluated at each iteration.
+
+
+
+The next few clauses build up return types.  Except for the
+RETURNS/RETURNING clause, they may each take an additional argument
+which specifies that instead of returning the appropriate value, it is
+accumulated in the specified variable.  For example, an unzipper might
+be defined as 
+
+(de unzip3 (L)
+  (for (in u L) (with X Y Z)
+    (collect (car U) X)
+    (collect (cadr U) Y)
+    (collect (caddr U) Z)
+    (returns (list X Y Z))))
+
+This is essentially the opposite of zip3.  Given a list of three element
+lists, it unzips them into three lists, and returns a list of those
+three lists.  For example, (unzip '((1 a w)(2 b x)(3 c y)(4 d z)))
+is ((1 2 3 4)(a b c d)(w x y z)).
+
+
+
+(returns exp) causes the given expression  to be the value of the  FOR.
+Returning is  synonymous  with returns.   It  may be  given  additional
+arguments, in which case they are  evaluated in order and the value  of
+the last is returned (implicit PROGN).
+
+
+
+(collect exp) causes the succesive values of the expression to be
+collected into a list.
+
+
+
+(adjoin exp) is similar, but only adds an element to the list if it is
+not equal to anything already there.
+
+
+
+(adjoinq exp) is like adjoin, but uses eq instead of equal.
+
+
+
+(conc exp) causes the succesive values to be nconc'd together.
+
+
+
+(join exp) causes them to be appended.
+
+
+
+(union exp) forms the union of all the exp
+
+
+
+(unionq exp), (intersection exp), (intersectionq exp) are similar, but
+use the specified function instead of union.
+
+
+
+(count exp) returns the number of times exp was non-nil.
+
+
+
+(sum exp), (product exp), (maximize exp), and (minimize exp) do the obvious.
+Synonyms are summing, maximizing, and minimizing.
+
+
+
+(always exp) will return t if exp is non-nil on each iteration.  If exp
+is ever nil, the loop will terminate immediately, no epilogue code,
+such as that introduced by finally will be run, and nil will be
+returned.  (never exp) is equivlent to (always (not exp)).
+
+
+
+Explicit tests for the end of the loop may be given using (while exp).
+The loop will terminate if exp becomes nil at the beginning of an
+iteration.  (until exp) is equivalent to (while (not exp)).
+Both while and until may be given additional arguments;
+(while e1 e2 ... eN) is equivalent to (while (and e1 e2 ... eN))
+and (until  e1 e2 ... eN) is equivalent to (until (or e1 e2 ... eN)).
+
+
+
+
+(when exp) will cause a jump to the next iteration if exp is nil.
+(unless exp) is equivalent to (when (not exp)).
+
+
+
+Unlike MACLISP and clones' LOOP, FOR does all variable binding/updating
+in  parallel.   There  is  a   similar  macro,  FOR*,  which  does   it
+sequentially.  All variable binding/updating  still preceeds any  tests
+or other code.  Also note that all WHEN or UNLESS clauses apply to  all
+action  clauses,  not  just  subsequent  ones.   This  fixed  order  of
+evaluation makes  FOR  less  powerful  than LOOP,  but  also  keeps  it
+considerably simpler.  The basic order of evaluation is 
+
+  1) bind variables to initial values (computed in the outer environment)
+  2) execute prologue (i.e. INITIALLY clauses)
+  3) while none of the termination conditions are satisfied:
+     4) check conditionalization clauses (WHEN and UNLESS), and start next
+	iteration if all are not satisfied.
+     5) perform body, collecting into variables as necessary
+     6) next iteration
+  7) (after a termination condition is satisfied) execute the epilogue (i. e.
+     FINALLY clauses)
+
+
+
+DEFSWITCH
+---------
+
+Defswitch provides a convenient machanism for declaring variables whose
+values need to be set in a disciplined manner.  It is quite similar to
+T's DEFINE-SWITCH.  The form of a defswitch expression is
+
+  (defswitch <name> <var> [<read-action> {<set-action>}])
+
+This declares  <name> to be a function of no arguments for deterimining
+the value of  the  variable  <var>.   <var> is   declared fluid.   SETF
+will set the value of  <var> when given a call  on <name> as its  first
+argument.  When  <name>  is  called  <read-action>  will  be  evaluated
+(after the value of the  variable is looked up).   When it is set   the
+<set-action>s will be evaluated (before the value is set).  <name>  may
+be used as a "free" variable in the <read-action> and <set-action>s, in
+which case it will hold the current value and new value,  respectively.
+If <var> is nil an uninterned id will be used for the variable.  
+
+Suppose we wish to  keep a list  in a variable, FOO,  but also want  to
+always have it's  length available  in FOOLENGTH.   We can  do this  by
+always accessing FOO by a function as follows:
+
+  (defswitch FOO nil nil (setq FOOLENGTH (length FOO)))

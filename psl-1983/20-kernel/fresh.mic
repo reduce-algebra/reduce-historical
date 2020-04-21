@@ -1,0 +1,8 @@
+;; Independant compilation of a  DEC20  program 
+;
+; MIC FRESH modulename
+;
+; Initialize for new sequence of builds
+;
+@delete 'a.SYM
+@copy P20:bare-20.sym 'A.sym

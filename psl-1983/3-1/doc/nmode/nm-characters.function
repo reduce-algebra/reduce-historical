@@ -1,0 +1,4 @@
+.silent_index {c-x-prefix} idx 3-2
+.silent_index {m-x-prefix} idx 3-2
+.silent_index {lisp-prefix} idx 3-2
+.silent_index {esc-prefix} idx 3-2

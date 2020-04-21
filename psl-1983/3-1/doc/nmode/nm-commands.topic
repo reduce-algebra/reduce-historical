@@ -1,0 +1,313 @@
+.silent_index {Kill Ring} idx 27-2
+.silent_index {Move Data} idx 27-2
+.silent_index {Buffers} idx 27-2
+.silent_index {Region} idx 27-2
+.silent_index {Move Data} idx 27-2
+.silent_index {Files} idx 27-2
+.silent_index {Region} idx 27-2
+.silent_index {Move Data} idx 27-2
+.silent_index {Inform} idx 27-2
+.silent_index {Subsequent Command Modifier} idx 27-3
+.silent_index {Change Mode} idx 27-3
+.silent_index {Move Point} idx 27-4
+.silent_index {Kill Ring} idx 27-4
+.silent_index {Sentence} idx 27-4
+.silent_index {Remove} idx 27-4
+.silent_index {Paragraph} idx 27-4
+.silent_index {Move Point} idx 27-4
+.silent_index {Sentence} idx 27-4
+.silent_index {Move Point} idx 27-4
+.silent_index {Lisp} idx 27-5
+.silent_index {Move Point} idx 27-5
+.silent_index {Buffers} idx 27-5
+.silent_index {Inform} idx 27-5
+.silent_index {Buffers} idx 27-5
+.silent_index {Set Global Variable} idx 27-5
+.silent_index {Subsequent Command Modifier} idx 27-5
+.silent_index {Text} idx 27-6
+.silent_index {Fill Column} idx 27-6
+.silent_index {Alter Existing Text} idx 27-6
+.silent_index {Kill Ring} idx 27-6
+.silent_index {Region} idx 27-6
+.silent_index {Preserve} idx 27-6
+.silent_index {Inform} idx 27-6
+.silent_index {Files} idx 27-6
+.silent_index {Remove} idx 27-6
+.silent_index {Remove} idx 27-7
+.silent_index {Remove} idx 27-7
+.silent_index {Remove} idx 27-7
+.silent_index {Files} idx 27-7
+.silent_index {Remove} idx 27-7
+.silent_index {Kill Ring} idx 27-8
+.silent_index {Remove} idx 27-8
+.silent_index {Remove} idx 27-8
+.silent_index {Remove} idx 27-8
+.silent_index {Select} idx 27-8
+.silent_index {Remove} idx 27-8
+.silent_index {Select} idx 27-8
+.silent_index {Remove} idx 27-8
+.silent_index {Lisp} idx 27-9
+.silent_index {Move Point} idx 27-9
+.silent_index {Lisp} idx 27-10
+.silent_index {Defun} idx 27-10
+.silent_index {Move Point} idx 27-10
+.silent_index {Subsequent Command Modifier} idx 27-10
+.silent_index {Mark} idx 27-10
+.silent_index {Move Point} idx 27-10
+.silent_index {Alter Display Format} idx 27-10
+.silent_index {Buffers} idx 27-10
+.silent_index {Lisp} idx 27-11
+.silent_index {Defun} idx 27-11
+.silent_index {Mark} idx 27-11
+.silent_index {Files} idx 27-11
+.silent_index {Lisp} idx 27-11
+.silent_index {Mark} idx 27-11
+.silent_index {Lisp} idx 27-11
+.silent_index {Escape} idx 27-11
+.silent_index {Fill Prefix} idx 27-12
+.silent_index {Fill Column} idx 27-12
+.silent_index {Paragraph} idx 27-12
+.silent_index {Alter Existing Text} idx 27-12
+.silent_index {Text} idx 27-12
+.silent_index {Fill Prefix} idx 27-12
+.silent_index {Fill Column} idx 27-12
+.silent_index {Paragraph} idx 27-12
+.silent_index {Alter Existing Text} idx 27-12
+.silent_index {Text} idx 27-12
+.silent_index {Fill Prefix} idx 27-12
+.silent_index {Fill Column} idx 27-12
+.silent_index {Paragraph} idx 27-12
+.silent_index {Sentence} idx 27-12
+.silent_index {Alter Existing Text} idx 27-12
+.silent_index {Files} idx 27-13
+.silent_index {Buffers} idx 27-13
+.silent_index {Move Data} idx 27-13
+.silent_index {Move Point} idx 27-13
+.silent_index {Text} idx 27-13
+.silent_index {Paragraph} idx 27-13
+.silent_index {Move Point} idx 27-13
+.silent_index {Text} idx 27-13
+.silent_index {Sentence} idx 27-13
+.silent_index {Move Point} idx 27-13
+.silent_index {Lisp} idx 27-13
+.silent_index {Move Point} idx 27-13
+.silent_index {Move Data} idx 27-14
+.silent_index {Mark} idx 27-14
+.silent_index {Alter Display Format} idx 27-14
+.silent_index {Inform} idx 27-14
+.silent_index {Move Point} idx 27-14
+.silent_index {Select} idx 27-14
+.silent_index {Insert Constant} idx 27-15
+.silent_index {Buffers} idx 27-15
+.silent_index {Move Data} idx 27-15
+.silent_index {Lisp} idx 27-15
+.silent_index {Insert Constant} idx 27-15
+.silent_index {Lisp} idx 27-16
+.silent_index {Insert Constant} idx 27-16
+.silent_index {Move Data} idx 27-16
+.silent_index {Files} idx 27-16
+.silent_index {Move Data} idx 27-16
+.silent_index {Kill Ring} idx 27-16
+.silent_index {Move Data} idx 27-16
+.silent_index {Mark} idx 27-16
+.silent_index {Move Data} idx 27-17
+.silent_index {Lisp} idx 27-17
+.silent_index {Kill Ring} idx 27-17
+.silent_index {Remove} idx 27-17
+.silent_index {Text} idx 27-17
+.silent_index {Kill Ring} idx 27-17
+.silent_index {Remove} idx 27-17
+.silent_index {Buffers} idx 27-17
+.silent_index {Remove} idx 27-17
+.silent_index {Lisp} idx 27-18
+.silent_index {Kill Ring} idx 27-18
+.silent_index {Remove} idx 27-18
+.silent_index {Text} idx 27-18
+.silent_index {Kill Ring} idx 27-18
+.silent_index {Remove} idx 27-18
+.silent_index {Kill Ring} idx 27-18
+.silent_index {Remove} idx 27-18
+.silent_index {Kill Ring} idx 27-18
+.silent_index {Region} idx 27-18
+.silent_index {Remove} idx 27-18
+.silent_index {Text} idx 27-19
+.silent_index {Kill Ring} idx 27-19
+.silent_index {Sentence} idx 27-19
+.silent_index {Remove} idx 27-19
+.silent_index {Buffers} idx 27-19
+.silent_index {Remove} idx 27-19
+.silent_index {Lisp} idx 27-19
+.silent_index {Escape} idx 27-19
+.silent_index {Lisp} idx 27-19
+.silent_index {Inform} idx 27-19
+.silent_index {Lisp} idx 27-20
+.silent_index {Escape} idx 27-20
+.silent_index {Lisp} idx 27-20
+.silent_index {Inform} idx 27-20
+.silent_index {Lisp} idx 27-20
+.silent_index {Lisp} idx 27-20
+.silent_index {Lisp} idx 27-21
+.silent_index {Change Mode} idx 27-21
+.silent_index {Lisp} idx 27-21
+.silent_index {Subsequent Command Modifier} idx 27-21
+.silent_index {Lisp} idx 27-21
+.silent_index {Escape} idx 27-21
+.silent_index {Lisp} idx 27-21
+.silent_index {Escape} idx 27-21
+.silent_index {Lisp} idx 27-22
+.silent_index {Alter Existing Text} idx 27-22
+.silent_index {Region} idx 27-22
+.silent_index {Alter Existing Text} idx 27-22
+.silent_index {Text} idx 27-22
+.silent_index {Alter Existing Text} idx 27-22
+.silent_index {Subsequent Command Modifier} idx 27-22
+.silent_index {Lisp} idx 27-23
+.silent_index {Insert Constant} idx 27-23
+.silent_index {Mark} idx 27-23
+.silent_index {Lisp} idx 27-23
+.silent_index {Defun} idx 27-23
+.silent_index {Mark} idx 27-23
+.silent_index {Mark} idx 27-23
+.silent_index {Lisp} idx 27-24
+.silent_index {Mark} idx 27-24
+.silent_index {Text} idx 27-24
+.silent_index {Paragraph} idx 27-24
+.silent_index {Mark} idx 27-24
+.silent_index {Move Point} idx 27-24
+.silent_index {Mark} idx 27-24
+.silent_index {Move Point} idx 27-24
+.silent_index {Text} idx 27-24
+.silent_index {Mark} idx 27-24
+.silent_index {Move Point} idx 27-25
+.silent_index {Lisp} idx 27-25
+.silent_index {Defun} idx 27-25
+.silent_index {Move Point} idx 27-25
+.silent_index {Lisp} idx 27-25
+.silent_index {Move Point} idx 27-25
+.silent_index {Lisp} idx 27-25
+.silent_index {Move Point} idx 27-25
+.silent_index {Text} idx 27-26
+.silent_index {Move Point} idx 27-26
+.silent_index {Goal Column} idx 27-26
+.silent_index {Move Point} idx 27-26
+.silent_index {Goal Column} idx 27-26
+.silent_index {Move Point} idx 27-26
+.silent_index {Move Point} idx 27-26
+.silent_index {Lisp} idx 27-27
+.silent_index {Move Point} idx 27-27
+.silent_index {Lisp} idx 27-27
+.silent_index {Move Point} idx 27-27
+.silent_index {Text} idx 27-27
+.silent_index {Move Point} idx 27-27
+.silent_index {Lisp} idx 27-27
+.silent_index {Move Point} idx 27-27
+.silent_index {Move Point} idx 27-28
+.silent_index {Move Point} idx 27-28
+.silent_index {Move Point} idx 27-28
+.silent_index {Move Point} idx 27-28
+.silent_index {Move Point} idx 27-28
+.silent_index {Goal Column} idx 27-29
+.silent_index {Move Point} idx 27-29
+.silent_index {Subsequent Command Modifier} idx 27-29
+.silent_index {Move Point} idx 27-29
+.silent_index {Escape} idx 27-29
+.silent_index {Escape} idx 27-29
+.silent_index {Alter Display Format} idx 27-30
+.silent_index {Alter Display Format} idx 27-30
+.silent_index {Alter Display Format} idx 27-30
+.silent_index {Alter Display Format} idx 27-30
+.silent_index {Insert Constant} idx 27-31
+.silent_index {Alter Display Format} idx 27-31
+.silent_index {Move Point} idx 27-31
+.silent_index {Files} idx 27-31
+.silent_index {Region} idx 27-31
+.silent_index {Move Data} idx 27-31
+.silent_index {Move Point} idx 27-31
+.silent_index {Preserve} idx 27-32
+.silent_index {Alter Existing Text} idx 27-32
+.silent_index {Select} idx 27-32
+.silent_index {Buffers} idx 27-32
+.silent_index {Set Global Variable} idx 27-32
+.silent_index {Alter Existing Text} idx 27-33
+.silent_index {Select} idx 27-33
+.silent_index {Lisp} idx 27-33
+.silent_index {Alter Display Format} idx 27-33
+.silent_index {Insert Constant} idx 27-33
+.silent_index {Move Point} idx 27-33
+.silent_index {Select} idx 27-33
+.silent_index {Files} idx 27-33
+.silent_index {Remove} idx 27-33
+.silent_index {Buffers} idx 27-34
+.silent_index {Files} idx 27-34
+.silent_index {Preserve} idx 27-34
+.silent_index {Files} idx 27-34
+.silent_index {Preserve} idx 27-34
+.silent_index {Alter Display Format} idx 27-34
+.silent_index {Alter Display Format} idx 27-34
+.silent_index {Alter Display Format} idx 27-34
+.silent_index {Alter Display Format} idx 27-35
+.silent_index {Alter Display Format} idx 27-35
+.silent_index {Alter Display Format} idx 27-35
+.silent_index {Alter Display Format} idx 27-35
+.silent_index {Buffers} idx 27-35
+.silent_index {Move Point} idx 27-35
+.silent_index {Buffers} idx 27-36
+.silent_index {Move Point} idx 27-36
+.silent_index {Fill Column} idx 27-36
+.silent_index {Set Global Variable} idx 27-36
+.silent_index {Fill Prefix} idx 27-36
+.silent_index {Set Global Variable} idx 27-36
+.silent_index {Set Global Variable} idx 27-36
+.silent_index {Set Global Variable} idx 27-37
+.silent_index {Mark} idx 27-37
+.silent_index {Files} idx 27-37
+.silent_index {Set Global Variable} idx 27-37
+.silent_index {Insert Constant} idx 27-37
+.silent_index {Change Mode} idx 27-38
+.silent_index {Change Mode} idx 27-38
+.silent_index {Change Mode} idx 27-38
+.silent_index {Change Mode} idx 27-38
+.silent_index {Insert Constant} idx 27-39
+.silent_index {Text} idx 27-39
+.silent_index {Change Mode} idx 27-39
+.silent_index {Alter Existing Text} idx 27-39
+.silent_index {Lisp} idx 27-39
+.silent_index {Alter Existing Text} idx 27-39
+.silent_index {Alter Existing Text} idx 27-40
+.silent_index {Region} idx 27-40
+.silent_index {Alter Existing Text} idx 27-40
+.silent_index {Text} idx 27-40
+.silent_index {Alter Existing Text} idx 27-40
+.silent_index {Alter Display Format} idx 27-40
+.silent_index {Files} idx 27-41
+.silent_index {Move Data} idx 27-41
+.silent_index {Preserve} idx 27-41
+.silent_index {Subsequent Command Modifier} idx 27-41
+.silent_index {Kill Ring} idx 27-41
+.silent_index {Region} idx 27-41
+.silent_index {Alter Existing Text} idx 27-41
+.silent_index {Alter Existing Text} idx 27-41
+.silent_index {Text} idx 27-42
+.silent_index {Alter Existing Text} idx 27-42
+.silent_index {Region} idx 27-42
+.silent_index {Alter Existing Text} idx 27-42
+.silent_index {Text} idx 27-42
+.silent_index {Alter Existing Text} idx 27-42
+.silent_index {Alter Display Format} idx 27-42
+.silent_index {Files} idx 27-42
+.silent_index {Move Data} idx 27-42
+.silent_index {Move Point} idx 27-42
+.silent_index {Files} idx 27-43
+.silent_index {Buffers} idx 27-43
+.silent_index {Move Point} idx 27-43
+.silent_index {Alter Display Format} idx 27-43
+.silent_index {Inform} idx 27-43
+.silent_index {Files} idx 27-43
+.silent_index {Preserve} idx 27-43
+.silent_index {Files} idx 27-43
+.silent_index {Region} idx 27-43
+.silent_index {Preserve} idx 27-43
+.silent_index {Files} idx 27-44
+.silent_index {Preserve} idx 27-44
+.silent_index {Lisp} idx 27-44
+.silent_index {Move Data} idx 27-44

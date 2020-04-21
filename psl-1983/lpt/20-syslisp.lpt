@@ -1,0 +1,606 @@
+PSL Manual                    7 February 1983                       SYSLISP
+section 20.0                                                      page 20.1
+
+                                CHAPTER 20                                CHAPTER 20                                CHAPTER 20
+                                  SYSLISP                                  SYSLISP                                  SYSLISP
+
+
+
+
+     20.1. Introduction to the SYSLISP level of PSL.  .  .  .  .  .    20.1
+     20.2. The Relationship of SYSLISP to RLISP .  .  .  .  .  .  .    20.2
+          20.2.1. SYSLISP Declarations .  .  .  .  .  .  .  .  .  .    20.2
+          20.2.2. SYSLISP Mode Analysis.  .  .  .  .  .  .  .  .  .    20.3
+          20.2.3. Defining Special Functions for Mode Analysis .  .    20.4
+          20.2.4. Modified FOR Loop .  .  .  .  .  .  .  .  .  .  .    20.4
+          20.2.5. Char and IDLOC Macros.  .  .  .  .  .  .  .  .  .    20.5
+          20.2.6. The Case Statement.  .  .  .  .  .  .  .  .  .  .    20.6
+          20.2.7. Memory Access and Address Operations.  .  .  .  .    20.7
+          20.2.8. Bit-Field Operation  .  .  .  .  .  .  .  .  .  .    20.8
+     20.3. Using SYSLISP.  .  .  .  .  .  .  .  .  .  .  .  .  .  .    20.9
+          20.3.1. To Compile SYSLISP Code .  .  .  .  .  .  .  .  .    20.9
+     20.4. SYSLISP Functions  .  .  .  .  .  .  .  .  .  .  .  .  .   20.10
+          20.4.1. W-Arrays .  .  .  .  .  .  .  .  .  .  .  .  .  .   20.11
+     20.5. Remaining SYSLISP Issues .  .  .  .  .  .  .  .  .  .  .   20.12
+          20.5.1. Stand Alone SYSLISP Programs  .  .  .  .  .  .  .   20.12
+          20.5.2. Need for Two Stacks  .  .  .  .  .  .  .  .  .  .   20.12
+          20.5.3. New Mode System.  .  .  .  .  .  .  .  .  .  .  .   20.13
+          20.5.4. Extend CREF for SYSLISP .  .  .  .  .  .  .  .  .   20.13
+
+  This  chapter  is  very  out  of  date  and  will  be replaced as soon as
+possible.
+
+
+
+20.1. Introduction to the SYSLISP level of PSL20.1. Introduction to the SYSLISP level of PSL20.1. Introduction to the SYSLISP level of PSL
+
+  SYSLISP [Benson 81] is  a  BCPL-like  language,  couched  in  LISP  form,
+providing operations on machine words, machine bytes and LISP ITEMs (tagged
+objects, packed into one or more words).  We actually think of SYSLISP as a
+lower  level  of  PSL,  dealing  with  words,  bytes,  bit-fields,  machine
+operations, and compile-time  storage  allocation,  enabling  us  to  write
+essentially all of the kernel in PSL.
+
+  The control structures and definition language are those of LISP, but the
+         Plus2  Times2                                     WPlus2  WTimes2         Plus2  Times2                                     WPlus2  WTimes2familiar Plus2, Times2, etc. are mapped to word operations WPlus2, WTimes2,
+etc.  SYSLISP handles static allocation of SYSLISP variables and arrays and
+initial  LISP  symbols,  permitting  the  easy  definition  of higher level
+Standard LISP functions and storage areas.    SYSLISP  provides  convenient
+                                        ______compile-time  constants  for  handling  strings,  LISP  symbols,  etc.  The
+SYSLISP compiler is based on the  PORTABLE  STANDARD  LISP  Compiler,  with
+extensions   to  handle  word  level  objects  and  efficient,  open-coded,
+word-level operations.  The SYSLISP mode of  the  compiler  does  efficient
+compile-time   folding   of   constants  and  more  comprehensive  register
+allocation than in the distributed version of the PLC.  Currently,  SYSLISP
+handles  bytes  through  the  explicit  packing  and  unpacking  operationsSYSLISP                       7 February 1983                    PSL Manual
+page 20.2                                                      section 20.1
+
+GetByteGetByteGetByte(word-address,byte-number)                                         /
+PutBytePutBytePutByte(word-address,byte-number,byte-value) without the  notion  of  byte-
+pointer; it is planned to extend SYSLISP to a C-like language by adding the
+appropriate declarations and analysis of word/byte/structure operations.
+
+  SYSLISP  is  a collection of functions and their corresponding data types
+which are used to implement low level primitives in PSL,  such  as  storage
+allocation, garbage collection and input and output.  The basic data object
+                    ____in  SYSLISP is the "word", a unit of storage large enough to contain a LISP
+____                            ____                         ____item.  On the PDP-10, a SYSLISP word is just a 36-bit PDP-10 word.  On  the
+                                               ____VAX  and most other byte addressed machines, a word is 4 bytes, or 32 bits.
+Conceptually, SYSLISP functions manipulate the actual bit patterns found in
+words, unlike normal LISP functions which manipulate higher-level  objects,
+           ____    ______         _____                            ______such   as  pairs,  vectors,  and  floats  or  arbitrary-precision  numbers.
+Arithmetic in SYSLISP is comparable  to  the  corresponding  operations  in
+FORTRAN or PASCAL.  In fact, SYSLISP is most closely modeled after BCPL, in
+that operations are essentially "typeless".
+
+
+
+20.2. The Relationship of SYSLISP to RLISP20.2. The Relationship of SYSLISP to RLISP20.2. The Relationship of SYSLISP to RLISP
+
+                                                                    ______                                                                    ______                                                                    ______                                                                    smacro                                                                    smacro  RLISP  was  extended with a CASE statement, SYSLISP declarations, smacros
+    _____    _____    _____    macro    macroand macros to provide convenient infix syntax (+, *, /  etc.)  for  calling
+the  SYSLISP  primitives.    Even  though  SYSLISP is semantically somewhat
+different from LISP (RLISP), we have tried to keep the syntax as similar as
+possible so that SYSLISP code is "familiar" to RLISP  users,  and  easy  to
+use.    RLISP functions can be easily converted and interfaced to functions
+at the SYSLISP level, gaining  considerable  efficiency  by  declaring  and
+directly using words and bytes instead of tagged LISP objects.
+
+
+20.2.1. SYSLISP Declarations20.2.1. SYSLISP Declarations20.2.1. SYSLISP Declarations
+
+  SYSLISP  variables  are either GLOBAL, memory locations (allocated by the
+compiler), or local stack locations.  Locals are  declared  by  SCALAR,  as
+usual.  Globals come in the following flavors:
+
+
+WCONST id = wconstexp {,id = wconstexp} ;
+
+Wconstexp is an expression involving constants and wconsts.
+
+WVAR wvardecl {, wvardecl} ;
+
+wvardecl ::= id | id = wconstexp
+
+
+WARRAY warraydecl {, warraydecl} ;
+
+warraydecl ::= id[wconstexp] | id[] = [ wconstexp {,wconstexp} ]
+                        | id[] = stringPSL Manual                    7 February 1983                       SYSLISP
+section 20.2                                                      page 20.3
+
+
+
+WSTRING warraydecl {, warraydecl} ;
+
+Each of these declarations can also be prefixed with the keywords:
+
+INTERNAL or EXTERNAL.
+
+If nothing appears, then a DEFAULT is used.
+
+(Notice  there are no metasyntactic square brackets here,
+only curly brackets.)
+
+
+  For example, the following GLOBAL-DATA is used in PSL:
+
+   on SysLisp;
+
+   exported WConst MaxSymbols = 8000,
+                   MaxConstants = 500,
+                   HeapSize = 100000;
+
+   external WArray SymNam, SymVal, SymFnc, SymPrp, ConstantVector;
+
+   external WVar NextSymbol, NextConstant;
+
+   exported WConst MaxRealRegs = 5,
+                   MaxArgs = 15;
+
+   external WArray ArgumentBlock;
+
+   off SysLisp;
+
+   END;
+
+
+
+20.2.2. SYSLISP Mode Analysis20.2.2. SYSLISP Mode Analysis20.2.2. SYSLISP Mode Analysis
+
+                                                                       ____  In  SYSLISP mode, the basic operators +, *, -, /, etc., are bound to word
+            WPlus2   WTimes2   WMinus            WPlus2   WTimes2   WMinusoperators  (WPlus2,  WTimes2,  WMinus,  etc.),  which   compile   OPEN   as
+                                                ____conventional  machine  operations  on  machine  words.    Thus most SYSLISP
+expressions, loops, etc. look exactly like their RLISP equivalents.
+
+
+20.2.3. Defining Special Functions for Mode Analysis20.2.3. Defining Special Functions for Mode Analysis20.2.3. Defining Special Functions for Mode Analysis
+
+  To have the Mode analyzer (currently  a  REFORM  function)  replace  LISP
+function names by SYSLISP ones, do:
+
+  PUT('LispName,'SYSNAME,'SysLispName);SYSLISP                       7 February 1983                    PSL Manual
+page 20.4                                                      section 20.2
+
+  The Following have been done:
+
+
+   DefList('((Plus WPlus2)
+             (Plus2 WPlus2)
+             (Minus WMinus)
+             (Difference WDifference)
+             (Times WTimes2)
+             (Times2 WTimes2)
+             (Quotient WQuotient)
+             (Remainder WRemainder)
+             (Mod WRemainder)
+             (Land WAnd)
+             (Lor WOr)
+             (Lxor WXor)
+             (Lnot WNot)
+             (LShift WShift)
+             (LSH WShift)), 'SysName);
+
+   DefList('((Neq WNeq)
+             (Equal WEq)
+             (Eqn WEq)
+             (Eq WEq)
+             (Greaterp WGreaterp)
+             (Lessp WLessp)
+             (Geq WGeq)
+             (Leq WLeq)
+             (Getv WGetv)
+             (Indx WGetv)
+             (Putv WPutv)
+             (SetIndx WPutv)), 'SysName);
+
+
+20.2.4. Modified FOR Loop20.2.4. Modified FOR Loop20.2.4. Modified FOR Loop
+
+                                                      Wxxxx                                                      Wxxxx  The FOR loop is modified in SYSLISP mode to use the Wxxxx functions to do
+loop incrementation and testing.  
+
+  [??? Should pick up via SysReform ???]  [??? Should pick up via SysReform ???]  [??? Should pick up via SysReform ???]
+
+
+20.2.5. Char and IDLOC Macros20.2.5. Char and IDLOC Macros20.2.5. Char and IDLOC Macros
+
+                                                ____  In  SYSLISP  mode, '<id> refers to the tagged item, just as in LISP mode,
+IdLoc                                                          LispVarIdLoc                    __                                    LispVarIdLoc <id> refers to the id space offset  of  the  <id>,  and  LispVar <id>
+                                                                      ____refers  to  the  GLOBAL  value  cell  of a GLOBAL or FLUID variable.  Note:
+LispVarLispVarLispVar can be used on the left hand side of an  argument  sentence.    For
+                                               __example,  to  store a NIL in the value cell of id FOO, we do any one of the
+following.PSL Manual                    7 February 1983                       SYSLISP
+section 20.2                                                      page 20.5
+
+       SYMVAL IDLOC FOO := 'NIL;
+
+       LISPVAR FOO := MKITEM(ID,IDLOC NIL);
+
+
+ Char Char _ __   _______                                                  _____(Char U:id): integer                                                  macro
+
+       Char       Char  The  Char  macro  returns  the  ASCII  code  corresponding  to its single
+character-id argument.  CHAR also can handle alias's  for  certain  special
+characters,  remove  QUOTE  marks  that  may  be  needed  to  pass  special
+characters through the parser, and can accept a prefixes to  compute  LOWER
+case, <Ctrl> characters, and <Meta> characters.  For example:
+
+       Little_a:= Char LOWER A;  % In case we think RAISE will occur
+       Little_a:= Char '!a;      % !a should not be raised
+       Meta_X := Char META X;
+       Weird := Char META Lower X;
+       Dinger := Char <Ctrl-G>;
+       Dinger := Char BELL;
+
+                                           PUT                                           PUT  The  following  Aliases  are  defined by PUTing the association under the
+indicator 'CharConst:
+
+   DefList('((NULL 8#0)
+             (BELL 8#7)
+             (BACKSPACE 8#10)
+             (TAB 8#11)
+             (LF 8#12)
+             (EOL 8#12)
+             (FF 8#14)
+             (CR 8#15)
+             (EOF 26)
+             (ESC 27)
+             (ESCAPE 27)
+             (BLANK 32)
+             (RUB 8#177)
+             (RUBOUT 8#177)
+             (DEL 8#177)
+             (DELETE 8#177)), 'CharConst);
+
+
+20.2.6. The Case Statement20.2.6. The Case Statement20.2.6. The Case Statement
+
+  RLISP in  SYSLISP  mode  provides  a  Numeric  case  statement,  that  is
+implemented quite efficiently; some effort is made to examine special cases
+(compact  vs.  non  compact  sets  of  cases, short vs. long sets of cases,
+etc.).  
+
+  [??? Note, CASE can also be used from  LISP  mode,  provided  tags  are  [??? Note, CASE can also be used from  LISP  mode,  provided  tags  are  [??? Note, CASE can also be used from  LISP  mode,  provided  tags  are
+  numeric.  There is also an FEXPR, CASE ???]  numeric.  There is also an FEXPR, CASE ???]  numeric.  There is also an FEXPR, CASE ???]
+
+  The syntax is:SYSLISP                       7 February 1983                    PSL Manual
+page 20.6                                                      section 20.2
+
+Case-Statement ::= CASE expr OF case-list END
+
+Case-list      ::=  Case-expr [; Case-list ]
+
+Case-expr      ::=  Tag-expr : expr
+
+tag-expr       ::=  DEFAULT | OTHERWISE  |
+                    tag | tag, tag ... tag |
+                    tag TO tag
+
+Tag            ::=  Integer | Wconst-Integer
+
+
+% This is a piece of code from the Token Scanner,
+% in file "PI:token-Scanner.red"
+.....
+    case ChTokenType of
+    0 to 9:      % digit
+    <<  TokSign := 1;
+        goto InsideNumber >>;
+    10:  % Start of ID
+    <<  if null LispVar !*Raise then
+            goto InsideID
+        else
+        <<  RaiseLastChar();
+            goto InsideRaisedID >> >>;
+    11:  % Delimiter, but not beginning of diphthong
+    <<  LispVar TokType!* := '3;
+        return MkID TokCh >>;
+    12:  % Start of comment
+        goto InsideComment;
+    13:  % Diphthong start-Lisp function uses P-list of starting char
+        return ScanPossibleDipthong(TokChannel, MkID TokCh);
+    14:  % ID escape character
+    <<  if null LispVar !*Raise then
+            goto GotEscape
+        else goto GotEscapeInRaisedID >>;
+    15:  % string quote
+    <<  BackupBuf();
+        goto InsideString >>;
+    16:  % Package indicator -
+         %        at start of token means use global package
+    <<  ResetBuf();
+        ChangedPackages := 1;
+        Package 'Global;
+        if null LispVar !*Raise then
+            goto GotPackageMustGetID
+        else goto GotPackageMustGetIDRaised >>;
+    17:  % Ignore - can't ever happen
+        ScannerError("Internal error - consult a wizard");
+    18:  % Minus sign
+    <<  TokSign := -1;PSL Manual                    7 February 1983                       SYSLISP
+section 20.2                                                      page 20.7
+
+        goto GotSign >>;
+    19:  % Plus sign
+    <<  TokSign := 1;
+        goto GotSign >>;
+    20:  % decimal point
+    <<  ResetBuf();
+        ReadInBuf();
+        if ChTokenType >= 10 then
+        <<  UnReadLastChar();
+            return ScanPossibleDipthong(TokChannel, '!.) >>
+        else
+        <<  TokSign := 1;
+            TokFloatFractionLength := 1;
+            goto InsideFloatFraction >> >>;
+    default:
+        return ScannerError("Unknown token type")
+    end;
+ .....
+
+
+
+20.2.7. Memory Access and Address Operations20.2.7. Memory Access and Address Operations20.2.7. Memory Access and Address Operations
+
+  The operators @ and & (corresponding to GetMem and Loc) may be used to do
+direct memory operations, similar to * and & in C.
+
+  @ may also be used on the LHS of an assignment.  Example:
+
+
+   WARRAY FOO[10];
+   WVAR   FEE=&FOO[0];
+
+   ...
+   @(fee+2) := @(fee+4) + & foo(5);
+   ...
+
+
+20.2.8. Bit-Field Operation20.2.8. Bit-Field Operation20.2.8. Bit-Field Operation
+
+  The  Field  and PutField operations are used for accessing fields smaller
+than whole words:
+
+  PUTFIELD(LOC, BITOFFSET, BITLENGTH, VALUE);
+
+  and
+
+  GETFIELD(LOC,BITOFFSET, BITLENGTH);
+
+  Special cases such as bytes, halfwords,  single  bits  are  optimized  if
+possible.
+
+  For  example,  the following definitions on the DEC-20 are used to defineSYSLISP                       7 February 1983                    PSL Manual
+page 20.8                                                      section 20.2
+
+the fields of an item (in file p20c:data-machine.red):
+
+
+   % Divide up the 36 bit DEC-20 word:
+
+   WConst  TagStartingBit = 0,
+           TagBitLength = 18,
+           StrictTagStartingBit = 9,
+           StrictTagBitLength = 9,
+           InfStartingBit = 18,
+           InfBitLength = 18,
+           GCStartingBit = 0,
+           GCBitLength = 9;
+
+   % Access to tag (type indicator) of Lisp item in ordinary code
+
+   syslsp macro procedure Tag U;
+       list('Field, cadr U, '(wconst TagStartingBit), '(wconst TagBitLe
+
+   syslsp macro procedure PutTag U;
+       list('PutField, cadr U, '(wconst TagStartingBit),
+                               '(wconst TagBitLength), caddr U);
+
+   % Access to tag of Lisp item in garbage collector,
+   %  if GC bits may be in use
+
+   syslsp macro procedure StrictTag U;
+       list('Field, cadr U, '(wconst StrictTagStartingBit),
+                            '(wconst StrictTagBitLength));
+
+   syslsp macro procedure PutStrictTag U;
+       list('PutField,
+                   cadr U, '(wconst StrictTagStartingBit),
+                           '(wconst StrictTagBitLength), caddr U);
+
+   % Access to info field of item (pointer or immediate operand)
+
+   syslsp macro procedure Inf U;
+       list('Field, cadr U, '(wconst InfStartingBit), '(wconst InfBitLe
+
+   syslsp macro procedure PutInf U;
+       list('PutField, cadr U, '(wconst InfStartingBit),
+                               '(wconst InfBitLength), caddr U);PSL Manual                    7 February 1983                       SYSLISP
+section 20.3                                                      page 20.9
+
+20.3. Using SYSLISP20.3. Using SYSLISP20.3. Using SYSLISP
+
+  ___________  Restriction:  SYSLISP  code  is  currently  ONLY  compiled,  since  it is
+converted into machine level operations, most of  which  are  dangerous  or
+tricky to use in an interpreted environment.
+
+  Note:  In  SYSLISP  mode, we currently execute some commands in the above
+PARSE/EVAL/PRINT mode, either to load files or  select  options,  but  most
+SYSLISP  code  is  compiled  to  a  file,  rather  than  being  immediately
+interpreted or compiled in-core.
+
+
+20.3.1. To Compile SYSLISP Code20.3.1. To Compile SYSLISP Code20.3.1. To Compile SYSLISP Code
+
+  Use PSL:RLISP, which usually has the Compiler, with  SYSLISP  extensions,
+loaded.   Alternatively, one may use <psl>syscmp.exe.  This is a version of
+RLISP built upon <PSL>psl.exe with the SYSLISP  compiler  and  data-machine
+macros loaded.
+
+   % Turn on SYSLISP mode:
+
+   ON SYSLISP; % This is causes the "mode-analysis" to be done
+               % Converting some LISP names to SYSLISP names.
+
+   % Use SYSLSP as the procedure type.
+
+  Example:
+
+   % Small file to access BPS origin and end.
+   % Starts in LISP mode
+
+   Fluid '(NextBP0 LastBP0);
+
+   NextBP0:=NIL;
+   LastBP0:=NIL;
+
+   On SYSLISP,COMP; % Switch to SYSLISP mode
+
+   syslsp procedure BPSize();
+    Begin scalar N1,L1;
+      If Null LispVar NextBP0 then LispVar NextBP0:=GtBPS 0;
+      If Null LispVar LastBP0 then LispVar LastBP0:=GtWarray 0;
+      N1 :=GtBPS(0);
+      L1:= GtWarray(0);
+      PrintF('" NextBPS=8#%o, used %d,  LastBPS=8#%o, used %d%n",
+                 N1,   N1-LispVar(NextBP0),     L1,LispVar(LastBP0)-L1)
+      LispVar NextBP0:=N1;
+      LispVar LastBP0:=L1;
+    End;
+
+   BPSize();     % Call the functionSYSLISP                       7 February 1983                    PSL Manual
+page 20.10                                                     section 20.4
+
+20.4. SYSLISP Functions20.4. SYSLISP Functions20.4. SYSLISP Functions
+
+  [??? What about overflow in Syslisp arithmetic? ???]  [??? What about overflow in Syslisp arithmetic? ???]  [??? What about overflow in Syslisp arithmetic? ???]
+
+
+ WPlus2 WPlus2 _ ____  _ ____   ____                           ____ ________  ____(WPlus2 U:word, V:word): word                           open-compiled, expr
+
+
+ WDifference WDifference _ ____  _ ____   ____                      ____ ________  ____(WDifference U:word, V:word): word                      open-compiled, expr
+
+
+ WTimes2 WTimes2 _ ____  _ ____   ____                          ____ ________  ____(WTimes2 U:word, V:word): word                          open-compiled, expr
+
+
+ WQuotient WQuotient _ ____  _ ____   ____                        ____ ________  ____(WQuotient U:word, V:word): word                        open-compiled, expr
+
+
+ WRemainder WRemainder _ ____  _ ____   ____                       ____ ________  ____(WRemainder U:word, V:word): word                       open-compiled, expr
+
+
+ WShift WShift _ ____  _ ____   ____                           ____ ________  ____(WShift U:word, V:word): word                           open-compiled, expr
+
+
+ WAnd WAnd _ ____  _ ____   ____                             ____ ________  ____(WAnd U:word, V:word): word                             open-compiled, expr
+
+
+ WOr WOr _ ____  _ ____   ____                              ____ ________  ____(WOr U:word, V:word): word                              open-compiled, expr
+
+
+ WXor WXor _ ____  _ ____   ____                             ____ ________  ____(WXor U:word, V:word): word                             open-compiled, expr
+
+
+ WNot WNot _ ____   ____                                     ____ ________  ____(WNot U:word): word                                     open-compiled, expr
+
+
+ WEQ WEQ _ ____  _ ____   _______                           ____ ________  ____(WEQ U:word, V:word): boolean                           open-compiled, expr
+
+
+ WNEQ WNEQ _ ____  _ ____   _______                          ____ ________  ____(WNEQ U:word, V:word): boolean                          open-compiled, expr
+
+
+ WGreaterP WGreaterP _ ____  _ ____   _______                     ____ ________  ____(WGreaterP U:word, V:word): boolean                     open-compiled, expr
+
+
+ WLessP WLessP _ ____  _ ____   _______                        ____ ________  ____(WLessP U:word, V:word): boolean                        open-compiled, expr
+
+
+ WGEQ WGEQ _ ____  _ ____   _______                          ____ ________  ____(WGEQ U:word, V:word): boolean                          open-compiled, exprPSL Manual                    7 February 1983                       SYSLISP
+section 20.4                                                     page 20.11
+
+ WLEQ WLEQ _ ____  _ ____   _______                          ____ ________  ____(WLEQ U:word, V:word): boolean                          open-compiled, expr
+
+
+ WGetV WGetV _ ____  _ ____   ____                           ____ ________  _____(WGetV U:word, V:word): word                           open-compiled, macro
+
+
+ WPutV WPutV _ ____  _ ____  _ ____   ____                   ____ ________  _____(WPutV U:word, V:word, W:word): word                   open-compiled, macro
+
+
+ Byte Byte _ ____  _ ____   ____                             ____ ________  ____(Byte U:word, V:word): word                             open-compiled, expr
+
+
+ PutByte PutByte _ ____  _ ____  _ ____   ____                  ____ ________  ____(PutByte U:word, V:word, W:word): word                  open-compiled, expr
+
+
+20.4.1. W-Arrays20.4.1. W-Arrays20.4.1. W-Arrays
+
+
+ CopyWArray CopyWArray ___ _ ______  ___ _ ______  _____ ___   ___ _ ______       ____(CopyWArray NEW:w-vector, OLD:w-vector, UPLIM:any): NEW:w-vector       expr
+
+          _____     Copy UPLIM + 1 words.
+
+
+ CopyWRDSToFrom CopyWRDSToFrom ___ _ ______  ___ ___   ___                            ____(CopyWRDSToFrom NEW:w-vector, OLD:any): any                            expr
+
+          CopyWArray          CopyWArray     Like CopyWArray in heap.
+
+
+ CopyWRDS CopyWRDS _ ___   ___                                                  ____(CopyWRDS S:any): any                                                  expr
+
+     Allocate new WRDS array in heap.
+
+
+
+20.5. Remaining SYSLISP Issues20.5. Remaining SYSLISP Issues20.5. Remaining SYSLISP Issues
+
+  The system should be made less dependent on the assemblers, compilers and
+loaders of the particular machine it is implemented on.  One way to do this
+is  to  bring up a very small kernel including a fast loader to load in the
+rest.
+
+
+20.5.1. Stand Alone SYSLISP Programs20.5.1. Stand Alone SYSLISP Programs20.5.1. Stand Alone SYSLISP Programs
+
+  In principle it works, but we need to  clearly  define  a  small  set  of
+support  functions.    Also, need to implement EXTERNAL properly, so that a
+normal LINKING loader can be used.  In PSL, we currently produce  a  single
+kernel  module,  with resident LAP (or later FAP), and it serves as dynamic
+linking loader for SYSLISP (ala MAIN SAIL).SYSLISP                       7 February 1983                    PSL Manual
+page 20.12                                                     section 20.5
+
+20.5.2. Need for Two Stacks20.5.2. Need for Two Stacks20.5.2. Need for Two Stacks
+
+  We must distinguish between true LISP items and untagged SYSLISP items on
+the  stack  for the garbage collector to work properly.  Two of the options
+for this are
+
+  1. Put a mark on the stack indicating a region containing untagged items.
+
+  2. Use a separate stack for untagged items.
+
+  Either of these involves a change in the  compiler,  since  it  currently
+only  allocates  one  frame  for  temporaries  on  the  stack  and does not
+distinguish where they get put.
+
+  The garbage collector should probably be recoded more modularly and at  a
+higher  level,  short  of redesigning the entire storage management scheme.
+This in itself would probably require the existence  of  a  separate  stack
+which is not traced through for return addresses and SYSLISP temporaries.
+
+
+20.5.3. New Mode System20.5.3. New Mode System20.5.3. New Mode System
+
+  A  better  scheme  for  intermixing  SYSLISP and LISP within a package is
+needed.  Mode Reduce will probably take care of this.
+
+
+20.5.4. Extend CREF for SYSLISP20.5.4. Extend CREF for SYSLISP20.5.4. Extend CREF for SYSLISP
+
+  The usual range of LISP tools should be available, such as  profiling,  a
+break package, tracing, etc.

@@ -1,0 +1,6 @@
+cd S:
+PSL:PSL.EXE
+(LOAD RLISP COMPILER)
+(SaveSystem "PSL 3.0 Rlisp")
+(quit)
+rename PSL-SAVE.EXE PSL:RLISP.EXE

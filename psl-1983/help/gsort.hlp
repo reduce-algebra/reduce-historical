@@ -1,0 +1,36 @@
+General List Sorting Utilities                      MLG - 22 December 1981
+------------------------------
+
+The module Gsort (use LOAD GSORT) contains a number of general sorting
+functions and associated key comparison functions.  The Key comparison
+functions are given 2 objects to compare, return NIL if they are not
+in correct order:
+
+BeforeFn(a:any,b:any):Extra-Boolean;  %  return NIL if not in order
+
+  The package defines:
+
+  NumberSortFn(N1:number,N2:Number)
+  StringSortFn(S1:String,N2:string)  [Sc1 and Sc2 are faster versions]
+  IdSortFn(D1:id,D2:id)              [IdC1 and IDc2 are faster]
+  AtomSortFn(X1:atom,X2:Atom)
+
+The general sorting functions expect a SortFn (which MUST be an ID)
+
+GsortP(Lst:x-list,BeforeFn:id):Boolean   % T if x-list is sorted 
+Gsort(Lst:x-list,BeforeFn:id):x-list     % Tree-sort of x-list
+GMergeSort(Lst:x-list,BeforeFn:id):x-list % Merge-sort of x-list
+ 
+Currently, Gsort is often fastest,  but GMergeSort is more stable.
+
+Example: To sort a list of Ids call Gsort(Dlist,'Idsortfn)
+         or Gsort(Dlist,'IDc2) for faster sort.
+       
+         To sort list of records (e.g. pairs), user must define comparison:
+         E.g. to sort LP, a List of dotted pairs (Number . Info), define
+     
+ procedure NPSortFn(P1,P2); NumberSortFn(Car p1, Car P2);
+
+         then execute Gsort(LP,'NPSortfn);
+
+See PU:Gsort.Red for the code.

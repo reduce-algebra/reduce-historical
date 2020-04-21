@@ -1,0 +1,92 @@
+PK: modules/files                   PT:			       status
+
+ALLOC
+   Allocators			m-allocators	sub3	almost same	
+   Copiers	
+   Cons-mkvect			m-cons-mkvect	sub3	almost same
+   Comp-support			m-comp-support	sub3	same
+   P20:System-gc	
+   P20:Gc			m-gc		stubs3	STUB
+ARITH
+   Arithmetic			m-arith		sub5	simpler
+DEBG 
+   p20:Mini-trace	
+   Mini-editor
+   Backtrace
+ERROR
+   Error-handlers		m-error-handlers sub2	simple subset
+   Type-errors			m-type-errors	 sub2	simple subset
+   Error-errorset		m-error-errorset sub2   trivial subset
+   Io-errors			m-io-errors      sub2   simple subset
+EVAL 
+   P20:Apply-lap		p-apply-lap	sub5	less efficient
+   Eval-apply			m-eval-apply	sub5	simpler
+   Catch-throw		
+   Prog-and-friends	
+EXTRA
+   p20:Timc			xxx-header
+   p20:System-extras		xxx-header
+   p20:Trap			
+   P20:Dumplisp		
+FASL 
+   p20:System-faslout
+   p20:System-faslin
+   Faslin
+   Load			
+   Autoload		
+P20:HEAP
+   [Declare HEAP,BPS]		xxx-header
+IO 
+   P20:Io-data			io-data		sub7	same?
+   Char-io			m-char-io	sub7    simple subset
+   Open-close			m-open-close	sub7	simpler
+   Rds-wrs			m-rds-wrs	sub7	simpler	
+   Other-io		
+   Read				m-read		sub4	simpler
+   Token-scanner		m-token		sub4	simpler
+   Printers			m-printers	sub2	simpler
+   p20:Write-float		
+   Printf			m-printf	sub2	trivial subset
+   Explode-compress	
+   Io-extensions	
+MACRO
+   Eval-when		
+   Cont-error		
+   Lisp-macros		
+   Onoff		
+   Define-smacro
+   Defconst
+   String-gensym
+   Loop-macros			m-loop-macros	sub5		simpler	
+MAIN
+   P20:Main-start		xxx-header			simpler
+PROP
+   P20:Function-primitives	p-function-primitives sub5 	less efficient
+   Property-list		m-property-list	sub5		simpler?
+   Fluid-global		
+   Putd-getd			m-putd-getd	sub6		simpler?
+RANDM
+   Known-to-comp-sl		m-known-to-comp sub5	trivial subset
+   Others-sl			M-others-sl	sub5	subset
+   Equal			m-equal		sub5 	subset
+   Carcdr			M-car-cdr	sub5	subset	
+   Easy-sl			M-easy-sl	sub5	subset
+   Easy-non-sl			M-easy-non-sl	sub5	subset
+   Sets				
+SYMBL
+   Binding			PK:binding	sub6	same
+   P20:Fast-binder		P-fast-binder	sub6	less-efficient
+   Symbol-values		m-symbol-values	sub5	subset
+   Oblist			m-oblist	sub5	subset	
+SYSIO 
+   p20:System-io		system-io,xxx-system-io
+							sub7	same?
+   P20:Scan-table	
+TLOOP 
+   Break	
+   Top-loop			m-top-loop	sub7	trivial subset
+   Dskin			m-dskin		sub7	simpler
+TYPES 
+   Type-conversions	
+   Vectors		
+   Sequence			m-sequence	sub3	simpler

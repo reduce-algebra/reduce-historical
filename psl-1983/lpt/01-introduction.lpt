@@ -1,0 +1,207 @@
+PSL Manual                    7 February 1983                  Introduction
+section 1.0                                                        page 1.1
+
+                                 CHAPTER 1                                 CHAPTER 1                                 CHAPTER 1
+                               INTRODUCTION                               INTRODUCTION                               INTRODUCTION
+
+
+
+
+     1.1. Opening Remarks  .  .  .  .  .  .  .  .  .  .  .  .  .  .     1.1
+     1.2. Scope of the Manual .  .  .  .  .  .  .  .  .  .  .  .  .     1.2
+          1.2.1. Typographic Conventions within the Manual  .  .  .     1.2
+          1.2.2. The Organization of the Manual .  .  .  .  .  .  .     1.3
+
+
+
+
+1.1. Opening Remarks1.1. Opening Remarks1.1. Opening Remarks
+
+                                                           1
+  This  document  describes  PSL  (PORTABLE  STANDARD  LISP ),  a portable,
+"modern" LISP developed  at  the  University  of  Utah  for  a  variety  of
+machines.  PSL is upward-compatible with STANDARD LISP [Marti 79].  In most
+cases,  STANDARD  LISP  did  not  commit  itself to specific implementation
+details (since it was to be compatible with a  portion  of  "most"  LISPs).
+PSL  is  more  specific  and provides many more functions than described in
+that report.
+
+  The goals of PSL include:
+
+
+   - Providing implementation tools for  LISP  that  can  be  used  to
+                                    ____     implement  a  variety  of LISP-like systems, including mini-lisps
+     embedded in other language systems (such as  existing  PASCAL  or
+     ADA applications).
+
+   - Effectively  supporting  the REDUCE algebra system on a number of
+     machines,  and  providing  algebra  modules  extracted  from  (or
+     modeled  upon)  REDUCE to be included in applications such as CAI
+     and CAGD.
+
+   - Providing a uniform, modern LISP programming environment  on  all
+     of  the  machines  that  we  use  (DEC-20,  VAX,  and 68000 based
+     personal machines)--of the power  of  FRANZ  LISP,  UCI  LISP  or
+     MACLISP.
+
+   - Studying  the  utility of a LISP-based systems language for other
+     applications (such as CAGD or VLSI design) in which SYSLISP  code
+     provides  efficiency  comparable to that of C or BCPL, yet enjoys
+
+
+_______________
+
+  1
+   "LSP" backwards!Introduction                  7 February 1983                    PSL Manual
+page 1.2                                                        section 1.1
+
+     the  interactive program development and debugging environment of
+     LISP.
+
+
+
+1.2. Scope of the Manual1.2. Scope of the Manual1.2. Scope of the Manual
+
+  This  manual  is  intended  to  describe  the  syntax,   semantics,   and
+implementation  of  PSL.  While we have attempted to make it comprehensive,
+it is not intended for use as a primer.  Some prior exposure to  LISP  will
+prove  very  helpful.    A  selection  of  LISP  primers  is  listed in the
+bibliography  in  Chapter   23;   see   for   example [Allen   79, Charniak
+80, Weissman 67, Winston 81].
+
+
+1.2.1. Typographic Conventions within the Manual1.2.1. Typographic Conventions within the Manual1.2.1. Typographic Conventions within the Manual
+
+  A  large  proportion  of  this  manual  is devoted to descriptions of the
+functions that make up PSL.  Each function is provided with a  prototypical
+header  line.    Each  argument is given a name and followed by its allowed
+type.  If an argument type is not commonly used, it may be a  specific  set
+                                                                       PutD                                                                       PutDenclosed  in  brackets  {...}.    For  example, this header shows that PutD
+(which defines other functions) takes three arguments:
+                                                                       ____                                                                       ____                                                                       ____   PutD                                                                expr   PutD _____ __ ____ _____ ____  ______  ____ _______    _____ __     expr  (PutD FNAME:id TYPE:ftype BODY:{lambda, code-pointer}): FNAME:id     expr
+
+
+      _____              __   1. FNAME, which is an id (identifier).
+
+      ____   2. TYPE, which  is  the  "function  type"  of  the  function  being
+      defined.
+
+      ____             ______                 ____ _______   3. BODY, which is a lambda expression or a code-pointer.
+
+
+             _____and  returns FNAME, the name of the function being defined.  Some functions
+are compiled open; these have a note saying  "open-compiled"  next  to  the
+function type.
+
+  Some  functions  accept an arbitrary number of arguments.  The header for
+these functions shows a  single  argument  enclosed  in  square  brackets--
+indicating that zero or more occurrences of that argument are allowed.  For
+example:
+   And   And  _ ____    _____ _______  (And [U:form]): extra-boolean
+  And  And  And  is a function which accepts zero or more arguments each of which may
+       ____be any form.
+
+  In some cases, LISP or RLISP code is given in the function  documentation
+as  the  function's  definition.  As far as possible, the code is extracted
+from the the current PSL sources (perhaps converted from one syntax to  the
+other);  however, this code is not always necessarily actually used in PSL,
+and may be given only to clarify the semantics of  the  function.    Please
+                                     _____check carefully if you depend on the exact definition.PSL Manual                    7 February 1983                  Introduction
+section 1.2                                                        page 1.3
+
+  Some features of PSL are anticipated but not yet fully implemented.  When
+these  are  documented  in  this  manual they are indicated with the words:
+ ___ ___________ ___ ___ ___________ ___ ___ ___________ ___[not implemented yet][not implemented yet][not implemented yet].
+
+
+1.2.2. The Organization of the Manual1.2.2. The Organization of the Manual1.2.2. The Organization of the Manual
+
+  This manual is arranged in separate  chapters,  which  are  meant  to  be
+self-contained  units.   Each begins with a small table of contents serving
+as a summary of constructs and as an aid in skimming.    Here  is  a  brief
+overview of the following chapters:
+
+  Chapter  2 is particularly useful for those using PSL for the first time.
+It begins with directions for starting PSL  and  getting  help.    It  also
+briefly  discusses  the handling of errors; some of the consequences of PSL
+being both a compiled and an interpreted language; function types; switches
+and globals.  PSL treats the parameters for various function  types  rather
+differently  from  a  number of other dialects, and the serious user should
+definitely become familiar with this information.
+
+  While most LISP implementations use only a  fully  parenthesized  syntax,
+PSL  gives  the  user  the  option  of using an ALGOL-like (or PASCAL-like)
+syntax (RLISP), which many users prefer.  Chapter 3 describes the syntax of
+RLISP.
+
+  Chapter 4 describes the data types used in PSL.   It  includes  functions
+useful  for  testing  equality  and for changing data types, and predicates
+useful with data types.
+
+  The next seven chapters describe in detail the basic  functions  provided
+by PSL.
+
+  Chapters  5,  6,  7,  and 8 describe functions for manipulating the basic
+                         ______   __   ____       ______      ______data structures of LISP: numbers, ids, lists, and strings and vectors.   As
+                                        _______    __________         ____virtually   every  LISP  program  uses  integers,  identifiers,  and  lists
+extensively, these three chapters (5, 6 and 7) should  be  included  in  an
+               ______      ______overview.   As vectors and strings are used less extensively, Chapter 8 may
+be skipped on a first reading.
+
+  Chapter 9 and, to some extent, Chapter 4  describe  the  basic  functions
+used  to drive a computation.  The reader wanting an overview of PSL should
+certainly read these two.
+
+  Chapter 10 describes functions useful in function definition and the idea
+of variable binding.  The novice LISP  user  should  definitely  read  this
+information  before  proceeding  to the rest of the manual.  Also described
+here is a proposed scheme for context-switching in the form of  the  funarg
+and closures.
+
+  Chapter  11  describes  functions  associated  with  the interpreter.  It
+                                                 Eval     Apply                                                 Eval     Applyincludes functions having to do with evaluation (Eval and Apply.)Introduction                  7 February 1983                    PSL Manual
+page 1.4                                                        section 1.2
+
+  Chapter  12  describes  the  I/O  facilities.   Most LISP programs do not
+require sophisticated I/O, so this may be skimmed on a first reading.   The
+section  dealing  with input deals extensively with customizing the scanner
+and reader, which is only of interest to the sophisticated user.
+
+  Chapter 13 presents information about the user interface  for  PSL.    It
+includes some generally useful information on running the system.
+
+  Chapter  14  discusses  error  handling.    Much of the information is of
+interest primarily to the sophisticated user.   However,  LISP  provides  a
+convenient  interactive facility for correcting certain errors which may be
+of interest to all, so  a  first  reading  should  include  parts  of  this
+chapter.
+
+  Chapter  15  discusses  some tools for debugging and statistics gathering
+based on the concept of embedding function definitions.
+
+  Chapter 16 describes the structure editor,  which  permits  the  user  to
+construct  and  modify  list structure, including the bodies of interpreted
+functions, and erroneous expressions  within  the  BREAK  loop.    It  also
+describes EMODE, an EMACS-like screen editor.
+
+  Chapter  17 briefly describes modules of useful tools.  This includes the
+PSL cross-reference generator, and various tools for defining macros.
+
+  The rest of the manual may be skipped on first reading.
+
+  Chapter 18 describes functions associated with  the  compiler.    Chapter
+19  describes  some  functions  for communicating with the TOPS-20 and UNIX
+operating systems.  Chapter 20 describes SYSLISP, a language  incorporating
+features  from  both  BCPL  and LISP and which is used as an implementation
+language  for  PSL.    Chapter  21  presents  details   of   the   portable
+implementation which may be of interest to sophisticated users, including a
+description  of the garbage collector.  Chapter 22 describes the extensible
+parser.  Section 22.4 provides BNF descriptions of the  input  accepted  by
+the token scanner, standard reader, and syntactic (RLISP) reader.
+
+  Chapter 23 contains the bibliography.
+
+  Chapter  24  is  an  alphabetical  index  of  concepts.  Chapter 25 is an
+alphabetical index of  all  functions  defined  in  the  manual.    Chapter
+26  contains  an  alphabetical  index  of all global variables and switches
+defined in the manual.

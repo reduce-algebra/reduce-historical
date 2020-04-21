@@ -1,0 +1,5 @@
+% XXX-GC.RED for 20
+
+IN "XXX-SYSTEM-GC.RED"$
+IN "PT:P-COMP-GC.RED"$
+END;

@@ -1,0 +1,15 @@
+
+@ren home:rlisp.init home:saved-rlisp.init
+@get PSL:RLISP
+@st
+*Options!* := nil; % Force reload
+*load(zboot, syslisp, if!-system, lap!-to!-asm);
+*load(dec20!-comp,dec20!-cmac,dec20!-asm);
+*remflag(''(extrareg),''terminaloperand);
+*off usermode;
+*in "p20t:dec20-patches.sl"$
+*Date!* := concat("Dec 20 cross compiler",date());
+*Dumplisp "S:TEST-DEC20-CROSS.EXE";
+*Quit;
+@reset .
+@ren home:saved-rlisp.init home:rlisp.init

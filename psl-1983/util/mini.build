@@ -1,0 +1,5 @@
+in "mini-support-patch.red"$
+in "mini-support.red"$
+in "mini-support.fix"$
+global '(PNAM);
+in "mini.sl"$

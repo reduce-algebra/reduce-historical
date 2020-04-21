@@ -1,0 +1,10 @@
+CompileTime <<
+on EolInStringOK;
+macro procedure !* U;
+    NIL;
+load Syslisp;
+>>;
+in "anyreg-cmacro.sl"$
+in "pass-1-lap.sl"$
+in "common-cmacros.sl"$
+in "common-predicates.sl"$

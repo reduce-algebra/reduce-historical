@@ -1,0 +1,2 @@
+CompileTime load pr!-main;
+in "pr-text.red"$

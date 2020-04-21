@@ -1,0 +1,2246 @@
+	radix 10
+STACK:	block 5001
+	intern STACK
+L0001:	STACK+0
+	intern L0001
+L0002:	STACK+5000
+	intern L0002
+HEAP:	block 150001
+	intern HEAP
+L0183:	HEAP+0
+	intern L0183
+L0184:	HEAP+150000
+	intern L0184
+L0185:	0
+	intern L0185
+L0186:	0
+	intern L0186
+BPS:	block 501
+	intern BPS
+L1005:	BPS+0
+	intern L1005
+L1006:	BPS+0
+	intern L1006
+L1007:	BPS+500
+	intern L1007
+L1008:	BPS+500
+	intern L1008
+L0004:	block 10
+	intern L0004
+ARG1:	0
+	intern ARG1
+ARG2:	0
+	intern ARG2
+ARG3:	0
+	intern ARG3
+ARG4:	0
+	intern ARG4
+ARG5:	0
+	intern ARG5
+ARG6:	0
+	intern ARG6
+ARG7:	0
+	intern ARG7
+ARG8:	0
+	intern ARG8
+ARG9:	0
+	intern ARG9
+ARG10:	0
+	intern ARG10
+ARG11:	0
+	intern ARG11
+ARG12:	0
+	intern ARG12
+ARG13:	0
+	intern ARG13
+ARG14:	0
+	intern ARG14
+ARG15:	0
+	intern ARG15
+SYMVAL:	intern SYMVAL
+	<29_31>+0
+	<29_31>+1
+	<29_31>+2
+	<29_31>+3
+	<29_31>+4
+	<29_31>+5
+	<29_31>+6
+	<29_31>+7
+	<29_31>+8
+	<29_31>+9
+	<29_31>+10
+	<29_31>+11
+	<29_31>+12
+	<29_31>+13
+	<29_31>+14
+	<29_31>+15
+	<29_31>+16
+	<29_31>+17
+	<29_31>+18
+	<29_31>+19
+	<29_31>+20
+	<29_31>+21
+	<29_31>+22
+	<29_31>+23
+	<29_31>+24
+	<29_31>+25
+	<29_31>+26
+	<29_31>+27
+	<29_31>+28
+	<29_31>+29
+	<29_31>+30
+	<29_31>+31
+	<29_31>+32
+	<29_31>+33
+	<29_31>+34
+	<29_31>+35
+	<29_31>+36
+	<29_31>+37
+	<29_31>+38
+	<29_31>+39
+	<29_31>+40
+	<29_31>+41
+	<29_31>+42
+	<29_31>+43
+	<29_31>+44
+	<29_31>+45
+	<29_31>+46
+	<29_31>+47
+	<29_31>+48
+	<29_31>+49
+	<29_31>+50
+	<29_31>+51
+	<29_31>+52
+	<29_31>+53
+	<29_31>+54
+	<29_31>+55
+	<29_31>+56
+	<29_31>+57
+	<29_31>+58
+	<29_31>+59
+	<29_31>+60
+	<29_31>+61
+	<29_31>+62
+	<29_31>+63
+	<29_31>+64
+	<29_31>+65
+	<29_31>+66
+	<29_31>+67
+	<29_31>+68
+	<29_31>+69
+	<29_31>+70
+	<29_31>+71
+	<29_31>+72
+	<29_31>+73
+	<29_31>+74
+	<29_31>+75
+	<29_31>+76
+	<29_31>+77
+	<29_31>+78
+	<29_31>+79
+	<29_31>+80
+	<29_31>+81
+	<29_31>+82
+	<29_31>+83
+	<30_31>+84
+	<29_31>+85
+	<29_31>+86
+	<29_31>+87
+	<29_31>+88
+	<29_31>+89
+	<29_31>+90
+	<29_31>+91
+	<29_31>+92
+	<29_31>+93
+	<29_31>+94
+	<29_31>+95
+	<29_31>+96
+	<29_31>+97
+	<29_31>+98
+	<29_31>+99
+	<29_31>+100
+	<29_31>+101
+	<29_31>+102
+	<29_31>+103
+	<29_31>+104
+	<29_31>+105
+	<29_31>+106
+	<29_31>+107
+	<29_31>+108
+	<29_31>+109
+	<29_31>+110
+	<29_31>+111
+	<29_31>+112
+	<29_31>+113
+	<29_31>+114
+	<29_31>+115
+	<29_31>+116
+	<29_31>+117
+	<29_31>+118
+	<29_31>+119
+	<29_31>+120
+	<29_31>+121
+	<29_31>+122
+	<29_31>+123
+	<29_31>+124
+	<29_31>+125
+	<29_31>+126
+	<29_31>+127
+	<30_31>+128
+	<29_31>+129
+	<29_31>+130
+	<29_31>+131
+	<29_31>+132
+	<29_31>+133
+	<29_31>+134
+	<29_31>+135
+	<29_31>+136
+	<29_31>+137
+	<29_31>+138
+	<29_31>+139
+	<29_31>+140
+	<29_31>+141
+	<29_31>+142
+	<29_31>+143
+	<29_31>+144
+	<29_31>+145
+	<29_31>+146
+	<29_31>+147
+	<29_31>+148
+	<29_31>+149
+	<29_31>+150
+	<29_31>+151
+	<29_31>+152
+	<29_31>+153
+	<30_31>+128
+	<29_31>+155
+	<29_31>+156
+	<29_31>+157
+	<29_31>+158
+	<29_31>+159
+	<29_31>+160
+	<29_31>+161
+	<29_31>+162
+	<29_31>+163
+	<29_31>+164
+	<29_31>+165
+	<29_31>+166
+	<29_31>+167
+	<29_31>+168
+	<29_31>+169
+	<29_31>+170
+	<29_31>+171
+	<29_31>+172
+	<29_31>+173
+	<29_31>+174
+	<29_31>+175
+	<29_31>+176
+	<29_31>+177
+	<29_31>+178
+	<29_31>+179
+	<29_31>+180
+	<29_31>+181
+	<29_31>+182
+	<29_31>+183
+	<29_31>+184
+	<29_31>+185
+	<29_31>+186
+	<29_31>+187
+	<29_31>+188
+	<29_31>+189
+	<29_31>+190
+	<29_31>+191
+	<29_31>+192
+	<29_31>+193
+	<29_31>+194
+	<29_31>+195
+	<29_31>+196
+	<29_31>+197
+	<29_31>+198
+	<29_31>+199
+	<29_31>+200
+	<29_31>+201
+	<29_31>+202
+	<29_31>+203
+	<29_31>+204
+	<29_31>+205
+	<29_31>+206
+	<29_31>+207
+	<29_31>+208
+	<29_31>+209
+	<29_31>+210
+	<29_31>+211
+	<29_31>+212
+	<29_31>+213
+	<29_31>+214
+	<29_31>+215
+	<29_31>+216
+	<29_31>+217
+	<29_31>+218
+	<29_31>+219
+	<29_31>+220
+	<29_31>+221
+	<29_31>+222
+	<29_31>+223
+	<29_31>+224
+	<29_31>+225
+	<29_31>+226
+	<29_31>+227
+	<29_31>+228
+	<29_31>+229
+	<29_31>+230
+	<29_31>+231
+	<29_31>+232
+	<29_31>+233
+	<29_31>+234
+	<29_31>+235
+	<29_31>+236
+	<29_31>+237
+	<29_31>+238
+	<29_31>+239
+	<29_31>+240
+	<30_31>+128
+	<29_31>+242
+	<30_31>+128
+	<30_31>+128
+	<29_31>+245
+	<29_31>+246
+	<29_31>+247
+	<29_31>+248
+	<29_31>+249
+	<29_31>+250
+	<29_31>+251
+	<29_31>+252
+	<29_31>+253
+	<29_31>+254
+	<29_31>+255
+	<29_31>+256
+	<29_31>+257
+	<29_31>+258
+	<29_31>+259
+	<29_31>+260
+	<29_31>+261
+	<29_31>+262
+	<29_31>+263
+	<29_31>+264
+	<29_31>+265
+	<29_31>+266
+	<29_31>+267
+	<29_31>+268
+	<29_31>+269
+	<29_31>+270
+	<29_31>+271
+	<29_31>+272
+	<29_31>+273
+	<29_31>+274
+	<29_31>+275
+	<29_31>+276
+	<29_31>+277
+	<29_31>+278
+	<29_31>+279
+	<29_31>+280
+	<29_31>+281
+	<29_31>+282
+	<29_31>+283
+	<29_31>+284
+	<29_31>+285
+	<29_31>+286
+	<29_31>+287
+	<29_31>+288
+	<29_31>+289
+	<29_31>+290
+	<29_31>+291
+	<29_31>+292
+	<29_31>+293
+	<29_31>+294
+	<29_31>+295
+	<29_31>+296
+	<29_31>+297
+	<29_31>+298
+	<29_31>+299
+	<29_31>+300
+	<29_31>+301
+	<29_31>+302
+	<29_31>+303
+	<29_31>+304
+	<29_31>+305
+	<29_31>+306
+	<29_31>+307
+	<29_31>+308
+	<29_31>+309
+	<29_31>+310
+	<29_31>+311
+	<29_31>+312
+	<29_31>+313
+	<29_31>+314
+	<29_31>+315
+	<29_31>+316
+	<29_31>+317
+	<29_31>+318
+	<29_31>+319
+	<29_31>+320
+	<29_31>+321
+	<29_31>+322
+	<29_31>+323
+	<29_31>+324
+	<29_31>+325
+	<29_31>+326
+	<29_31>+327
+	<29_31>+328
+	<29_31>+329
+	<29_31>+330
+	<29_31>+331
+	<29_31>+332
+	<29_31>+333
+	<29_31>+334
+	<29_31>+335
+	<29_31>+336
+	<29_31>+337
+	<29_31>+338
+	<29_31>+339
+	<29_31>+340
+	<29_31>+341
+	<30_31>+128
+	<29_31>+343
+	<29_31>+344
+	<29_31>+345
+	<29_31>+346
+	<29_31>+347
+	<29_31>+348
+	<30_31>+128
+	<30_31>+128
+	<29_31>+351
+	<29_31>+352
+	<29_31>+353
+	<29_31>+354
+	<29_31>+355
+	<29_31>+356
+	<29_31>+357
+	<29_31>+358
+	<29_31>+359
+	<29_31>+360
+	<29_31>+361
+	<29_31>+362
+	<30_31>+26
+	<29_31>+364
+	<29_31>+365
+	<29_31>+366
+	<29_31>+367
+	<29_31>+368
+	<29_31>+369
+	<29_31>+370
+	block 130
+SYMPRP:	intern SYMPRP
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	<30_31>+128
+	block 130
+SYMNAM:	intern SYMNAM
+	extern L1105
+	<4_31>+L1105
+	extern L1106
+	<4_31>+L1106
+	extern L1107
+	<4_31>+L1107
+	extern L1108
+	<4_31>+L1108
+	extern L1109
+	<4_31>+L1109
+	extern L1110
+	<4_31>+L1110
+	extern L1111
+	<4_31>+L1111
+	extern L1112
+	<4_31>+L1112
+	extern L1113
+	<4_31>+L1113
+	extern L1114
+	<4_31>+L1114
+	extern L1115
+	<4_31>+L1115
+	extern L1116
+	<4_31>+L1116
+	extern L1117
+	<4_31>+L1117
+	extern L1118
+	<4_31>+L1118
+	extern L1119
+	<4_31>+L1119
+	extern L1120
+	<4_31>+L1120
+	extern L1121
+	<4_31>+L1121
+	extern L1122
+	<4_31>+L1122
+	extern L1123
+	<4_31>+L1123
+	extern L1124
+	<4_31>+L1124
+	extern L1125
+	<4_31>+L1125
+	extern L1126
+	<4_31>+L1126
+	extern L1127
+	<4_31>+L1127
+	extern L1128
+	<4_31>+L1128
+	extern L1129
+	<4_31>+L1129
+	extern L1130
+	<4_31>+L1130
+	extern L1131
+	<4_31>+L1131
+	extern L1132
+	<4_31>+L1132
+	extern L1133
+	<4_31>+L1133
+	extern L1134
+	<4_31>+L1134
+	extern L1135
+	<4_31>+L1135
+	extern L1136
+	<4_31>+L1136
+	extern L1137
+	<4_31>+L1137
+	extern L1138
+	<4_31>+L1138
+	extern L1139
+	<4_31>+L1139
+	extern L1140
+	<4_31>+L1140
+	extern L1141
+	<4_31>+L1141
+	extern L1142
+	<4_31>+L1142
+	extern L1143
+	<4_31>+L1143
+	extern L1144
+	<4_31>+L1144
+	extern L1145
+	<4_31>+L1145
+	extern L1146
+	<4_31>+L1146
+	extern L1147
+	<4_31>+L1147
+	extern L1148
+	<4_31>+L1148
+	extern L1149
+	<4_31>+L1149
+	extern L1150
+	<4_31>+L1150
+	extern L1151
+	<4_31>+L1151
+	extern L1152
+	<4_31>+L1152
+	extern L1153
+	<4_31>+L1153
+	extern L1154
+	<4_31>+L1154
+	extern L1155
+	<4_31>+L1155
+	extern L1156
+	<4_31>+L1156
+	extern L1157
+	<4_31>+L1157
+	extern L1158
+	<4_31>+L1158
+	extern L1159
+	<4_31>+L1159
+	extern L1160
+	<4_31>+L1160
+	extern L1161
+	<4_31>+L1161
+	extern L1162
+	<4_31>+L1162
+	extern L1163
+	<4_31>+L1163
+	extern L1164
+	<4_31>+L1164
+	extern L1165
+	<4_31>+L1165
+	extern L1166
+	<4_31>+L1166
+	extern L1167
+	<4_31>+L1167
+	extern L1168
+	<4_31>+L1168
+	extern L1169
+	<4_31>+L1169
+	extern L1170
+	<4_31>+L1170
+	extern L1171
+	<4_31>+L1171
+	extern L1172
+	<4_31>+L1172
+	extern L1173
+	<4_31>+L1173
+	extern L1174
+	<4_31>+L1174
+	extern L1175
+	<4_31>+L1175
+	extern L1176
+	<4_31>+L1176
+	extern L1177
+	<4_31>+L1177
+	extern L1178
+	<4_31>+L1178
+	extern L1179
+	<4_31>+L1179
+	extern L1180
+	<4_31>+L1180
+	extern L1181
+	<4_31>+L1181
+	extern L1182
+	<4_31>+L1182
+	extern L1183
+	<4_31>+L1183
+	extern L1184
+	<4_31>+L1184
+	extern L1185
+	<4_31>+L1185
+	extern L1186
+	<4_31>+L1186
+	extern L1187
+	<4_31>+L1187
+	extern L1188
+	<4_31>+L1188
+	extern L1189
+	<4_31>+L1189
+	extern L1190
+	<4_31>+L1190
+	extern L1191
+	<4_31>+L1191
+	extern L1192
+	<4_31>+L1192
+	extern L1193
+	<4_31>+L1193
+	extern L1194
+	<4_31>+L1194
+	extern L1195
+	<4_31>+L1195
+	extern L1196
+	<4_31>+L1196
+	extern L1197
+	<4_31>+L1197
+	extern L1198
+	<4_31>+L1198
+	extern L1199
+	<4_31>+L1199
+	extern L1200
+	<4_31>+L1200
+	extern L1201
+	<4_31>+L1201
+	extern L1202
+	<4_31>+L1202
+	extern L1203
+	<4_31>+L1203
+	extern L1204
+	<4_31>+L1204
+	extern L1205
+	<4_31>+L1205
+	extern L1206
+	<4_31>+L1206
+	extern L1207
+	<4_31>+L1207
+	extern L1208
+	<4_31>+L1208
+	extern L1209
+	<4_31>+L1209
+	extern L1210
+	<4_31>+L1210
+	extern L1211
+	<4_31>+L1211
+	extern L1212
+	<4_31>+L1212
+	extern L1213
+	<4_31>+L1213
+	extern L1214
+	<4_31>+L1214
+	extern L1215
+	<4_31>+L1215
+	extern L1216
+	<4_31>+L1216
+	extern L1217
+	<4_31>+L1217
+	extern L1218
+	<4_31>+L1218
+	extern L1219
+	<4_31>+L1219
+	extern L1220
+	<4_31>+L1220
+	extern L1221
+	<4_31>+L1221
+	extern L1222
+	<4_31>+L1222
+	extern L1223
+	<4_31>+L1223
+	extern L1224
+	<4_31>+L1224
+	extern L1225
+	<4_31>+L1225
+	extern L1226
+	<4_31>+L1226
+	extern L1227
+	<4_31>+L1227
+	extern L1228
+	<4_31>+L1228
+	extern L1229
+	<4_31>+L1229
+	extern L1230
+	<4_31>+L1230
+	extern L1231
+	<4_31>+L1231
+	extern L1232
+	<4_31>+L1232
+	extern L1233
+	<4_31>+L1233
+	extern L1234
+	<4_31>+L1234
+	extern L1235
+	<4_31>+L1235
+	extern L1236
+	<4_31>+L1236
+	extern L1237
+	<4_31>+L1237
+	extern L1238
+	<4_31>+L1238
+	extern L1239
+	<4_31>+L1239
+	extern L1240
+	<4_31>+L1240
+	extern L1241
+	<4_31>+L1241
+	extern L1242
+	<4_31>+L1242
+	extern L1243
+	<4_31>+L1243
+	extern L1244
+	<4_31>+L1244
+	extern L1245
+	<4_31>+L1245
+	extern L1246
+	<4_31>+L1246
+	extern L1247
+	<4_31>+L1247
+	extern L1248
+	<4_31>+L1248
+	extern L1249
+	<4_31>+L1249
+	extern L1250
+	<4_31>+L1250
+	extern L1251
+	<4_31>+L1251
+	extern L1252
+	<4_31>+L1252
+	extern L1253
+	<4_31>+L1253
+	extern L1254
+	<4_31>+L1254
+	extern L1255
+	<4_31>+L1255
+	extern L1256
+	<4_31>+L1256
+	extern L1257
+	<4_31>+L1257
+	extern L1258
+	<4_31>+L1258
+	extern L1259
+	<4_31>+L1259
+	extern L1260
+	<4_31>+L1260
+	extern L1261
+	<4_31>+L1261
+	extern L1262
+	<4_31>+L1262
+	extern L1263
+	<4_31>+L1263
+	extern L1264
+	<4_31>+L1264
+	extern L1265
+	<4_31>+L1265
+	extern L1266
+	<4_31>+L1266
+	extern L1267
+	<4_31>+L1267
+	extern L1268
+	<4_31>+L1268
+	extern L1269
+	<4_31>+L1269
+	extern L1270
+	<4_31>+L1270
+	extern L1271
+	<4_31>+L1271
+	extern L1272
+	<4_31>+L1272
+	extern L1273
+	<4_31>+L1273
+	extern L1274
+	<4_31>+L1274
+	extern L1275
+	<4_31>+L1275
+	extern L1276
+	<4_31>+L1276
+	extern L1277
+	<4_31>+L1277
+	extern L1278
+	<4_31>+L1278
+	extern L1279
+	<4_31>+L1279
+	extern L1280
+	<4_31>+L1280
+	extern L1281
+	<4_31>+L1281
+	extern L1282
+	<4_31>+L1282
+	extern L1283
+	<4_31>+L1283
+	extern L1284
+	<4_31>+L1284
+	extern L1285
+	<4_31>+L1285
+	extern L1286
+	<4_31>+L1286
+	extern L1287
+	<4_31>+L1287
+	extern L1288
+	<4_31>+L1288
+	extern L1289
+	<4_31>+L1289
+	extern L1290
+	<4_31>+L1290
+	extern L1291
+	<4_31>+L1291
+	extern L1292
+	<4_31>+L1292
+	extern L1293
+	<4_31>+L1293
+	extern L1294
+	<4_31>+L1294
+	extern L1295
+	<4_31>+L1295
+	extern L1296
+	<4_31>+L1296
+	extern L1297
+	<4_31>+L1297
+	extern L1298
+	<4_31>+L1298
+	extern L1299
+	<4_31>+L1299
+	extern L1300
+	<4_31>+L1300
+	extern L1301
+	<4_31>+L1301
+	extern L1302
+	<4_31>+L1302
+	extern L1303
+	<4_31>+L1303
+	extern L1304
+	<4_31>+L1304
+	extern L1305
+	<4_31>+L1305
+	extern L1306
+	<4_31>+L1306
+	extern L1307
+	<4_31>+L1307
+	extern L1308
+	<4_31>+L1308
+	extern L1309
+	<4_31>+L1309
+	extern L1310
+	<4_31>+L1310
+	extern L1311
+	<4_31>+L1311
+	extern L1312
+	<4_31>+L1312
+	extern L1313
+	<4_31>+L1313
+	extern L1314
+	<4_31>+L1314
+	extern L1315
+	<4_31>+L1315
+	extern L1316
+	<4_31>+L1316
+	extern L1317
+	<4_31>+L1317
+	extern L1318
+	<4_31>+L1318
+	extern L1319
+	<4_31>+L1319
+	extern L1320
+	<4_31>+L1320
+	extern L1321
+	<4_31>+L1321
+	extern L1322
+	<4_31>+L1322
+	extern L1323
+	<4_31>+L1323
+	extern L1324
+	<4_31>+L1324
+	extern L1325
+	<4_31>+L1325
+	extern L1326
+	<4_31>+L1326
+	extern L1327
+	<4_31>+L1327
+	extern L1328
+	<4_31>+L1328
+	extern L1329
+	<4_31>+L1329
+	extern L1330
+	<4_31>+L1330
+	extern L1331
+	<4_31>+L1331
+	extern L1332
+	<4_31>+L1332
+	extern L1333
+	<4_31>+L1333
+	extern L1334
+	<4_31>+L1334
+	extern L1335
+	<4_31>+L1335
+	extern L1336
+	<4_31>+L1336
+	extern L1337
+	<4_31>+L1337
+	extern L1338
+	<4_31>+L1338
+	extern L1339
+	<4_31>+L1339
+	extern L1340
+	<4_31>+L1340
+	extern L1341
+	<4_31>+L1341
+	extern L1342
+	<4_31>+L1342
+	extern L1343
+	<4_31>+L1343
+	extern L1344
+	<4_31>+L1344
+	extern L1345
+	<4_31>+L1345
+	extern L1346
+	<4_31>+L1346
+	extern L1347
+	<4_31>+L1347
+	extern L1348
+	<4_31>+L1348
+	extern L1349
+	<4_31>+L1349
+	extern L1350
+	<4_31>+L1350
+	extern L1351
+	<4_31>+L1351
+	extern L1352
+	<4_31>+L1352
+	extern L1353
+	<4_31>+L1353
+	extern L1354
+	<4_31>+L1354
+	extern L1355
+	<4_31>+L1355
+	extern L1356
+	<4_31>+L1356
+	extern L1357
+	<4_31>+L1357
+	extern L1358
+	<4_31>+L1358
+	extern L1359
+	<4_31>+L1359
+	extern L1360
+	<4_31>+L1360
+	extern L1361
+	<4_31>+L1361
+	extern L1362
+	<4_31>+L1362
+	extern L1363
+	<4_31>+L1363
+	extern L1364
+	<4_31>+L1364
+	extern L1365
+	<4_31>+L1365
+	extern L1366
+	<4_31>+L1366
+	extern L1367
+	<4_31>+L1367
+	extern L1368
+	<4_31>+L1368
+	extern L1369
+	<4_31>+L1369
+	extern L1370
+	<4_31>+L1370
+	extern L1371
+	<4_31>+L1371
+	extern L1372
+	<4_31>+L1372
+	extern L1373
+	<4_31>+L1373
+	extern L1374
+	<4_31>+L1374
+	extern L1375
+	<4_31>+L1375
+	extern L1376
+	<4_31>+L1376
+	extern L1377
+	<4_31>+L1377
+	extern L1378
+	<4_31>+L1378
+	extern L1379
+	<4_31>+L1379
+	extern L1380
+	<4_31>+L1380
+	extern L1381
+	<4_31>+L1381
+	extern L1382
+	<4_31>+L1382
+	extern L1383
+	<4_31>+L1383
+	extern L1384
+	<4_31>+L1384
+	extern L1385
+	<4_31>+L1385
+	extern L1386
+	<4_31>+L1386
+	extern L1387
+	<4_31>+L1387
+	extern L1388
+	<4_31>+L1388
+	extern L1389
+	<4_31>+L1389
+	extern L1390
+	<4_31>+L1390
+	extern L1391
+	<4_31>+L1391
+	extern L1392
+	<4_31>+L1392
+	extern L1393
+	<4_31>+L1393
+	extern L1394
+	<4_31>+L1394
+	extern L1395
+	<4_31>+L1395
+	extern L1396
+	<4_31>+L1396
+	extern L1397
+	<4_31>+L1397
+	extern L1398
+	<4_31>+L1398
+	extern L1399
+	<4_31>+L1399
+	extern L1400
+	<4_31>+L1400
+	extern L1401
+	<4_31>+L1401
+	extern L1402
+	<4_31>+L1402
+	extern L1403
+	<4_31>+L1403
+	extern L1404
+	<4_31>+L1404
+	extern L1405
+	<4_31>+L1405
+	extern L1406
+	<4_31>+L1406
+	extern L1407
+	<4_31>+L1407
+	extern L1408
+	<4_31>+L1408
+	extern L1409
+	<4_31>+L1409
+	extern L1410
+	<4_31>+L1410
+	extern L1411
+	<4_31>+L1411
+	extern L1412
+	<4_31>+L1412
+	extern L1413
+	<4_31>+L1413
+	extern L1414
+	<4_31>+L1414
+	extern L1415
+	<4_31>+L1415
+	extern L1416
+	<4_31>+L1416
+	extern L1417
+	<4_31>+L1417
+	extern L1418
+	<4_31>+L1418
+	extern L1419
+	<4_31>+L1419
+	extern L1420
+	<4_31>+L1420
+	extern L1421
+	<4_31>+L1421
+	extern L1422
+	<4_31>+L1422
+	extern L1423
+	<4_31>+L1423
+	extern L1424
+	<4_31>+L1424
+	extern L1425
+	<4_31>+L1425
+	extern L1426
+	<4_31>+L1426
+	extern L1427
+	<4_31>+L1427
+	extern L1428
+	<4_31>+L1428
+	extern L1429
+	<4_31>+L1429
+	extern L1430
+	<4_31>+L1430
+	extern L1431
+	<4_31>+L1431
+	extern L1432
+	<4_31>+L1432
+	extern L1433
+	<4_31>+L1433
+	extern L1434
+	<4_31>+L1434
+	extern L1435
+	<4_31>+L1435
+	extern L1436
+	<4_31>+L1436
+	extern L1437
+	<4_31>+L1437
+	extern L1438
+	<4_31>+L1438
+	extern L1439
+	<4_31>+L1439
+	extern L1440
+	<4_31>+L1440
+	extern L1441
+	<4_31>+L1441
+	extern L1442
+	<4_31>+L1442
+	extern L1443
+	<4_31>+L1443
+	extern L1444
+	<4_31>+L1444
+	extern L1445
+	<4_31>+L1445
+	extern L1446
+	<4_31>+L1446
+	extern L1447
+	<4_31>+L1447
+	extern L1448
+	<4_31>+L1448
+	extern L1449
+	<4_31>+L1449
+	extern L1450
+	<4_31>+L1450
+	extern L1451
+	<4_31>+L1451
+	extern L1452
+	<4_31>+L1452
+	extern L1453
+	<4_31>+L1453
+	extern L1454
+	<4_31>+L1454
+	extern L1455
+	<4_31>+L1455
+	extern L1456
+	<4_31>+L1456
+	extern L1457
+	<4_31>+L1457
+	extern L1458
+	<4_31>+L1458
+	extern L1459
+	<4_31>+L1459
+	extern L1460
+	<4_31>+L1460
+	extern L1461
+	<4_31>+L1461
+	extern L1462
+	<4_31>+L1462
+	extern L1463
+	<4_31>+L1463
+	extern L1464
+	<4_31>+L1464
+	extern L1465
+	<4_31>+L1465
+	extern L1466
+	<4_31>+L1466
+	extern L1467
+	<4_31>+L1467
+	extern L1468
+	<4_31>+L1468
+	extern L1469
+	<4_31>+L1469
+	extern L1470
+	<4_31>+L1470
+	extern L1471
+	<4_31>+L1471
+	extern L1472
+	<4_31>+L1472
+	extern L1473
+	<4_31>+L1473
+	extern L1474
+	<4_31>+L1474
+	extern L1475
+	<4_31>+L1475
+	372
+	373
+	374
+	375
+	376
+	377
+	378
+	379
+	380
+	381
+	382
+	383
+	384
+	385
+	386
+	387
+	388
+	389
+	390
+	391
+	392
+	393
+	394
+	395
+	396
+	397
+	398
+	399
+	400
+	401
+	402
+	403
+	404
+	405
+	406
+	407
+	408
+	409
+	410
+	411
+	412
+	413
+	414
+	415
+	416
+	417
+	418
+	419
+	420
+	421
+	422
+	423
+	424
+	425
+	426
+	427
+	428
+	429
+	430
+	431
+	432
+	433
+	434
+	435
+	436
+	437
+	438
+	439
+	440
+	441
+	442
+	443
+	444
+	445
+	446
+	447
+	448
+	449
+	450
+	451
+	452
+	453
+	454
+	455
+	456
+	457
+	458
+	459
+	460
+	461
+	462
+	463
+	464
+	465
+	466
+	467
+	468
+	469
+	470
+	471
+	472
+	473
+	474
+	475
+	476
+	477
+	478
+	479
+	480
+	481
+	482
+	483
+	484
+	485
+	486
+	487
+	488
+	489
+	490
+	491
+	492
+	493
+	494
+	495
+	496
+	497
+	498
+	499
+	500
+	0
+SYMFNC:	intern SYMFNC
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+	extern L0024
+	jrst L0024##
+	extern L0017
+	jrst L0017##
+	extern L0026
+	jrst L0026##
+	extern L0034
+	jrst L0034##
+	extern PRTITM
+	jrst PRTITM##
+	extern PRIN1
+	jrst PRIN1##
+	extern L0025
+	jrst L0025##
+	extern L0028
+	jrst L0028##
+	extern L0042
+	jrst L0042##
+	extern PRIN2
+	jrst PRIN2##
+	extern TERPRI
+	jrst TERPRI##
+	extern PRINT
+	jrst PRINT##
+	extern PRIN2T
+	jrst PRIN2T##
+	extern PUTC
+	jrst PUTC##
+	extern PBLANK
+	jrst PBLANK##
+	extern L0021
+	jrst L0021##
+	extern L1022
+	jrst L1022##
+	extern L1023
+	jrst L1023##
+ JRST SYMFNC+348
+	extern QUIT
+	jrst QUIT##
+	extern ERROR
+	jrst ERROR##
+	extern L0093
+	jrst L0093##
+	extern L0094
+	jrst L0094##
+ JRST SYMFNC+348
+	extern L0095
+	jrst L0095##
+ JRST SYMFNC+348
+	extern L0098
+	jrst L0098##
+	extern L0099
+	jrst L0099##
+	extern L0102
+	jrst L0102##
+	extern L0103
+	jrst L0103##
+	extern L0106
+	jrst L0106##
+ JRST SYMFNC+348
+	extern L0156
+	jrst L0156##
+	extern L0165
+	jrst L0165##
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+	extern L0172
+	jrst L0172##
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+	extern L1101
+	jrst L1101##
+	extern L0177
+	jrst L0177##
+	extern L0182
+	jrst L0182##
+ JRST SYMFNC+348
+	extern L1026
+	jrst L1026##
+	extern GTHEAP
+	jrst GTHEAP##
+	extern GTSTR
+	jrst GTSTR##
+	extern GTVECT
+	jrst GTVECT##
+	extern L0191
+	jrst L0191##
+	extern GTID
+	jrst GTID##
+	extern L0192
+	jrst L0192##
+	extern CONS
+	jrst CONS##
+	extern XCONS
+	jrst XCONS##
+	extern NCONS
+	jrst NCONS##
+	extern MKVECT
+	jrst MKVECT##
+	extern LIST2
+	jrst LIST2##
+	extern LIST3
+	jrst LIST3##
+	extern LIST4
+	jrst LIST4##
+	extern LIST5
+	jrst LIST5##
+ JRST SYMFNC+348
+	extern L0209
+	jrst L0209##
+	extern EQSTR
+	jrst EQSTR##
+	extern L0222
+	jrst L0222##
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+	extern L0224
+	jrst L0224##
+	extern L0230
+	jrst L0230##
+	extern L0233
+	jrst L0233##
+	extern L0246
+	jrst L0246##
+	extern DIGITP
+	jrst DIGITP##
+	extern L0237
+	jrst L0237##
+	extern L0297
+	jrst L0297##
+	extern READID
+	jrst READID##
+	extern RATOM
+	jrst RATOM##
+	extern WHITEP
+	jrst WHITEP##
+	extern GETC
+	jrst GETC##
+	extern L1021
+	jrst L1021##
+	extern L0241
+	jrst L0241##
+	extern L0252
+	jrst L0252##
+	extern L0301
+	jrst L0301##
+	extern INTERN
+	jrst INTERN##
+	extern L0295
+	jrst L0295##
+	extern ALPHAP
+	jrst ALPHAP##
+	extern L0291
+	jrst L0291##
+	extern L0270
+	jrst L0270##
+	extern L0263
+	jrst L0263##
+	extern L0330
+	jrst L0330##
+	extern L0287
+	jrst L0287##
+	extern L0299
+	jrst L0299##
+	extern READ1
+	jrst READ1##
+	extern READ
+	jrst READ##
+	extern L0310
+	jrst L0310##
+	extern QUOTE
+	jrst QUOTE##
+ JRST SYMFNC+348
+	extern L0321
+	jrst L0321##
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+	extern L0325
+	jrst L0325##
+	extern L1019
+	jrst L1019##
+	extern L0360
+	jrst L0360##
+	extern L0334
+	jrst L0334##
+	extern L1018
+	jrst L1018##
+	extern L0339
+	jrst L0339##
+	extern FCODEP
+	jrst FCODEP##
+	extern L0350
+	jrst L0350##
+	extern L0355
+	jrst L0355##
+	extern L0359
+	jrst L0359##
+ JRST SYMFNC+348
+	extern L0370
+	jrst L0370##
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+	extern L0436
+	jrst L0436##
+	extern L0365
+	jrst L0365##
+	extern L0437
+	jrst L0437##
+ JRST SYMFNC+348
+	extern L0371
+	jrst L0371##
+	extern L1060
+	jrst L1060##
+	extern L0375
+	jrst L0375##
+	extern L0398
+	jrst L0398##
+	extern L0402
+	jrst L0402##
+	extern EVAL
+	jrst EVAL##
+	extern L0429
+	jrst L0429##
+	extern L0425
+	jrst L0425##
+	extern LBIND1
+	jrst LBIND1##
+	extern GET
+	jrst GET##
+	extern L0443
+	jrst L0443##
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+	extern L0515
+	jrst L0515##
+	extern L0674
+	jrst L0674##
+	extern PLUS2
+	jrst PLUS2##
+	extern MINUS
+	jrst MINUS##
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+	extern ADD1
+	jrst ADD1##
+ JRST SYMFNC+348
+	extern SUB1
+	jrst SUB1##
+	extern L0471
+	jrst L0471##
+	extern LESSP
+	jrst LESSP##
+	extern L0483
+	jrst L0483##
+	extern TIMES2
+	jrst TIMES2##
+	extern CAR
+	jrst CAR##
+	extern CDR
+	jrst CDR##
+	extern CAAR
+	jrst CAAR##
+	extern CADR
+	jrst CADR##
+	extern CDAR
+	jrst CDAR##
+	extern CDDR
+	jrst CDDR##
+	extern ATOM
+	jrst ATOM##
+	extern APPEND
+	jrst APPEND##
+	extern MEMQ
+	jrst MEMQ##
+	extern L0509
+	jrst L0509##
+	extern EVLIS
+	jrst EVLIS##
+	extern PROGN
+	jrst PROGN##
+	extern EVCOND
+	jrst EVCOND##
+	extern COND
+	jrst COND##
+	extern SET
+	jrst SET##
+	extern SETQ
+	jrst SETQ##
+ JRST SYMFNC+348
+	extern DE
+	jrst DE##
+ JRST SYMFNC+348
+	extern DF
+	jrst DF##
+ JRST SYMFNC+348
+	extern DN
+	jrst DN##
+ JRST SYMFNC+348
+	extern DM
+	jrst DM##
+ JRST SYMFNC+348
+	extern LIST
+	jrst LIST##
+	extern ATSOC
+	jrst ATSOC##
+	extern GEQ
+	jrst GEQ##
+	extern LEQ
+	jrst LEQ##
+	extern EQCAR
+	jrst EQCAR##
+ JRST SYMFNC+348
+	extern COPYD
+	jrst COPYD##
+	extern DELATQ
+	jrst DELATQ##
+	extern PUT
+	jrst PUT##
+	extern L0569
+	jrst L0569##
+	extern WHILE
+	jrst WHILE##
+ JRST SYMFNC+348
+	extern L0614
+	jrst L0614##
+	extern L0620
+	jrst L0620##
+	extern L0604
+	jrst L0604##
+	extern L0665
+	jrst L0665##
+	extern L0603
+	jrst L0603##
+	extern APPLY
+	jrst APPLY##
+	extern L0607
+	jrst L0607##
+	extern LENGTH
+	jrst LENGTH##
+	extern CODEP
+	jrst CODEP##
+	extern PAIRP
+	jrst PAIRP##
+	extern IDP
+	jrst IDP##
+	extern EQ
+	jrst EQ##
+	extern NULL
+	jrst NULL##
+	extern NOT
+	jrst NOT##
+	extern L0634
+	jrst L0634##
+	extern MAPOBL
+	jrst MAPOBL##
+	extern L0642
+	jrst L0642##
+	extern L0643
+	jrst L0643##
+ JRST SYMFNC+348
+	extern L0646
+	jrst L0646##
+	extern L0647
+	jrst L0647##
+	extern PROP
+	jrst PROP##
+	extern L0660
+	jrst L0660##
+	extern L0679
+	jrst L0679##
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+	extern L1009
+	jrst L1009##
+	extern L1076
+	jrst L1076##
+	extern MAIN.
+	jrst MAIN.##
+	extern INIT
+	jrst INIT##
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+	extern TIMC
+	jrst TIMC##
+	extern DATE
+	jrst DATE##
+	extern L1017
+	jrst L1017##
+	extern PUTINT
+	jrst PUTINT##
+	extern L1020
+	jrst L1020##
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+	extern FLAG
+	jrst FLAG##
+ JRST SYMFNC+348
+	extern L1034
+	jrst L1034##
+	extern L1029
+	jrst L1029##
+	extern SPACED
+	jrst SPACED##
+	extern DASHED
+	jrst DASHED##
+	extern DOTTED
+	jrst DOTTED##
+	extern L1051
+	jrst L1051##
+	extern INF
+	jrst INF##
+	extern TAG
+	jrst TAG##
+	extern MKITEM
+	jrst MKITEM##
+	extern L1095
+	jrst L1095##
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+	extern L1098
+	jrst L1098##
+	extern L1083
+	jrst L1083##
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+ JRST SYMFNC+348
+	extern L1104
+	jrst L1104##
+	block 130
+L0003:	intern L0003
+	371
+	end

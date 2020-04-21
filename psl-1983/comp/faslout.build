@@ -1,0 +1,12 @@
+CompileTime load If!-system, Syslisp;
+CompileTime if_system(PDP10, <<
+load Monsym;
+in "p20:system-faslout.red"$
+>>)$
+CompileTime if_system(Unix, <<
+in "../kernel/vax/system-faslout.red"$
+>>)$
+CompileTime if_system(HP9836, <<
+in "php:system-faslout.red"$
+>>)$
+in "faslout.red"$

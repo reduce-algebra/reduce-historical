@@ -1,0 +1,315 @@
+"XXX-HEADER.RED"$                                     MAIN2          6/1
+FIRSTCALL;                                            MAIN2          14/2
+UNDEFINEDFUNCTIONAUX;                                 MAIN2          77/3
+"PT:MINI-CHAR-IO.RED"$                                SUB2           3/1
+"PT:MINI-PRINTERS.RED"$                               SUB2           4/2
+"PT:MINI-ERROR-ERRORSET.RED"$                         SUB2           5/3
+"PT:MINI-ERROR-HANDLERS.RED"$                         SUB2           6/4
+"PT:MINI-TYPE-ERRORS.RED"$                            SUB2           7/5
+"XXX-HEADER.RED"$                                     MAIN3          6/1
+"PT:STUBS3.RED"$                                      MAIN3          7/2
+FIRSTCALL;                                            MAIN3          12/3
+CASETEST;                                             MAIN3          23/4
+CTEST N;                                              MAIN3          41/5
+SHOW(N,S);                                            MAIN3          49/6
+CONSTEST();                                           MAIN3          56/7
+UNDEFINEDFUNCTIONAUX;                                 MAIN3          68/8
+"PT:MINI-ALLOCATORS.RED"$                             SUB3           3/1
+"PT:MINI-CONS-MKVECT.RED"$                            SUB3           4/2
+"PT:MINI-COMP-SUPPORT.RED"$                           SUB3           5/3
+"PT:MINI-SEQUENCE.RED"$                               SUB3           7/4
+"PT:MINI-GC.RED"$                                     STUBS3         4/1
+"XXX-HEADER.RED"$                                     MAIN4          5/1
+"PT:P-FUNCTION-PRIMITIVES.RED"$                       MAIN4          6/2
+"PT:STUBS4.RED"$                                      MAIN4          7/3
+"PT:STUBS3.RED"$                                      MAIN4          8/4
+FIRSTCALL;                                            MAIN4          15/5
+MORESTUFF;                                            MAIN4          68/6
+FUNCTIONTEST();                                       MAIN4          74/7
+COMPILED1;                                            MAIN4          124/8
+COMPILED2;                                            MAIN4          128/9
+COMPILED3(A1,A2,A3,A4);                               MAIN4          132/10
+UNDEFINEDFUNCTIONAUXAUX ;                             MAIN4          142/11
+COMPILEDCALLINGINTERPRETEDAUX();                      MAIN4          155/12
+"PT:MINI-EQUAL.RED"$                                  SUB4           6/1
+"PT:MINI-TOKEN.RED"$                                  SUB4           7/2
+"PT:MINI-READ.RED"$                                   SUB4           8/3
+SPACED(M);                                            STUBS4         3/1
+DASHED(M);                                            STUBS4         7/2
+DOTTED(M);                                            STUBS4         12/3
+SHOULDBE(M,V,E);                                      STUBS4         18/4
+"XXX-HEADER.RED"$                                     MAIN5          4/1
+"PT:STUBS3.RED"$                                      MAIN5          5/2
+"PT:STUBS4.RED"$                                      MAIN5          6/3
+"PT:STUBS5.RED"$                                      MAIN5          7/4
+FIRSTCALL;                                            MAIN5          13/5
+TESTSERIES();                                         MAIN5          45/6
+TESTGET();                                            MAIN5          49/7
+TESTUNDEFINED;                                        MAIN5          59/8
+UNBINDN N;                                            MAIN5          64/9
+LBIND1(X,Y);                                          MAIN5          67/10
+"PT:P-FUNCTION-PRIMITIVES.RED"$                       SUB5           5/1
+"PT:P-APPLY-LAP.RED"$                                 SUB5           6/2
+"PT:MINI-ARITHMETIC.RED"$                             SUB5           8/3
+"PT:MINI-CARCDR.RED"$                                 SUB5           9/4
+"PT:MINI-EASY-SL.RED"$                                SUB5           10/5
+"PT:MINI-EASY-NON-SL.RED"$                            SUB5           11/6
+"PT:MINI-EVAL-APPLY.RED"$                             SUB5           12/7
+"PT:MINI-KNOWN-TO-COMP.RED"$                          SUB5           13/8
+"PT:MINI-LOOP-MACROS.RED"$                            SUB5           14/9
+"PT:MINI-OTHERS-SL.RED"$                              SUB5           15/10
+"PT:MINI-OBLIST.RED"$                                 SUB5           16/11
+"PT:MINI-PROPERTY-LIST.RED"$                          SUB5           17/12
+"PT:MINI-SYMBOL-VALUES.RED"$                          SUB5           18/13
+UNDEFINEDFUNCTIONAUXAUX;                              STUBS5         6/1
+INF X;                                                STUBS5         22/2
+TAG X;                                                STUBS5         25/3
+MKITEM(X,Y);                                          STUBS5         28/4
+"XXX-HEADER.RED"$                                     MAIN6          5/1
+"PT:STUBS3.RED"$                                      MAIN6          6/2
+"PT:STUBS4.RED"$                                      MAIN6          7/3
+"PT:STUBS5.RED"$                                      MAIN6          8/4
+"PT:STUBS6.RED"$                                      MAIN6          9/5
+FIRSTCALL;                                            MAIN6          15/6
+TESTSERIES();                                         MAIN6          48/7
+BINDINGTEST;                                          MAIN6          55/8
+INTERPTEST();                                         MAIN6          71/9
+TESTFASTAPPLY EXPR 0)                                 MAIN6          102/10
+TESTAPPLY(MSG,FN,ANSWER);                             MAIN6          107/11
+COMPILED1(XXX,YYY);                                   MAIN6          117/12
+COMPILED2(XXX,YYY);                                   MAIN6          122/13
+COMPBINDTEST();                                       MAIN6          129/14
+CBIND1(X,CFL1,CFL2);                                  MAIN6          139/15
+CBIND2();                                             MAIN6          149/16
+"PK:BINDING.RED"$                                     SUB6           3/1
+"PT:P-FAST-BINDER.RED"$                               SUB6           4/2
+"PT:MINI-PUTD-GETD.RED"$                              SUB6           6/3
+RESET();                                              SUB6           8/4
+"PT:MINI-PRINTF.RED"$                                 STUBS6         3/1
+"PT:MINI-TOP-LOOP.RED"$                               STUBS6         4/2
+FUNCALL(FN,I);                                        STUBS6         8/3
+"XXX-HEADER.RED"$                                     MAIN7          5/1
+"PT:STUBS3.RED"$                                      MAIN7          6/2
+"PT:STUBS4.RED"$                                      MAIN7          7/3
+"PT:STUBS5.RED"$                                      MAIN7          8/4
+"PT:STUBS6.RED"$                                      MAIN7          9/5
+"PT:STUBS7.RED"$                                      MAIN7          10/6
+"PT:PSL-TIMER.SL"$                                    MAIN7          11/7
+FIRSTCALL;                                            MAIN7          17/8
+IOTEST;                                               MAIN7          61/9
+"XXX-SYSTEM-IO.RED"$                                  SUB7           5/1
+"PT:IO-DATA.RED"$                                     SUB7           6/2
+"PT:MINI-IO-ERRORS.RED"$                              SUB7           7/3
+"PT:MINI-DSKIN.RED"$                                  SUB7           8/4
+"PT:MINI-OPEN-CLOSE.RED"$                             SUB7           9/5
+"PT:MINI-RDS-WRS.RED"$                                SUB7           10/6
+"PT:SYSTEM-IO.RED"$                                   SUB7           11/7
+GTHEAP N;                                             MINI-ALLOCATOR 14/1
+GTSTR N;                                              MINI-ALLOCATOR 27/2
+GTVECT N;                                             MINI-ALLOCATOR 36/3
+GTWARRAY N;                                           MINI-ALLOCATOR 44/4
+GTID();                                               MINI-ALLOCATOR 48/5
+PLUS2(X,Y);                                           MINI-ARITHMETI 5/1
+MINUS(X);                                             MINI-ARITHMETI 9/2
+ADD1 N;                                               MINI-ARITHMETI 13/3
+SUB1 N;                                               MINI-ARITHMETI 17/4
+GREATERP(N1,N2);                                      MINI-ARITHMETI 21/5
+LESSP(N1,N2);                                         MINI-ARITHMETI 24/6
+DIFFERENCE(N1,N2);                                    MINI-ARITHMETI 28/7
+CAR X;                                                MINI-CARCDR    5/1
+CDR X;                                                MINI-CARCDR    8/2
+CAAR X;                                               MINI-CARCDR    13/3
+CADR X;                                               MINI-CARCDR    16/4
+CDAR X;                                               MINI-CARCDR    19/5
+CDDR X;                                               MINI-CARCDR    22/6
+CHANNELWRITECHAR(CHN,X);                              MINI-CHAR-IO   3/1
+WRITECHAR CH;                                         MINI-CHAR-IO   6/2
+LIST2(A1,A2);                                         MINI-COMP-SUPP 4/1
+LIST3(A1,A2,A3);                                      MINI-COMP-SUPP 7/2
+LIST4(A1,A2,A3,A4);                                   MINI-COMP-SUPP 10/3
+LIST5(A1,A2,A3,A4,A5);                                MINI-COMP-SUPP 13/4
+HARDCONS(X,Y);                                        MINI-CONS-MKVE 6/1
+CONS(X,Y);                                            MINI-CONS-MKVE 14/2
+XCONS(X,Y);                                           MINI-CONS-MKVE 17/3
+NCONS X;                                              MINI-CONS-MKVE 20/4
+MKVECT N;                                             MINI-CONS-MKVE 23/5
+TYPEFILE F;                                           MINI-DSKIN     3/1
+DSKIN F;                                              MINI-DSKIN     12/2
+LAPIN F;                                              MINI-DSKIN     25/3
+ATSOC(X,Y);                                           MINI-EASY-NON- 3/1
+GEQ(N1,N2);                                           MINI-EASY-NON- 9/2
+LEQ(N1,N2);                                           MINI-EASY-NON- 12/3
+EQCAR(X,Y);                                           MINI-EASY-NON- 15/4
+COPYD(NEWID,OLDID);                                   MINI-EASY-NON- 18/5
+DELATQ(X,Y);                                          MINI-EASY-NON- 28/6
+ATOM X;                                               MINI-EASY-SL   8/1
+APPEND(U,V);                                          MINI-EASY-SL   13/2
+MEMQ(X,Y);                                            MINI-EASY-SL   17/3
+REVERSE U;                                            MINI-EASY-SL   22/4
+EVLIS X;                                              MINI-EASY-SL   31/5
+EVPROGN FL;                                           MINI-EASY-SL   35/6
+PROGN X;                                              MINI-EASY-SL   42/7
+EVCOND FL;                                            MINI-EASY-SL   45/8
+COND X;                                               MINI-EASY-SL   51/9
+QUOTE A;                                              MINI-EASY-SL   54/10
+SETQ A;                                               MINI-EASY-SL   57/11
+DE(X);                                                MINI-EASY-SL   60/12
+DF(X);                                                MINI-EASY-SL   63/13
+DN(X);                                                MINI-EASY-SL   66/14
+DM(X);                                                MINI-EASY-SL   69/15
+LIST X;                                               MINI-EASY-SL   73/16
+EQSTR(S1,S2);                                         MINI-EQUAL     5/1
+ERRORHEADER;                                          MINI-ERROR-ERR 4/1
+ERROR S;                                              MINI-ERROR-ERR 7/2
+ERRORTRAILER S;                                       MINI-ERROR-ERR 11/3
+FATALERROR S;                                         MINI-ERROR-HAN 5/1
+STDERROR M;                                           MINI-ERROR-HAN 8/2
+INITEVAL;                                             MINI-EVAL-APPL 5/1
+EVAL X;                                               MINI-EVAL-APPL 19/2
+APPLY(FN,A);                                          MINI-EVAL-APPL 43/3
+LAMBDAAPPLY(X,A);                                     MINI-EVAL-APPL 60/4
+LAMBDAEVALAPPLY(X,Y);                                 MINI-EVAL-APPL 68/5
+DOLAMBDA(VARS,BODY,ARGS);                             MINI-EVAL-APPL 71/6
+LAMBDAP(X);                                           MINI-EVAL-APPL 86/7
+GETLAMBDA(FN);                                        MINI-EVAL-APPL 89/8
+!%RECLAIM();                                          MINI-GC        9/1
+RECLAIM();                                            MINI-GC        13/2
+HEAPINFO();                                           MINI-GC        17/3
+IOERROR M;                                            MINI-IO-ERRORS 3/1
+CODEP X;                                              MINI-KNOWN-TO- 3/1
+PAIRP X;                                              MINI-KNOWN-TO- 6/2
+IDP X;                                                MINI-KNOWN-TO- 9/3
+EQ(X,Y);                                              MINI-KNOWN-TO- 12/4
+NULL X;                                               MINI-KNOWN-TO- 15/5
+NOT X;                                                MINI-KNOWN-TO- 18/6
+WHILE FL;                                             MINI-LOOP-MACR 3/1
+MAPOBL(FN);                                           MINI-OBLIST    6/1
+PRINTFEXPRS;                                          MINI-OBLIST    9/2
+PRINT1FEXPR(X);                                       MINI-OBLIST    12/3
+PRINTFUNCTIONS;                                       MINI-OBLIST    15/4
+PRINT1FUNCTION(X);                                    MINI-OBLIST    18/5
+OPEN(FILENAME,HOW);                                   MINI-OPEN-CLOS 3/1
+CLOSE N;                                              MINI-OPEN-CLOS 8/2
+LENGTH U;                                             MINI-OTHERS-SL 4/1
+LENGTH1(U, N);                                        MINI-OTHERS-SL 8/2
+PRIN1 X;                                              MINI-PRINTERS  8/1
+PRIN2 X;                                              MINI-PRINTERS  15/2
+PRINT X;                                              MINI-PRINTERS  22/3
+PRIN2T X;                                             MINI-PRINTERS  25/4
+PBLANK;                                               MINI-PRINTERS  30/5
+PRIN1INT X;                                           MINI-PRINTERS  33/6
+PRIN1INTX X;                                          MINI-PRINTERS  40/7
+PRIN1ID X;                                            MINI-PRINTERS  45/8
+PRIN2ID X;                                            MINI-PRINTERS  50/9
+PRIN1STRING X;                                        MINI-PRINTERS  53/10
+PRIN2STRING X;                                        MINI-PRINTERS  60/11
+PRIN1PAIR X;                                          MINI-PRINTERS  67/12
+PRIN2PAIR X;                                          MINI-PRINTERS  78/13
+TERPRI();                                             MINI-PRINTERS  89/14
+PRTITM X;                                             MINI-PRINTERS  92/15
+CHANNELPRIN2(CHN,X);                                  MINI-PRINTERS  102/16
+BLDMSG(FMT,A1,A2,A3,A4,A5,A6);                        MINI-PRINTF    3/1
+PROP X;                                               MINI-PROPERTY- 5/1
+GET(X,Y);                                             MINI-PROPERTY- 9/2
+PUT(X,Y,Z);                                           MINI-PROPERTY- 17/3
+REMPROP(X,Y);                                         MINI-PROPERTY- 28/4
+GETFNTYPE X;                                          MINI-PROPERTY- 38/5
+GETD(FN);                                             MINI-PUTD-GETD 6/1
+PUTD(FN,TYPE,BODY);                                   MINI-PUTD-GETD 21/2
+RDS N;                                                MINI-RDS-WRS   5/1
+WRS N;                                                MINI-RDS-WRS   13/2
+READ;                                                 MINI-READ      6/1
+READ1(X);                                             MINI-READ      10/2
+READLIST(X);                                          MINI-READ      15/3
+MKSTRING(L, C);                                       MINI-SEQUENCE  5/1
+SET(X,Y);                                             MINI-SYMBOL-VA 3/1
+INITREAD;                                             MINI-TOKEN     11/1
+SETRAISE X;                                           MINI-TOKEN     21/2
+RATOM;                                                MINI-TOKEN     24/3
+CLEARWHITE();                                         MINI-TOKEN     41/4
+CLEARCOMMENT();                                       MINI-TOKEN     45/5
+READINT;                                              MINI-TOKEN     50/6
+BUFFERTOSTRING N;                                     MINI-TOKEN     59/7
+READSTR;                                              MINI-TOKEN     67/8
+READID;                                               MINI-TOKEN     77/9
+RAISECHAR C;                                          MINI-TOKEN     88/10
+INTERN S;                                             MINI-TOKEN     95/11
+INITNEWID(D,S);                                       MINI-TOKEN     105/12
+LOOKUPID(S);                                          MINI-TOKEN     115/13
+WHITEP X;                                             MINI-TOKEN     131/14
+DIGITP X;                                             MINI-TOKEN     135/15
+ALPHAP(X);                                            MINI-TOKEN     138/16
+UPPERCASEP X;                                         MINI-TOKEN     141/17
+LOWERCASEP X;                                         MINI-TOKEN     144/18
+ESCAPEP X;                                            MINI-TOKEN     147/19
+ALPHAESCP X;                                          MINI-TOKEN     150/20
+ALPHANUMP X;                                          MINI-TOKEN     153/21
+ALPHANUMESCP X;                                       MINI-TOKEN     156/22
+TIME();                                               MINI-TOP-LOOP  3/1
+TYPEERROR(OFFENDER, FN, TYP);                         MINI-TYPE-ERRO 3/1
+USAGETYPEERROR(OFFENDER, FN, TYP, USAGE);             MINI-TYPE-ERRO 15/2
+NONIDERROR(X,Y);                                      MINI-TYPE-ERRO 29/3
+NONNUMBERERROR(OFFENDER, FN);                         MINI-TYPE-ERRO 32/4
+NONINTEGERERROR(OFFENDER, FN);                        MINI-TYPE-ERRO 35/5
+NONPOSITIVEINTEGERERROR(OFFENDER, FN);                MINI-TYPE-ERRO 38/6
+CODEAPPLY(CODEPTR, ARGLIST);                          P-APPLY-LAP    53/1
+CODEEVALAPPLY EXPR 2)                                 P-APPLY-LAP    206/2
+CODEEVALAPPLYAUX(CODEPTR, ARGLIST, P);                P-APPLY-LAP    213/3
+BINDEVAL(FORMALS, ARGS);                              P-APPLY-LAP    363/4
+BINDEVALAUX(FORMALS, ARGS, N);                        P-APPLY-LAP    366/5
+COMPILEDCALLINGINTERPRETEDAUX();                      P-APPLY-LAP    381/6
+FASTLAMBDAAPPLY();                                    P-APPLY-LAP    387/7
+COMPILEDCALLINGINTERPRETEDAUXAUX FN;                  P-APPLY-LAP    391/8
+LAMBIND V;                                            P-FAST-BINDER  23/1
+PROGBIND V;                                           P-FAST-BINDER  32/2
+SYMFNCBASE D;   % THE ADDRESS OF CELL,                P-FUNCTION-PRI 57/1
+FUNBOUNDP FN;                                         P-FUNCTION-PRI 65/2
+MAKEFUNBOUND(D);                                      P-FUNCTION-PRI 73/3
+FLAMBDALINKP FN;                                      P-FUNCTION-PRI 79/4
+MAKEFLAMBDALINK D;                                    P-FUNCTION-PRI 85/5
+FCODEP FN;                                            P-FUNCTION-PRI 91/6
+MAKEFCODE(U, CODEPTR);                                P-FUNCTION-PRI 96/7
+GETFCODEPOINTER U;                                    P-FUNCTION-PRI 106/8
+CODEPRIMITIVE EXPR 15)                                P-FUNCTION-PRI 121/9
+COMPILEDCALLINGINTERPRETED EXPR 15)                   P-FUNCTION-PRI 136/10
+FASTAPPLY EXPR 0)                                     P-FUNCTION-PRI 153/11
+SAVEREGISTERS(A1, A2, A3, A4, A5,                     P-FUNCTION-PRI 193/12
+UNDEFINEDFUNCTIONAUX EXPR 0)                          P-FUNCTION-PRI 214/13
+ERNAL WCONST STACKSIZE = 5000;                        P20T:XXX-HEADE 11/1
+ERNAL WARRAY STACK[STACKSIZE];                        P20T:XXX-HEADE 12/2
+ERNAL WCONST HEAPSIZE = 150000;  % ENOUGH FOR PSL-TIM P20T:XXX-HEADE 21/3
+ERNAL WARRAY HEAP[HEAPSIZE];   % COULD DO A DYNAMIC A P20T:XXX-HEADE 22/4
+ERNAL WARRAY OTHERHEAP[HEAPSIZE];                     P20T:XXX-HEADE 30/5
+ERNAL WCONST BPSSIZE  = 500;                          P20T:XXX-HEADE 36/6
+ERNAL WARRAY BPS[BPSSIZE];   % COULD DO A DYNAMIC ALL P20T:XXX-HEADE 37/7
+INITHEAP();                                           P20T:XXX-HEADE 44/8
+ERNAL WCONST MAXARGBLOCK = (MAXARGS - MAXREALREGS) -  P20T:XXX-HEADE 53/9
+MAIN!. EXPR 0)                                        P20T:XXX-HEADE 64/10
+INIT();                                               P20T:XXX-HEADE 88/11
+GETC();                                               P20T:XXX-HEADE 94/12
+TIMC();                                               P20T:XXX-HEADE 98/13
+PUTC X;                                               P20T:XXX-HEADE 101/14
+QUIT;                                                 P20T:XXX-HEADE 105/15
+DATE;                                                 P20T:XXX-HEADE 108/16
+VERSIONNAME;                                          P20T:XXX-HEADE 111/17
+PUTINT I;                                             P20T:XXX-HEADE 114/18
+!%STORE!-JCALL EXPR 2) % CODEADDRESS, STORAGE ADDRESS P20T:XXX-HEADE 118/19
+!%COPY!-FUNCTION!-CELL EXPR 2) % FROM TO              P20T:XXX-HEADE 124/20
+UNDEFINEDFUNCTION EXPR 0) % FOR MISSING FUNCTION      P20T:XXX-HEADE 131/21
+FLAG EXPR 2)      % DUMMY FOR INIT                    P20T:XXX-HEADE 138/22
+LONGTIMES(X,Y);                                       P20T:XXX-HEADE 144/23
+LONGDIV(X,Y);                                         P20T:XXX-HEADE 147/24
+LONGREMAINDER(X,Y);                                   P20T:XXX-HEADE 150/25
+SYSCLEARIO EXPR 0)                                    P20T:XXX-SYSTE 30/1
+SYSOPENREAD(CHANNEL,FILENAME);                        P20T:XXX-SYSTE 44/2
+SYSOPENWRITE(CHANNEL,FILENAME);                       P20T:XXX-SYSTE 56/3
+DEC20OPEN EXPR 3)                                     P20T:XXX-SYSTE 64/4
+SYSREADREC(FILEDESCRIPTOR,STRINGBUFFER);              P20T:XXX-SYSTE 83/5
+DEC20READCHAR EXPR 1)                                 P20T:XXX-SYSTE 98/6
+ SYSWRITEREC (FILEDESCRIPTOR, STRINGTOWRITE, STRINGLE P20T:XXX-SYSTE 123/7
+DEC20WRITECHAR EXPR 2)                                P20T:XXX-SYSTE 130/8
+SYSCLOSE EXPR 1)                                      P20T:XXX-SYSTE 145/9
+SYSMAXBUFFER(FILEDESC);                               P20T:XXX-SYSTE 154/10
+
+
+ 2945 lines, 312 procedures found

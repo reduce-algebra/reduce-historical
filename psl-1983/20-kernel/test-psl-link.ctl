@@ -1,0 +1,42 @@
+cd S:
+define DSK:, DSK:, P20:
+LINK
+/nosymbol
+nil.rel
+/set:.low.:202
+types.rel
+randm.rel
+alloc.rel
+arith.rel
+debg.rel
+error.rel
+eval.rel
+extra.rel
+fasl.rel
+io.rel
+macro.rel
+prop.rel
+symbl.rel
+sysio.rel
+tloop.rel
+main.rel
+heap.rel
+dtypes.rel
+drandm.rel
+dalloc.rel
+darith.rel
+ddebg.rel
+derror.rel
+deval.rel
+dextra.rel
+dfasl.rel
+dio.rel
+dmacro.rel
+dprop.rel
+dsymbl.rel
+dsysio.rel
+dtloop.rel
+dmain.rel
+dheap.rel
+/save s:bpsl.exe
+/go

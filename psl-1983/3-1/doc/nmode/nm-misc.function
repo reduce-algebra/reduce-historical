@@ -1,0 +1,3 @@
+.silent_index {insert-date-command} idx 21-1
+.silent_index {nmode-gc} idx 21-1
+.silent_index {write-screen-command} idx 21-1

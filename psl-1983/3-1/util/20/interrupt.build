@@ -1,0 +1,2 @@
+CompileTime load Syslisp, Monsym, Jsys;
+in "20-interrupt.red"$

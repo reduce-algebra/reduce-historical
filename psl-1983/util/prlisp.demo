@@ -1,0 +1,38 @@
+% This is a small Picture RLISP demo file
+% For ANY driver
+
+Outline := { 10, 10} _ {-10, 10} _            % Outline is 20 by 20 
+          {-10,-10} _ { 10,-10} _ {10, 10}$   % Square
+
+Arrow := {0,-1} _ {0,2}  &  {-1,1} _ {0,2} _ {1,1}$
+                              
+Cubeface   :=   (Outline & Arrow)  |  ZMOVE 10$
+
+Cube   :=   Cubeface   
+        &  Cubeface | XROT (180)  % 180 degrees
+        &  Cubeface | YROT ( 90)
+        &  Cubeface | YROT (-90)
+        &  Cubeface | XROT ( 90)
+        &  Cubeface | XROT (-90)$
+
+BigCube := Cube | Scale 5$
+
+ESHOW  BigCube$
+
+ESHOW {10,10} | circle(70)$
+
+Cpts := {0,0} _ {70,-60} _ {189,-69} _ {206,33} _ {145,130} _ {48,130}
+       _ {0,84} $
+
+ESHOW ( {10,10} | CIRCLE(50))$
+
+ESHOW (Cpts & Cpts | BEZIER())$
+
+ESHOW (Cpts & Cpts | BSPLINE())$
+
+ESHOW  (BigCube | XROT 20 | YROT 30 | ZROT 10)$
+
+ESHOW (Cube | scale 2 | XMOVE (-240) | REPEATED(5, XMOVE 80))$
+
+
+END;

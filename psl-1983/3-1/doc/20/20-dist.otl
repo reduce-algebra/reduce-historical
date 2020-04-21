@@ -1,0 +1,19 @@
+@Comment{OUTLINE of 20-DIST.MSS.10 by Scribe 3C(1312) on 20 June 1983 at 13:39}
+1. INTRODUCTION                                           2 20-DIST.MSS.10 line 49
+2. DISCLAIMER                                             2 20-DIST.MSS.10 line 67
+3. CONTENTS OF THE TAPE                                   2 20-DIST.MSS.10 line 86
+4. INSTALLING PSL                                         4 20-DIST.MSS.10 line 178
+  4.1. Retrieve Control Files                             5 20-DIST.MSS.10 line 188
+  4.2. Create a single subdirectory                       5 20-DIST.MSS.10 line 213
+  4.3. A MULTIPLE SUB-DIRECTORY SYSTEM                    6 20-DIST.MSS.10 line 238
+  4.4. Build Sub-Directories                              6 20-DIST.MSS.10 line 258
+  4.5. Announce the System                                7 20-DIST.MSS.10 line 292
+  4.6. Summary of Restoration Process                     8 20-DIST.MSS.10 line 303
+5. REBUILDING LOADABLE MODULES                            8 20-DIST.MSS.10 line 311
+6. REBUILDING THE INTERPRETER                             9 20-DIST.MSS.10 line 363
+  6.1. Complete Kernel Rebuild                            9 20-DIST.MSS.10 line 377
+  6.2. Partial or Incremental Kernel Rebuild             11 20-DIST.MSS.10 line 441
+  6.3. Rebuilding RLISP.EXE from PSL.EXE                 13 20-DIST.MSS.10 line 494
+7. RELATIONSHIP TO PSL 3.0                               13 20-DIST.MSS.10 line 522
+8. FUTURE UPDATES                                        13 20-DIST.MSS.10 line 530
+ Table of Contents                                        1 -SCRIBE-SCRATCH-.28-33-1.100028 line 3

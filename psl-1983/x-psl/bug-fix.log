@@ -1,0 +1,345 @@
+Bug:	Compress doesn't work on a list of ASCII values
+Fix:	Make it call Lisp2Char on each element of the list.
+By:	Eric
+Date:	4:51pm  Tuesday, 12 October 1982
+Source:	PI:EXPLODE-COMPRESS.RED
+Module: IO in kernel
+Remarks: The numbers 0..9 no longer work the same as !0..!9
+
+Bug:	In open-coded arithmetic/vector access.
+Fix:	Added (USESDEST USESDEST) clause to ASSOCPAT
+By:	Eric
+Date:	11:10am  Monday, 11 October 1982
+Source:	P20C:DEC20-COMP.RED and PVC:VAX-COMP.RED; P68C:M68K-COMP.RED should
+	also be changed.
+Module:	DEC20-COMP and VAX-COMP
+Remarks:
+
+Bug:	Catch no longer needed in Read, due to change in EOF handling
+Fix:	Removed CATCH($READ$, ChannelRead IN*) from READ, similarly for
+	COMPRESS and IMPLODE
+By:	Eric
+Date:	1:31pm  Friday, 8 October 1982
+Source:	PI:READ.RED, PI:EXPLODE-COMPRESS.RED
+Module:	IO in kernel
+Remarks:
+
+Bug:	There is no EXPR for reading files
+Fix:	Change DSKIN from a FEXPR to a one argument EXPR
+By:	Eric
+Date:	12:14pm  Tuesday, 5 October 1982
+Source:	PI:DSKIN.RED
+Module:	IO in kernel
+Remarks: This change is incompatible for those using DSKIN with multiple
+	arguments.  These uses will have to change to multiple DSKINs.
+
+Feature: The printing functions use the variables PRINLEVEL and PRINLENGTH,
+	as described in the Common Lisp Manual.
+By:	Eric
+Date:	12:12pm  Tuesday, 5 October 1982
+Source:	PI:PRINTERS.RED
+Module: IO in kernel
+Remarks:
+
+Bug:	BIGNUM quotient, re-evaluation errors
+Fix:	Improved BIGNUM and BIGFACE installed
+By:	M. L. Griss, for A. C. Norman
+Date:	4 October 1982.
+Source:	PU:BIGFACE.RED, PU:BIGBIG.RED
+Module:	BIGNUM
+Remarks:	Some errors still remain, in BLDIFF, etc. and
+        minor typo's fixed.
+
+Bug:	Scantable in POLY was inherited from CURRENTSCANTABLE!*
+	not "nice" under PSL
+Fix:	Added an ALGSCANTABLE!*, similar to RLISP table
+By:	Martin
+Date:	3:41pm  Tuesday, 28 September 1982
+Source: PU:POLY.RED
+Module: POLY
+Remarks:
+
+Bug:	(REMAINDER (RANDOM) n) wasnet good for 3,7 or 11
+Fix:  	Defined RandomModulus variable and RANDOMMOD(N) function
+By:	Martin
+Date:	3:38pm  Tuesday, 28 September 1982
+Source:	PU:mathlib.red
+Module:	MATHLIB
+Remarks: Maybe just a "quick" fix and needs further examination
+
+Bug:	CopyStringToFrom wasn't safe
+Fix:	Make it safe
+By:	Cris
+Date:	10:37am  Tuesday, 28 September 1982
+Source:	PI:COPIERS.RED
+Module:	kernel
+Remarks:
+
+Bug:	*THROW wasn't restoring the outer variable bindings
+Fix:	Call on RestoreEnvironment.
+By:	Eric
+Date:	8:55am  Monday, 27 September 1982
+Source:	PI:CATCH-THROW.RED
+Module:	EVAL in kernel
+Remarks:
+
+Bug:	PRINTX in DEBUG didn't handle circular vectors.
+Fix:	Now it does.
+By:	Eric
+Date:	5:44pm  Friday, 24 September 1982
+Source:	PU:DEBUG.RED
+Module:	DEBUG
+Remarks: Also made DEBUG use CODE-NUMBER-OF-ARGUMENTS to find out the
+	# of arguments to a compiled function.
+
+Feature: The printing function for code pointers prints the number of
+	arguments expected, in the format #<Code 3 284313>, where 3
+	is the # of arguments and 284313 is the address.  The address
+	part is now printed in the "preferred" radix of the machine,
+	defined by the WConst CompressedBinaryRadix, which is 8 on the
+	Dec-20 and Cray, and 16 on the Vax, 68000, and 360.
+By:	Eric
+Date:	5:38pm  Friday, 24 September 1982
+Source:	PI:PRINTERS.RED and PXX:GLOBAL-DATA.RED (for constant definition)
+Module:	IO in kernel
+Remarks:
+
+Bug:	No way to find out how many arguments a compiled function gets.
+Fix:	Put a header above the entry point with the # of arguments,
+	accessed by the function CODE-NUMBER-OF-ARGUMENTS, which expects
+	a code pointer as its argument and returns the number of arguments
+	the code pointer expects, or NIL.
+By:	Eric
+Date:	5:17pm  Friday, 24 September 1982
+Source:	PC:PASS-1-LAP.SL (to add header word), PC:DATA-MACHINE.RED (to define
+	access macro), PI:PUTD-GETD.RED (to define callable entry point).
+Module:	PASS-1-LAP, SYSLISP, PROP in kernel
+Remarks: Only functions compiled since this change have the header word;
+	old FASL files will have to be recompiled to make use of this
+	feature.
+
+Bug:	IDs (symbols) are not garbage collected.
+Fix:	Allocate symbols as a free list linked through the name cell
+By:	Eric
+Date:	5:02pm  Friday, 24 September 1982
+Source:	PI:COPYING-GC.RED, PI:COMPACTING-GC.RED, PI:ALLOCATORS.RED,
+	PC:LAP-TO-ASM.RED
+Module:	LAP-TO-ASM, ALLOC in kernel
+Remarks:
+
+Bug:	"FOO not compiled" messages in compiler are still unclear.
+Fix:	Now says "Value of FOO not used, therefore not compiled", or
+	"Top level FOO in (FOO BAR) not used, therefore not compiled"
+By:	Eric
+Date:	11:43am  Monday, 20 September 1982
+Source:	PC:COMPILER.RED
+Module:	COMPILER
+Remarks:
+
+Bug:	Printing {99} in ERROR is only noise.
+Fix:	Only print message, don't print number
+By:	Eric
+Date:	11:32am  Monday, 20 September 1982
+Source:	PI:ERROR-ERRORSET.RED and PI:ERROR-HANDLERS.RED
+Module:	ERROR in kernel
+Remarks:
+
+Bug:	Unmatched right paren in a file is not an error.
+Fix:	Only allow an unmatched right paren from the terminal
+By:	Eric
+Date:	11:26am  Monday, 20 September 1982
+Source:	PI:READ.RED
+Module:	IO
+Remarks:
+
+Bug:	CAR of a form is sometimes evaluated; compiler and Eval do not agree.
+Fix:	CAR of a form is NEVER evaluated; only a LAMBDA form or globally
+	defined function name is allowed.
+By:	Eric
+Date:	10:41am  Monday, 20 September 1982
+Source:	PC:COMPILER.RED and PI:EVAL-APPLY.RED
+Module:	EVAL in kernel, and COMPILER
+Remarks:
+
+Bug:	Backtrace is not very helpful
+Fix:	Suppress printing of interpreter functions; better formatting
+By:	Eric
+Date:	10:24am  Monday, 20 September 1982
+Source:	PI:BACKTRACE.RED
+Module:	EXTRA
+Remarks: It's still not too hot.
+
+Bug:	The prettyprinter is weak, and conses a lot.
+Fix:	Use the IMSSS prettyprinter, with a few modifications.
+By:	Eric
+Date:	9:27am  Monday, 20 September 1982
+Source:	Added PU:PRETTYPRINT.SL and PU:PRETTYPRINT.BUILD.  Deleted
+	  PU:PRETTY.RED and PU:PRETTY.BUILD.  Changed PI:AUTOLOAD.RED
+Module:	Removed PRETTY, added PRETTYPRINT, changed FASL in kernel
+Remarks:
+
+Bug:	Not all I/O functions have channel-specific counterparts
+Fix:	Added ChannelTerPri, ChannelLineLength, ChannelPosn, ChannelEject
+		ChannelReadCH, ChannelPrint, ChannelPrin2T, ChannelSpaces
+		ChannelTab, ChannelSpaces2, ChannelPrinC
+By:	Eric
+Date:	4:21pm  Friday, 17 September 1982
+Source:	on PI: PRINTF.RED, OTHER-IO.RED, EASY-SL.RED, EASY-NON-SL.RED
+Module: IO and RANDM, in kernel
+Remarks:
+
+Bug:	DO with no return forms returns T instead of NIL
+Fix:	Typo in DO, DO*, DO-LOOP, DO-LOOP*, ((null (cdr result) nil))
+	==> ((null (cdr result)) nil)
+By:	Eric
+Date:	5:09pm  Wednesday, 15 September 1982
+Source:	PU:ITER-MACROS.SL
+Module:	USEFUL
+Remarks:
+
+Bug:	Token scanner won't read 1+ and 1- as symbols
+Fix:	Patch in ChannelReadToken
+By:	Eric
+Date:	11:01am  Wednesday, 15 September 1982
+Source: PI:TOKEN-SCANNER.RED
+Module:	IO in kernel
+Remarks: Still doesn't scan -1+ as a symbol
+
+Bug:	InternP doesn't work for strings
+Fix:	Checks to see if a symbol with that pname is interned
+By:	Eric
+Date:	9:36am  Wednesday, 15 September 1982
+Source:	PI:OBLIST.RED
+Module:	SYMBL in kernel
+Remarks:
+
+Bug:	(igetv (igetv x 5) y) generates bad code
+Fix:	Add USESDEST clause to ASSOCPAT in xxx-COMP.RED
+By:	Eric
+Date:	2:11pm  Monday, 13 September 1982
+Source:	P20C:DEC20-COMP.RED and PVC:VAX-COMP.RED (Should also be done to
+		P68C:M68K-COMP.RED).
+Module:	DEC20-COMP and VAX-COMP
+Remarks:
+
+Bug:	in EXP
+Fix:	Changed 2**N to 2.0**N
+By:	Eric
+Date:	8:50am  Monday, 13 September 1982
+Source:	PU:MATHLIB.RED
+Module:	MATHLIB
+Remarks:
+
+Bug:	APPLY(x, list(1,2,3,4,5,6)) doesn't avoid consing
+Fix:	Add a PA1FN for APPLY so that !&PaList isn't applied to the 2nd arg
+By:	Eric
+Date:	4:26pm  Friday, 10 September 1982
+Source:	PC:COMPILER.RED and PC:COMP-DECLS.RED
+Module:	COMPILER, COMP-DECLS
+Remarks:
+
+Bug:	Compiler error and warning messages are confusing
+Fix:	Use more English, always print the function name
+By:	Eric 
+Date:	9:54am  Friday, 10 September 1982
+Source: PC:COMPILER.RED
+Module: COMPILER
+Remarks:
+
+Bug:	FLUID and MACRO can't have the same name
+Fix:	Use indicator VARTYPE for variables, instead of sharing TYPE with
+	functions.
+By:	Eric
+Date:	9:16am  Friday, 10 September 1982
+Source: PI:FLUID-GLOBAL.RED
+Module: PROP in kernel
+Remarks:
+
+Bug:	DUMPLISP blows away the last page of the stack in rare cases on the 20
+Fix:	Add some slack in the call to UNMAP-SPACE from DUMPLISP
+By:	Eric
+Date:	10:24am  Friday, 3 September 1982
+Source:	P20:DUMPLISP.RED
+Module:	EXTRA
+Remarks:
+
+Bug:	WNOT was not caught by constant folding
+Fix:	Added PA1REFORMFN = &DOOP for WNOT
+By:	Eric
+Date:	9:47am  Friday, 3 September 1982
+Source:	PC:COMP-DECLS.RED
+Module:	COMP-DECLS
+Remarks:
+
+Bug:	CHAR-UPCASE and CHAR-DOWNCASE returned NIL instead of their arguments
+	if the function didn't modify them.
+Fix:	Return the argument instead
+By:	Eric
+Date:	2:25pm  Thursday, 2 September 1982
+Source:	PU:CHARS.LSP
+Module:	CHARS
+Remarks:
+
+Bug:	Right parens cause an error at the top level
+Fix:	Make ) a read macro to be ignored outside of list reading
+By:	Eric
+Date:	2:08pm  Thursday, 2 September 1982
+Source: PI:READ.RED
+Module:	IO in kernel
+Remarks:
+
+Bug:	PSL-SAVE.CTL requires that you are connected to P20:
+Fix:	add a logical name definition def DSK: DSK:,P20:
+By:	Eric
+Date:	1:35pm  Thursday, 2 September 1982
+Source:	P20:PSL-SAVE.CTL
+Module:	None
+Remarks:
+
+Bug:	XJsysError and JSYS constants are wrong
+Fix:	Fixed.
+By:	Eric
+Date:	1:28pm  Thursday, 2 September 1982
+Source: P20:20-INTERRUPT.RED
+Module: INTERRUPT
+Remarks:
+
+Bug:	MACROEXPAND does not handle multiple argument SETQ
+Fix:	Removed MACROEXPAND-SETQ, use MACROEXPAND-RANDOM instead
+By:	Eric
+Date:	10:33am  Thursday, 2 September 1982
+Source: PU:MACROEXPAND.SL
+Module:	USEFUL
+Remarks:
+
+Bug:	Functions in Mathlib call REDERR which is only defined in Rlisp
+Fix:	Have them call StdError instead
+By:	Eric
+Date:	9:20am  Thursday, 2 September 1982
+Source: PU:MATHLIB.RED
+Module:	MATHLIB
+Remarks:
+
+Bug:	Prettyprint returns its argument, which is worse than useless
+Fix:	Make it return NIL instead
+By:	Eric
+Date:	9:15am  Thursday, 2 September 1982
+Source: PU:PRETTY.RED
+Module: PRETTY
+Remarks:
+
+Bug:	ContError does not handle atoms as the ReEvalForm
+Fix:	Now it does.
+By:	Eric
+Date:	9:11am  Thursday, 2 September 1982
+Source: PI:CONT-ERROR.RED
+Module: MACRO in kernel
+Remarks:
+
+Bug:	(QUOTE x y) is incorrectly printed
+Fix:	Change ChannelPrintPair so that only (QUOTE x) prints as 'x
+By:	Eric
+Date:	8:59am  Thursday, 2 September 1982
+Source: PI:PRINTERS.RED
+Module: IO in kernel
+Remarks:

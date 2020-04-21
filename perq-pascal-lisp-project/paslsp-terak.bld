@@ -1,0 +1,15 @@
+; Command file to assemble PASn pieces together and then compile them.
+; for Terak-20 version
+;
+COP PAS3.INI PASLSP.INI
+APP PAS1.SLI PASLSP.INI
+APP PAS2.SLI PASLSP.INI
+APP PAS3.SLI PASLSP.INI
+APP USER.SLI PASLSP.INI
+filter t <pas0.pre >s:plt.pas
+append pas1.pas S:PLT.PAS
+append pas2.pas S:PLT.PAS
+append pas3.pas S:PLT.PAS
+append exec.pas S:PLT.PAS
+filter t <pasn.pre >s:pltn.pas
+append s:pltn.pas S:PLT.PAS

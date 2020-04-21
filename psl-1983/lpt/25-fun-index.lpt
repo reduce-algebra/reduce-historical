@@ -1,0 +1,789 @@
+PSL Manual                    7 February 1983                Function Index
+section 25.0                                                      page 25.1
+
+                                CHAPTER 25                                CHAPTER 25                                CHAPTER 25
+                            INDEX OF FUNCTIONS                            INDEX OF FUNCTIONS                            INDEX OF FUNCTIONS
+
+  The following is an alphabetical list of the PSL functions, with the page
+on which they are defined.
+
+
+      !%Reclaim . . . . . . . . . . expr      21.8
+      !*DESTROY . . . . . . . . . . cmacro    18.22
+      !*DO. . . . . . . . . . . . . cmacro    18.22
+      !*JUMP. . . . . . . . . . . . cmacro    18.22
+      !*LBL . . . . . . . . . . . . cmacro    18.22
+      !*LOAD. . . . . . . . . . . . cmacro    18.22
+      !*SET . . . . . . . . . . . . cmacro    18.22
+      !*STORE . . . . . . . . . . . cmacro    18.22
+
+      \CreatePackage. . . . . . . . expr      6.11
+      \LocalIntern. . . . . . . . . expr      6.12
+      \LocalInternP . . . . . . . . expr      6.11
+      \LocalMapObl. . . . . . . . . expr      6.12
+      \LocalRemob . . . . . . . . . expr      6.12
+      \PathIntern . . . . . . . . . expr      6.11
+      \PathInternP. . . . . . . . . expr      6.11
+      \PathMapObl . . . . . . . . . expr      6.11
+      \PathRemob. . . . . . . . . . expr      6.11
+      \SetPackage . . . . . . . . . expr      6.11
+
+      A . . . . . . . . . . . . . . edit      16.7
+      Abs . . . . . . . . . . . . . expr      5.2
+      AConc . . . . . . . . . . . . expr      7.7
+      Acos. . . . . . . . . . . . . expr      5.12
+      AcosD . . . . . . . . . . . . expr      5.12
+      Acot. . . . . . . . . . . . . expr      5.12
+      AcotD . . . . . . . . . . . . expr      5.13
+      Acsc. . . . . . . . . . . . . expr      5.13
+      AcscD . . . . . . . . . . . . expr      5.13
+      Add1. . . . . . . . . . . . . expr      5.2
+      Adjoin. . . . . . . . . . . . expr      7.7
+      AdjoinQ . . . . . . . . . . . expr      7.8
+      AlphaNumericP . . . . . . . . expr      8.8
+      AlphaP. . . . . . . . . . . . expr      8.8
+      And . . . . . . . . . . . . . fexpr     4.8
+      Ans . . . . . . . . . . . . . expr      13.6
+      AnyId . . . . . . . . . . . . expr      22.10
+      AnyTok. . . . . . . . . . . . expr      22.10
+      Append. . . . . . . . . . . . expr      7.6
+      Apply . . . . . . . . . . . . expr      11.4
+      ApplyInEnvironment. . . . . . expr      10.10
+      Asec. . . . . . . . . . . . . expr      5.13
+      AsecD . . . . . . . . . . . . expr      5.13
+      Asin. . . . . . . . . . . . . expr      5.11
+      AsinD . . . . . . . . . . . . expr      5.11Function Index                7 February 1983                    PSL Manual
+page 25.2                                                      section 25.0
+
+      Ass . . . . . . . . . . . . . expr      7.10
+      Assoc . . . . . . . . . . . . expr      7.10
+      Atan2 . . . . . . . . . . . . expr      5.12
+      Atan2D. . . . . . . . . . . . expr      5.12
+      Atan. . . . . . . . . . . . . expr      5.12
+      AtanD . . . . . . . . . . . . expr      5.12
+      Atom. . . . . . . . . . . . . expr      4.7
+      Atsoc . . . . . . . . . . . . expr      7.10
+
+      B . . . . . . . . . . . . . . edit      16.2, 16.7
+      BackQuote . . . . . . . . . . macro     17.13
+      BeginRLisp. . . . . . . . . . expr      13.7
+      BELOW . . . . . . . . . . . . edit      16.8
+      BF. . . . . . . . . . . . . . edit      16.8
+      BI. . . . . . . . . . . . . . edit      16.9
+      BIND. . . . . . . . . . . . . edit      16.9
+      Bits. . . . . . . . . . . . . macro     19.9
+      BK. . . . . . . . . . . . . . edit      16.9
+      BldMsg. . . . . . . . . . . . expr      12.27
+      BO. . . . . . . . . . . . . . edit      16.9
+      BothCaseP . . . . . . . . . . expr      8.8
+      BothTimes . . . . . . . . . . expr      18.4
+      Btr . . . . . . . . . . . . . macro     15.10
+      Bug . . . . . . . . . . . . . expr      2.10
+      Byte. . . . . . . . . . . . . expr      20.11
+
+      CaptureEnvironment. . . . . . expr      10.11
+      Car . . . . . . . . . . . . . expr      7.2
+      Case. . . . . . . . . . . . . fexpr     9.4
+      Catch!-All. . . . . . . . . . macro     9.19
+      Catch . . . . . . . . . . . . fexpr     9.17
+      Cd. . . . . . . . . . . . . . expr      19.13
+      Cdr . . . . . . . . . . . . . expr      7.2
+      Ceiling . . . . . . . . . . . expr      5.8
+      CHANGE. . . . . . . . . . . . edit      16.9
+      ChannelEject. . . . . . . . . expr      12.10
+      ChannelFlush. . . . . . . . . expr      19.17
+      ChannelLineLength . . . . . . expr      12.11
+      ChannelLPosn. . . . . . . . . expr      12.11
+      ChannelPosn . . . . . . . . . expr      12.10
+      ChannelPrin1. . . . . . . . . expr      12.7
+      ChannelPrin2. . . . . . . . . expr      12.8
+      ChannelPrin2T . . . . . . . . expr      12.12
+      ChannelPrinC. . . . . . . . . expr      12.8
+      ChannelPrint. . . . . . . . . expr      12.8
+      ChannelPrintF . . . . . . . . expr      12.9
+      ChannelRead . . . . . . . . . expr      12.13
+      ChannelReadCH . . . . . . . . expr      12.16
+      ChannelReadChar . . . . . . . expr      12.15
+      ChannelReadToken. . . . . . . expr      12.16
+      ChannelSpaces . . . . . . . . expr      12.11
+      ChannelTab. . . . . . . . . . expr      12.12PSL Manual                    7 February 1983                Function Index
+section 25.0                                                      page 25.3
+
+      ChannelTerPri . . . . . . . . expr      12.10
+      ChannelUnReadChar . . . . . . expr      12.16
+      ChannelWriteChar. . . . . . . expr      12.6
+      Char!-Bits. . . . . . . . . . expr      8.9
+      Char!-Code. . . . . . . . . . expr      8.9
+      Char!-DownCase. . . . . . . . expr      8.10
+      Char!-Equal . . . . . . . . . expr      8.9
+      Char!-Font. . . . . . . . . . expr      8.9
+      Char!-GreaterP. . . . . . . . expr      8.9
+      Char!-Int . . . . . . . . . . expr      8.10
+      Char!-LessP . . . . . . . . . expr      8.9
+      Char!-UpCase. . . . . . . . . expr      8.10
+      Char!<. . . . . . . . . . . . expr      8.9
+      Char!=. . . . . . . . . . . . expr      8.9
+      Char!>. . . . . . . . . . . . expr      8.9
+      Char. . . . . . . . . . . . . macro     20.5
+      Character . . . . . . . . . . expr      8.10
+      CharsInInputBuffer. . . . . . expr      19.17
+      ClearBindings . . . . . . . . expr      10.11
+      Close . . . . . . . . . . . . expr      12.5
+      Closure . . . . . . . . . . . macro     10.10
+      Cmds. . . . . . . . . . . . . fexpr     19.2
+      Code!-Char. . . . . . . . . . expr      8.9
+      Code!-Number!-Of!-Arguments . expr      10.7
+      CodeApply . . . . . . . . . . expr      11.6
+      CodeEvalApply . . . . . . . . expr      11.6
+      CodeP . . . . . . . . . . . . expr      4.7
+      CommentOutCode. . . . . . . . macro     18.4
+      Compile . . . . . . . . . . . expr      18.2
+      CompileTime . . . . . . . . . expr      18.4
+      Compress. . . . . . . . . . . expr      12.26
+      COMS. . . . . . . . . . . . . edit      16.10
+      COMSQ . . . . . . . . . . . . edit      16.10
+      Concat. . . . . . . . . . . . expr      8.6
+      ConcatS . . . . . . . . . . . expr      19.2
+      Cond. . . . . . . . . . . . . fexpr     9.1
+      Cons. . . . . . . . . . . . . expr      7.2
+      Const . . . . . . . . . . . . macro     17.22
+      ConstantP . . . . . . . . . . expr      4.7
+      ContError . . . . . . . . . . macro     14.3
+      ContinuableError. . . . . . . expr      14.3
+      Copy. . . . . . . . . . . . . expr      7.3
+      CopyD . . . . . . . . . . . . expr      10.3
+      CopyScanTable . . . . . . . . expr      12.25
+      CopyString. . . . . . . . . . expr      8.2
+      CopyStringToFrom. . . . . . . expr      8.2
+      CopyVector. . . . . . . . . . expr      8.4
+      CopyVectorToFrom. . . . . . . expr      8.4
+      CopyWArray. . . . . . . . . . expr      20.11
+      CopyWRDS. . . . . . . . . . . expr      20.11
+      CopyWRDSToFrom. . . . . . . . expr      20.11
+      Cos . . . . . . . . . . . . . expr      5.10Function Index                7 February 1983                    PSL Manual
+page 25.4                                                      section 25.0
+
+      CosD. . . . . . . . . . . . . expr      5.10
+      Cot . . . . . . . . . . . . . expr      5.11
+      CotD. . . . . . . . . . . . . expr      5.11
+      CPrint. . . . . . . . . . . . expr      17.25
+      Csc . . . . . . . . . . . . . expr      5.11
+      CscD. . . . . . . . . . . . . expr      5.11
+
+      Date. . . . . . . . . . . . . expr      13.2
+      De. . . . . . . . . . . . . . macro     10.4
+      Decr. . . . . . . . . . . . . macro     5.3
+      DefConst. . . . . . . . . . . macro     17.22
+      DefLambda . . . . . . . . . . macro     17.14
+      DefList . . . . . . . . . . . expr      6.5
+      DefMacro. . . . . . . . . . . macro     17.12
+      Defstruct . . . . . . . . . . fexpr     17.16
+      DefstructP. . . . . . . . . . expr      17.15
+      DefstructType . . . . . . . . expr      17.15
+      DegreesToDMS. . . . . . . . . expr      5.10
+      DegreesToRadians. . . . . . . expr      5.9
+      Del . . . . . . . . . . . . . expr      7.9
+      DelAsc. . . . . . . . . . . . expr      7.9
+      DelAscIP. . . . . . . . . . . expr      7.9
+      DelatQ. . . . . . . . . . . . expr      7.9
+      DelatQIP. . . . . . . . . . . expr      7.9
+      DelBps. . . . . . . . . . . . expr      21.9
+      DELETE. . . . . . . . . . . . edit      16.10
+      Delete. . . . . . . . . . . . expr      7.8
+      DeletIP . . . . . . . . . . . expr      7.9
+      DelQ. . . . . . . . . . . . . expr      7.9
+      DelQIP. . . . . . . . . . . . expr      7.9
+      DelWArray . . . . . . . . . . expr      21.9
+      DeSetQ. . . . . . . . . . . . macro     6.8
+      Df. . . . . . . . . . . . . . macro     10.4
+      Difference. . . . . . . . . . expr      5.3
+      Digit!-Char . . . . . . . . . expr      8.10
+      Digit . . . . . . . . . . . . expr      12.25
+      DigitP. . . . . . . . . . . . expr      8.8
+      Divide. . . . . . . . . . . . expr      5.3
+      Dm. . . . . . . . . . . . . . macro     10.5
+      DMStoDegrees. . . . . . . . . expr      5.10
+      DMStoRadians. . . . . . . . . expr      5.10
+      Dn. . . . . . . . . . . . . . macro     10.4
+      Do!*. . . . . . . . . . . . . macro     9.16
+      Do-Loop!* . . . . . . . . . . macro     9.16
+      Do-Loop . . . . . . . . . . . macro     9.16
+      Do. . . . . . . . . . . . . . macro     9.15
+      DoCmds. . . . . . . . . . . . expr      19.2
+      Ds. . . . . . . . . . . . . . macro     10.5
+      DskIn . . . . . . . . . . . . expr      12.14
+      DumpLisp. . . . . . . . . . . expr      13.2
+
+      E . . . . . . . . . . . . . . edit      16.10PSL Manual                    7 February 1983                Function Index
+section 25.0                                                      page 25.5
+
+      EchoOff . . . . . . . . . . . expr      19.17
+      EchoOn. . . . . . . . . . . . expr      19.17
+      EditF . . . . . . . . . . . . expr      16.10
+      EditFns . . . . . . . . . . . fexpr     16.10
+      EditP . . . . . . . . . . . . fexpr     16.11
+      EditV . . . . . . . . . . . . fexpr     16.11
+      Eject . . . . . . . . . . . . expr      12.10
+      Emacs . . . . . . . . . . . . expr      19.3
+      EMBED . . . . . . . . . . . . edit      16.11
+      Eq. . . . . . . . . . . . . . expr      4.5
+      EqCar . . . . . . . . . . . . expr      4.6
+      EqN . . . . . . . . . . . . . expr      4.5
+      EqStr . . . . . . . . . . . . expr      4.6
+      Equal . . . . . . . . . . . . expr      4.6
+      Error . . . . . . . . . . . . expr      14.2
+      ErrorPrintF . . . . . . . . . expr      12.10
+      ErrorSet. . . . . . . . . . . expr      14.2
+      ErrPrin . . . . . . . . . . . expr      12.8
+      Eval. . . . . . . . . . . . . expr      11.2
+      EvalInEnvironment . . . . . . expr      10.10
+      EvIn. . . . . . . . . . . . . expr      12.15
+      EvLis . . . . . . . . . . . . expr      11.5
+      EvOut . . . . . . . . . . . . expr      12.6
+      EvProgN . . . . . . . . . . . expr      11.6
+      EvShut. . . . . . . . . . . . expr      12.5
+      Exec. . . . . . . . . . . . . expr      19.3
+      Exit. . . . . . . . . . . . . macro     9.7
+      ExitLisp. . . . . . . . . . . expr      13.1, 19.14
+      Exp . . . . . . . . . . . . . expr      5.13
+      Expand. . . . . . . . . . . . expr      11.7
+      Explode2. . . . . . . . . . . expr      12.26
+      Explode . . . . . . . . . . . expr      12.26
+      ExprP . . . . . . . . . . . . expr      10.7
+      Expt. . . . . . . . . . . . . expr      5.3
+      Extended-Get. . . . . . . . . expr      17.25
+      Extended-Put. . . . . . . . . expr      17.25
+      EXTRACT . . . . . . . . . . . edit      16.11
+
+      F=. . . . . . . . . . . . . . edit      16.13
+      F . . . . . . . . . . . . . . edit      16.2, 16.12
+      Factorial . . . . . . . . . . expr      5.14
+      FaslEnd . . . . . . . . . . . expr      18.3
+      FaslIn. . . . . . . . . . . . expr      18.3
+      FaslOut . . . . . . . . . . . expr      18.2
+      FatalError. . . . . . . . . . expr      14.8
+      FCodeP. . . . . . . . . . . . expr      10.6
+      FExprP. . . . . . . . . . . . expr      10.7
+      FileP . . . . . . . . . . . . expr      12.5, 19.5
+      FindPrefix. . . . . . . . . . expr      6.4
+      FindSuffix. . . . . . . . . . expr      6.4
+      First . . . . . . . . . . . . macro     7.4
+      Fix . . . . . . . . . . . . . expr      5.2Function Index                7 February 1983                    PSL Manual
+page 25.6                                                      section 25.0
+
+      FixP. . . . . . . . . . . . . expr      4.7
+      Flag1 . . . . . . . . . . . . expr      6.6
+      Flag. . . . . . . . . . . . . expr      6.6
+      FlagP . . . . . . . . . . . . expr      6.6
+      FLambdaLinkP. . . . . . . . . expr      10.6
+      FlatSize2 . . . . . . . . . . expr      12.27
+      FlatSize. . . . . . . . . . . expr      12.27
+      Float . . . . . . . . . . . . expr      5.2
+      FloatP. . . . . . . . . . . . expr      4.7
+      Floor . . . . . . . . . . . . expr      5.8
+      Fluid . . . . . . . . . . . . expr      10.8, 18.5
+      FluidP. . . . . . . . . . . . expr      10.9
+      FlushStdOutputBuffer. . . . . expr      19.17
+      For!* . . . . . . . . . . . . macro     9.13
+      For . . . . . . . . . . . . . macro     9.8
+      ForEach . . . . . . . . . . . macro     9.13
+      Fourth. . . . . . . . . . . . macro     7.5
+      FS. . . . . . . . . . . . . . edit      16.13
+      FStub . . . . . . . . . . . . macro     15.12
+      FUnBoundP . . . . . . . . . . expr      10.6
+      Function. . . . . . . . . . . fexpr     11.7
+
+      GenSym. . . . . . . . . . . . expr      6.3
+      Geq . . . . . . . . . . . . . expr      5.5
+      Get . . . . . . . . . . . . . expr      6.5
+      GetCDir . . . . . . . . . . . expr      19.6
+      GetD. . . . . . . . . . . . . expr      10.3
+      GetEnv. . . . . . . . . . . . expr      19.14
+      GetFCodePointer . . . . . . . expr      10.6
+      GetFork . . . . . . . . . . . expr      19.4
+      GetNewJfn . . . . . . . . . . expr      19.5
+      GetOldJfn . . . . . . . . . . expr      19.5
+      GetRescan . . . . . . . . . . expr      19.5
+      GetUName. . . . . . . . . . . expr      19.6
+      GetV. . . . . . . . . . . . . expr      8.3
+      Global. . . . . . . . . . . . expr      10.8, 18.6
+      GlobalP . . . . . . . . . . . expr      10.9
+      GmergeSort. . . . . . . . . . expr      17.22
+      Go. . . . . . . . . . . . . . fexpr     9.5
+      Graph-to-Tree . . . . . . . . expr      17.25
+      GraphicP. . . . . . . . . . . expr      8.8
+      GreaterP. . . . . . . . . . . expr      5.5
+      Gsort . . . . . . . . . . . . expr      17.22
+      GtBps . . . . . . . . . . . . expr      21.9
+      GtConstStr. . . . . . . . . . expr      21.8
+      GtFixN. . . . . . . . . . . . expr      21.9
+      GtFltN. . . . . . . . . . . . expr      21.9
+      GtHEAP. . . . . . . . . . . . expr      21.8
+      GtID. . . . . . . . . . . . . expr      21.9
+      GtJfn . . . . . . . . . . . . expr      19.6
+      GtStr . . . . . . . . . . . . expr      21.8
+      GtVect. . . . . . . . . . . . expr      21.8PSL Manual                    7 February 1983                Function Index
+section 25.0                                                      page 25.7
+
+      GtWArray. . . . . . . . . . . expr      21.9
+      GtWrds. . . . . . . . . . . . expr      21.8
+
+      HAppend . . . . . . . . . . . expr      17.24
+      HCons . . . . . . . . . . . . macro     17.24
+      HCopy . . . . . . . . . . . . macro     17.24
+      HELP. . . . . . . . . . . . . edit      16.3, 16.13
+      Help. . . . . . . . . . . . . fexpr     13.7
+      HelpDir . . . . . . . . . . . expr      19.3
+      HighHalfWord. . . . . . . . . expr      19.8
+      Hist. . . . . . . . . . . . . nexpr     13.5
+      HList . . . . . . . . . . . . nexpr     17.24
+      HReverse. . . . . . . . . . . expr      17.25
+
+      I . . . . . . . . . . . . . . edit      16.13
+      Id2Int. . . . . . . . . . . . expr      4.10
+      Id2String . . . . . . . . . . expr      4.10
+      Id. . . . . . . . . . . . . . expr      22.10
+      IdApply0. . . . . . . . . . . expr      11.6
+      IdApply1. . . . . . . . . . . expr      11.6
+      IdApply2. . . . . . . . . . . expr      11.6
+      IdApply3. . . . . . . . . . . expr      11.6
+      IdApply4. . . . . . . . . . . expr      11.6
+      IdP . . . . . . . . . . . . . expr      4.7
+      IdSort. . . . . . . . . . . . expr      17.23
+      IF. . . . . . . . . . . . . . edit      16.13
+      If. . . . . . . . . . . . . . macro     9.2
+      If_System . . . . . . . . . . cmacro    19.1
+      IGetS . . . . . . . . . . . . expr      8.4
+      IGetV . . . . . . . . . . . . expr      8.4
+      Implode . . . . . . . . . . . expr      12.27
+      ImportForeignString . . . . . expr      19.16
+      Imports . . . . . . . . . . . expr      18.3
+      In. . . . . . . . . . . . . . macro     12.14
+      Incr. . . . . . . . . . . . . macro     5.3
+      IndexError. . . . . . . . . . expr      14.9
+      Indx. . . . . . . . . . . . . expr      8.5
+      InFile. . . . . . . . . . . . fexpr     19.6
+      Init-File-String. . . . . . . expr      13.3
+      Inp . . . . . . . . . . . . . expr      13.6
+      INSERT. . . . . . . . . . . . edit      16.13
+      Inspect . . . . . . . . . . . expr      17.26
+      Int!-Char . . . . . . . . . . expr      8.10
+      Int2Id. . . . . . . . . . . . expr      4.10
+      Int2Str . . . . . . . . . . . expr      19.8
+      Intern. . . . . . . . . . . . expr      4.9
+      InternGenSym. . . . . . . . . expr      6.3
+      InternP . . . . . . . . . . . expr      6.4
+      InterSection. . . . . . . . . expr      7.8
+      InterSectionQ . . . . . . . . expr      7.8
+      IPutS . . . . . . . . . . . . expr      8.5
+      IPutV . . . . . . . . . . . . expr      8.4Function Index                7 February 1983                    PSL Manual
+page 25.8                                                      section 25.0
+
+      ISizeS. . . . . . . . . . . . expr      8.4
+      ISizeV. . . . . . . . . . . . expr      8.4
+
+      JBits . . . . . . . . . . . . expr      19.9
+      JConv . . . . . . . . . . . . expr      19.7
+      Jsys0 . . . . . . . . . . . . expr      19.7
+      Jsys1 . . . . . . . . . . . . expr      19.7
+      Jsys2 . . . . . . . . . . . . expr      19.7
+      Jsys3 . . . . . . . . . . . . expr      19.7
+      Jsys4 . . . . . . . . . . . . expr      19.7
+
+      KillFork. . . . . . . . . . . expr      19.4
+
+      LambdaApply . . . . . . . . . expr      11.5
+      LambdaEvalApply . . . . . . . expr      11.6
+      LAnd. . . . . . . . . . . . . expr      5.7
+      LAP . . . . . . . . . . . . . expr      18.10
+      LapIn . . . . . . . . . . . . expr      12.14
+      LastCar . . . . . . . . . . . expr      7.5
+      LastPair. . . . . . . . . . . expr      7.5
+      LBind1. . . . . . . . . . . . expr      10.9
+      LC. . . . . . . . . . . . . . edit      16.14
+      LCL . . . . . . . . . . . . . edit      16.14
+      LConc . . . . . . . . . . . . expr      7.7
+      Length. . . . . . . . . . . . expr      7.6
+      Leq . . . . . . . . . . . . . expr      5.5
+      LessP . . . . . . . . . . . . expr      5.6
+      Let!* . . . . . . . . . . . . macro     9.17
+      Let . . . . . . . . . . . . . macro     9.16
+      LI. . . . . . . . . . . . . . edit      16.14
+      LineLength. . . . . . . . . . expr      12.11
+      List2Set. . . . . . . . . . . expr      7.8
+      List2SetQ . . . . . . . . . . expr      7.8
+      List2String . . . . . . . . . expr      4.10
+      List2Vector . . . . . . . . . expr      4.11
+      List. . . . . . . . . . . . . fexpr     7.6
+      Liter . . . . . . . . . . . . expr      12.26
+      LNot. . . . . . . . . . . . . expr      5.7
+      LO. . . . . . . . . . . . . . edit      16.14
+      Load. . . . . . . . . . . . . macro     18.3
+      LoadTime. . . . . . . . . . . expr      18.5
+      Log10 . . . . . . . . . . . . expr      5.14
+      Log2. . . . . . . . . . . . . expr      5.14
+      Log . . . . . . . . . . . . . expr      5.13
+      LOr . . . . . . . . . . . . . expr      5.7
+      LowerCaseP. . . . . . . . . . expr      8.8
+      LowHalfWord . . . . . . . . . expr      19.8
+      LP. . . . . . . . . . . . . . edit      16.15
+      LPosn . . . . . . . . . . . . expr      12.11
+      LPQ . . . . . . . . . . . . . edit      16.15
+      LShift. . . . . . . . . . . . expr      5.7
+      LXOr. . . . . . . . . . . . . expr      5.7PSL Manual                    7 February 1983                Function Index
+section 25.0                                                      page 25.9
+
+
+      M . . . . . . . . . . . . . . edit      16.15
+      MacroExpand . . . . . . . . . macro     17.14
+      MacroP. . . . . . . . . . . . expr      10.7
+      Main. . . . . . . . . . . . . expr      13.4
+      Make!-Bytes . . . . . . . . . expr      8.5
+      Make!-Halfwords . . . . . . . expr      8.5
+      Make!-String. . . . . . . . . expr      8.2
+      Make!-Vector. . . . . . . . . expr      8.3
+      Make!-Words . . . . . . . . . expr      8.5
+      MakeFCode . . . . . . . . . . expr      10.6
+      MakeFLambdaLink . . . . . . . expr      10.6
+      MAKEFN. . . . . . . . . . . . edit      16.16
+      MakeFUnBound. . . . . . . . . expr      10.6
+      MakeUnBound . . . . . . . . . expr      6.9
+      Map . . . . . . . . . . . . . expr      9.14
+      MapC. . . . . . . . . . . . . expr      9.14
+      MapCan. . . . . . . . . . . . expr      9.14
+      MapCar. . . . . . . . . . . . expr      9.14
+      MapCon. . . . . . . . . . . . expr      9.14
+      MapList . . . . . . . . . . . expr      9.15
+      MapObl. . . . . . . . . . . . expr      6.4
+      MARK. . . . . . . . . . . . . edit      16.16
+      Max2. . . . . . . . . . . . . expr      5.6
+      Max . . . . . . . . . . . . . macro     5.6
+      MBD . . . . . . . . . . . . . edit      16.17
+      Member. . . . . . . . . . . . expr      7.6
+      MemQ. . . . . . . . . . . . . expr      7.6
+      Min2. . . . . . . . . . . . . expr      5.6
+      Min . . . . . . . . . . . . . macro     5.6
+      Minus . . . . . . . . . . . . expr      5.4
+      MinusP. . . . . . . . . . . . expr      5.6
+      MkQuote . . . . . . . . . . . expr      11.7
+      MkString. . . . . . . . . . . expr      8.2
+      MkVect. . . . . . . . . . . . expr      8.3
+      MM. . . . . . . . . . . . . . expr      19.4
+      Mod . . . . . . . . . . . . . expr      5.9
+      MOVE. . . . . . . . . . . . . edit      16.17
+
+      N . . . . . . . . . . . . . . edit      16.18
+      NameFromJfn . . . . . . . . . expr      19.6
+      NConc . . . . . . . . . . . . expr      7.7
+      NCons . . . . . . . . . . . . expr      7.3
+      Ne. . . . . . . . . . . . . . expr      4.6
+      Neq . . . . . . . . . . . . . macro     4.6
+      NewId . . . . . . . . . . . . expr      4.9
+      NewTrBuff . . . . . . . . . . expr      15.6
+      NEX . . . . . . . . . . . . . edit      16.18
+      NExprP. . . . . . . . . . . . expr      10.7
+      Next. . . . . . . . . . . . . macro     9.7
+      NonCharacterError . . . . . . expr      14.10
+      NonIDError. . . . . . . . . . expr      14.9Function Index                7 February 1983                    PSL Manual
+page 25.10                                                     section 25.0
+
+      NonIntegerError . . . . . . . expr      14.9
+      NonNumberError. . . . . . . . expr      14.9
+      NonPairError. . . . . . . . . expr      14.9
+      NonPositiveIntegerError . . . expr      14.10
+      NonSequenceError. . . . . . . expr      14.10
+      NonStringError. . . . . . . . expr      14.10
+      NonVectorError. . . . . . . . expr      14.10
+      Not . . . . . . . . . . . . . expr      4.8
+      NString!-Capitalize . . . . . expr      8.13
+      NString!-DownCase . . . . . . expr      8.13
+      NString!-UpCase . . . . . . . expr      8.13
+      NTH . . . . . . . . . . . . . edit      16.18
+      Nth . . . . . . . . . . . . . expr      7.5
+      Null. . . . . . . . . . . . . expr      4.7
+      Num . . . . . . . . . . . . . expr      22.10
+      NumberP . . . . . . . . . . . expr      4.7
+      NX. . . . . . . . . . . . . . edit      16.19
+
+      Off . . . . . . . . . . . . . macro     6.14
+      OK. . . . . . . . . . . . . . edit      16.3, 16.19
+      On. . . . . . . . . . . . . . macro     6.14
+      OneP. . . . . . . . . . . . . expr      5.6
+      Open. . . . . . . . . . . . . expr      12.4
+      OpenFork. . . . . . . . . . . expr      19.4
+      OpenNewJfn. . . . . . . . . . expr      19.5
+      OpenOldJfn. . . . . . . . . . expr      19.5
+      Or. . . . . . . . . . . . . . fexpr     4.9
+      ORF . . . . . . . . . . . . . edit      16.19
+      ORR . . . . . . . . . . . . . edit      16.19
+      Out . . . . . . . . . . . . . macro     12.5
+
+      P . . . . . . . . . . . . . . edit      16.1, 16.20
+      Pair. . . . . . . . . . . . . expr      7.11
+      PairP . . . . . . . . . . . . expr      4.8
+      Path. . . . . . . . . . . . . expr      19.13
+      PathIn. . . . . . . . . . . . expr      12.15
+      Pause . . . . . . . . . . . . expr      13.8
+      PBind1. . . . . . . . . . . . expr      10.10
+      PL. . . . . . . . . . . . . . edit      16.1
+      PList . . . . . . . . . . . . macro     15.12
+      Plus2 . . . . . . . . . . . . expr      5.4
+      Plus. . . . . . . . . . . . . macro     5.4
+      PNth. . . . . . . . . . . . . expr      7.5
+      Pop . . . . . . . . . . . . . macro     17.15
+      Posn. . . . . . . . . . . . . expr      12.11
+      PP. . . . . . . . . . . . . . edit      16.21
+      Ppf . . . . . . . . . . . . . macro     15.12
+      PrettyPrint . . . . . . . . . expr      12.11
+      Prin1 . . . . . . . . . . . . expr      12.8
+      Prin2 . . . . . . . . . . . . expr      12.8
+      Prin2L. . . . . . . . . . . . expr      12.11
+      Prin2T. . . . . . . . . . . . expr      12.12PSL Manual                    7 February 1983                Function Index
+section 25.0                                                     page 25.11
+
+      PrinC . . . . . . . . . . . . expr      12.8
+      Print . . . . . . . . . . . . expr      12.8
+      PrintF. . . . . . . . . . . . expr      12.10
+      PrintScanTable. . . . . . . . expr      12.25
+      PrintX. . . . . . . . . . . . expr      15.13
+      Prog1 . . . . . . . . . . . . macro     9.5
+      Prog2 . . . . . . . . . . . . expr      9.5
+      Prog. . . . . . . . . . . . . fexpr     9.5
+      ProgN . . . . . . . . . . . . fexpr     9.4
+      Prop. . . . . . . . . . . . . expr      6.7
+      PSetF . . . . . . . . . . . . macro     6.9
+      PSetQ . . . . . . . . . . . . macro     6.8
+      Push. . . . . . . . . . . . . macro     17.14
+      Put . . . . . . . . . . . . . expr      6.5
+      PutByte . . . . . . . . . . . expr      20.11
+      PutD. . . . . . . . . . . . . expr      10.2
+      PutDipthong . . . . . . . . . expr      12.25
+      PutReadMacro. . . . . . . . . expr      12.25
+      PutRescan . . . . . . . . . . expr      19.5
+      PutV. . . . . . . . . . . . . expr      8.3
+      Pwd . . . . . . . . . . . . . expr      19.13
+
+      Quit. . . . . . . . . . . . . expr      13.1
+      Quote . . . . . . . . . . . . fexpr     11.6
+      Quotient. . . . . . . . . . . expr      5.4
+
+      R . . . . . . . . . . . . . . edit      16.2, 16.21
+      RadiansToDegrees. . . . . . . expr      5.9
+      RadiansToDMS. . . . . . . . . expr      5.9
+      Random. . . . . . . . . . . . expr      5.14
+      RangeError. . . . . . . . . . expr      14.9
+      RAtom . . . . . . . . . . . . expr      12.21
+      Rds . . . . . . . . . . . . . expr      12.5
+      Read-Init-File. . . . . . . . expr      13.3
+      Read. . . . . . . . . . . . . expr      12.13
+      ReadCH. . . . . . . . . . . . expr      12.16
+      ReadChar. . . . . . . . . . . expr      12.16
+      Recip . . . . . . . . . . . . expr      5.4
+      Reclaim . . . . . . . . . . . expr      21.8
+      RecopyStringToNULL. . . . . . expr      19.8
+      ReDo. . . . . . . . . . . . . expr      13.6
+      RelJfn. . . . . . . . . . . . expr      19.5
+      ReLoad. . . . . . . . . . . . macro     18.3
+      Remainder . . . . . . . . . . expr      5.4
+      RemD. . . . . . . . . . . . . expr      10.4
+      RemFlag1. . . . . . . . . . . expr      6.6
+      RemFlag . . . . . . . . . . . expr      6.6
+      RemOb . . . . . . . . . . . . expr      6.4
+      RemProp . . . . . . . . . . . expr      6.5
+      RemPropL. . . . . . . . . . . expr      6.5
+      REPACK. . . . . . . . . . . . edit      16.21
+      Repeat. . . . . . . . . . . . macro     9.7Function Index                7 February 1983                    PSL Manual
+page 25.12                                                     section 25.0
+
+      ResBtr. . . . . . . . . . . . expr      15.10
+      Reset . . . . . . . . . . . . expr      13.2, 19.4
+      Rest. . . . . . . . . . . . . macro     7.5
+      RestoreEnvironment. . . . . . expr      10.11
+      Restr . . . . . . . . . . . . expr      15.9
+      Return. . . . . . . . . . . . expr      9.6
+      Reverse . . . . . . . . . . . expr      7.9
+      ReversIP. . . . . . . . . . . expr      7.10
+      RI. . . . . . . . . . . . . . edit      16.22
+      RLisp . . . . . . . . . . . . expr      13.6
+      RO. . . . . . . . . . . . . . edit      16.22
+      Round . . . . . . . . . . . . expr      5.8
+      RplacA. . . . . . . . . . . . expr      7.4
+      RplacD. . . . . . . . . . . . expr      7.4
+      RplaChar. . . . . . . . . . . expr      8.10
+      RplacW. . . . . . . . . . . . expr      7.4
+      RPrint. . . . . . . . . . . . expr      12.11
+      Run . . . . . . . . . . . . . expr      19.3
+      RunFork . . . . . . . . . . . expr      19.4
+
+      S . . . . . . . . . . . . . . edit      16.22
+      SAssoc. . . . . . . . . . . . expr      7.10
+      SAVE. . . . . . . . . . . . . edit      16.22
+      SaveSystem. . . . . . . . . . expr      13.2
+      Sec . . . . . . . . . . . . . expr      5.11
+      SecD. . . . . . . . . . . . . expr      5.11
+      SECOND. . . . . . . . . . . . edit      16.23
+      Second. . . . . . . . . . . . macro     7.5
+      Set . . . . . . . . . . . . . expr      6.7
+      SetF. . . . . . . . . . . . . macro     6.8
+      SetIndx . . . . . . . . . . . expr      8.6
+      SetProp . . . . . . . . . . . expr      6.7
+      SetQ. . . . . . . . . . . . . fexpr     6.7
+      SetSub. . . . . . . . . . . . expr      8.6
+      SetSubSeq . . . . . . . . . . expr      8.6
+      Shut. . . . . . . . . . . . . macro     12.5
+      Sin . . . . . . . . . . . . . expr      5.10
+      SinD. . . . . . . . . . . . . expr      5.10
+      Size. . . . . . . . . . . . . expr      8.5
+      Spaces. . . . . . . . . . . . expr      12.12
+      Sqrt. . . . . . . . . . . . . expr      5.13
+      Standard!-CharP . . . . . . . expr      8.7
+      StandardLisp. . . . . . . . . expr      13.6
+      StartFork . . . . . . . . . . expr      19.4
+      StdError. . . . . . . . . . . expr      14.9
+      StdTrace. . . . . . . . . . . expr      15.7
+      Step. . . . . . . . . . . . . expr      15.3
+      STOP. . . . . . . . . . . . . edit      16.23
+      Str2Int . . . . . . . . . . . expr      19.8
+      Str . . . . . . . . . . . . . expr      22.11
+      String!-Capitalize. . . . . . expr      8.13
+      String!-CharP . . . . . . . . expr      8.8PSL Manual                    7 February 1983                Function Index
+section 25.0                                                     page 25.13
+
+      String!-DownCase. . . . . . . expr      8.13
+      String!-Equal . . . . . . . . expr      8.11
+      String!-GreaterP. . . . . . . expr      8.11
+      String!-Left!-Trim. . . . . . expr      8.12
+      String!-Length. . . . . . . . expr      8.13
+      String!-LessP . . . . . . . . expr      8.11
+      String!-Not!-Equal. . . . . . expr      8.12
+      String!-Not!-GreaterP . . . . expr      8.12
+      String!-Not!-LessP. . . . . . expr      8.12
+      String!-Repeat. . . . . . . . expr      8.12
+      String!-Right!-Trim . . . . . expr      8.12
+      String!-to!-List. . . . . . . expr      8.13
+      String!-to!-Vector. . . . . . expr      8.13
+      String!-Trim. . . . . . . . . expr      8.12
+      String!-UpCase. . . . . . . . expr      8.12
+      String!<!=. . . . . . . . . . expr      8.11
+      String!<!>. . . . . . . . . . expr      8.11
+      String!<. . . . . . . . . . . expr      8.11
+      String!=. . . . . . . . . . . expr      8.11
+      String!>!=. . . . . . . . . . expr      8.11
+      String!>. . . . . . . . . . . expr      8.11
+      String2List . . . . . . . . . expr      4.10
+      String2Vector . . . . . . . . expr      4.11
+      String. . . . . . . . . . . . nexpr     4.11, 8.2
+      StringGenSym. . . . . . . . . expr      6.3
+      StringP . . . . . . . . . . . expr      4.8
+      Stub. . . . . . . . . . . . . macro     15.12
+      Sub1. . . . . . . . . . . . . expr      5.5
+      Sub . . . . . . . . . . . . . expr      8.6
+      SublA . . . . . . . . . . . . expr      7.12
+      SubLis. . . . . . . . . . . . expr      7.11
+      SubSeq. . . . . . . . . . . . expr      8.6
+      Subst . . . . . . . . . . . . expr      7.11
+      SubstIP . . . . . . . . . . . expr      7.11
+      SubString . . . . . . . . . . expr      8.13
+      SubTypeP. . . . . . . . . . . expr      17.16
+      SW. . . . . . . . . . . . . . edit      16.23
+      Swap. . . . . . . . . . . . . expr      19.8
+      Sys . . . . . . . . . . . . . expr      19.3
+      System. . . . . . . . . . . . expr      19.14
+
+      T . . . . . . . . . . . . . . edit      16.2
+      Tab . . . . . . . . . . . . . expr      12.12
+      Take. . . . . . . . . . . . . expr      19.3
+      Tan . . . . . . . . . . . . . expr      5.10
+      TanD. . . . . . . . . . . . . expr      5.10
+      TConc . . . . . . . . . . . . expr      7.7
+      TerPri. . . . . . . . . . . . expr      12.10
+      TEST. . . . . . . . . . . . . edit      16.23
+      THIRD . . . . . . . . . . . . edit      16.23
+      Third . . . . . . . . . . . . macro     7.5
+      THROUGH . . . . . . . . . . . edit      16.24Function Index                7 February 1983                    PSL Manual
+page 25.14                                                     section 25.0
+
+      Throw . . . . . . . . . . . . expr      9.18
+      Time. . . . . . . . . . . . . expr      13.2
+      Times2. . . . . . . . . . . . expr      5.5
+      Times . . . . . . . . . . . . macro     5.5
+      TO. . . . . . . . . . . . . . edit      16.24
+      TopLoop . . . . . . . . . . . expr      13.4
+      TotalCopy . . . . . . . . . . expr      8.7
+      Tr. . . . . . . . . . . . . . macro     15.3, 15.5
+      TraceCount. . . . . . . . . . expr      15.7
+      TransferSign. . . . . . . . . expr      5.9
+      TrCnt . . . . . . . . . . . . macro     15.12
+      TrIn. . . . . . . . . . . . . macro     15.8
+      TrOut . . . . . . . . . . . . expr      15.7
+      Trst. . . . . . . . . . . . . macro     15.3, 15.6
+      TTY:. . . . . . . . . . . . . edit      16.24
+      Type. . . . . . . . . . . . . expr      19.3
+      TypeError . . . . . . . . . . expr      14.9
+
+      UnBindN . . . . . . . . . . . expr      10.9
+      UNBLOCK . . . . . . . . . . . edit      16.24
+      UnBoundP. . . . . . . . . . . expr      6.10, 10.9
+      UNDO. . . . . . . . . . . . . edit      16.25
+      UnFluid . . . . . . . . . . . expr      10.9
+      Union . . . . . . . . . . . . expr      7.8
+      UnionQ. . . . . . . . . . . . expr      7.8
+      Unless. . . . . . . . . . . . macro     9.3
+      UnQuote . . . . . . . . . . . fexpr     17.13
+      UnQuoteL. . . . . . . . . . . fexpr     17.13
+      UnReadChar. . . . . . . . . . expr      12.16
+      UnTr. . . . . . . . . . . . . macro     15.3, 15.9
+      UnTrst. . . . . . . . . . . . macro     15.3, 15.9
+      Unwind!-All . . . . . . . . . macro     9.19
+      Unwind!-Protect . . . . . . . macro     9.19
+      UP. . . . . . . . . . . . . . edit      16.2, 16.25
+      UpbV. . . . . . . . . . . . . expr      8.4
+      UpperCaseP. . . . . . . . . . expr      8.8
+      UsageTypeError. . . . . . . . expr      14.9
+      User-HomeDir-String . . . . . expr      13.3
+
+      ValueCell . . . . . . . . . . expr      6.9
+      VDir. . . . . . . . . . . . . expr      19.3
+      Vector2List . . . . . . . . . expr      4.11
+      Vector2String . . . . . . . . expr      4.11
+      Vector. . . . . . . . . . . . nexpr     4.11, 8.4
+      VectorP . . . . . . . . . . . expr      4.8
+
+      WaitFork. . . . . . . . . . . expr      19.4
+      WAnd. . . . . . . . . . . . . expr      20.10
+      WDifference . . . . . . . . . expr      20.10
+      WEQ . . . . . . . . . . . . . expr      20.10
+      WGEQ. . . . . . . . . . . . . expr      20.10
+      WGetV . . . . . . . . . . . . macro     20.11PSL Manual                    7 February 1983                Function Index
+section 25.0                                                     page 25.15
+
+      WGreaterP . . . . . . . . . . expr      20.10
+      When. . . . . . . . . . . . . macro     9.3
+      While . . . . . . . . . . . . macro     9.6
+      WLEQ. . . . . . . . . . . . . expr      20.11
+      WLessP. . . . . . . . . . . . expr      20.10
+      WNEQ. . . . . . . . . . . . . expr      20.10
+      WNot. . . . . . . . . . . . . expr      20.10
+      WOr . . . . . . . . . . . . . expr      20.10
+      WPlus2. . . . . . . . . . . . expr      20.10
+      WPutV . . . . . . . . . . . . macro     20.11
+      WQuotient . . . . . . . . . . expr      20.10
+      WRemainder. . . . . . . . . . expr      20.10
+      WriteChar . . . . . . . . . . expr      12.6
+      Wrs . . . . . . . . . . . . . expr      12.5
+      WShift. . . . . . . . . . . . expr      20.10
+      WTimes2 . . . . . . . . . . . expr      20.10
+      WXor. . . . . . . . . . . . . expr      20.10
+
+      XCons . . . . . . . . . . . . expr      7.3
+      XJsys0. . . . . . . . . . . . expr      19.6
+      XJsys1. . . . . . . . . . . . expr      19.7
+      XJsys2. . . . . . . . . . . . expr      19.7
+      XJsys3. . . . . . . . . . . . expr      19.7
+      XJsys4. . . . . . . . . . . . expr      19.7
+      XTR . . . . . . . . . . . . . edit      16.25
+      Xword . . . . . . . . . . . . expr      19.8
+
+      YesP. . . . . . . . . . . . . expr      13.8
+
+      ZeroP . . . . . . . . . . . . expr      5.6

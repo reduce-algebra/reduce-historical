@@ -1,0 +1,75 @@
+
+			 7-Mar-83 15:48:41
+
+BATCON Version	104(4133)			GLXLIB Version	1(527)
+
+	    Job FASL Req #262 for KESSLER in Stream 0
+
+	OUTPUT:	 Nolog				TIME-LIMIT: 0:20:00
+	UNIQUE:	 Yes				BATCH-LOG:  Supersede
+	RESTART: No				ASSISTANCE: Yes
+						SEQUENCE:   800
+
+	Input from => PS:<PSL.KERNEL.20>FASL.CTL.2
+	Output to  => PS:<PSL.KERNEL.20>FASL.LOG
+
+
+
+15:48:42 MONTR	 Univ of Utah Computer Science KL-20, TOPS-20AN Monitor 5.3(1500)
+15:48:42 MONTR	@SET TIME-LIMIT 1200
+15:48:42 MONTR	@LOGIN KESSLER SMALL
+15:48:46 MONTR	 Job 13 on TTY225 7-Mar-83 15:48:46
+15:48:46 MONTR	 Previous login at 7-Mar-83 15:44:26
+15:48:46 MONTR	 There is 1 other job logged in as user KESSLER
+15:48:59 MONTR	@
+15:48:59 MONTR	[PS Mounted]
+15:48:59 MONTR	
+15:48:59 MONTR	[CONNECTED TO PS:<PSL.KERNEL.20>]
+15:48:59 MONTR	define DSK: DSK:, P20:, PI:
+15:49:03 MONTR	@S:DEC20-CROSS.EXE
+15:49:05 USER	Dec 20 cross compiler
+15:49:07 USER	[8] ASMOut "fasl";
+15:49:08 USER	ASMOUT: IN files; or type in expressions
+15:49:09 USER	When all done execute ASMEND;
+15:50:57 USER	[9] in "fasl.build";
+15:50:59 USER	%
+15:50:59 USER	% FASL.BUILD - Files used for Fasl in the interpreter
+15:50:59 USER	% 
+15:50:59 USER	% Author:      Eric Benson
+15:50:59 USER	%              Symbolic Computation Group
+15:50:59 USER	%              Computer Science Dept.
+15:50:59 USER	%              University of Utah
+15:50:59 USER	% Date:        19 May 1982
+15:50:59 USER	% Copyright (c) 1982 University of Utah
+15:50:59 USER	%
+15:50:59 USER	
+15:50:59 USER	PathIn "system-faslout.red"$
+15:51:02 USER	PathIn "system-faslin.red"$
+15:51:12 USER	PathIn "faslin.red"$
+15:51:42 USER	*** Garbage collection starting
+15:52:01 USER	*** GC 4: time 3388 ms
+15:52:01 USER	*** 68004 recovered, 564 stable, 21432 active, 68004 free
+15:52:15 USER	
+15:52:15 USER	PathIn "load.red"$
+15:52:18 USER	*** Function `LOAD' has been redefined
+15:52:21 USER	*** Function `RELOAD' has been redefined
+15:52:35 USER	                        % Standard module FASL loader
+15:52:35 USER	PathIn "autoload.red"$                  % stubs to load modules
+15:52:53 USER	[10] ASMEnd;
+15:53:51 USER	*** Garbage collection starting
+15:54:19 USER	*** GC 5: time 3087 ms
+15:54:19 USER	*** 73806 recovered, 13587 stable, 2607 active, 73806 free
+15:54:51 USER	NIL
+15:54:52 USER	[11] quit;
+15:54:55 MONTR	@compile fasl.mac, dfasl.mac
+15:55:01 USER	MACRO:  .MAIN
+15:55:09 USER	MACRO:  .MAIN
+15:55:10 USER	
+15:55:10 USER	EXIT
+15:55:13 MONTR	@delete fasl.mac, dfasl.mac
+15:55:13 MONTR	 FASL.MAC.1 [OK]
+15:55:14 MONTR	 DFASL.MAC.1 [OK]
+15:55:20 MONTR	@
+15:55:27 MONTR	Killed by OPERATOR, TTY 221
+15:55:27 MONTR	Killed Job 13, User KESSLER, Account SMALL, TTY 225,
+15:55:27 MONTR	  at  7-Mar-83 15:55:26,  Used 0:01:14 in 0:06:40

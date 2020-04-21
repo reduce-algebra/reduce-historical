@@ -1,0 +1,252 @@
+NMODE command list (Lisp mode) - 25 January 1983
+--------------------------------------------------------
+)                      INSERT-CLOSING-BRACKET
+Backspace              DELETE-BACKWARD-HACKING-TABS-COMMAND
+C-%                    REPLACE-STRING-COMMAND
+C-(                    BACKWARD-UP-LIST-COMMAND
+C-)                    FORWARD-UP-LIST-COMMAND
+C--                    NEGATIVE-ARGUMENT
+C-0                    ARGUMENT-DIGIT
+C-1                    ARGUMENT-DIGIT
+C-2                    ARGUMENT-DIGIT
+C-3                    ARGUMENT-DIGIT
+C-4                    ARGUMENT-DIGIT
+C-5                    ARGUMENT-DIGIT
+C-6                    ARGUMENT-DIGIT
+C-7                    ARGUMENT-DIGIT
+C-8                    ARGUMENT-DIGIT
+C-9                    ARGUMENT-DIGIT
+C-<                    MARK-BEGINNING-COMMAND
+C-=                    WHAT-CURSOR-POSITION-COMMAND
+C->                    MARK-END-COMMAND
+C-?                    HELP-DISPATCH
+C-@                    SET-MARK-COMMAND
+C-A                    MOVE-TO-START-OF-LINE-COMMAND
+C-B                    MOVE-BACKWARD-CHARACTER-COMMAND
+C-D                    DELETE-FORWARD-CHARACTER-COMMAND
+C-E                    MOVE-TO-END-OF-LINE-COMMAND
+C-F                    MOVE-FORWARD-CHARACTER-COMMAND
+C-G                    NMODE-ABORT-COMMAND
+C-K                    KILL-LINE
+C-L                    NMODE-REFRESH-COMMAND
+C-M-(                  BACKWARD-UP-LIST-COMMAND
+C-M-)                  FORWARD-UP-LIST-COMMAND
+C-M--                  NEGATIVE-ARGUMENT
+C-M-0                  ARGUMENT-DIGIT
+C-M-1                  ARGUMENT-DIGIT
+C-M-2                  ARGUMENT-DIGIT
+C-M-3                  ARGUMENT-DIGIT
+C-M-4                  ARGUMENT-DIGIT
+C-M-5                  ARGUMENT-DIGIT
+C-M-6                  ARGUMENT-DIGIT
+C-M-7                  ARGUMENT-DIGIT
+C-M-8                  ARGUMENT-DIGIT
+C-M-9                  ARGUMENT-DIGIT
+C-M-@                  MARK-FORM-COMMAND
+C-M-A                  MOVE-BACKWARD-DEFUN-COMMAND
+C-M-B                  MOVE-BACKWARD-FORM-COMMAND
+C-M-Backspace          MARK-DEFUN-COMMAND
+C-M-D                  DOWN-LIST
+C-M-E                  END-OF-DEFUN-COMMAND
+C-M-F                  MOVE-FORWARD-FORM-COMMAND
+C-M-H                  MARK-DEFUN-COMMAND
+C-M-I                  LISP-TAB-COMMAND
+C-M-K                  KILL-FORWARD-FORM-COMMAND
+C-M-L                  SELECT-PREVIOUS-BUFFER-COMMAND
+C-M-M                  BACK-TO-INDENTATION-COMMAND
+C-M-N                  MOVE-FORWARD-LIST-COMMAND
+C-M-O                  SPLIT-LINE-COMMAND
+C-M-P                  MOVE-BACKWARD-LIST-COMMAND
+C-M-Q                  LISP-INDENT-SEXPR
+C-M-R                  REPOSITION-WINDOW-COMMAND
+C-M-Return             BACK-TO-INDENTATION-COMMAND
+C-M-Rubout             KILL-BACKWARD-FORM-COMMAND
+C-M-T                  TRANSPOSE-FORMS
+C-M-Tab                LISP-TAB-COMMAND
+C-M-U                  BACKWARD-UP-LIST-COMMAND
+C-M-V                  SCROLL-OTHER-WINDOW-COMMAND
+C-M-W                  APPEND-NEXT-KILL-COMMAND
+C-M-X                  M-X-PREFIX
+C-M-[                  MOVE-BACKWARD-DEFUN-COMMAND
+C-M-\                  LISP-INDENT-REGION-COMMAND
+C-M-]                  END-OF-DEFUN-COMMAND
+C-N                    MOVE-DOWN-EXTENDING-COMMAND
+C-O                    OPEN-LINE-COMMAND
+C-P                    MOVE-UP-COMMAND
+C-Q                    INSERT-NEXT-CHARACTER-COMMAND
+C-R                    REVERSE-SEARCH-COMMAND
+C-Rubout               DELETE-BACKWARD-HACKING-TABS-COMMAND
+C-S                    INCREMENTAL-SEARCH-COMMAND
+C-Space                SET-MARK-COMMAND
+C-T                    TRANSPOSE-CHARACTERS-COMMAND
+C-U                    UNIVERSAL-ARGUMENT
+C-V                    NEXT-SCREEN-COMMAND
+C-W                    KILL-REGION
+C-X                    C-X-PREFIX
+C-X .                  SET-FILL-PREFIX-COMMAND
+C-X 1                  ONE-WINDOW-COMMAND
+C-X 2                  TWO-WINDOWS-COMMAND
+C-X 3                  VIEW-TWO-WINDOWS-COMMAND
+C-X 4                  VISIT-IN-OTHER-WINDOW-COMMAND
+C-X <                  SCROLL-WINDOW-LEFT-COMMAND
+C-X =                  WHAT-CURSOR-POSITION-COMMAND
+C-X >                  SCROLL-WINDOW-RIGHT-COMMAND
+C-X A                  APPEND-TO-BUFFER-COMMAND
+C-X B                  SELECT-BUFFER-COMMAND
+C-X C-B                BUFFER-BROWSER-COMMAND
+C-X C-F                FIND-FILE-COMMAND
+C-X C-L                LOWERCASE-REGION-COMMAND
+C-X C-N                SET-GOAL-COLUMN-COMMAND
+C-X C-O                DELETE-BLANK-LINES-COMMAND
+C-X C-S                SAVE-FILE-COMMAND
+C-X C-T                TRANSPOSE-LINES
+C-X C-U                UPPERCASE-REGION-COMMAND
+C-X C-V                VISIT-FILE-COMMAND
+C-X C-W                WRITE-FILE-COMMAND
+C-X C-X                EXCHANGE-POINT-AND-MARK
+C-X C-Z                NMODE-EXIT-TO-SUPERIOR
+C-X D                  DIRED-COMMAND
+C-X E                  EXCHANGE-WINDOWS-COMMAND
+C-X F                  SET-FILL-COLUMN-COMMAND
+C-X G                  GET-REGISTER-COMMAND
+C-X H                  MARK-WHOLE-BUFFER-COMMAND
+C-X K                  KILL-BUFFER-COMMAND
+C-X O                  OTHER-WINDOW-COMMAND
+C-X P                  WRITE-SCREEN-PHOTO-COMMAND
+C-X Rubout             BACKWARD-KILL-SENTENCE-COMMAND
+C-X T                  TRANSPOSE-REGIONS
+C-X V                  NMODE-INVERT-VIDEO
+C-X X                  PUT-REGISTER-COMMAND
+C-X ^                  GROW-WINDOW-COMMAND
+C-Y                    INSERT-KILL-BUFFER
+C-]                    LISP-PREFIX
+Esc-4                  MOVE-BACKWARD-WORD-COMMAND
+Esc-5                  MOVE-FORWARD-WORD-COMMAND
+Esc-A                  MOVE-UP-COMMAND
+Esc-B                  MOVE-DOWN-COMMAND
+Esc-C                  MOVE-FORWARD-CHARACTER-COMMAND
+Esc-D                  MOVE-BACKWARD-CHARACTER-COMMAND
+Esc-F                  MOVE-TO-BUFFER-END-COMMAND
+Esc-J                  NMODE-FULL-REFRESH
+Esc-L                  OPEN-LINE-COMMAND
+Esc-M                  KILL-LINE
+Esc-P                  DELETE-FORWARD-CHARACTER-COMMAND
+Esc-S                  SCROLL-WINDOW-UP-LINE-COMMAND
+Esc-T                  SCROLL-WINDOW-DOWN-LINE-COMMAND
+Esc-U                  SCROLL-WINDOW-UP-PAGE-COMMAND
+Esc-V                  SCROLL-WINDOW-DOWN-PAGE-COMMAND
+Esc-h                  MOVE-TO-BUFFER-START-COMMAND
+Escape                 ESC-PREFIX
+Lisp-?                 LISP-HELP-COMMAND
+Lisp-A                 LISP-ABORT-COMMAND
+Lisp-B                 LISP-BACKTRACE-COMMAND
+Lisp-C                 LISP-CONTINUE-COMMAND
+Lisp-E                 EXECUTE-FORM-COMMAND
+Lisp-L                 EXIT-NMODE
+Lisp-Q                 LISP-QUIT-COMMAND
+Lisp-R                 LISP-RETRY-COMMAND
+Lisp-Y                 YANK-LAST-OUTPUT-COMMAND
+M-%                    QUERY-REPLACE-COMMAND
+M-'                    UPCASE-DIGIT-COMMAND
+M-(                    INSERT-PARENS
+M--                    NEGATIVE-ARGUMENT
+M-/                    HELP-DISPATCH
+M-0                    ARGUMENT-DIGIT
+M-1                    ARGUMENT-DIGIT
+M-2                    ARGUMENT-DIGIT
+M-3                    ARGUMENT-DIGIT
+M-4                    ARGUMENT-DIGIT
+M-5                    ARGUMENT-DIGIT
+M-6                    ARGUMENT-DIGIT
+M-7                    ARGUMENT-DIGIT
+M-8                    ARGUMENT-DIGIT
+M-9                    ARGUMENT-DIGIT
+M-;                    INSERT-COMMENT-COMMAND
+M-<                    MOVE-TO-BUFFER-START-COMMAND
+M->                    MOVE-TO-BUFFER-END-COMMAND
+M-?                    HELP-DISPATCH
+M-@                    MARK-WORD-COMMAND
+M-A                    BACKWARD-SENTENCE-COMMAND
+M-B                    MOVE-BACKWARD-WORD-COMMAND
+M-Backspace            MARK-DEFUN-COMMAND
+M-C                    UPPERCASE-INITIAL-COMMAND
+M-D                    KILL-FORWARD-WORD-COMMAND
+M-E                    FORWARD-SENTENCE-COMMAND
+M-F                    MOVE-FORWARD-WORD-COMMAND
+M-G                    FILL-REGION-COMMAND
+M-H                    MARK-PARAGRAPH-COMMAND
+M-I                    TAB-TO-TAB-STOP-COMMAND
+M-K                    KILL-SENTENCE-COMMAND
+M-L                    LOWERCASE-WORD-COMMAND
+M-M                    BACK-TO-INDENTATION-COMMAND
+M-Q                    FILL-PARAGRAPH-COMMAND
+M-R                    MOVE-TO-SCREEN-EDGE-COMMAND
+M-Return               BACK-TO-INDENTATION-COMMAND
+M-Rubout               KILL-BACKWARD-WORD-COMMAND
+M-S                    CENTER-LINE-COMMAND
+M-T                    TRANSPOSE-WORDS
+M-Tab                  TAB-TO-TAB-STOP-COMMAND
+M-U                    UPPERCASE-WORD-COMMAND
+M-V                    PREVIOUS-SCREEN-COMMAND
+M-W                    COPY-REGION
+M-X                    M-X-PREFIX
+M-X Append to File     APPEND-TO-FILE-COMMAND
+M-X Apropos            APROPOS-COMMAND
+M-X Auto Fill Mode     AUTO-FILL-MODE-COMMAND
+M-X Count Occurrences  COUNT-OCCURRENCES-COMMAND
+M-X DIRED              EDIT-DIRECTORY-COMMAND
+M-X Delete File        DELETE-FILE-COMMAND
+M-X Delete Matching Lines DELETE-MATCHING-LINES-COMMAND
+M-X Delete Non-Matching Lines DELETE-NON-MATCHING-LINES-COMMAND
+M-X Delete and Expunge File DELETE-AND-EXPUNGE-FILE-COMMAND
+M-X Edit Directory     EDIT-DIRECTORY-COMMAND
+M-X Execute Buffer     EXECUTE-BUFFER-COMMAND
+M-X Execute File       EXECUTE-FILE-COMMAND
+M-X Find File          FIND-FILE-COMMAND
+M-X Flush Lines        DELETE-MATCHING-LINES-COMMAND
+M-X How Many           COUNT-OCCURRENCES-COMMAND
+M-X Insert Buffer      INSERT-BUFFER-COMMAND
+M-X Insert Date        INSERT-DATE-COMMAND
+M-X Insert File        INSERT-FILE-COMMAND
+M-X Keep Lines         DELETE-NON-MATCHING-LINES-COMMAND
+M-X Kill Buffer        KILL-BUFFER-COMMAND
+M-X Kill File          DELETE-FILE-COMMAND
+M-X Kill Some Buffers  KILL-SOME-BUFFERS-COMMAND
+M-X Lisp Mode          LISP-MODE-COMMAND
+M-X List Buffers       BUFFER-BROWSER-COMMAND
+M-X Make Space         NMODE-GC
+M-X Prepend to File    PREPEND-TO-FILE-COMMAND
+M-X Query Replace      QUERY-REPLACE-COMMAND
+M-X Rename Buffer      RENAME-BUFFER-COMMAND
+M-X Replace String     REPLACE-STRING-COMMAND
+M-X Revert File        REVERT-FILE-COMMAND
+M-X Save All Files     SAVE-ALL-FILES-COMMAND
+M-X Select Buffer      SELECT-BUFFER-COMMAND
+M-X Set Key            SET-KEY-COMMAND
+M-X Set Visited Filename SET-VISITED-FILENAME-COMMAND
+M-X Start Scripting    START-SCRIPTING-COMMAND
+M-X Start Timing NMODE START-TIMING-COMMAND
+M-X Stop Scripting     STOP-SCRIPTING-COMMAND
+M-X Stop Timing NMODE  STOP-TIMING-COMMAND
+M-X Text Mode          TEXT-MODE-COMMAND
+M-X Undelete File      UNDELETE-FILE-COMMAND
+M-X Visit File         VISIT-FILE-COMMAND
+M-X Write File         WRITE-FILE-COMMAND
+M-X Write Region       WRITE-REGION-COMMAND
+M-Y                    UNKILL-PREVIOUS
+M-Z                    FILL-COMMENT-COMMAND
+M-[                    BACKWARD-PARAGRAPH-COMMAND
+M-\                    DELETE-HORIZONTAL-SPACE-COMMAND
+M-]                    FORWARD-PARAGRAPH-COMMAND
+M-^                    DELETE-INDENTATION-COMMAND
+M-~                    BUFFER-NOT-MODIFIED-COMMAND
+Newline                INDENT-NEW-LINE-COMMAND
+Return                 RETURN-COMMAND
+Rubout                 DELETE-BACKWARD-HACKING-TABS-COMMAND
+Tab                    LISP-TAB-COMMAND
+]                      INSERT-CLOSING-BRACKET
+
+C-\                    "Meta" prefix on Dec-20
+C-[ (Escape)           "Meta" prefix on 9836
+C-^                    "Control" prefix
+C-Z                    "Control-Meta" prefix

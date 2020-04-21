@@ -1,0 +1,22 @@
+(
+("Franz Opus 37, Mars VAX 780 " . " 30-Mar-83")
+(EmptyTest-10000		 . 230)
+(GEmptyTest-10000	 . 2200)
+(Cdr1Test-100		 . 2280)
+(Cdr2Test-100		 . 910)
+(CddrTest-100		 . 610)
+(ListOnlyCdrTest1	 . 3420)
+(ListOnlyCddrTest1	 . 6900)
+(ListOnlyCdrTest2	 . 12150)
+(ListOnlyCddrTest2	 . 15100)
+(ReverseTest-10		 . 462)
+(MyReverse1Test-10	 . 605)
+(MyReverse2Test-10	 . 490)
+(LengthTest-100		 . 3026)
+(ArithmeticTest-10000	 . 4830)
+(EvalTest-10000		 . 5510)
+(tak-18-12-6		 . 1105)
+(gtak-18-12-6		 . 11696)
+(gtsta-g0		 . 13000)   % Estimate from KIM
+(gtsta-g1		 . 18000)   % GC overflow
+)

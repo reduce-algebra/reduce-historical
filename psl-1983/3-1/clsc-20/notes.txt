@@ -1,0 +1,36 @@
+1.  Changed references to "PS:<PSL.DOC.NMODE>" to "PNDOC:", in files
+	PN:NMODE-EX-20 => PNB:NMODE-20.B
+
+2.  Redo the terminal type selection, in
+	PN:NMODE-EX-20 => PNB:NMODE-20.B
+
+3.  Changed TELERAY terminal definitions to do 7 bit input (not 8), in
+	PW:TELERAY.SL => PWB:TELERAY.B
+
+4.  Where is the source code for VT100 terminals (and AMBASSADOR)?
+
+5.  Changed PRINLEVEL init from 2 to NIL (in PDIST:MAKE-NMODE.CTL)
+
+6.  Use ESC as the M-Prefix key, in files
+	PN:EXTENDED-INPUT.SL => PNB:EXTENDED-INPUT.B
+
+7.  Define M-ESC (accessed by the sequence ESC ESC) to be the ESC-Prefix, in
+	PN:MODE-DEFS.SL => PNB:MODE-DEFS.B
+
+8.  When further terminal types are supported, load the packages from
+	PW:WINDOWS-EX-20.SL => PW:WINDOWS-20.B
+
+9.  Note that PSL, not BARE-PSL is used to remake NMODE, so be sure you
+    don't have a PSL.INIT file.  Also a few extra packages (HOMEDIR and
+    INIT-FILE) are pre-loaded in the new NMODE.
+
+10. Note that the loading sequence finds the NMODE.LAP in "PL:", not
+    the version in "PN:".
+
+11. Fixed bug in METHOD TELERAY MOVE-CURSOR that used vector index of -1, in
+	PW:TELERAY.SL => PWB:TELERAY.B
+
+12. Why, in 2 window mode, is the top line of the bottom window printed
+    as appended to the mode line of the top window, and therefore not
+    visible?  Is the bug something on our 20 or a problem in NMODE in
+    general?

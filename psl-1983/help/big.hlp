@@ -1,0 +1,255 @@
+
+
+
+Beryl Morrison, 4 June 1982
+
+BigNum Structure and "Constants"
+
+The  current  PSL  bignum  package was written using vectors of "Big Digits" or
+"Bigits".  The first element  of  each  vector  is  either  BIGPOS  or  BIGNEG,
+depending whether the number is positive or negative.  A bignum of the form 
+
+[BIGPOS a b c d]
+
+has a value of 
+
+a + b * bbase!* + c * bbase!* ** 2 + d * bbase!* ** 3
+
+BBase!*  is a fluid variable which varies from one machine to another.  For the
+VAX and the DEC-20, it is calculated as follows:  
+
+bbits!* := (n-1)/2;
+bbase!* := 2 ** bbits!*;
+
+"n" is the total number of bits per word on the given machine.  On the  DEC-20,
+n  is  36,  so  bbits!*  is  17 and bbase!* is 131072.  On the VAX, n is 32, so
+bbits!* is 15 and bbase!* is 32768.
+
+There are some other constants used in the system as well.  The sources are  in
+pu:bigbig.red on the DEC-20, /u/benson/psl-dist/util/bigbig.red on the VAX.
+
+Starting BigNums
+
+"Load Big;" will bring in the bignum package.  A file called big.lap loads
+
+arith.b         which  provides  an  interface via tags for when inum functions
+                and when bignum functions  should  be  used;  (sources  are  in
+                test-arith.red)
+vector-fix.b    which  provides  a  means of truncating vectors without copying
+                them;
+bigbig.b        which provides the bignum versions of functions as required  by
+                arith.b;
+bigface.b       which   provides  the  final  interface  between  bigbig.b  and
+                arith.b.
+
+The order of loading the files must remain as shown; arith and  vector-fix  may
+be  swapped,  but otherwise function definitions must be presented in the order
+given.
+
+Building the BigNum Package
+
+Each of the  individual  files  may  be  rebuilt  (to  form  a  new  *.b  file)
+separately.  A file XXX.red may be rebuilt as follows:  
+
+[1] faslout "YYY";
+[2] in "XXX.red"$
+                                       2
+
+
+[3] faslout;
+
+On  the  DEC-20,  the  resulting YYY.b file is put on the directory pl:; on the
+VAX, it is put on the connected directory.  They should be on pl: on the DEC-20
+for public access, and on /usr/local/lib/psl on the VAX.
+
+The Functions in BigBig
+
+The functions defined by BigBig for bignums are as follows:
+
+BLOr            Takes two BigNum arguments, returning a bignum.   Calls  BSize,
+                GtPos, PosIfZero.
+
+BLXOr           Takes  two  BigNum arguments, returning a bignum.  Calls BSize,
+                GtPos, TrimBigNum1.
+
+BLAnd           Takes two BigNum arguments, returning a bignum.   Calls  BSize,
+                GtPos, TrimBigNum1.
+
+BLNot           Takes  one  BigNum argument, returning a bignum.  Calls BMinus,
+                BSmallAdd.
+
+BLShift         Takes two BigNum arguments, returning a bignum.  Calls BMinusP,
+                BQuotient, BTwoPower, BMinus, BTimes2.
+
+BMinus          Takes one BigNum argument, returning a bignum.   Calls  BZeroP,
+                BSize, BMinusP, GtPos, GtNeg.
+
+BMinusP         Takes one BigNum argument, returning a bignum or NIL.
+
+BPlus2          Takes two BigNum arguments, returning a bignum.  Calls BMinusP,
+                BDifference2, BMinus, BPlusA2.
+
+BDifference     BZeroP, BMinus, BMinusP, BPlusA2, BDifference2.
+
+BTimes2         Takes  two  BigNum arguments, returning a bignum.  Calls BSize,
+                BMinusP, GtPos, GtNeg, BDigitTimes2, PosIfZero, TrimBigNum1.
+
+BDivide         Takes two BigNum arguments, returning a pair of bignums.  Calls
+                BSize, GtPos, BSimpleDivide, BHardDivide.
+
+BGreaterP       Takes two BigNum arguments, returning a bignum or NIL.    Calls
+                BMinusP, BDifference.
+
+BLessP          Takes  two  BigNum arguments, returning a bignum or NIL.  Calls
+                BMinusP, BDifference.
+
+BAdd1           Takes a BigNum argument, returning a bignum.  Calls BSmallAdd.
+
+BSub1           Takes  a  BigNum  argument,  returning   a   bignum.      Calls
+                BigSmallDiff.
+                                       3
+
+
+FloatFromBigNum Takes  a  bignum,  returning a float.  Calls BZeroP, BGreaterP,
+                BLessP, BSize, BMinusP.
+
+BChannelPrin2    Calls BigNumP, NonBigNumError, BSimpleDivide, BSize, BZeroP.
+
+BRead            Calls GtPos, BReadAdd, BMinus.
+
+BigFromFloat    Takes a float and converts to a bignum.   Calls  BNum,  BPlus2,
+                BTimes2, BTwoPower, FloatFromBigNum, BMinus, PosIfZero.
+
+The following functions are support functions for those given above.
+
+SetBits         Takes  as  an  argument  the total number of bits per word on a
+                given machine; sets some fluid variables  accordingly.    NOTE:
+                FloatHi!*  must  be  changed  separately from this procedure by
+                hand when moving to a new machine both  in  bigbig.red  and  in
+                bigface.red.    Calls TwoPower, BNum, BMinus, BSub1, BTwoPower,
+                BAdd1.
+
+BigNumP         Checks  if  the  argument  is  a  bignum.    Calls  no  special
+                functions.
+
+NonBigNumError   Calls no special functions.
+
+BSize           Gives  size  of  a bignum, i.e. total number of bigits (the tag
+                "BIGPOS" or "BIGNEG" is number 0).  Calls BigNumP.
+
+PosIfZero       Takes a bignum; if it is a negative zero, it is converted to  a
+                positive zero.  Calls BPosOrNegZeroP, BMinusP.
+
+BPosOrNegZeroP  Takes a BigNum; checks if magnitude is zero.  Calls BSize.
+
+GtPos           Takes  an  inum/fixnum.    Returns  a  vector  of  size  of the
+                argument; first (i.e.0th) element is BIGPOS, others are NIL.
+
+GtNeg           Takes an  inum/fixnum.    Returns  a  vector  of  size  of  the
+                argument; first (i.e.0th) element is BIGNEG, others are NIL.
+
+TrimBigNum      Takes  a  BigNum as an argument; truncates any trailing "NIL"s.
+                Calls BigNumP, NonBigNumError, TrimBigNum1, BSize.
+
+TrimBigNum1     Does dirty work for TrimBigNum, with second argument  the  size
+                of the BigNum.
+
+Big2Sys          Calls BLessP, BGreaterP, BSize, BMinusP.
+
+TwoPower        Takes and returns a fix/inum.  2**n.
+
+BTwoPower       Takes  a  fix/inum  or  bignum, returns a bignum of value 2**n.
+                Calls BigNumP, Big2Sys, GtPos, TwoPower, TrimBigNum1.
+
+BZeroP          Checks size of BigNum (0) and sign.  Calls BSize, BMinusP.
+                                       4
+
+
+BOneP            Calls BMinusP, BSize.
+
+BAbs             Calls BMinusP, BMinus.
+
+BGeq             Calls BLessP.
+
+BLeq             Calls BGreaterP.
+
+BMax             Calls BGeq.
+
+BMin             Calls BLeq.
+
+BExpt           Takes   a  BigNum  and  a  fix/inum.    Calls  Int2B,  BTimes2,
+                BQuotient.
+
+AddCarry        Support for trapping the carry in addition.
+
+BPlusA2         Does the dirty work of  addition  of  two  BigNums  with  signs
+                pre-checked   and   identical.    Calls  BSize,  GtNeg,  GtPos,
+                AddCarry, PosIfZero, TrimBigNum1.
+
+SubCarry        Mechanism to get carry in subtractions.
+
+BDifference2    Does the dirty work of subtraction with signs  pre-checked  and
+                identical.    Calls  BSize,  GtNeg, GtPos, SubCarry, PosIfZero,
+                TrimBigNum1.
+
+BDigitTimes2    Multiplies the first argument (BigNum) by a single Bigit of the
+                second  BigNum  argument.    Returns  the  partially  completed
+                result.  Calls no special functions.
+
+BSmallTimes2    Takes  a  BigNum  argument  and  a fixnum argument, returning a
+                bignum.  Calls GtPos, BMinusP, GtNeg, PosIfZero, TrimBigNum1.
+
+BQuotient       Takes two BigNum arguments, returning a bignum.  Calls BDivide.
+
+BRemainder      Takes two BigNum arguments, returning a bignum.  Calls BDivide.
+
+BSimpleQuotient  Calls BSimpleDivide.
+
+BSimpleRemainder
+                Calls BSimpleDivide.
+
+BSimpleDivide   Used to divide a BigNum by an inum.  Returns a dotted  pair  of
+                quotient  and  remainder,  both  being bignums.  Calls BMinusP,
+                GtPos, GtNeg, PosIfZero, TrimBigNum1.
+
+BHardDivide     Used to divide two "true" BigNums.  Returns a pair of  bignums.
+                Algorithm taken from Knuth.  Calls BMinusP, GtPos, GtNeg, BAbs,
+                BSmallTimes2,    BSize,   BDifference,   BPlus2,   TrimBigNum1,
+                BSimpleQuotient, PosIfZero.
+                                       5
+
+
+BReadAdd         Calls BSmallTimes2, BSmallAdd.
+
+BSmallAdd       Adds  an  inum  to a BigNum, returning a bignum.  Calls BZeroP,
+                BMinusP, BMinus, BSmallDiff, BSize, GtPos, AddCarry, PosIfZero,
+                TrimBigNum1.
+
+BNum            Takes an inum and returns a BigNum of one bigit; test that  the
+                inum is less than bbase!* is assumed done.  Calls GtPos, GtNeg.
+
+BSmallDiff        Calls  BZeroP,  BMinusP,  BMinus, BSmallAdd, GtPos, SubCarry,
+                PosIfZero, TrimBigNum1.
+
+int2b           Takes a fix/inum and converts to a BigNum.  Calls BNum, BRead.
+
+Problems
+
+   - Should the "vectors" be changed to hwords?
+   - Should there be primitives so that each bigit uses almost  the  whole
+     word  instead  of  almost  half the word?  This would involve writing
+     "overflow" functions, checking and trapping  overflow  in  operations
+     such  as multiplication.  This would allow integers to be returned as
+     inums or fixnums if they are geq the current bbase!* and lessp  2  **
+     (n-1).    Currently,  anything  bbase!* or larger is kept as a bignum
+     once the bignum package is loaded.
+   - Make the constants  real  constants  instead  of  fluids:    bbase!*,
+     bbits!*,  floathi!*,  floatlow!*, logicalbits!*, wordhi!*, wordlow!*,
+     syshi!*, syslo!*, digit2letter!*.  Carry!* should be a fluid.
+   - Try to make the whole package loaded as one *.b file.
+   - Change arith.b so that divide is used for the  interface  instead  of
+     quotient  and remainder.  As it stands, doing a "Divide" when bignums
+     are loaded would mean doing  the  quotient  and  then  the  remainder
+     separately, although Knuth's algorithm computes them together.
+   - Get rid of superfluous functions.
+   - Put in more calls to NonBigNumError for greater safety?

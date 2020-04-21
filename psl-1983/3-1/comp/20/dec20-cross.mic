@@ -1,0 +1,21 @@
+@delete s:ex-dec20-cross.exe,
+ exp
+
+
+@get psl:ex-rlisp
+@st
+*Options!*:=NIL; % Force reload of ALL
+*load(zboot, syslisp, if!-system, lap!-to!-asm);
+*load(dec20!-comp,dec20!-asm);
+*load(dec20!-cmac);
+*remflag(''(extrareg),''terminaloperand);
+*off usermode;
+*% This patch is until init files can be read
+*%CopyD(''SaveUncompiledExpression, ''SaveForCompilation);
+*%in "DEC20-PATCHES.sl"$
+*in "pt:new-sym.red"$
+*cross!-compiler!-name := "S:EX-DEC20-CROSS.EXE";
+*Date!* := "Extended Dec 20 cross compiler";
+*writesavefile();
+*Quit;
+@reset .

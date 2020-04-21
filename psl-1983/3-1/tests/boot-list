@@ -1,0 +1,100 @@
+  Cross-compiler Test and Bootstrap series                    page 1
+
+PK: modules/files            PT:			       status
+
+ALLOC
+ Allocators		P-allocators	sub3	cleaned up
+ Copiers	
+ Cons-mkvect		m-cons-mkvect	sub3	almost same
+ Comp-support  	     PK:comp-support	sub3	same
+ P20:System-gc	        xxx-system-gc   sub8    same
+ P20:Gc			m-gc		stubs3	STUB until test 8
+	                xxx-gc          sub8
+ compacting-gc          p-comp-gc       sub8	cleaned up
+ARITH
+ Arithmetic		m-arithmetic	sub5	simpler
+DEBG 
+ p20:Mini-trace	
+ Mini-editor
+ Backtrace
+ERROR
+ Error-handlers		m-error-handlers sub2	simple subset
+ Type-errors		m-type-errors	 sub2	same, with
+							fake StdError,Bldmsg
+ Error-errorset		m-error-errorset sub2   trivial subset
+ Io-errors		m-io-errors      sub2   simple subset
+EVAL 
+ P20:Apply-lap		p-apply-lap	sub5a	less efficient
+ Eval-apply		m-eval-apply	sub5a	simpler
+ Catch-throw	     PK:catch-throw     sub9    same	
+ Prog-and-friends    PK:prog-and-friends sub9   same	
+EXTRA
+ p20:Timc		xxx-header
+ p20:System-extras	xxx-header
+ p20:Trap			
+ P20:Dumplisp		
+FASL 
+ p20:System-faslout
+ p20:System-faslin
+ Faslin
+ Load			
+ Autoload		
+P20:HEAP
+ [Declare HEAP,BPS]	xxx-header
+  Cross-compiler Test and Bootstrap series                    page 2
+
+IO 
+ P20:Io-data		io-data		sub7	same?
+ Char-io		m-char-io	sub7    simple subset
+ Open-close		m-open-close	sub7	simpler
+ Rds-wrs		m-rds-wrs	sub7	simpler	
+ Other-io		
+ Read			m-read		sub4	simpler
+ Token-scanner		m-token		sub4	simpler
+ Printers		m-printers	sub2	simpler
+ p20:Write-float		
+ Printf			m-printf	sub2	trivial subset
+ Explode-compress	
+ Io-extensions	
+MACRO
+ Eval-when		
+ Cont-error		
+ Lisp-macros		
+ Onoff		
+ Define-smacro
+ Defconst
+ String-gensym
+ Loop-macros		m-loop-macros	sub5		simpler	
+MAIN
+ P20:Main-start		xxx-header			simpler
+PROP
+ P20:Function-primitives
+			p-function-primitives sub5b 	less efficient
+ Property-list		m-property-list	sub5b		simpler?
+ Fluid-global		m-fluid-global  sub5b	        trivial
+ Putd-getd		m-putd-getd	sub6		simpler?
+RANDM
+ Known-to-comp-sl    PK:known-to-comp-sl sub5b	same
+ Others-sl		M-others-sl	sub5b	subset
+ Equal			m-equal		sub5b 	subset
+ Carcdr		     PK:carcdr	 	sub5b	same
+ Easy-sl		M-easy-sl	sub5b	subset
+ Easy-non-sl		M-easy-non-sl	sub5b	subset
+ Sets				
+SYMBL
+ Binding	     PK:binding	        sub6	same
+ P20:Fast-binder	P-fast-binder	sub6	less-efficient
+ Symbol-values		m-symbol-values	sub5b	subset
+ Oblist			m-oblist	sub5b	subset	
+SYSIO 
+ p20:System-io		system-io,
+			xxx-system-io	sub7	same?
+ P20:Scan-table	
+TLOOP 
+ Break	
+ Top-loop		m-top-loop	sub7	trivial subset
+ Dskin			m-dskin		sub7	simpler
+TYPES 
+ Type-conversions	m-type-conversions sub5b	simpler
+ Vectors		
+ Sequence		m-sequence	sub3	simpler

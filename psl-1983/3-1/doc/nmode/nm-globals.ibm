@@ -1,0 +1,76 @@
+,MOD
+- R 44X (11 April 1983) <PSL.NMODE-DOC>NM-GLOBALS.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+          201/NMODE Manual (Globals)                                            Page 26-1
+
+
+          202/26.  Globals
+
+          201/This section defines a number of conceptual 203/global variables201/, which are
+          referred to in the descriptions of NMODE commands.  These 203/globals 201/represent
+          state information that can affect the behavior of various NMODE commands.
+          The value of NMODE globals are set as the result  of  various  NMODE
+          commands.
+
+
+
+
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Global Explanation: Fill Column
+
+
+          201/The fill column is the column beyond which all the fill commands: auto fill, fill
+          paragraph, fill region, and fill comment, will try to break up lines.  The fill
+          column can be set by the Set Fill Column command.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Global Explanation: Fill Prefix
+
+
+          201/The fill prefix, if present, is a string that the fill paragraph and fill region
+          commands expect to see on the areas that they are filling. It is useful, for
+          instance, in filling indented text.  Only the indented area will be filled, and
+          any new lines created by the filling will be properly indented.  Autofill will
+          also insert it on each new line it starts.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Global Explanation: Goal Column
+
+
+          201/The goal column is set or unset using the C-X C-N command.  When the goal
+          column is defined, the commands C-N and C-P will always leave the cursor at
+          the specified column position, if the current line is sufficiently long.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Global Explanation: Kill Ring
+
+
+           201/The kill ring is a stack of the 16 most recently killed pieces of text.  The
+          Insert Kill Buffer command reads text on the top of the kill ring and inserts
+          it back into the buffer.  It can accept an argument, specifying an argument
+          other than the top one.  If one knows that the text one wants is on the kill
+          ring, but is not certain how deeply it is buried, one can retrieve the top
+          item with the Insert Kill Buffer command, then look through the other items
+          one by one with the Unkill Previous command.  This rotates the items on the
+          kill ring, displaying them one by one in a cycle.
+           Most kill commands push their text onto the top of the kill ring.  If two kill
+          commands are performed right after each  other,  the  text  they  kill  is
+          concatenated.  Commands the kill forward add onto the end of the previously
+          killed text.  Commands that kill backward add onto the beginning. That way,
+          the text is assembled in its original order.  If intervening commands have
+          201/Page 26-2                                            NMODE Manual (Globals)
+
+
+          taken place one can issue an Append Next Kill command before the next kill
+          in order to assemble the next killed text together with the text on top of the
+          kill ring.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

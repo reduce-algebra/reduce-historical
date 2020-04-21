@@ -1,0 +1,22 @@
+
+LINK FROM KESSLER, TTY 101
+
+[DO: Execution of PS:<PSL.KERNEL.20>MAKE-RLISP.CTL.1 started at 7-Mar-83 09:29:25]
+
+ TOPS-20 Command processor 5(712)-1
+@PSL:BARE-PSL.EXE random-argument-to-get-a-new-fork
+Bare PSL 3.1, 7-Mar-83 
+1 lisp> (load rlisp compiler init-file)
+*** FLUID `SEMIC*' cannot become GLOBAL
+*** FLUID `SEMIC*' cannot become GLOBAL
+*** FLUID `*OUTPUT' cannot become GLOBAL
+NIL
+2 lisp> (SaveSystem "PSL 3.1 RLisp" "S:RLISP.EXE" '((read-init-file "rlisp")))
+*** Garbage collection starting
+*** GC 2: time 841 ms
+*** 512 recovered, 32 stable, 6880 active, 83088 free
+NIL
+3 lisp> (quit)
+@reset .
+@
+[DO: Execution finished at 7-Mar-83 09:30:38]

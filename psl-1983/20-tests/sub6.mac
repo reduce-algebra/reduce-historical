@@ -1,0 +1,1043 @@
+	search monsym
+	radix 10
+	extern L0001
+	extern L0002
+	extern SYMNAM
+	extern SYMVAL
+	extern SYMFNC
+	extern SYMPRP
+	extern L0003
+	extern L0004
+	extern ARG1
+	extern ARG2
+	extern ARG3
+	extern ARG4
+	extern ARG5
+	extern ARG6
+	extern ARG7
+	extern ARG8
+	extern ARG9
+	extern ARG10
+	extern ARG11
+	extern ARG12
+	extern ARG13
+	extern ARG14
+	extern ARG15
+	extern BNDSTK
+	extern L1005
+	extern L1006
+	extern L1007
+;     (!*ENTRY BSTACKOVERFLOW EXPR 0)
+;     (!*ALLOC 0)
+;     (!*MOVE (QUOTE "***** Binding stack overflow, restarting...") (REG 2))
+;          (MOVE (REG 2) (QUOTE "***** Binding stack overflow, restarting..."))
+;     (!*MOVE (!$FLUID ERROUT!*) (REG 1))
+;          (MOVE (REG 1) (!$FLUID ERROUT!*))
+;     (!*LINK CHANNELPRIN2 EXPR 2)
+;          (HRRZI (REG LINKREG) 150)
+;          (HRRZI (REG NARGREG) 2)
+;          (PUSHJ (REG ST) (ENTRY CHANNELPRIN2))
+;     (!*MOVE (WCONST 10) (REG 2))
+;          (HRRZI (REG 2) 10)
+;     (!*MOVE (!$FLUID ERROUT!*) (REG 1))
+;          (MOVE (REG 1) (!$FLUID ERROUT!*))
+;     (!*LINK CHANNELWRITECHAR EXPR 2)
+;          (HRRZI (REG LINKREG) 151)
+;          (HRRZI (REG NARGREG) 2)
+;          (PUSHJ (REG ST) (ENTRY CHANNELWRITECHAR))
+;     (!*LINKE 0 RESET EXPR 0)
+;          (HRRZI (REG LINKREG) 338)
+;          (SETZM (REG NARGREG))
+;          (JRST (ENTRY RESET))
+L1009:	42
+	byte(7)42,42,42,42,42,32,66,105,110,100,105,110,103,32,115,116,97,99,107,32,111,118,101,114,102,108,111,119,44,32,114,101,115,116,97,114,116,105,110,103,46,46,46,0
+	0
+; (!*ENTRY BSTACKOVERFLOW EXPR 0)
+L1010:	intern L1010
+ MOVE 2,L1008
+ MOVE 1,SYMVAL+340
+ HRRZI 12,150
+ HRRZI 13,2
+ PUSHJ 15,SYMFNC+150
+ HRRZI 2,10
+ MOVE 1,SYMVAL+340
+ HRRZI 12,151
+ HRRZI 13,2
+ PUSHJ 15,SYMFNC+151
+ HRRZI 12,338
+ SETZM 13
+ JRST SYMFNC+338
+L1008:	<4_31>+L1009
+;     (!*ENTRY BSTACKUNDERFLOW EXPR 0)
+;     (!*ALLOC 0)
+;     (!*MOVE (QUOTE "***** Binding stack underflow, restarting...") (REG 2))
+;          (MOVE (REG 2) (QUOTE "***** Binding stack underflow, restarting..."))
+;     (!*MOVE (!$FLUID ERROUT!*) (REG 1))
+;          (MOVE (REG 1) (!$FLUID ERROUT!*))
+;     (!*LINK CHANNELPRIN2 EXPR 2)
+;          (HRRZI (REG LINKREG) 150)
+;          (HRRZI (REG NARGREG) 2)
+;          (PUSHJ (REG ST) (ENTRY CHANNELPRIN2))
+;     (!*MOVE (WCONST 10) (REG 2))
+;          (HRRZI (REG 2) 10)
+;     (!*MOVE (!$FLUID ERROUT!*) (REG 1))
+;          (MOVE (REG 1) (!$FLUID ERROUT!*))
+;     (!*LINK CHANNELWRITECHAR EXPR 2)
+;          (HRRZI (REG LINKREG) 151)
+;          (HRRZI (REG NARGREG) 2)
+;          (PUSHJ (REG ST) (ENTRY CHANNELWRITECHAR))
+;     (!*LINKE 0 RESET EXPR 0)
+;          (HRRZI (REG LINKREG) 338)
+;          (SETZM (REG NARGREG))
+;          (JRST (ENTRY RESET))
+L1012:	43
+	byte(7)42,42,42,42,42,32,66,105,110,100,105,110,103,32,115,116,97,99,107,32,117,110,100,101,114,102,108,111,119,44,32,114,101,115,116,97,114,116,105,110,103,46,46,46,0
+	0
+; (!*ENTRY BSTACKUNDERFLOW EXPR 0)
+L1013:	intern L1013
+ MOVE 2,L1011
+ MOVE 1,SYMVAL+340
+ HRRZI 12,150
+ HRRZI 13,2
+ PUSHJ 15,SYMFNC+150
+ HRRZI 2,10
+ MOVE 1,SYMVAL+340
+ HRRZI 12,151
+ HRRZI 13,2
+ PUSHJ 15,SYMFNC+151
+ HRRZI 12,338
+ SETZM 13
+ JRST SYMFNC+338
+L1011:	<4_31>+L1012
+;     (!*ENTRY CAPTUREENVIRONMENT EXPR 0)
+;     (!*ALLOC 0)
+;     (!*MOVE (WVAR BNDSTKPTR) (REG 1))
+;          (MOVE (REG 1) (WVAR BNDSTKPTR))
+;     (!*EXIT 0)
+;          (POPJ (REG ST) 0)
+	0
+; (!*ENTRY CAPTUREENVIRONMENT EXPR 0)
+L1014:	intern L1014
+ MOVE 1,L1007
+ POPJ 15,0
+;     (!*ENTRY RESTOREENVIRONMENT EXPR 1)
+;     (!*ALLOC 0)
+;     (!*MOVE (REG 1) (REG 5))
+;          (MOVE (REG 5) (REG 1))
+;     (!*JUMPWGEQ (LABEL G0004) (REG 1) (WVAR BNDSTKLOWERBOUND))
+;          (CAML (REG 1) (WVAR BNDSTKLOWERBOUND))
+;          (JRST (LABEL G0004))
+;     (!*LINKE 0 BSTACKUNDERFLOW EXPR 0)
+;          (HRRZI (REG LINKREG) 341)
+;          (SETZM (REG NARGREG))
+;          (JRST (ENTRY BSTACKUNDERFLOW))
+;     (!*LBL (LABEL G0004))
+;     (!*JUMPWLESSP (LABEL G0008) (REG 5) (WVAR BNDSTKPTR))
+;          (CAMGE (REG 5) (WVAR BNDSTKPTR))
+;          (JRST (LABEL G0008))
+;     (!*MOVE (QUOTE NIL) (REG 1))
+;          (MOVE (REG 1) (REG NIL))
+;     (!*EXIT 0)
+;          (POPJ (REG ST) 0)
+;     (!*LBL (LABEL G0008))
+;     (!*MOVE (MEMORY (WVAR BNDSTKPTR) (WCONST 0)) (REG 1))
+;          (MOVE (REG 1) (INDIRECT (WVAR BNDSTKPTR)))
+;     (!*MOVE (REG 1) (REG 4))
+;          (MOVE (REG 4) (REG 1))
+;     (!*MOVE (WVAR BNDSTKPTR) (REG 2))
+;          (MOVE (REG 2) (WVAR BNDSTKPTR))
+;     (!*MOVE (MEMORY (REG 2) (WCONST -1)) (REG 3))
+;          (MOVE (REG 3) (INDEXED (REG 2) -1))
+;     (!*MOVE (REG 1) (MEMORY (REG 3) (WCONST SYMVAL)))
+;          (MOVEM (REG 1) (INDEXED (REG 3) (IMMEDIATE SYMVAL)))
+;     (!*WPLUS2 (WVAR BNDSTKPTR) (WCONST -2))
+;          (MOVNI (REG T2) (MINUS -2))
+;          (ADDM (REG T2) (WVAR BNDSTKPTR))
+;     (!*JUMP (LABEL G0004))
+;          (JRST (LABEL G0004))
+	1
+; (!*ENTRY RESTOREENVIRONMENT EXPR 1)
+L1015:	intern L1015
+ MOVE 5,1
+ CAML 1,L1005
+ JRST L1016
+ HRRZI 12,341
+ SETZM 13
+ JRST SYMFNC+341
+L1016: CAMGE 5,L1007
+ JRST L1017
+ MOVE 1,0
+ POPJ 15,0
+L1017: MOVE 1,@L1007
+ MOVE 4,1
+ MOVE 2,L1007
+ MOVE 3,-1(2)
+ MOVEM 1,SYMVAL(3)
+ MOVNI 7,2
+ ADDM 7,L1007
+ JRST L1016
+;     (!*ENTRY CLEARBINDINGS EXPR 0)
+;     (!*ALLOC 0)
+;     (!*MOVE (WVAR BNDSTKLOWERBOUND) (REG 1))
+;          (MOVE (REG 1) (WVAR BNDSTKLOWERBOUND))
+;     (!*LINK RESTOREENVIRONMENT EXPR 1)
+;          (HRRZI (REG LINKREG) 343)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY RESTOREENVIRONMENT))
+;     (!*LINKE 0 !%CLEAR!-CATCH!-STACK EXPR 0)
+;          (HRRZI (REG LINKREG) 344)
+;          (SETZM (REG NARGREG))
+;          (JRST (ENTRY !%CLEAR!-CATCH!-STACK))
+	0
+; (!*ENTRY CLEARBINDINGS EXPR 0)
+L1018:	intern L1018
+ MOVE 1,L1005
+ HRRZI 12,343
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+343
+ HRRZI 12,344
+ SETZM 13
+ JRST SYMFNC+344
+;     (!*ENTRY UNBINDN EXPR 1)
+;     (!*ALLOC 0)
+;     (!*WMINUS (REG 1) (REG 1))
+;          (MOVNS (REG 1))
+;     (!*WSHIFT (REG 1) (WCONST 1))
+;          (LSH (REG 1) 1)
+;     (!*WPLUS2 (REG 1) (WVAR BNDSTKPTR))
+;          (ADD (REG 1) (WVAR BNDSTKPTR))
+;     (!*LINKE 0 RESTOREENVIRONMENT EXPR 1)
+;          (HRRZI (REG LINKREG) 343)
+;          (HRRZI (REG NARGREG) 1)
+;          (JRST (ENTRY RESTOREENVIRONMENT))
+	1
+; (!*ENTRY UNBINDN EXPR 1)
+L1019:	intern L1019
+ MOVNS 1
+ LSH 1,1
+ ADD 1,L1007
+ HRRZI 12,343
+ HRRZI 13,1
+ JRST SYMFNC+343
+;     (!*ENTRY LBIND1 EXPR 2)
+;     (!*ALLOC 0)
+;     (!*MOVE (REG 1) (REG 5))
+;          (MOVE (REG 5) (REG 1))
+;     (!*JUMPTYPE (LABEL G0004) (REG 1) ID)
+;          (LDB (REG T6) (LIT (FULLWORD (FIELDPOINTER (REG 1) 0 5))))
+;          (CAIN (REG T6) 30)
+;          (JRST (LABEL G0004))
+;     (!*MOVE (QUOTE "binding") (REG 2))
+;          (MOVE (REG 2) (QUOTE "binding"))
+;     (!*LINKE 0 NONIDERROR EXPR 2)
+;          (HRRZI (REG LINKREG) 159)
+;          (HRRZI (REG NARGREG) 2)
+;          (JRST (ENTRY NONIDERROR))
+;     (!*LBL (LABEL G0004))
+;     (!*JUMPEQ (LABEL G0006) (REG 1) (QUOTE NIL))
+;          (CAMN (REG 1) (REG NIL))
+;          (JRST (LABEL G0006))
+;     (!*JUMPNOTEQ (LABEL G0005) (REG 1) (QUOTE T))
+;          (CAME (REG 1) (FLUID T))
+;          (JRST (LABEL G0005))
+;     (!*LBL (LABEL G0006))
+;     (!*MOVE (QUOTE "T and NIL cannot be rebound") (REG 1))
+;          (MOVE (REG 1) (QUOTE "T and NIL cannot be rebound"))
+;     (!*LINKE 0 STDERROR EXPR 1)
+;          (HRRZI (REG LINKREG) 158)
+;          (HRRZI (REG NARGREG) 1)
+;          (JRST (ENTRY STDERROR))
+;     (!*LBL (LABEL G0005))
+;     (!*WPLUS2 (WVAR BNDSTKPTR) (WCONST 2))
+;          (HRRZI (REG T2) 2)
+;          (ADDM (REG T2) (WVAR BNDSTKPTR))
+;     (!*JUMPWGEQ (LABEL G0009) (WVAR BNDSTKUPPERBOUND) (WVAR BNDSTKPTR))
+;          (MOVE (REG T1) (WVAR BNDSTKUPPERBOUND))
+;          (CAML (REG T1) (WVAR BNDSTKPTR))
+;          (JRST (LABEL G0009))
+;     (!*LINKE 0 BSTACKOVERFLOW EXPR 0)
+;          (HRRZI (REG LINKREG) 339)
+;          (SETZM (REG NARGREG))
+;          (JRST (ENTRY BSTACKOVERFLOW))
+;     (!*LBL (LABEL G0009))
+;     (!*FIELD (REG 1) (REG 1) (WCONST 18) (WCONST 18))
+;          (HRRZ (REG 1) (REG 1))
+;     (!*MOVE (REG 1) (REG 5))
+;          (MOVE (REG 5) (REG 1))
+;     (!*MOVE (WVAR BNDSTKPTR) (REG 4))
+;          (MOVE (REG 4) (WVAR BNDSTKPTR))
+;     (!*MOVE (REG 1) (MEMORY (REG 4) (WCONST -1)))
+;          (MOVEM (REG 1) (INDEXED (REG 4) -1))
+;     (!*MOVE (MEMORY (REG 1) (WCONST SYMVAL)) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG 1) (IMMEDIATE SYMVAL)))
+;     (!*MOVE (REG 1) (MEMORY (REG 4) (WCONST 0)))
+;          (MOVEM (REG 1) (INDEXED (REG 4) 0))
+;     (!*MOVE (REG 2) (MEMORY (REG 5) (WCONST SYMVAL)))
+;          (MOVEM (REG 2) (INDEXED (REG 5) (IMMEDIATE SYMVAL)))
+;     (!*MOVE (REG 2) (REG 1))
+;          (MOVE (REG 1) (REG 2))
+;     (!*EXIT 0)
+;          (POPJ (REG ST) 0)
+;          (FULLWORD (FIELDPOINTER (REG 1) 0 5))
+L1023:	26
+	byte(7)84,32,97,110,100,32,78,73,76,32,99,97,110,110,111,116,32,98,101,32,114,101,98,111,117,110,100,0
+L1024:	6
+	byte(7)98,105,110,100,105,110,103,0
+	2
+; (!*ENTRY LBIND1 EXPR 2)
+LBIND1:	intern LBIND1
+ MOVE 5,1
+ LDB 11,L1020
+ CAIN 11,30
+ JRST L1025
+ MOVE 2,L1021
+ HRRZI 12,159
+ HRRZI 13,2
+ JRST SYMFNC+159
+L1025: CAMN 1,0
+ JRST L1026
+ CAME 1,SYMVAL+84
+ JRST L1027
+L1026: MOVE 1,L1022
+ HRRZI 12,158
+ HRRZI 13,1
+ JRST SYMFNC+158
+L1027: HRRZI 7,2
+ ADDM 7,L1007
+ MOVE 6,L1006
+ CAML 6,L1007
+ JRST L1028
+ HRRZI 12,339
+ SETZM 13
+ JRST SYMFNC+339
+L1028: HRRZ 1,1
+ MOVE 5,1
+ MOVE 4,L1007
+ MOVEM 1,-1(4)
+ MOVE 1,SYMVAL(1)
+ MOVEM 1,0(4)
+ MOVEM 2,SYMVAL(5)
+ MOVE 1,2
+ POPJ 15,0
+L1020:	point 5,1,4
+L1022:	<4_31>+L1023
+L1021:	<4_31>+L1024
+;     (!*ENTRY PBIND1 EXPR 1)
+;     (!*ALLOC 0)
+;     (!*MOVE (QUOTE NIL) (REG 2))
+;          (MOVE (REG 2) (REG NIL))
+;     (!*LINKE 0 LBIND1 EXPR 2)
+;          (HRRZI (REG LINKREG) 257)
+;          (HRRZI (REG NARGREG) 2)
+;          (JRST (ENTRY LBIND1))
+	1
+; (!*ENTRY PBIND1 EXPR 1)
+PBIND1:	intern PBIND1
+ MOVE 2,0
+ HRRZI 12,257
+ HRRZI 13,2
+ JRST SYMFNC+257
+;     (!*ENTRY LAMBIND EXPR 1)
+;     (!*ALLOC 3)
+;          (ADJSP (REG ST) 3)
+;     (!*FIELD (REG 1) (REG 1) (WCONST 18) (WCONST 18))
+;          (HRRZ (REG 1) (REG 1))
+;     (!*MOVE (REG 1) (FRAME 1))
+;          (MOVEM (REG 1) (INDEXED (REG ST) 0))
+;     (!*SIGNEDFIELD (REG 2) (MEMORY (REG 1) (WCONST 0)) (WCONST 18) (WCONST 18))
+;          (HRRE (REG 2) (INDEXED (REG 1) 0))
+;     (!*MOVE (REG 2) (FRAME 2))
+;          (MOVEM (REG 2) (INDEXED (REG ST) -1))
+;     (!*MOVE (WCONST 0) (FRAME 3))
+;          (SETZM (INDEXED (REG ST) -2))
+;     (!*LBL (LABEL G0005))
+;     (!*JUMPWGREATERP (LABEL G0004) (FRAME 3) (FRAME 2))
+;          (MOVE (REG T1) (INDEXED (REG ST) -2))
+;          (CAMLE (REG T1) (INDEXED (REG ST) -1))
+;          (JRST (LABEL G0004))
+;     (!*MOVE (FRAME 3) (REG 2))
+;          (MOVE (REG 2) (INDEXED (REG ST) -2))
+;     (!*WPLUS2 (REG 2) (!$FLUID LAMBINDARGS!*))
+;          (ADD (REG 2) (!$FLUID LAMBINDARGS!*))
+;     (!*MOVE (MEMORY (REG 2) (WCONST 0)) (REG 2))
+;          (MOVE (REG 2) (INDEXED (REG 2) 0))
+;     (!*MOVE (FRAME 3) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) -2))
+;     (!*WPLUS2 (REG 1) (FRAME 1))
+;          (ADD (REG 1) (INDEXED (REG ST) 0))
+;     (!*MOVE (MEMORY (REG 1) (WCONST 1)) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG 1) 1))
+;     (!*LINK LBIND1 EXPR 2)
+;          (HRRZI (REG LINKREG) 257)
+;          (HRRZI (REG NARGREG) 2)
+;          (PUSHJ (REG ST) (ENTRY LBIND1))
+;     (!*WPLUS2 (FRAME 3) (WCONST 1))
+;          (AOS (INDEXED (REG ST) -2))
+;     (!*JUMP (LABEL G0005))
+;          (JRST (LABEL G0005))
+;     (!*LBL (LABEL G0004))
+;     (!*MOVE (QUOTE NIL) (REG 1))
+;          (MOVE (REG 1) (REG NIL))
+;     (!*EXIT 3)
+;          (ADJSP (REG ST) (MINUS 3))
+;          (POPJ (REG ST) 0)
+	1
+; (!*ENTRY LAMBIND EXPR 1)
+L1029:	intern L1029
+ ADJSP 15,3
+ HRRZ 1,1
+ MOVEM 1,0(15)
+ HRRE 2,0(1)
+ MOVEM 2,-1(15)
+ SETZM -2(15)
+L1030: MOVE 6,-2(15)
+ CAMLE 6,-1(15)
+ JRST L1031
+ MOVE 2,-2(15)
+ ADD 2,SYMVAL+166
+ MOVE 2,0(2)
+ MOVE 1,-2(15)
+ ADD 1,0(15)
+ MOVE 1,1(1)
+ HRRZI 12,257
+ HRRZI 13,2
+ PUSHJ 15,SYMFNC+257
+ AOS -2(15)
+ JRST L1030
+L1031: MOVE 1,0
+ ADJSP 15,-3
+ POPJ 15,0
+;     (!*ENTRY PROGBIND EXPR 1)
+;     (!*ALLOC 3)
+;          (ADJSP (REG ST) 3)
+;     (!*FIELD (REG 1) (REG 1) (WCONST 18) (WCONST 18))
+;          (HRRZ (REG 1) (REG 1))
+;     (!*MOVE (REG 1) (FRAME 1))
+;          (MOVEM (REG 1) (INDEXED (REG ST) 0))
+;     (!*SIGNEDFIELD (REG 2) (MEMORY (REG 1) (WCONST 0)) (WCONST 18) (WCONST 18))
+;          (HRRE (REG 2) (INDEXED (REG 1) 0))
+;     (!*MOVE (REG 2) (FRAME 2))
+;          (MOVEM (REG 2) (INDEXED (REG ST) -1))
+;     (!*MOVE (WCONST 0) (FRAME 3))
+;          (SETZM (INDEXED (REG ST) -2))
+;     (!*LBL (LABEL G0005))
+;     (!*JUMPWGREATERP (LABEL G0004) (FRAME 3) (FRAME 2))
+;          (MOVE (REG T1) (INDEXED (REG ST) -2))
+;          (CAMLE (REG T1) (INDEXED (REG ST) -1))
+;          (JRST (LABEL G0004))
+;     (!*MOVE (FRAME 3) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) -2))
+;     (!*WPLUS2 (REG 1) (FRAME 1))
+;          (ADD (REG 1) (INDEXED (REG ST) 0))
+;     (!*MOVE (MEMORY (REG 1) (WCONST 1)) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG 1) 1))
+;     (!*LINK PBIND1 EXPR 1)
+;          (HRRZI (REG LINKREG) 346)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PBIND1))
+;     (!*WPLUS2 (FRAME 3) (WCONST 1))
+;          (AOS (INDEXED (REG ST) -2))
+;     (!*JUMP (LABEL G0005))
+;          (JRST (LABEL G0005))
+;     (!*LBL (LABEL G0004))
+;     (!*MOVE (QUOTE NIL) (REG 1))
+;          (MOVE (REG 1) (REG NIL))
+;     (!*EXIT 3)
+;          (ADJSP (REG ST) (MINUS 3))
+;          (POPJ (REG ST) 0)
+	1
+; (!*ENTRY PROGBIND EXPR 1)
+L1032:	intern L1032
+ ADJSP 15,3
+ HRRZ 1,1
+ MOVEM 1,0(15)
+ HRRE 2,0(1)
+ MOVEM 2,-1(15)
+ SETZM -2(15)
+L1033: MOVE 6,-2(15)
+ CAMLE 6,-1(15)
+ JRST L1034
+ MOVE 1,-2(15)
+ ADD 1,0(15)
+ MOVE 1,1(1)
+ HRRZI 12,346
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+346
+ AOS -2(15)
+ JRST L1033
+L1034: MOVE 1,0
+ ADJSP 15,-3
+ POPJ 15,0
+;     (!*ENTRY GETD EXPR 1)
+;     (!*PUSH (QUOTE NIL))
+;          (PUSH (REG ST) (REG NIL))
+;     (!*PUSH (REG 1))
+;          (PUSH (REG ST) (REG 1))
+;     (!*JUMPTYPE (LABEL G0004) (REG 1) ID)
+;          (LDB (REG T6) (LIT (FULLWORD (FIELDPOINTER (REG 1) 0 5))))
+;          (CAIN (REG T6) 30)
+;          (JRST (LABEL G0004))
+;     (!*MOVE (QUOTE "*** Can only GETD off ID's: ") (REG 1))
+;          (MOVE (REG 1) (QUOTE "*** Can only GETD off ID's: "))
+;     (!*LINK PRIN2 EXPR 1)
+;          (HRRZI (REG LINKREG) 138)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PRIN2))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK PRINT EXPR 1)
+;          (HRRZI (REG LINKREG) 140)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PRINT))
+;     (!*MOVE (QUOTE NIL) (REG 1))
+;          (MOVE (REG 1) (REG NIL))
+;     (!*JUMP (LABEL G0001))
+;          (JRST (LABEL G0001))
+;     (!*LBL (LABEL G0004))
+;     (!*LINK FUNBOUNDP EXPR 1)
+;          (HRRZI (REG LINKREG) 231)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY FUNBOUNDP))
+;     (!*JUMPEQ (LABEL G0008) (REG 1) (QUOTE NIL))
+;          (CAMN (REG 1) (REG NIL))
+;          (JRST (LABEL G0008))
+;     (!*MOVE (QUOTE NIL) (REG 1))
+;          (MOVE (REG 1) (REG NIL))
+;     (!*JUMP (LABEL G0001))
+;          (JRST (LABEL G0001))
+;     (!*LBL (LABEL G0008))
+;     (!*MOVE (QUOTE FTYPE) (REG 2))
+;          (MOVE (REG 2) (QUOTE FTYPE))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK GET EXPR 2)
+;          (HRRZI (REG LINKREG) 258)
+;          (HRRZI (REG NARGREG) 2)
+;          (PUSHJ (REG ST) (ENTRY GET))
+;     (!*MOVE (REG 1) (REG 2))
+;          (MOVE (REG 2) (REG 1))
+;     (!*MOVE (REG 2) (FRAME 2))
+;          (MOVEM (REG 2) (INDEXED (REG ST) -1))
+;     (!*JUMPNOTEQ (LABEL G0014) (REG 2) (QUOTE NIL))
+;          (CAME (REG 2) (REG NIL))
+;          (JRST (LABEL G0014))
+;     (!*MOVE (QUOTE EXPR) (FRAME 2))
+;          (MOVE (REG T1) (QUOTE EXPR))
+;          (MOVEM (REG T1) (INDEXED (REG ST) -1))
+;     (!*LBL (LABEL G0014))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK FCODEP EXPR 1)
+;          (HRRZI (REG LINKREG) 237)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY FCODEP))
+;     (!*JUMPEQ (LABEL G0018) (REG 1) (QUOTE NIL))
+;          (CAMN (REG 1) (REG NIL))
+;          (JRST (LABEL G0018))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK GETFCODEPOINTER EXPR 1)
+;          (HRRZI (REG LINKREG) 239)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY GETFCODEPOINTER))
+;     (!*MOVE (FRAME 2) (REG 2))
+;          (MOVE (REG 2) (INDEXED (REG ST) -1))
+;     (!*LINKE 2 XCONS EXPR 2)
+;          (ADJSP (REG ST) (MINUS 2))
+;          (HRRZI (REG LINKREG) 180)
+;          (HRRZI (REG NARGREG) 2)
+;          (JRST (ENTRY XCONS))
+;     (!*LBL (LABEL G0018))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK FLAMBDALINKP EXPR 1)
+;          (HRRZI (REG LINKREG) 234)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY FLAMBDALINKP))
+;     (!*JUMPEQ (LABEL G0024) (REG 1) (QUOTE NIL))
+;          (CAMN (REG 1) (REG NIL))
+;          (JRST (LABEL G0024))
+;     (!*MOVE (QUOTE !*LAMBDALINK) (REG 2))
+;          (MOVE (REG 2) (QUOTE !*LAMBDALINK))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK GET EXPR 2)
+;          (HRRZI (REG LINKREG) 258)
+;          (HRRZI (REG NARGREG) 2)
+;          (PUSHJ (REG ST) (ENTRY GET))
+;     (!*MOVE (FRAME 2) (REG 2))
+;          (MOVE (REG 2) (INDEXED (REG ST) -1))
+;     (!*LINKE 2 XCONS EXPR 2)
+;          (ADJSP (REG ST) (MINUS 2))
+;          (HRRZI (REG LINKREG) 180)
+;          (HRRZI (REG NARGREG) 2)
+;          (JRST (ENTRY XCONS))
+;     (!*LBL (LABEL G0024))
+;     (!*MOVE (QUOTE "*** GETD should find a LAMBDA or CODE") (REG 1))
+;          (MOVE (REG 1) (QUOTE "*** GETD should find a LAMBDA or CODE"))
+;     (!*LINK PRIN2 EXPR 1)
+;          (HRRZI (REG LINKREG) 138)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PRIN2))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK PRINT EXPR 1)
+;          (HRRZI (REG LINKREG) 140)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PRINT))
+;     (!*MOVE (QUOTE NIL) (REG 1))
+;          (MOVE (REG 1) (REG NIL))
+;     (!*LBL (LABEL G0001))
+;     (!*EXIT 2)
+;          (ADJSP (REG ST) (MINUS 2))
+;          (POPJ (REG ST) 0)
+;          (FULLWORD (FIELDPOINTER (REG 1) 0 5))
+L1041:	36
+	byte(7)42,42,42,32,71,69,84,68,32,115,104,111,117,108,100,32,102,105,110,100,32,97,32,76,65,77,66,68,65,32,111,114,32,67,79,68,69,0
+L1042:	27
+	byte(7)42,42,42,32,67,97,110,32,111,110,108,121,32,71,69,84,68,32,111,102,102,32,73,68,39,115,58,32,0
+	1
+; (!*ENTRY GETD EXPR 1)
+GETD:	intern GETD
+ PUSH 15,0
+ PUSH 15,1
+ LDB 11,L1035
+ CAIN 11,30
+ JRST L1043
+ MOVE 1,L1036
+ HRRZI 12,138
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+138
+ MOVE 1,0(15)
+ HRRZI 12,140
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+140
+ MOVE 1,0
+ JRST L1044
+L1043: HRRZI 12,231
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+231
+ CAMN 1,0
+ JRST L1045
+ MOVE 1,0
+ JRST L1044
+L1045: MOVE 2,L1037
+ MOVE 1,0(15)
+ HRRZI 12,258
+ HRRZI 13,2
+ PUSHJ 15,SYMFNC+258
+ MOVE 2,1
+ MOVEM 2,-1(15)
+ CAME 2,0
+ JRST L1046
+ MOVE 6,L1038
+ MOVEM 6,-1(15)
+L1046: MOVE 1,0(15)
+ HRRZI 12,237
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+237
+ CAMN 1,0
+ JRST L1047
+ MOVE 1,0(15)
+ HRRZI 12,239
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+239
+ MOVE 2,-1(15)
+ ADJSP 15,-2
+ HRRZI 12,180
+ HRRZI 13,2
+ JRST SYMFNC+180
+L1047: MOVE 1,0(15)
+ HRRZI 12,234
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+234
+ CAMN 1,0
+ JRST L1048
+ MOVE 2,L1039
+ MOVE 1,0(15)
+ HRRZI 12,258
+ HRRZI 13,2
+ PUSHJ 15,SYMFNC+258
+ MOVE 2,-1(15)
+ ADJSP 15,-2
+ HRRZI 12,180
+ HRRZI 13,2
+ JRST SYMFNC+180
+L1048: MOVE 1,L1040
+ HRRZI 12,138
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+138
+ MOVE 1,0(15)
+ HRRZI 12,140
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+140
+ MOVE 1,0
+L1044: ADJSP 15,-2
+ POPJ 15,0
+L1035:	point 5,1,4
+L1040:	<4_31>+L1041
+L1039:	<30_31>+260
+L1038:	<30_31>+293
+L1037:	<30_31>+311
+L1036:	<4_31>+L1042
+;     (!*ENTRY PUTD EXPR 3)
+;     (!*ALLOC 3)
+;          (ADJSP (REG ST) 3)
+;     (!*MOVE (REG 1) (FRAME 1))
+;          (MOVEM (REG 1) (INDEXED (REG ST) 0))
+;     (!*MOVE (REG 2) (FRAME 2))
+;          (MOVEM (REG 2) (INDEXED (REG ST) -1))
+;     (!*MOVE (REG 3) (FRAME 3))
+;          (MOVEM (REG 3) (INDEXED (REG ST) -2))
+;     (!*JUMPTYPE (LABEL G0004) (REG 1) ID)
+;          (LDB (REG T6) (LIT (FULLWORD (FIELDPOINTER (REG 1) 0 5))))
+;          (CAIN (REG T6) 30)
+;          (JRST (LABEL G0004))
+;     (!*MOVE (QUOTE "*** Can only define ID's as functions: ") (REG 1))
+;          (MOVE (REG 1) (QUOTE "*** Can only define ID's as functions: "))
+;     (!*LINK PRIN2 EXPR 1)
+;          (HRRZI (REG LINKREG) 138)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PRIN2))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK PRINT EXPR 1)
+;          (HRRZI (REG LINKREG) 140)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PRINT))
+;     (!*MOVE (QUOTE NIL) (REG 1))
+;          (MOVE (REG 1) (REG NIL))
+;     (!*JUMP (LABEL G0001))
+;          (JRST (LABEL G0001))
+;     (!*LBL (LABEL G0004))
+;     (!*LINK FCODEP EXPR 1)
+;          (HRRZI (REG LINKREG) 237)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY FCODEP))
+;     (!*JUMPEQ (LABEL G0009) (REG 1) (QUOTE NIL))
+;          (CAMN (REG 1) (REG NIL))
+;          (JRST (LABEL G0009))
+;     (!*MOVE (QUOTE "*** Redefining a COMPILED function: ") (REG 1))
+;          (MOVE (REG 1) (QUOTE "*** Redefining a COMPILED function: "))
+;     (!*LINK PRIN2 EXPR 1)
+;          (HRRZI (REG LINKREG) 138)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PRIN2))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK PRINT EXPR 1)
+;          (HRRZI (REG LINKREG) 140)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PRINT))
+;     (!*JUMP (LABEL G0008))
+;          (JRST (LABEL G0008))
+;     (!*LBL (LABEL G0009))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK FUNBOUNDP EXPR 1)
+;          (HRRZI (REG LINKREG) 231)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY FUNBOUNDP))
+;     (!*JUMPNOTEQ (LABEL G0008) (REG 1) (QUOTE NIL))
+;          (CAME (REG 1) (REG NIL))
+;          (JRST (LABEL G0008))
+;     (!*MOVE (QUOTE " Redefining function ") (REG 1))
+;          (MOVE (REG 1) (QUOTE " Redefining function "))
+;     (!*LINK PRIN2 EXPR 1)
+;          (HRRZI (REG LINKREG) 138)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PRIN2))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK PRINT EXPR 1)
+;          (HRRZI (REG LINKREG) 140)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PRINT))
+;     (!*LBL (LABEL G0008))
+;     (!*MOVE (QUOTE !*LAMBDALINK) (REG 2))
+;          (MOVE (REG 2) (QUOTE !*LAMBDALINK))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK REMPROP EXPR 2)
+;          (HRRZI (REG LINKREG) 334)
+;          (HRRZI (REG NARGREG) 2)
+;          (PUSHJ (REG ST) (ENTRY REMPROP))
+;     (!*MOVE (QUOTE FTYPE) (REG 2))
+;          (MOVE (REG 2) (QUOTE FTYPE))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK REMPROP EXPR 2)
+;          (HRRZI (REG LINKREG) 334)
+;          (HRRZI (REG NARGREG) 2)
+;          (PUSHJ (REG ST) (ENTRY REMPROP))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK MAKEFUNBOUND EXPR 1)
+;          (HRRZI (REG LINKREG) 217)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY MAKEFUNBOUND))
+;     (!*MOVE (FRAME 3) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) -2))
+;     (!*LINK LAMBDAP EXPR 1)
+;          (HRRZI (REG LINKREG) 312)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY LAMBDAP))
+;     (!*JUMPEQ (LABEL G0017) (REG 1) (QUOTE NIL))
+;          (CAMN (REG 1) (REG NIL))
+;          (JRST (LABEL G0017))
+;     (!*MOVE (FRAME 3) (REG 3))
+;          (MOVE (REG 3) (INDEXED (REG ST) -2))
+;     (!*MOVE (QUOTE !*LAMBDALINK) (REG 2))
+;          (MOVE (REG 2) (QUOTE !*LAMBDALINK))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK PUT EXPR 3)
+;          (HRRZI (REG LINKREG) 308)
+;          (HRRZI (REG NARGREG) 3)
+;          (PUSHJ (REG ST) (ENTRY PUT))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK MAKEFLAMBDALINK EXPR 1)
+;          (HRRZI (REG LINKREG) 236)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY MAKEFLAMBDALINK))
+;     (!*JUMP (LABEL G0016))
+;          (JRST (LABEL G0016))
+;     (!*LBL (LABEL G0017))
+;     (!*JUMPNOTTYPE (LABEL G0019) (FRAME 3) CODE)
+;          (LDB (REG T6) (LIT (FULLWORD (FIELDPOINTER (INDEXED (REG ST) -2) 0 5))))
+;          (CAIE (REG T6) 15)
+;          (JRST (LABEL G0019))
+;     (!*MOVE (FRAME 3) (REG 2))
+;          (MOVE (REG 2) (INDEXED (REG ST) -2))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK MAKEFCODE EXPR 2)
+;          (HRRZI (REG LINKREG) 238)
+;          (HRRZI (REG NARGREG) 2)
+;          (PUSHJ (REG ST) (ENTRY MAKEFCODE))
+;     (!*JUMP (LABEL G0016))
+;          (JRST (LABEL G0016))
+;     (!*LBL (LABEL G0019))
+;     (!*MOVE (QUOTE "*** Body must be a LAMBDA or CODE") (REG 1))
+;          (MOVE (REG 1) (QUOTE "*** Body must be a LAMBDA or CODE"))
+;     (!*LINK PRIN2 EXPR 1)
+;          (HRRZI (REG LINKREG) 138)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PRIN2))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK PRIN1 EXPR 1)
+;          (HRRZI (REG LINKREG) 134)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PRIN1))
+;     (!*MOVE (QUOTE " ") (REG 1))
+;          (MOVE (REG 1) (QUOTE " "))
+;     (!*LINK PRIN2 EXPR 1)
+;          (HRRZI (REG LINKREG) 138)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PRIN2))
+;     (!*MOVE (FRAME 3) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) -2))
+;     (!*LINK PRINT EXPR 1)
+;          (HRRZI (REG LINKREG) 140)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PRINT))
+;     (!*MOVE (QUOTE NIL) (REG 1))
+;          (MOVE (REG 1) (REG NIL))
+;     (!*JUMP (LABEL G0001))
+;          (JRST (LABEL G0001))
+;     (!*LBL (LABEL G0016))
+;     (!*JUMPEQ (LABEL G0022) (FRAME 2) (QUOTE EXPR))
+;          (MOVE (REG T1) (INDEXED (REG ST) -1))
+;          (CAMN (REG T1) (QUOTE EXPR))
+;          (JRST (LABEL G0022))
+;     (!*MOVE (FRAME 2) (REG 3))
+;          (MOVE (REG 3) (INDEXED (REG ST) -1))
+;     (!*MOVE (QUOTE FTYPE) (REG 2))
+;          (MOVE (REG 2) (QUOTE FTYPE))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LINK PUT EXPR 3)
+;          (HRRZI (REG LINKREG) 308)
+;          (HRRZI (REG NARGREG) 3)
+;          (PUSHJ (REG ST) (ENTRY PUT))
+;     (!*LBL (LABEL G0022))
+;     (!*MOVE (FRAME 1) (REG 1))
+;          (MOVE (REG 1) (INDEXED (REG ST) 0))
+;     (!*LBL (LABEL G0001))
+;     (!*EXIT 3)
+;          (ADJSP (REG ST) (MINUS 3))
+;          (POPJ (REG ST) 0)
+;          (FULLWORD (FIELDPOINTER (REG 1) 0 5))
+;          (FULLWORD (FIELDPOINTER (INDEXED (REG ST) -2) 0 5))
+L1059:	0
+	byte(7)32,0
+L1060:	32
+	byte(7)42,42,42,32,66,111,100,121,32,109,117,115,116,32,98,101,32,97,32,76,65,77,66,68,65,32,111,114,32,67,79,68,69,0
+L1061:	20
+	byte(7)32,82,101,100,101,102,105,110,105,110,103,32,102,117,110,99,116,105,111,110,32,0
+L1062:	35
+	byte(7)42,42,42,32,82,101,100,101,102,105,110,105,110,103,32,97,32,67,79,77,80,73,76,69,68,32,102,117,110,99,116,105,111,110,58,32,0
+L1063:	38
+	byte(7)42,42,42,32,67,97,110,32,111,110,108,121,32,100,101,102,105,110,101,32,73,68,39,115,32,97,115,32,102,117,110,99,116,105,111,110,115,58,32,0
+	3
+; (!*ENTRY PUTD EXPR 3)
+PUTD:	intern PUTD
+ ADJSP 15,3
+ MOVEM 1,0(15)
+ MOVEM 2,-1(15)
+ MOVEM 3,-2(15)
+ LDB 11,L1049
+ CAIN 11,30
+ JRST L1064
+ MOVE 1,L1050
+ HRRZI 12,138
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+138
+ MOVE 1,0(15)
+ HRRZI 12,140
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+140
+ MOVE 1,0
+ JRST L1065
+L1064: HRRZI 12,237
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+237
+ CAMN 1,0
+ JRST L1066
+ MOVE 1,L1051
+ HRRZI 12,138
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+138
+ MOVE 1,0(15)
+ HRRZI 12,140
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+140
+ JRST L1067
+L1066: MOVE 1,0(15)
+ HRRZI 12,231
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+231
+ CAME 1,0
+ JRST L1067
+ MOVE 1,L1052
+ HRRZI 12,138
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+138
+ MOVE 1,0(15)
+ HRRZI 12,140
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+140
+L1067: MOVE 2,L1053
+ MOVE 1,0(15)
+ HRRZI 12,334
+ HRRZI 13,2
+ PUSHJ 15,SYMFNC+334
+ MOVE 2,L1054
+ MOVE 1,0(15)
+ HRRZI 12,334
+ HRRZI 13,2
+ PUSHJ 15,SYMFNC+334
+ MOVE 1,0(15)
+ HRRZI 12,217
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+217
+ MOVE 1,-2(15)
+ HRRZI 12,312
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+312
+ CAMN 1,0
+ JRST L1068
+ MOVE 3,-2(15)
+ MOVE 2,L1053
+ MOVE 1,0(15)
+ HRRZI 12,308
+ HRRZI 13,3
+ PUSHJ 15,SYMFNC+308
+ MOVE 1,0(15)
+ HRRZI 12,236
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+236
+ JRST L1069
+L1068: LDB 11,L1055
+ CAIE 11,15
+ JRST L1070
+ MOVE 2,-2(15)
+ MOVE 1,0(15)
+ HRRZI 12,238
+ HRRZI 13,2
+ PUSHJ 15,SYMFNC+238
+ JRST L1069
+L1070: MOVE 1,L1056
+ HRRZI 12,138
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+138
+ MOVE 1,0(15)
+ HRRZI 12,134
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+134
+ MOVE 1,L1057
+ HRRZI 12,138
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+138
+ MOVE 1,-2(15)
+ HRRZI 12,140
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+140
+ MOVE 1,0
+ JRST L1065
+L1069: MOVE 6,-1(15)
+ CAMN 6,L1058
+ JRST L1071
+ MOVE 3,-1(15)
+ MOVE 2,L1054
+ MOVE 1,0(15)
+ HRRZI 12,308
+ HRRZI 13,3
+ PUSHJ 15,SYMFNC+308
+L1071: MOVE 1,0(15)
+L1065: ADJSP 15,-3
+ POPJ 15,0
+L1049:	point 5,1,4
+L1055:	point 5,-2(15),4
+L1058:	<30_31>+293
+L1057:	<4_31>+L1059
+L1056:	<4_31>+L1060
+L1054:	<30_31>+311
+L1053:	<30_31>+260
+L1052:	<4_31>+L1061
+L1051:	<4_31>+L1062
+L1050:	<4_31>+L1063
+;     (!*ENTRY RESET EXPR 0)
+;     (!*ALLOC 0)
+;     (!*MOVE (QUOTE "Should RESET here, but will QUIT") (REG 1))
+;          (MOVE (REG 1) (QUOTE "Should RESET here, but will QUIT"))
+;     (!*LINK PRIN2T EXPR 1)
+;          (HRRZI (REG LINKREG) 141)
+;          (HRRZI (REG NARGREG) 1)
+;          (PUSHJ (REG ST) (ENTRY PRIN2T))
+;     (!*LINK QUIT EXPR 0)
+;          (HRRZI (REG LINKREG) 148)
+;          (SETZM (REG NARGREG))
+;          (PUSHJ (REG ST) (ENTRY QUIT))
+;     (!*MOVE (QUOTE NIL) (REG 1))
+;          (MOVE (REG 1) (REG NIL))
+;     (!*EXIT 0)
+;          (POPJ (REG ST) 0)
+L1073:	31
+	byte(7)83,104,111,117,108,100,32,82,69,83,69,84,32,104,101,114,101,44,32,98,117,116,32,119,105,108,108,32,81,85,73,84,0
+	0
+; (!*ENTRY RESET EXPR 0)
+RESET:	intern RESET
+ MOVE 1,L1072
+ HRRZI 12,141
+ HRRZI 13,1
+ PUSHJ 15,SYMFNC+141
+ HRRZI 12,148
+ SETZM 13
+ PUSHJ 15,SYMFNC+148
+ MOVE 1,0
+ POPJ 15,0
+L1072:	<4_31>+L1073
+	end

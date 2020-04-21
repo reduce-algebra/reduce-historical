@@ -1,0 +1,33 @@
+PSL Spectral Tests,  DEC-20 test system,  No-Date-Yet, test8
+---------------------------------------------------------------
+*** Garbage collection starting NIL  3191 193 69
+*** GC %w: time %d ms 2 489 18 6
+*** %d recovered, %d stable, %d active, %d free 204 157 9413 1
+EmptyTest 10000		18
+SlowEmptyTest 10000	187
+Cdr1Test 100		527
+Cdr2Test 100		372
+CddrTest 100		274
+ListOnlyCdrTest1	1769
+ListOnlyCddrTest1	3194
+ListOnlyCdrTest2	2790
+ListOnlyCddrTest2	4083
+ReverseTest 10		458
+*** Garbage collection starting NIL  3191 193 77
+*** GC %w: time %d ms 3 1071 5669 5656
+*** %d recovered, %d stable, %d active, %d free 37096 9533 37 1
+MyReverse1Test 10	458
+*** Garbage collection starting NIL  3191 193 77
+*** GC %w: time %d ms 4 1064 5237 5224
+*** %d recovered, %d stable, %d active, %d free 36664 9533 37 1
+MyReverse2Test 10	441
+*** Garbage collection starting NIL  3191 193 76
+*** GC %w: time %d ms 5 1063 5237 5224
+*** %d recovered, %d stable, %d active, %d free 36664 9533 37 1
+LengthTest 100		560
+ArithmeticTest 10000	643
+EvalTest 10000		2434
+tak 18 12 6		476
+gtak 18 12 6		1378
+gtsta g0		1132
+gtsta g1		1195

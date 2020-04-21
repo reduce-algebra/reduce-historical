@@ -1,0 +1,707 @@
+Utah Symbolic Computation Group                                        May 1981
+Operating Note No. 56
+
+
+
+
+
+
+
+
+
+                      Portable Standard LISP Project List
+
+                                      by
+
+                                  M. L. Griss
+
+                              University of Utah
+                           Salt Lake City, UT 84112
+
+
+                        Last Revision: 2 November 1981
+
+
+
+
+
+
+
+
+
+                                   ABSTRACT
+
+This  note  lists  "projects"  that  need to be done to complete or enhance the
+developing  Portable  Standard  LISP  System.  This   includes   additions   or
+modifications  to  the basic sources, applications of the system and tools, and
+primitive facility development on newer target machines.
+
+
+
+
+
+
+
+
+
+
+
+Work supported in part by the  National  Science  Foundation  under  Grant  No.
+MCS80-07034.
+PSL Projects                                                                  2
+
+
+1. Introduction
+     This  note  is  a  guide  to  the  current set of Projects that need to be
+completed to enhance the developing versions of Portable Standard  LISP  (PSL);
+the   current   versions  are  referred  to  as  F-STDLSP  and  20-STDLSP.  For
+convenience, F-STDLSP is referred to as FSL and 20-STDLSP  is  referred  to  as
+20SL, and these are names used in files.
+
+     The  projects  divide  into  3  major  areas:  Basic  PSL  development and
+portability; PSL Applications and Tools; Support of PSL  development  on  newer
+machines.
+
+2. Miscellaneous Small Enhancements and "Bugs"
+
+   a. We  need  a way of accessing LISP function with same name as SYSLISP
+      name  [eg  PLUS2]  from  SYSLISP,  or  causing  better  SYSLISP/LISP
+      renaming  (cf  SYSNAME);  should use MODE-REDUCE (similar to LISPVAR
+      usage in SYSLISP) [Morrison?];
+
+   b. Document  ERRORFORM!*  and  BREAKRETRY,   make   more   ERRORs   use
+      ERRORFORM!*; make ERRORFORM!* a fluid in appropriate places;
+
+   c. Have  allocator  functions  call  ERROR mechanism when no heap or GC
+      left, so that maybe  unwind  can  release  space;  also  maybe  have
+      %RECLAIM have user hook per type so that user can monitor individual
+      type usage.  How do we handle problem that ERROR uses some heap?;
+
+   d. Tighten  BUILDING  sequence,  isolate a SYSLISP that can be run as a
+      stand-alone language, with a minimum number  of  support  functions;
+      document CLEARLY, with a more formal specification of SYSLISP;
+
+   e. Isolate  machine  dependant  code in earliest files, reorder rest of
+      functions with an eye to having just allocator, I/O and Fast-load in
+      base files, rest of LISP loaded onto this  kernel  by  FASL  [mostly
+      done, needs a FAP before further effort];
+
+   f. Add  BIGNUM  hooks, and rework BIGNUMs to use more effective storage
+      model;  [Standard  LISP  source   exists   and   has   been   tested
+      interpretively and compiled in the current STDLISP environment; low-
+      level hooks not yet in; probably should use WORD vectors in place of
+      lists];  add  some  of the BIGBIT operations that were used in Minor
+      work;
+
+   g. Permit Compiled and Interp NEXPRs. Consider LEXPRs. Perhaps a  macro
+      package  for  N-ary  functions.  Perhaps  examine an argument number
+      checking technique suggested by C. Griss: each call or definition of
+      a function with N-args, leans to use of  a  generated  name,  Foo-N;
+      this  is  really  of  the same level as treatment of FEXPR and MACRO
+      types in Standard Lisp: intead of FEXPRs, MACROs, and EXPRs, we have
+      FEXPRs, MACROs, EXPR0s, EXPR1s, EXPR2s...EXPRns;
+
+   h. Try to SYSLISP with primitives so that EVAL-APPLY-LAP  support  code
+      can  be  written  in  SYSLISP.  Probably  need  LEXPR or stack local
+PSL Projects                                                                  3
+
+
+      arrays.  May involve "hard" compiler additons;
+
+   i. Optimize  ARITHMETIC  package, use SMACROs in place of PROCEDUREs to
+      get better speed on small INTs.  Examine re-assigment of TAG bits to
+      optimize arithmetic dispatch;
+
+   j. Use macros to make certain calls of ARITH in system  functions  more
+      efficient; interface to Type'ing of MODE-RLISP.
+
+3. I/O
+
+   a. Arbitray long input strings;
+
+   b. Bignum Parse/Print;
+
+   c. BINARY I/O for .FAP/.REL;
+
+   d. Packages  (multi-symbol  tables)  interfaced as tree structured HASH
+      tables for Intern, invoked by Hook in I/O;
+
+   e. Implement Multi-Window Package (FRAMER), hooks to I/O;
+
+   f. Provide primitives for READ-TABLE switching;
+
+   g. Implement super PARENs  (see  NUREAD.RED  by  MLG,  not  in  current
+      system);
+
+
+
+3.1. Interrupts
+     Design  better  Interrupt  Mechanism,  decide how much control user should
+have; perhaps only available to terminate various kinds of run-ways.  Implement
+a semi-portable interrupt  machanism.    We  should  probably  look  at  what's
+available  on  the  most  likely  targets  (Tops-20,  Unix,  VMS?, perhaps bare
+hardware on some micros), and try  to  extract  some  common  denominator  (not
+necessarily  the LCD though -- if an OS doesn't offer anything reasonable, then
+just bag interrupts for that implementation and be done with it).
+
+     The current implementation does not allow arbitrary lisp code  to  be  run
+from  an  interrupt, and then resumption, as a GC will lose anything pointed at
+only from registers.  There are two ways to rectify this "defect":
+
+   a. Go to a stack model for compiled code.  I believe this  would  be  a
+      mistake.    One  of  the  major  virtues of the current model is the
+      excellent speed of compiled code.  This is in large part due to  the
+      register  model used.  For my applications, at least, I would prefer
+      the  availability  of  raw  speed,  when  desired,  over   arbitrary
+      interrupts.    As  noted  below,  I believe we still have sufficient
+      power in the interrupts available in the current model.
+
+   b. Partition the registers into  tagged  and  untagged  registers,  and
+      modify  the compiler so that any tagged object WHICH LIVES ONLY IN A
+PSL Projects                                                                  4
+
+
+      REGISTER  is in a tagged register.  Note that the compiler may leave
+      tagged objects in an untagged register, which is OK so  long  as  it
+      knows  that another pointer to the same object lives on the stack or
+      in a value cell; however, the relocating GC can have  problems,  and
+      we  need  to go to a 2 stack model.  A problem this may introduce in
+      the SysLisp  version  is  parameter  passing  --  we  may  need  two
+      different  function linkage mechanisms -- one for tagged and one for
+      untagged objects.   It  may  be  possible  to  have  the  number  of
+      registers  of each type vary dynamically.  Because of the tremendous
+      increase in complexity introduced  by  register  partitioning,  this
+      would be difficult, but probably should be faced.
+
+     I think we can live with a restricted interrupt mechanism.  A fixed set of
+conditions  would  exist,  together with a collection of possible actions.  The
+user would be able to assign one of these (limited) actions to a condition.
+
+     The set of conditions would of necessity be  somewhat  machine  dependent.
+Hopefully  a  somewhat  machine-independent subset could be made common to most
+inplementations.  This subset might include a number of terminal keys,  various
+"standard" error conditions such as I/O errors, and an alarm clock.
+
+     The set of actions would include:
+
+   a. Various carefully coded SysLisp routines intended for specific sorts
+      of  conditions,  such  as  an  arithmetic  overflow causing a bignum
+      package to be entered.  These would be  carefully  coded  so  as  to
+      allow resumption of the computation.  This could also include things
+      such as a Tops-20 style ^T, or a quit back to the Exec.
+
+   b. Execute  a  given, arbitrary piece of Lisp code, and then throw to a
+      given tag.  This could  be  used  to  generate  an  Error,  enter  a
+      breakloop  to  examine  an  infinite  loop  (and then return to top-
+      level), abort a computation and return to top-level (the code run on
+      top of the stack could set a hook to be run upon return to top-level
+      or whatever, as well), etc.  This depends on the  implementation  of
+      Catch  and  Throw  causing  everything  needed  for  the surrounding
+      context to be saved on the stack, and will require Throw to do  some
+      of  its  work  with  interrupts disabled, before returning to CATCH.
+      Need to consider ARMING/DISARMING.
+
+   c. Set a flag for the interpreter, and  then  resume  the  computation.
+      Then,  when  the  interpreter is next entered, an arbitrary piece of
+      Lisp code  is  run,  and  the  interpreter  can  resume  after  this
+      "delayed"  interrupt  is handled.  Should be able to do this kind of
+      delayed interrupt in general.
+
+     Note that the interrupt status must be altered upon entering the GC.    We
+cannot run Lisp code during a GC, so actions of the second sort, above, must be
+deferred  until  after the GC.  A number of those in class (1), above, may also
+need to be deferred.  Note that it is the actions which must  change  during  a
+GC, not the conditions.
+PSL Projects                                                                  5
+
+
+     A  possible  collection  of  Lisp functions as user entry points to such a
+mechanism are:
+
+(InitializeInterrupts)
+                I'm not sure if this is needed at the  user  level,  or  if  it
+                should   just  always  happen  as  part  of  the  Lisp  startup
+                procedure.
+
+(EnableInterrupts)
+
+(DisableInterrupts)
+
+(SetInterrupt <condition> <action>)
+                where <condition> is some appropriate keyword (an ID)  such  as
+                'ControlT,   or  'StackOverflow,  and  <action>  is  either  an
+                appropriate keyword such as  'QuitToExec,  'QuitToTopLevel,  or
+                'PrintStatistics,  or  is  a list such as '(InterpreterInterupt
+                (print "This is an interpreter interupt")) or  '(ThrownInterupt
+                (print  "Now  we'll throw to ErrorSet") '!$Error!$).  Note that
+                the function  SetInterrupt  is  responsible  for  checking  its
+                arguments.
+
+(RemoveInterrupt <condition>)
+
+4. Storage Management
+
+   a. Explore  a variety of alternative Storage Management schemes: BIBOP,
+      COPYING;
+
+   b. Consider improved garbage collector/allocator, using AREAS, BIBOP or
+      some such; at least get SYSLISP items on non-traced stack (or  stack
+      region);  maybe  have SYSLISP stack group; use bit-table rather than
+      RELOC fields, to permit extended addressing code to be run, use more
+      of word.  Look at ELISP copying GC.
+
+   c. Consider collecting or relocating compiled code blocks,  IDs  and/or
+      GENSYMs;
+
+5. New Machine Implementations
+
+   a. Bring   up  an  extended  addressing  DEC-20  Standard  LISP,  using
+      essentially the same  c-macros,  and  some  additional  kernel  code
+      (developed  at  Rutgers for an extended addressing R/UCI LISP on the
+      DEC-20 by C. Hedrick).
+
+   b. Small  Pointer  DEC-20  with  BIBOP  and/or  Bit-table  for  18  bit
+      pointers;
+
+   c. Implement  SYSLISP and PSL on PDP-11/45, as support for some of CAGD
+      tools - probably obselete ?;
+
+   d. Implement SYSLISP and PSL on VAX-750;
+PSL Projects                                                                  6
+
+
+   e. Implement SYSLISP and PSL on M68000 [Apollo and Wicat];
+
+   f. Implement SYSLISP and PSL for Z80;
+
+   g. Re-implement  FORTRAN  version  to check validity; move to CRAY; try
+      more "genuine" FORTRAN version; consider FORTRAN bootstrap; consider
+      PASLSP or KISLSP as bootstrap aid;
+
+6. PASCAL like languages
+     ADA, C and PASCAL versions, continuing from  TERAK  experiments;  do  some
+LILITH experiments [MODULA]. Major effort is current PASLSP on PERQ, Apollo and
+Wicat. Later move PASLSP more into a SYSLISP to PASCAL.
+
+   a. Continue  parameterizing (using # filter) 20, Terak, PERQ and Apollo
+      features; tighten source code, improve I/O;  look  at  other  PASCAL
+      LISPs;
+
+   b. Modularize  so  can be come "Library" for embedded systems (INS file
+      on Apollo, or MODULE for PERQ);
+
+   c. Extend GC for FIXNUM's, Strings and maybe vectors;
+
+7. Support work on Apollo
+
+
+
+7.1. Initial Experiments
+
+   a. Test LTNET.
+
+   b. Finish implementation of FTP (stream-IO back to 20,  ratfor  I/O  on
+      20);
+
+   c. Should WICAT ftp to/from DOMAIN-net for shared printer?
+
+   d. Establish back-up command files, and save system on floppies.
+
+   e. Print and duplicate interesting HELP, DOC and INS files.
+
+   f. Test some simple assembly code;
+
+   g. Try BCPL and C cross assemblers;
+
+
+
+7.2. Graphics
+     Idea is to explore Apollo graphics, provide library of Graphics and Window
+routines  for  other  utilities,  eg VT52 emulator, Tek-like graphics terminal,
+etc.
+
+   a. Borrow Summagraphics bit-pad from Brandt, and attach to one of SIO's
+      (via patch panel ?), and add to STROKES for test, or perhaps  attach
+PSL Projects                                                                  7
+
+
+      an SIO process to it, to send commands to DM input window (how?);
+
+   b. Perhaps adapt TERAK FONT and Graphics editors;
+
+   c. Test primitives (why didn't Scroll work);
+
+   d. try Bit-blt
+
+   e. try some of illegal "bits" (ie <-> MM, interlace, etc)
+
+   f. Faster Line drawing
+
+   g. RasterOp
+
+   h. Try Inverse Video Fonts
+
+   i. Reimplement own Window package.
+
+   j. Work  on FONT editor: find font format's in one of INS files; Decode
+      STD and NONIE; Try create a font (see Terak Font Editor);
+
+
+
+7.3. PSL work
+
+   a. Study ASM and architecture, develop notes on OS funnies  (talk  MDL,
+      Harvard, etc);
+
+   b. Modify PSL compiler (look at VAX work and Normans' 68000 stuff)
+
+   c. Try some codings and Boot it.
+
+8. Impact of Other LISPs
+
+   a. Look at IMSSS additions (Utilities);
+
+   b. Study  FRANZ-LISP,  UCI-LISP and MACLISP for new features (also some
+      extensions and enhancements motivated by the work on InterLISP, NIL,
+      SPICE LISP and the LISP Machine);
+
+   c. Look at COMMON-LISP effort at CMU;
+
+   d. Develop macro package to permit FRANZ-LISP,  MACLISP  and  InterLISP
+      code to be directly loaded. VERY important, see InterLISP utility;
+
+   e. Implement/examine  CMU-Top-Level facilities (using MACLISP/FRANZLISP
+      sources);
+
+   f. Study VLISP Portability;
+PSL Projects                                                                  8
+
+
+9. Editor and Editor Interface
+
+   a. Implement  EMID/EMODE  multi-window,  multi-buffer EMACS-like screen
+      editor [1].  This is planned to be the major interface  to  the  PSL
+      system,  and  will have convenient commands (MODES) to edit LISP and
+      RLISP, examine documentation and convert LISP and RLISP to and  from
+      other  convenient  forms.  There  are  "autoparen" modes in which an
+      expression typed into a buffer automatically EVALs as  soon  as  the
+      expression  is  complete.  EMID has also been used to experimentally
+      develop a VLSI SLA  editor  (SLATE) [4]  and  will  be  used  to  do
+      algebraic  expression  "surgery".  The  new  version of EMDOE should
+      concentrate on:
+
+         i. Good window/package interface;
+
+        ii. Interface  to  PSL  (interactive  editing  of  functions   and
+            expressions);
+
+       iii. True "modes".
+
+      Implement EMACS fork call, using fixed page to pass text;
+
+   b. Implement   the  simple  EDIT-like  line-oriented  editor  based  on
+      SOS/EDIT for editing RLISP/REDUCE and some LISP  input;  mostly  for
+      people familiar with these editors.
+
+   c. Add a simple History mechanism [Cf CMU-LISP toplevel ];
+
+   d. Implement  the  InterLISP-like/UCI-Lisp like structure EDITOR (using
+      Nordtsrom source, UCI source, or IMSSS modified source);
+
+10. Compiler and Loader
+
+   a. Need to implement 2 stacks for W-arith, etc.
+
+   b. Implement a FAP (fast loader); Currently, the c-macro loader  (LAP),
+      and  binary  loader  (FAP), are based on a variety of ad-hoc loaders
+      that have been written for the various machines and adapted for  new
+      machines.  Frick [5]  has written a general purpose LAP and FAP in a
+      much more portable fashion (using a set of configuring parameters to
+      describe the kind of target machine), and it  is  planned  to  adopt
+      this as the basic LAP/FAP package when the STDLISP kernel is stable.
+
+   c. Make FAP and dynamic code space allocation part of kernel;
+
+   d. Implement DEC-20 .REL file loader;
+
+   e. Enhance resident compiler to accept SYSLISP;
+PSL Projects                                                                  9
+
+
+11. Language Extensions
+
+   a. Convert  SYSLISP [3] from a BCPL-like language to a C-like language;
+      basic idea is  to  make  use  of  some  type  information  for  more
+      effective   compilation;   Modes,   Mode   analysis   and  structure
+      definitions should be obtained from MODE system, but code-generation
+      for new SPECIFIC functions must be addressed;
+
+   b. Mode Analyzing RLISP/REDUCE [MODE-REDUCE] is an ALGOL-68  or  PASCAL
+      like  interface  to Standard LISP, which provides an additional MODE
+      analysis pass after parsing, to rebind "generic" function  names  to
+      "specific"  functions,  based  on  the declared or analysed MODEs of
+      arguments. The system includes a variety of MODE generators (STRUCT,
+      UNION, etc) [10, 7, 9].  We plan to reimplement this system  to  use
+      SYSLISP/STDLISP  more  effectively.  We  will  also  make  the MODE-
+      ANALYSIS phase part of SYSLISP, so that words, bytes, items etc. can
+      co-exist more naturally.  Note that parsing from RLISP is into MODE-
+      STDLISP or MODE-SYSLISP [which now become same language];
+
+   c. Implement better RLISP parser and top loop "generating" functions;
+
+   d. Rename  JUMPON  to  CASE  or  SWITCH;  extend  to  include   SELECTx
+      constructs;
+
+   e. Iteration  and  progs  should  be  made  more  compatible.  A single
+      iteration  construct,  equivalent  to  LISPM's  DoNamed  should   be
+      implemented,  and all other iteration and Prog contructs made macros
+      which map into it.  I propose that Iterate is a better name than  Do
+      or  DoNamed.    It  may  contain labels and Go's as a prog, and also
+      ReturnFrom's and a Next construct.  A simple  Return  should  simply
+      macro  into  a  ReturnFrom the nearest Iterate, and similarly a next
+      which does not specify an Iterate tag.  Go's should  be  allowed  to
+      jump  out  to  LEXICALLY  surrounding Iterate's, but not across true
+      function calls.  All this will be quite simple to implement so  long
+      as  all the nasty constructs such as WHILE and PROG and the like are
+      macros into a single construct  such  as  Iterate.    Prog's  should
+      possibly also be extended to allow initial values to be specified as
+      for  example (PROG (A B (N 0) (Flg T) X) ...) which would initialize
+      A, B, and X to nil, N to zero, and Flg to true.  This is trivial  to
+      do using Iterate as the target of the Prog macro.  The map functions
+      would  also be macros into an appropriate Iterate function.  The FOR
+      macro (which  has  basically  been  implemented)  would  allow  very
+      general  sorts  of  loops  and  mapping  functions,  and would allow
+      returns and the like to pass through.  Another excellent function to
+      have would be a ReturnTop  or  some  such  which  returns  from  the
+      lexically  outermost Iterate -- thus in general will return from the
+      function begin defined.  Quite useful, I  believe,  though  I  don't
+      think it exists in any other lisps.
+PSL Projects                                                                 10
+
+
+12. Error Handler and Break Package
+
+   a. Modifications  to  Error  handler(s),  and  BREAK/TRACE/BACKTRACE to
+      provide error "severity" level or classification so we can  pick  up
+      ALL  error messages(templates), and BREAK can decide if it can start
+      a new (debugging) STDLSP or MUST strip stack.
+
+   b. Add more tools to BREAKLOOP, ie walk BSTACK to see OLD fluid values;
+      perhaps devise scheme to relate BSTACK sections with  current  Proc;
+      perhaps have PROCNAME pushed on BSTACK [only if has FLUIDS] (see the
+      DDT program by BENSON);
+
+   c. Design   better  Error  Recovery  mechanism,  particular  for  error
+      correction and retry. An interface to  EMODE  would  help,  also  an
+      interface to the "single" stepper (CMU-TOPLEVEL).
+
+   d. Examine  the  notion  of  Stack groups, and introduce an ERROR stack
+      group, since we run SYSLISP code using initial [STKLO,STKHI,ST],  in
+      order  to  define  a new [STKLO',STKHI',ST']; this stack group stuff
+      may help improve error handler.
+
+   e. Improve BREAK package (combine with EMBED, rename current  BREAK  to
+      BREAKLOOP,  let  BREAK  be used to instrument a function: (BREAK FOO
+      condition action);
+
+   f. Add Error Severity classification;
+
+   g. Make some errors continuable: Undefined function, Unbound  variable,
+      etc; Idea is perhaps to have CERROR(n,msg,errorform) for continuable
+      errors, FERROR(n,msg) for FATAL errors that cant use BREAK lOOP, and
+      ERROR(n,msg) for the most common case;
+
+   h. Implement  the  portable  DEBUG  package  of  functions for tracing,
+      breaking  and  embedding  functions [11].  Facilities  include   the
+      (conditional)  tracing  of  function  calls  and  interpreted SETQs;
+      selective backtrace; embedding functions to selectively insert  pre-
+      and  post-  actions, and conditions; primitive statistics gathering;
+      generation of simple stubs (print their name and argument, and  read
+      a  value to return); and, a PRINT for circular and re-entrant lists.
+      This will replace the simple TRACE package in  the  current  kernel,
+      and interact more effectively with the BREAK package.
+
+   i. Timing Hooks;
+
+   j. Expand Macros in PUTDs (under flag control?);
+
+13. Source Code Checking
+
+   a. IMSSS "syntax" checker;
+
+   b. Implement version of CREF for SYSLISP and STDLISP.  CREF processes a
+      number  of  source files, cross-referencing the functions and Global
+PSL Projects                                                                 11
+
+
+      variables  used;  gives  an  indication  of  where  each function is
+      defined or redefined, its type (EXPR, FEXPR, etc), the functions and
+      variables it uses, various undefined functions  and  variables,  and
+      other  statistics  that  can  be  selected  or deselected under flag
+      control [8].
+
+14. Manual and Help Facility
+
+   a. Improve HELP, combine with other HELP mechanism.   It  will  display
+      short text descriptions for major functions on request; by reading a
+      documentation  data  base, and should also display an activity based
+      HELP-TEXT (e.g. in response to ? at appropriate points).
+
+   b. The MANUAL is now fleshed out, but consists of a  motley  collection
+      of  chapters  and  paragraphs.    Both  HELP  and  MANUAL  require a
+      considerable amount of work in the conversion and writing of  pieces
+      of text; we also need to co-ordinate with the SCRIBE sources for the
+      various  documents  already  written.  A  model  for a multi-chapter
+      scribe document has been tested, in which  an  index  and  table  of
+      contents  data-base are being built similarly to the usual AUX file;
+      at any time,  an  uptodate  INDEX  and  TABLE  of  CONTENTS  can  be
+      produced;
+
+   c. A documentation mode of EMODE (ala INFO tree in EMACS).
+
+15. Funarg, Closures and Stack Groups
+     Improve  the  binding scheme.  Use a Baker-like scheme for fluid bindings,
+and have locals in interpreted code.
+
+     To handle locals in interpreted code will  require  having  those  special
+forms  which  know about locals to have special interpreter functions which are
+passed an extra argument -- the lexical environment (probably  as  an  a-list).
+These  will  be  essentially those f-exprs which are open-compiled:  COND, AND,
+OR, SETQ, PROG, various looping constructs (which I think should, together with
+PROG, all be macros to a single DO-like special form), CATCH, THROW (these last
+two are currently exprs, but I think should be made special), GO, RETURN.  Note
+that this would allow a somewhat more general use of things like return,  which
+I believe is all the the better.  This is discussed a little bit more, below.
+
+     The  fluid  scheme  I propose is essentially that of Baker, with rerooting
+after EVERY binding and unbinding operation enforced.  This allows us to  still
+always  look for fluid values in the value cell.  For further efficiency we can
+still do our binding on the binding stack, which is now  viewed  as  a  binding
+tree cache, so long as whenever we capture an environment (as with a Closure or
+Catch) we write it out into the heap.  This will substantially speed up binding
+and unbinding in those cases where there is no intervening environment capture.
+Also, use of STACK as cache to avoid much rebinding in list.
+
+     The  capturing  of  an  environment  for a closure should be done not with
+FUNCTION, which simply quotes its argument in such a manner that it is known to
+be intended for execution, and should be compiled to code, but  rather  with  a
+third form of quote, probably called CLOSURE.  There should also be a mechanism
+PSL Projects                                                                 12
+
+
+for  grabbing  the  current environment, without including a function to be run
+therein, though of course (CLOSURE EVAL)  can  always  be  used  to  give  this
+effect.
+
+     Currently  we  are implementing a variant of Baker's [2] re-rooting scheme
+to work well in the shallow binding  environment;  we  expect  that  non-funarg
+compiled  code  will  run  essentially as fast as in LISP 1.6. Context switches
+will be more expensive.
+
+     We may also implement some form of  Stack  Group,  as  done  by  the  LISP
+machine group [6, 12], to provide faster large context switch.
+
+     Perhaps implement some form of LOCAL in interpreted code;
+
+     Consider ramifications of package system, funargs and stack groups as some
+sort of static/dynamic environment methods;
+
+16. Applications
+
+   a. Implement the REDUCE algebra system;
+
+   b. Get and Implement the VOCAL CAI language;
+
+   c. Bring up MINI and META, improve their use of I/O;
+
+   d. Implement Picture RLISP for TekTronix, HP, APOLLO, etc.
+
+   e. Implement  extended  SLATE  on PSL and maybe combine with other VLSI
+      projects (ABLE->RLISP...).
+
+   f. FORTRAN (RATFOR?) to SYSLISP compilers for tools.
+
+17. References
+
+[1]   Armantrout, R.; Benson, E.; Galway, W.; and Griss, M. L.
+      EMID: A Multi-Window Screen Editor Written in Standard LISP.
+      Utah Symbolic Computation Group Opnote No. 54, University of Utah,
+         Computer Science Department, Jan, 1981.
+
+[2]   Baker, H. G.
+      Shallow Binding in LISP 1.5.
+      CACM 21(7):565, July, 1978.
+
+[3]   Benson, E. and Griss, M. L.
+      SYSLISP: A portable LISP based systems implementation language.
+      Utah Symbolic Computation Group, Report UCP-81, University of Utah,
+         February, 1981.
+
+[4]   Carter, T.; Galway, W.; Goates, G.; Griss, M. L.; and Haslam, R.
+      SLATE: A Lisp Based EMACS Like Text Editor for SLA Design.
+      Utah Symbolic Computation Group  Opnote No. 55, University of Utah,
+         Computer Science Department, Jan, 1981.
+PSL Projects                                                                 13
+
+
+[5]   Frick, I. B.
+      A Portable Lap and Binary Loader.
+      Utah Symbolic Computation Group Operating Note Opnote No. 52, University
+         of Utah, November, 1979.
+
+[6]   Greenblatt, R.
+      The LISP Machine.
+      Technical Report ?, MIT, August, 1975.
+
+[7]   Griss, M. L.
+      The Definition and Use of Data-Structures in Reduce.
+      In Proceedings of SYMSAC 76, pages 53-59.  SYMSAC, August, 1976.
+
+[8]   Griss, M. L.
+      RCREF:  An Efficient REDUCE and LISP Cross-Reference Program.
+      Utah Symbolic Computation Group, Operating Note Opnote No. 30,
+         Univerisity of Utah, ??, 1977.
+
+[9]   Griss, Martin L.; Hearn, A. C; and Maguire, G. Q., Jr.
+      Using The MODE Analyzing version of REDUCE.
+      Utah Symbolic Computation Group Opnote No. 48, Dept of CS, U of U, Jun,
+         1980.
+
+[10]  Hearn, A. C.
+      A Mode Analyzing Algebraic Manipulation Program.
+      In Proceedings of ACM 74, pages 722-724.  ACM, New York, New York, 1974.
+
+[11]  Norman, A.C. and Morrison, D. F.
+      The REDUCE Debugging Package.
+      Utah Symbolic Computation Group, Operating Note Opnote No. 49, Dept of
+         CS, U of U, Feb, 1981.
+
+[12]  Weinreb, D. and Moon, D.
+      LISP Machine Manual.
+      Manual  , M. I. T., January, 1979.
+      second preliminary version.
+PSL Projects                                                                  i
+
+
+                               Table of Contents
+1. Introduction                                                               2
+2. Miscellaneous Small Enhancements and "Bugs"                                2
+3. I/O                                                                        3
+     3.1. Interrupts                                                          3
+4. Storage Management                                                         5
+5. New Machine Implementations                                                5
+6. PASCAL like languages                                                      6
+7. Support work on Apollo                                                     6
+     7.1. Initial Experiments                                                 6
+     7.2. Graphics                                                            6
+     7.3. PSL work                                                            7
+8. Impact of Other LISPs                                                      7
+9. Editor and Editor Interface                                                8
+10. Compiler and Loader                                                       8
+11. Language Extensions                                                       9
+12. Error Handler and Break Package                                          10
+13. Source Code Checking                                                     10
+14. Manual and Help Facility                                                 11
+15. Funarg, Closures and Stack Groups                                        11
+16. Applications                                                             12
+17. References                                                               12

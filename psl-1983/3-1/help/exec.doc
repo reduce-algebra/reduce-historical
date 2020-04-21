@@ -1,0 +1,42 @@
+EXEC0.RED: A Simple TOPS20 Interface		26 April 1982
+------------------------------------
+This is a loadable option but currently is non-functional.
+
+Top Level Functions of Interest:
+   RUN FileName;	Run A File in sub-fork
+   EXEC();              Run Exec
+   EMACS();             Run EMACS
+   MM();                Run MM
+   FileP FileName; 	Test If File exists
+   CMDS (!%L);          Submit List of commands (FEXPR)
+   DoCmds (L);          Submit List of commands (EXPR)
+                        Use CRLF or BL in string
+   VDIR (L);            DoCmds LIST("VDIR ",L,CRLF,"POP");
+   HelpDir();           DoCmds  LIST("DIR PH:*.HLP",CRLF,"POP");
+   Take (FileName);     DoCmds LIST("Take ",FileName,CRLF,"POP");
+   SYS (L);             DoCmds LIST("SYS ", L, CRLF, "POP");
+   TALK (L);            DoCmds LIST("TALK ",L,CRLF);
+   TYPE (L);            DoCmds LIST("TYPE ",L,CRLF,"POP");
+
+Fork manipulation:  [return forkhandle, FH, an integer returned by system]
+   OPENFork FileName; 	 	Get a File into a Fork
+   RUNFork FH;	 	        Normal use, to run a Fork
+   KILLFork FH;	 	        Kill a Fork
+    GetFork Jfn; 	 	Create Fork, READ File on Jfn
+    STARTFork FH;	 	Start (Restart) a Fork
+    WAITFork FH;	        Wait for completion
+
+File manipulation functions:    [Mostly return JFN, as small integer]
+   GetOLDJfn FileName; 	        test If file OLD and return Jfn
+   GetNEWJfn FileName; 	 	test If file NEW and return Jfn
+   RELJfn Jfn;	 	        return Jfn to system
+   OPENOLDJfn Jfn;	 	OPEN to READ
+   OPENNEWJfn Jfn;	 	Open to WRITE
+   GTJfn FileName; 	        Get a Jfn
+   NAMEFROMJfn Jfn;	 	name of File on a Jfn
+
+
+Miscellaneous Functions:
+   GetUNAME(); 	 	        Get USER name
+   GetCDIR();	 	        Get Connected DIRECTORY
+

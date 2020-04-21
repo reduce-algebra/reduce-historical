@@ -1,0 +1,6 @@
+Subject: PASLSP TEST
+To: GRISS
+cc: CAI.OTTENHEIMER
+
+(DSKIN "PASLSP.TST") croaks on the 20 also, ends up with inf. recursion.
+

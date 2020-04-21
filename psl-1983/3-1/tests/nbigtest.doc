@@ -1,0 +1,25 @@
+15-Mar-83 08:09:34-MST,000000728;000000000001
+Date: 15 Mar 1983 0809-MST
+From: Martin.Griss <Griss@UTAH-20>
+To: kessLER
+cc: griss
+
+Need to experiment with NBIG0 on Apollo. There may be still a small bug.
+
+Test as follows. Ship that latest NBIG0.RED that I sent you, rebuild it.
+Then ship and built PT:nbtest stuff.
+
+Load NBIG.LAP and NBTEST.B, call NTEST1 40; show1 40.
+
+This should work, and you should see a smooth range of INTEGERS, NEG intergers
+and correspnding floats (good test of WRUTE-FLOAT)
+
+
+Then call SETBITS 32; rerun NTEST1 40; SHOW1 40; I get signs incorrectly
+flipping at FIXNUM/BIGNUM transition points.
+
+I belive its related to a possibel BUG in 32-bit arith. 
+
+Also compare <griss>32-bit.red with what lowder is running.
+M
+-------

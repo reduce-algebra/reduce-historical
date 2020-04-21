@@ -1,0 +1,20 @@
+The Simple JSYS Interface
+-------------------------
+This is a loadble option [Load Jsys; in RLISP, (Load Jsys) in LISP].
+[Explain why it is useful.]
+
+5 Syslisp functions: XJSYSn(R1,R2,R3,R4,Jnum)  -> result of Rn in R1
+
+5 LISP functions: JSYSn(R1,R2,R3,R4,Jnum) ->Rn in R1
+                  Ri given as Lisp Integers or Strings.
+                  Tags removed converted to W-int or StringPointer.
+
+Jsys Names are defined as NEWNAMs, eg jsPBIN, jsPBOUT, etc.
+
+Support Functions:
+  LowHalfWord(X), HighHalfWord(X), Xword(Hi,Lo), 
+  Bits L, where L is list of BitPos or (FieldVal . RightBitPos)
+  
+
+(See Files JSYS0.RED and EXEC0.RED on PU:)
+

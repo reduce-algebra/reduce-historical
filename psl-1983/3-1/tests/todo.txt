@@ -1,0 +1,18 @@
+Improvement to Test Series and Boot Sequence
+
+Start using the LinkReg in Link, LinkE
+   [See PT20:dec20-patches.sl]
+
+Improve portability of FUNCTION-PRIMITIVES.RED
+   [See TEST-FUNCTION-PRIMITIVES, using *JCALL for all.
+    Maybe go to SYMFNC=ADDRESS table ?]
+
+May need to add a new CMACRO or two, or expand CMACRO's, to permit
+indirect JUMP via a register/location, to define CodePrimitive().
+
+Modify TEST5 and TEST6 to use the various portable  APPLY etc.
+
+Add BINARY IO tests to I/O. Perhaps as a file of LAP to read in?
+
+Define a FASLIN/FASLOUT tester.
+

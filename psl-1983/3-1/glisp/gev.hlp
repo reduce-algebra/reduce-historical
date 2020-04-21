@@ -1,0 +1,47 @@
+                 GEV Inspector/Editor for Lisp Data
+
+GEV (for GLISP Edit Value) is a display-based program which displays
+Lisp data in a window according to its GLISP datatype description.
+The user can "zoom in" on data of interest, display computed properties
+of objects by menu selection, send messages to objects, and write
+looping programs interactively using menu selection.  GEV is available
+for Interlisp-D and for Interlisp-10 using a Heath-19 terminal.
+
+A demonstration file for GEV is available.  From Interlisp, enter
+LOAD(<GLISP>GEVLOAD.LSP); then try (GEV C 'CIRCLE) and (GEV HPP 'PROJECT).
+
+The commands which can be entered at the "GEV:" prompt are as follows:
+
+     Q         Quit.
+
+     POP       Pop up to the earlier GEV edit window.
+
+     E         Edit the current item using the Lisp editor.
+
+     PR        Write a looping program using menu selection.
+
+     P         Display a menu of computed PROPerties for selection.
+
+     A         Display a menu of ADJectives for selection.
+
+     I         Display a menu of ISA adjectives for selection.
+
+     M         Display a menu of Messages to the object for selection.
+
+     R         Redraw the current window.
+
+     T n       Print the data type of item n.
+
+     n         Push down to "zoom in" on data item n.
+
+When a menu option is selected, a  separate  menu  is  displayed  and  a
+"Menu:"  prompt  is  given.    Menu  selections are made by entering the
+number of the desired menu item (followed by a carriage  return).    "Q"
+may be entered instead of a number to leave the menu mode without making
+any selection.
+
+The data used for the demonstration is contained in the file GEVDEMO.LSP.
+Documentation on GEV is contained in HPP Memo HPP-82-34, copies of which
+may be obtained in MJH 225.  While designed for use with GLISP, GEV may
+be used for any Lisp data which is described by a GLISP structure
+description.

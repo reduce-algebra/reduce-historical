@@ -1,0 +1,28 @@
+<PSL>PSL.EXE
+------------
+
+This is the "bare" version of <psl>PSL.EXE, and accepts essentially
+Standard LISP syntax and semantics.  
+
+Differences and extensions are documented in the Manual (currently as
+xxxx.LPT on <reduce.syslisp.manual>).  Some help files are xxxx.DOC on
+<PSL.DOC>; smaller help files are on <psl.help>.
+
+[<PSL>LOGICAL-NAMES.CMD defines convenient aliases (such as PSL:, PH: for
+xxx.HLP file, PD: for xxx.DOC files, etc.), and should be taken]
+
+Recall that file I/O needs string-quotes (") around file names; use
+        (DSKIN "file") for input with echo.
+        (LAPIN "file") for input without echo.
+
+(HELP) for general help, indication of what help available.
+(HELP a b c) for information on topics a,b,c. This call prints
+    files from the PH: (<PSL.HELP>) directory:
+
+PH:TOPLOOP.HLP for information on the History mechanism.
+PH:BREAK.HLP for information on the BREAK loop that is called on
+   error.
+PH:TRACE.HLP for information on TRACEing and BREAKing functions.
+PH:EDITOR.HLP for a simple structure editor.
+
+Comments/complaints/Cries-for-help to Griss@UTAH-20.

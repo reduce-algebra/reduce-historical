@@ -1,0 +1,230 @@
+,MOD
+- R 44X (11 April 1983) <PSL.NMODE-DOC>NM-FUN-INDEX.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+          201/NMODE Manual (Function Index)                                    Page 28-1
+
+
+          202/28.  Function Index
+
+          201/append-next-kill-command  . . . . . . . . . . . . . . . . 11-3, 27-2
+          append-to-buffer-command . . . . . . . . . . . . . . . . 11-4, 16-2, 27-2
+          append-to-file-command  . . . . . . . . . . . . . . . . . 11-4, 15-4, 27-2
+          apropos-command . . . . . . . . . . . . . . . . . . . . . 8-1, 9-1, 27-2
+          argument-digit . . . . . . . . . . . . . . . . . . . . . . 5-1, 27-3
+          auto-fill-mode-command . . . . . . . . . . . . . . . . . . 6-1, 13-4, 27-3
+
+          back-to-indentation-command . . . . . . . . . . . . . . . 13-4, 27-4
+          backward-kill-sentence-command  . . . . . . . . . . . . . 11-1, 13-2, 14-1, 
+                                                                      27-4
+          backward-paragraph-command  . . . . . . . . . . . . . . 13-3, 27-4
+          backward-sentence-command  . . . . . . . . . . . . . . . 13-2, 27-4
+          backward-up-list-command  . . . . . . . . . . . . . . . . 20-4, 27-5
+          browser-browser-command  . . . . . . . . . . . . . . . . 8-1
+          buffer-browser-command . . . . . . . . . . . . . . . . . 8-1, 16-2, 27-5
+          buffer-not-modified-command . . . . . . . . . . . . . . . 15-2, 27-5
+
+          c-x-prefix . . . . . . . . . . . . . . . . . . . . . . . . 3-2, 27-5
+          center-line-command  . . . . . . . . . . . . . . . . . . . 13-5, 27-6
+          copy-region  . . . . . . . . . . . . . . . . . . . . . . . 11-3, 27-6
+          count-occurrences-command  . . . . . . . . . . . . . . . 19-1, 27-6
+
+          delete-and-expunge-file-command . . . . . . . . . . . . . 15-4, 27-6
+          delete-backward-character-command  . . . . . . . . . . . 4-1, 14-1, 27-7
+          delete-backward-hacking-tabs-command . . . . . . . . . . 11-1, 20-3, 27-7
+          delete-blank-lines-command . . . . . . . . . . . . . . . . 4-3, 11-1, 27-7
+          delete-file-command  . . . . . . . . . . . . . . . . . . . 15-4, 27-7
+          delete-forward-character-command  . . . . . . . . . . . . 11-1, 27-8
+          delete-horizontal-space-command  . . . . . . . . . . . . . 11-1, 13-3, 20-2, 
+                                                                      27-8
+          delete-indentation-command . . . . . . . . . . . . . . . . 11-1, 13-3, 20-2, 
+                                                                      20-6, 27-8
+          delete-matching-lines-command  . . . . . . . . . . . . . . 19-1, 27-8
+          delete-non-matching-lines-command . . . . . . . . . . . . 19-1, 27-8
+          dired-command . . . . . . . . . . . . . . . . . . . . . . 8-1, 15-2, 15-3, 
+                                                                      27-9
+          down-list-command . . . . . . . . . . . . . . . . . . . . 20-4, 27-9
+
+          edit-directory-command . . . . . . . . . . . . . . . . . . 8-1, 15-2, 27-9
+          end-of-defun-command . . . . . . . . . . . . . . . . . . 20-5, 27-10
+          esc-prefix . . . . . . . . . . . . . . . . . . . . . . . . 3-2, 27-10
+          exchange-point-and-mark . . . . . . . . . . . . . . . . . 10-1, 27-10
+          exchange-windows-command  . . . . . . . . . . . . . . . 18-1, 27-10
+          execute-buffer-command  . . . . . . . . . . . . . . . . . 27-10
+          execute-defun-command  . . . . . . . . . . . . . . . . . 20-7, 27-11
+          execute-file-command . . . . . . . . . . . . . . . . . . . 27-11
+          execute-form-command  . . . . . . . . . . . . . . . . . . 20-7, 27-11
+          exit-nmode . . . . . . . . . . . . . . . . . . . . . . . . 7-2, 27-11
+          201/Page 28-2                                    NMODE Manual (Function Index)
+
+
+          fill-comment-command . . . . . . . . . . . . . . . . . . . 20-3, 27-12
+          fill-paragraph-command . . . . . . . . . . . . . . . . . . 13-4, 27-12
+          fill-region-command  . . . . . . . . . . . . . . . . . . . 13-4, 27-12
+          find-file-command  . . . . . . . . . . . . . . . . . . . . 16-1, 27-13
+          forward-paragraph-command  . . . . . . . . . . . . . . . 13-3, 27-13
+          forward-sentence-command . . . . . . . . . . . . . . . . 13-2, 27-13
+          forward-up-list-command . . . . . . . . . . . . . . . . . 20-4, 27-13
+
+          get-register-command  . . . . . . . . . . . . . . . . . . 11-5, 27-14
+          grow-window-command  . . . . . . . . . . . . . . . . . . 18-2, 27-14
+
+          help-dispatch  . . . . . . . . . . . . . . . . . . . . . . 9-1, 27-14
+
+          incremental-search-command  . . . . . . . . . . . . . . . 12-1, 27-14
+          indent-new-line-command . . . . . . . . . . . . . . . . . 20-1, 20-2, 20-6, 
+                                                                      27-15
+          indent-region-command . . . . . . . . . . . . . . . . . . 13-3, 27-15
+          insert-buffer-command . . . . . . . . . . . . . . . . . . 11-4, 16-2, 27-15
+          insert-closing-bracket  . . . . . . . . . . . . . . . . . . 20-2, 27-15
+          insert-comment-command  . . . . . . . . . . . . . . . . . 20-3, 27-16
+          insert-date-command . . . . . . . . . . . . . . . . . . . 21-1, 27-16
+          insert-file-command  . . . . . . . . . . . . . . . . . . . 15-4, 27-16
+          insert-kill-buffer . . . . . . . . . . . . . . . . . . . . . 11-2, 27-16
+          insert-next-character-command . . . . . . . . . . . . . . 4-1, 27-17
+
+          kill-backward-form-command  . . . . . . . . . . . . . . . 11-1, 20-4, 27-17
+          kill-backward-word-command . . . . . . . . . . . . . . . 11-1, 13-1, 14-1, 
+                                                                      27-17
+          kill-buffer-command  . . . . . . . . . . . . . . . . . . . 16-2, 27-17
+          kill-forward-form-command . . . . . . . . . . . . . . . . 11-1, 20-4, 27-18
+          kill-forward-word-command . . . . . . . . . . . . . . . . 11-1, 13-1, 27-18
+          kill-line  . . . . . . . . . . . . . . . . . . . . . . . . . 11-1, 27-18
+          kill-region . . . . . . . . . . . . . . . . . . . . . . . . 11-1, 11-2, 27-18
+          kill-sentence-command  . . . . . . . . . . . . . . . . . . 11-1, 13-2, 27-19
+          kill-some-buffers-command  . . . . . . . . . . . . . . . . 16-2, 27-19
+
+          lisp-abort-command . . . . . . . . . . . . . . . . . . . . 20-8, 27-19
+          lisp-backtrace-command  . . . . . . . . . . . . . . . . . 20-8, 27-19
+          lisp-continue-command  . . . . . . . . . . . . . . . . . . 20-8, 27-20
+          lisp-help-command  . . . . . . . . . . . . . . . . . . . . 20-8, 27-20
+          lisp-indent-region-command . . . . . . . . . . . . . . . . 20-7, 27-20
+          lisp-indent-sexpr  . . . . . . . . . . . . . . . . . . . . 20-6, 27-20
+          lisp-mode-command . . . . . . . . . . . . . . . . . . . . 20-1, 27-21
+          lisp-prefix . . . . . . . . . . . . . . . . . . . . . . . . 3-2, 27-21
+          lisp-quit-command  . . . . . . . . . . . . . . . . . . . . 20-8, 27-21
+          lisp-retry-command . . . . . . . . . . . . . . . . . . . . 20-8, 27-21
+          lisp-tab-command . . . . . . . . . . . . . . . . . . . . . 20-3, 20-6, 27-22
+          lowercase-region-command  . . . . . . . . . . . . . . . . 13-6, 27-22
+          lowercase-word-command . . . . . . . . . . . . . . . . . 13-5, 14-2, 27-22
+          201/NMODE Manual (Function Index)                                    Page 28-3
+
+
+          m-x-prefix . . . . . . . . . . . . . . . . . . . . . . . . 3-2, 6-1, 27-22
+          make-parens-command  . . . . . . . . . . . . . . . . . . 20-5, 27-23
+          mark-beginning-command . . . . . . . . . . . . . . . . . 10-2, 27-23
+          mark-defun-command . . . . . . . . . . . . . . . . . . . 10-2, 20-5, 27-23
+          mark-end-command . . . . . . . . . . . . . . . . . . . . 10-2, 27-23
+          mark-form-command  . . . . . . . . . . . . . . . . . . . 10-2, 20-5, 27-24
+          mark-paragraph-command . . . . . . . . . . . . . . . . . 10-2, 13-3, 27-24
+          mark-whole-buffer-command  . . . . . . . . . . . . . . . 10-2, 27-24
+          mark-word-command  . . . . . . . . . . . . . . . . . . . 10-2, 13-2, 27-24
+          move-backward-character-command . . . . . . . . . . . . 4-1, 27-25
+          move-backward-defun-command . . . . . . . . . . . . . . 20-5, 27-25
+          move-backward-form-command  . . . . . . . . . . . . . . 20-4, 27-25
+          move-backward-list-command . . . . . . . . . . . . . . . 20-4, 27-25
+          move-backward-word-command  . . . . . . . . . . . . . . 13-1, 27-26
+          move-down-command  . . . . . . . . . . . . . . . . . . . 4-1, 27-26
+          move-down-extending-command . . . . . . . . . . . . . . 4-1, 27-26
+          move-forward-character-command . . . . . . . . . . . . . 4-1, 27-26
+          move-forward-form-command  . . . . . . . . . . . . . . . 20-4, 27-27
+          move-forward-list-command . . . . . . . . . . . . . . . . 20-4, 27-27
+          move-forward-word-command . . . . . . . . . . . . . . . 13-1, 27-27
+          move-over-paren-command  . . . . . . . . . . . . . . . . 20-5, 27-27
+          move-to-buffer-end-command . . . . . . . . . . . . . . . 4-1, 27-28
+          move-to-buffer-start-command  . . . . . . . . . . . . . . 4-1, 27-28
+          move-to-end-of-line-command . . . . . . . . . . . . . . . 4-1, 27-28
+          move-to-screen-edge-command  . . . . . . . . . . . . . . 17-2, 27-28
+          move-to-start-of-line-command  . . . . . . . . . . . . . . 4-1, 27-28
+          move-up-command  . . . . . . . . . . . . . . . . . . . . 4-1, 27-29
+
+          negative-argument . . . . . . . . . . . . . . . . . . . . 5-1, 27-29
+          next-screen-command . . . . . . . . . . . . . . . . . . . 17-2, 27-29
+          nmode-abort-command  . . . . . . . . . . . . . . . . . . 23-1, 27-29
+          nmode-exit-to-superior . . . . . . . . . . . . . . . . . . 7-2, 27-29
+          nmode-full-refresh . . . . . . . . . . . . . . . . . . . . 17-1, 27-30
+          nmode-gc  . . . . . . . . . . . . . . . . . . . . . . . . 21-1, 27-30
+          nmode-invert-video . . . . . . . . . . . . . . . . . . . . 2-1, 27-30
+          nmode-refresh-command  . . . . . . . . . . . . . . . . . 4-1, 17-1, 27-30
+
+          one-window-command . . . . . . . . . . . . . . . . . . . 18-1, 27-30
+          open-line-command . . . . . . . . . . . . . . . . . . . . 4-3, 5-1, 27-31
+          other-window-command . . . . . . . . . . . . . . . . . . 18-1, 27-31
+
+          prepend-to-file-command . . . . . . . . . . . . . . . . . 11-4, 15-4, 27-31
+          previous-screen-command . . . . . . . . . . . . . . . . . 17-2, 27-31
+          put-register-command  . . . . . . . . . . . . . . . . . . 11-5, 27-32
+
+          query-replace-command . . . . . . . . . . . . . . . . . . 19-1, 27-32
+
+          rename-buffer-command  . . . . . . . . . . . . . . . . . 16-2, 27-32
+          replace-string-command  . . . . . . . . . . . . . . . . . 19-1, 27-33
+          reposition-window-command . . . . . . . . . . . . . . . . 17-2, 27-33
+          return-command  . . . . . . . . . . . . . . . . . . . . . 4-1, 27-33
+          reverse-search-command  . . . . . . . . . . . . . . . . . 12-1, 27-33
+          revert-file-command  . . . . . . . . . . . . . . . . . . . 15-2, 27-33
+          201/Page 28-4                                    NMODE Manual (Function Index)
+
+
+          save-all-files-command  . . . . . . . . . . . . . . . . . . 16-2, 27-34
+          save-file-command  . . . . . . . . . . . . . . . . . . . . 4-3, 15-1, 16-2, 
+                                                                      27-34
+          scroll-other-window-command . . . . . . . . . . . . . . . 18-2, 27-34
+          scroll-window-down-line-command . . . . . . . . . . . . . 17-2, 27-34
+          scroll-window-down-page-command  . . . . . . . . . . . . 17-2, 27-34
+          scroll-window-left-command . . . . . . . . . . . . . . . . 17-2, 27-35
+          scroll-window-right-command . . . . . . . . . . . . . . . 17-2, 27-35
+          scroll-window-up-line-command . . . . . . . . . . . . . . 17-2, 27-35
+          scroll-window-up-page-command  . . . . . . . . . . . . . 17-2, 27-35
+          select-buffer-command  . . . . . . . . . . . . . . . . . . 16-1, 27-35
+          select-previous-buffer-command  . . . . . . . . . . . . . 16-1, 27-36
+          set-fill-column-command  . . . . . . . . . . . . . . . . . 13-5, 22-5, 27-36
+          set-fill-prefix-command . . . . . . . . . . . . . . . . . . 13-5, 27-36
+          set-goal-column-command . . . . . . . . . . . . . . . . . 4-2, 27-36
+          set-key-command . . . . . . . . . . . . . . . . . . . . . 6-2, 27-37
+          set-mark-command  . . . . . . . . . . . . . . . . . . . . 10-1, 27-37
+          set-visited-filename-command . . . . . . . . . . . . . . . 15-4, 27-37
+          split-line-command . . . . . . . . . . . . . . . . . . . . 20-2, 27-37
+          start-scripting-command  . . . . . . . . . . . . . . . . . 27-38
+          start-timing-command . . . . . . . . . . . . . . . . . . . 27-38
+          stop-scripting-command  . . . . . . . . . . . . . . . . . 27-38
+          stop-timing-command . . . . . . . . . . . . . . . . . . . 27-38
+
+          tab-to-tab-stop-command . . . . . . . . . . . . . . . . . 13-1, 13-3, 27-39
+          text-mode-command . . . . . . . . . . . . . . . . . . . . 13-1, 20-1, 27-39
+          transpose-characters-command  . . . . . . . . . . . . . . 4-1, 14-1, 27-39
+          transpose-forms  . . . . . . . . . . . . . . . . . . . . . 20-5, 27-39
+          transpose-lines . . . . . . . . . . . . . . . . . . . . . . 14-2, 27-40
+          transpose-regions  . . . . . . . . . . . . . . . . . . . . 14-2, 27-40
+          transpose-words . . . . . . . . . . . . . . . . . . . . . 13-1, 27-40
+          two-windows-command  . . . . . . . . . . . . . . . . . . 18-1, 27-40
+
+          undelete-file-command  . . . . . . . . . . . . . . . . . . 15-4, 27-41
+          universal-argument . . . . . . . . . . . . . . . . . . . . 5-1, 27-41
+          unkill-previous . . . . . . . . . . . . . . . . . . . . . . 11-3, 27-41
+          upcase-digit-command  . . . . . . . . . . . . . . . . . . 14-2, 27-41
+          uppercase-initial-command  . . . . . . . . . . . . . . . . 13-5, 14-2, 27-42
+          uppercase-region-command . . . . . . . . . . . . . . . . 10-1, 13-6, 27-42
+          uppercase-word-command . . . . . . . . . . . . . . . . . 13-5, 14-2, 27-42
+
+          view-two-windows-command . . . . . . . . . . . . . . . . 18-2, 27-42
+          visit-file-command  . . . . . . . . . . . . . . . . . . . . 4-3, 15-1, 27-42
+          visit-in-other-window-command . . . . . . . . . . . . . . 18-3, 27-43
+
+          what-cursor-position-command  . . . . . . . . . . . . . . 4-2, 13-5, 27-43
+          write-file-command . . . . . . . . . . . . . . . . . . . . 15-3, 27-43
+          write-region-command  . . . . . . . . . . . . . . . . . . 15-4, 27-43
+          write-screen-command  . . . . . . . . . . . . . . . . . . 21-1, 27-44
+          201/NMODE Manual (Function Index)                                    Page 28-5
+
+
+          yank-last-output-command  . . . . . . . . . . . . . . . . 20-7, 27-44

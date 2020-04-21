@@ -1,0 +1,67 @@
+% (Do definitions twice to see what functions were defined.)
+macro procedure TWICE u; list( 'PROGN, second u, second u );
+
+% A definition of Complex, structure with Real and Imaginary parts.
+% Give 0 Init values.
+TWICE
+Defstruct( Complex( !:Creator(Complex) ), R(0), I(0) );
+
+C0 := MakeComplex();                % Constructor with default inits.
+
+ComplexP C0;                        % Predicate.
+
+C1:=MakeComplex( R 1, I 2 );   % Constructor with named values.
+
+R(C1); I(C1);                       % Named selectors.
+
+C2:=Complex(3,4);                   % Creator with positional values.
+
+AlterComplex( C1, R(2), I(3) );	    % Alterant with named values.
+
+C1;
+
+R(C1):=5; I(C1):=6;                 % Named depositors.
+
+C1;
+
+% Show use of Include Option.  (Again, redef to show fns defined.)
+TWICE
+Defstruct( MoreComplex( !:Include(Complex) ), Z(99) );
+
+M0 := MakeMoreComplex();
+
+M1 := MakeMoreComplex( R 1, I 2, Z 3 );
+
+R C1;
+
+R M1;
+
+% A more complicated example: The structures which are used in the
+% Defstruct facility to represent defstructs.  (The EX prefix has
+% been added to the names to protect the innocent...)
+TWICE				% Redef to show fns generated.
+Defstruct(
+    EXDefstructDescriptor( !:Prefix(EXDsDesc), !:Creator ),
+	   DsSize(	!:Type int ),	% (Upper Bound of vector.)
+	   Prefix(	!:Type string ),
+	   SlotAlist(	!:Type alist ),	% (Cdrs are SlotDescriptors.)
+	   ConsName(	!:Type fnId ),
+	   AltrName(	!:Type fnId ),
+	   PredName(	!:Type fnId ),
+	   CreateName(	!:Type fnId ),
+	   Include(	!:Type typeid ),
+	   InclInit(	!:Type alist )
+);
+
+TWICE				% Redef to show fns generated.
+Defstruct(
+    EXSlotDescriptor( !:Prefix(EXSlotDesc), !:Creator ),
+	   SlotNum(	!:Type int ),
+	   InitForm(	!:Type form ),
+	   SlotFn(	!:Type fnId ),		% Selector/Depositor id.
+	   SlotType(	!:Type type ),		% Hm...
+	   UserGet(	!:Type boolean ),
+	   UserPut(	!:Type boolean )
+);
+
+END;

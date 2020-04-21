@@ -1,0 +1,49 @@
+PSL Manual                    7 February 1983
+
+
+PrefacePrefacePreface
+
+
+
+  This Portable LISP implementation would not have been started without the
+effort  and  inspiration  of  the  original  STANDARD  LISP  reporters  (A.
+C. Hearn, J. Marti, M. L. Griss and C. Griss) and the many people who  gave
+freely  of their advice (often unsolicited!).  We especially appreciate the
+comments of A. Norman, M. Rothstein, H. Stoyan and T. Ager.
+
+  It would not have been completed without the efforts of the  many  people
+who  have  worked  arduously  on  SYSLISP  and  PSL at various levels: Eric
+Benson, Will Galway, Ellen Gibson, Martin Griss, Bob Kessler, Steve Lowder,
+Chip Maguire, Beryl Morrison, Don Morrison, Bobbie Othmer,  Bob  Pendleton,
+and John Peterson.
+
+  We  are also grateful for the many comments and significant contributions
+by the LISP users at the Hewlett-Packard Computer Research Center  in  Palo
+Alto.
+
+  This  document  has  been  worked  on by most members of the current Utah
+Symbolic Computation Group.  The primary editorial function has been in the
+hands of B. Morrison, M. L. Griss, B. Othmer, and W. Galway; major sections
+have been contributed by E. Benson, W. Galway, and D. Morrison.
+
+  This is a preliminary version of the manual, and so  may  suffer  from  a
+number  of  errors  and  omissions.  Please let us know of problems you may
+detect.
+
+  We have also made some stylistic decisions  regarding  Font  to  indicate
+semantic  classification  and Case to make symbols more readable.  Based on
+feedback from users of the earlier 3.0 PSL  release  and  manual,  we  have
+decided  to  use  LISP  syntax  as  the primary description language; where
+appropriate RLISP syntax also appears.  We  would  appreciate  comments  on
+these and other decisions.
+
+  Based on feedback from numerous users, this issue of the manual uses LISP
+syntax  rather  than  RLISP  as  the  primary  description  language; where
+appropriate, RLISP syntax also appears.
+
+  Report bugs, errors and mis-features by sending MAIL to PSL-BUGS@Utah-20;
+                                                                        Bug                                                                        Bugalternatively, send a message to Griss from within PSL by calling  the  Bug
+function, BUG(); in RLISP.
+
+  Permission  is  given  to  copy this manual for internal use with the PSL
+system.

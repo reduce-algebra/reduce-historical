@@ -1,0 +1,36 @@
+,MOD
+- R 44X (28 February 1983) <PSL.NMODE-DOC>NM-INTRODUCTION.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+          201/Introduction                    NMODE Manual                       Page 1-1
+
+
+          202/1.  Introduction
+
+          201/This document describes the NMODE text editor.  NMODE is an interactive,
+          multiple-window, screen-oriented editor written in PSL (Portable Standard
+          Lisp).  NMODE provides a compatible subset of the EMACS text editor,
+          developed at M.I.T.  It also contains a number of extensions, most notably an
+          interface to the underlying Lisp system for Lisp programmers.
+
+          NMODE was developed at the Hewlett-Packard Laboratories Computer Research
+          Center by Alan Snyder.  A number of significant extensions have been
+          contributed by Jeff Soreff.
+
+          NMODE is based on an earlier editor, EMODE, written in PSL by William F.
+          Galway  at  the  University  of  Utah.   Many of the basic ideas and the
+          underlying structure of the NMODE editor come directly from EMODE.
+
+          This document is only partially complete, but is being reprinted at this time
+          for the benefit of new users that are not familiar with EMACS.  The bulk of
+          this document has been borrowed from EMACS documentation and modified
+          appropriately in areas where NMODE and EMACS differ.

@@ -1,0 +1,30 @@
+,MOD
+- R 44X (11 April 1983) <PSL.NMODE-DOC>NM-MISC.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+          201/NMODE Manual (Miscellaneous Commands)                            Page 21-1
+
+
+          202/21.  Miscellaneous Commands
+
+            201/This chapter covers some miscellaneous commands which don't fit naturally
+          into earlier chapters.
+
+            M-X Insert Date (203/insert-date-command201/) inserts the current date into the
+          text in the current buffer.  The mark is put after the inserted date and
+          point is left unchanged.
+
+            M-X Make Space (203/nmode-gc201/) reclaims any wasted internal space.  It also
+          indicates the remaining amount of free space.
+
+            M-X Write Screen (203/write-screen-command201/) writes a copy of the current
+          screen to a file.

@@ -1,0 +1,67 @@
+% COMMON-CMACROS.SL - C-macros and Anyregs common to all implementations
+
+!*Link (FunctionName FunctionType NumberOfArguments)
+!*Call (FunctionName)
+!*LinkE (DeAllocCount FunctionName FunctionType NumberOfArguments)
+!*JCall (FunctionName)
+
+!*DeAlloc (DeAllocCount)
+!*Alloc (N)
+!*Exit (N)
+
+!*JumpWithin (Label LowerBound UpperBound)
+!*ProgBind (FluidsList)
+!*FreeRstr (FluidsList)
+!*Jump (Arg1)
+!*Lbl (Arg1)
+!*Push (Arg1)
+!*Pop (Arg1)
+!*Move (Source Destination)
+!*JumpEQ (Label Arg1 Arg2)
+!*JumpNotEQ (Label Arg1 Arg2)
+!*JumpWLessP (Label Arg1 Arg2)
+!*JumpWGreaterP (Label Arg1 Arg2)
+!*JumpWLEQ (Label Arg1 Arg2)
+!*JumpWGEQ (Label Arg1 Arg2)
+!*JumpType (Label Arg TypeTag)
+!*JumpNotType (Label Arg TypeTag)
+!*JumpInType (Label Arg TypeTag)
+!*JumpNotInType (Label Arg TypeTag)
+!*MkItem (Arg1 Arg2)
+!*WPlus2 (Arg1 Arg2)
+!*WDifference (Arg1 Arg2)
+!*WTimes2 (Arg1 Arg2)
+!*AShift (Arg1 Arg2)
+!*WShift (Arg1 Arg2)
+!*WAnd (Arg1 Arg2)
+!*WOr (Arg1 Arg2)
+!*WXOr (Arg1 Arg2)
+!*WMinus (Arg1 Arg2)
+!*WNot (Arg1 Arg2)
+!*Loc (Arg1 Arg2)
+!*Field (Arg1 Arg2 Arg3 Arg4)
+!*SignedField (Arg1 Arg2 Arg3 Arg4)
+!*PutField (Arg1 Arg2 Arg3 Arg4)
+
+
+AnyregCAR (Register Source)
+AnyregCDR (Register Source)
+AnyregQUOTE (Register Source)
+AnyregREG (Register Source)
+AnyregWCONST (Register Source)
+
+(DefAnyreg WCONST
+	   AnyregWCONST
+	   (SOURCE))
+
+AnyregFRAME (Register Source)
+AnyregFRAMESIZE (Register)
+(DefAnyreg FrameSize
+	   AnyregFRAMESIZE)
+
+AnyregMEMORY (Register Source ArgTwo)
+AnyregLABEL (Register Source)
+(DefAnyreg LABEL
+	   AnyregLABEL)
+
+(flag '(FLUID !$FLUID GLOBAL !$GLOBAL WVAR) 'TerminalOperand)

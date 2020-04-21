@@ -1,0 +1,127 @@
+ 5-Apr-83 07:45:56-MST,6095;000000000001
+Return-path: <@UTAH-CS:GRISS@HP-HULK>
+Received: from UTAH-CS by UTAH-20; Tue 5 Apr 83 07:42:55-MST
+Date:  5 Apr 1983 0632-PST
+From: GRISS@HP-HULK
+Subject: summary.tim
+Message-Id: <418401264.19777.hplabs@HP-VENUS>
+Received: by HP-VENUS via CHAOSNET; 5 Apr 1983 06:34:23-PST
+Received: by UTAH-CS.ARPA (3.320.5/3.7.6)
+	id AA04724; 5 Apr 83 07:41:25 MST (Tue)
+To: kessler@HP-VENUS, griss@HP-VENUS
+
+
+
+ SUMMARY TESTS on 2-Apr-83 
+
+
+     Total Times 
+(TOTAL BLKDOLPHIN): 
+          Tot 386690.000, avg  20352.105, dev   26417.830 ,      19.000 tests
+(TOTAL LM2): 
+          Tot  98971.000, avg   5209.000, dev    5183.557 ,      19.000 tests
+(TOTAL STDAPOLLO): 
+          Tot 108814.000, avg   5727.053, dev    5053.535 ,      19.000 tests
+(TOTAL STDHP9836): 
+          Tot 117890.000, avg   6204.737, dev    5954.895 ,      19.000 tests
+(TOTAL FRANZ750): 
+          Tot 156825.000, avg   8253.947, dev    8252.232 ,      19.000 tests
+(TOTAL STD750): 
+          Tot 100368.000, avg   5282.526, dev    5518.533 ,      19.000 tests
+(TOTAL FRANZ780): 
+          Tot 102524.000, avg   5396.000, dev    5561.586 ,      19.000 tests
+(TOTAL FAST780): 
+          Tot  56199.000, avg   2957.842, dev    3255.864 ,      19.000 tests
+(TOTAL STD780): 
+          Tot  70686.000, avg   3720.316, dev    4218.948 ,      19.000 tests
+(TOTAL FASTHP9836): 
+          Tot  47420.000, avg   2495.789, dev    2380.819 ,      19.000 tests
+(TOTAL TESTEXT20): 
+          Tot  24202.000, avg   1273.789, dev    1291.616 ,      19.000 tests
+(TOTAL EXT20): 
+          Tot  23036.000, avg   1212.421, dev    1204.962 ,      19.000 tests
+(TOTAL TEST20): 
+          Tot  23300.000, avg   1226.316, dev    1211.688 ,      19.000 tests
+(TOTAL STD20): 
+          Tot  21334.000, avg   1122.842, dev    1158.361 ,      19.000 tests
+(TOTAL TESTCRAY): 
+          Tot   3511.080, avg    184.794, dev     166.001 ,      19.000 tests
+
+     Ratio of Total Times to STD20
+(RATIO (TOTAL BLKDOLPHIN) (TOTAL STD20)): 
+          Tot     18.126, avg     18.126, dev      22.806 ,       1.000 tests
+(RATIO (TOTAL LM2) (TOTAL STD20)): 
+          Tot      4.639, avg      4.639, dev       4.475 ,       1.000 tests
+(RATIO (TOTAL STDAPOLLO) (TOTAL STD20)): 
+          Tot      5.100, avg      5.100, dev       4.363 ,       1.000 tests
+(RATIO (TOTAL STDHP9836) (TOTAL STD20)): 
+          Tot      5.526, avg      5.526, dev       5.141 ,       1.000 tests
+(RATIO (TOTAL FRANZ750) (TOTAL STD20)): 
+          Tot      7.351, avg      7.351, dev       7.124 ,       1.000 tests
+(RATIO (TOTAL STD750) (TOTAL STD20)): 
+          Tot      4.705, avg      4.705, dev       4.764 ,       1.000 tests
+(RATIO (TOTAL FRANZ780) (TOTAL STD20)): 
+          Tot      4.806, avg      4.806, dev       4.801 ,       1.000 tests
+(RATIO (TOTAL FAST780) (TOTAL STD20)): 
+          Tot      2.634, avg      2.634, dev       2.811 ,       1.000 tests
+(RATIO (TOTAL STD780) (TOTAL STD20)): 
+          Tot      3.313, avg      3.313, dev       3.642 ,       1.000 tests
+(RATIO (TOTAL FASTHP9836) (TOTAL STD20)): 
+          Tot      2.223, avg      2.223, dev       2.055 ,       1.000 tests
+(RATIO (TOTAL TESTEXT20) (TOTAL STD20)): 
+          Tot      1.134, avg      1.134, dev       1.115 ,       1.000 tests
+(RATIO (TOTAL EXT20) (TOTAL STD20)): 
+          Tot      1.080, avg      1.080, dev       1.040 ,       1.000 tests
+(RATIO (TOTAL TEST20) (TOTAL STD20)): 
+          Tot      1.092, avg      1.092, dev       1.046 ,       1.000 tests
+(RATIO (TOTAL STD20) (TOTAL STD20)): 
+          Tot      1.000, avg      1.000, dev       1.000 ,       1.000 tests
+(RATIO (TOTAL TESTCRAY) (TOTAL STD20)): 
+          Tot      0.165, avg      0.165, dev       0.143 ,       1.000 tests
+
+     Average Each test Ratios to STD20
+(TOTAL RATIO (BLKDOLPHIN) (STD20)): 
+          Tot    432.295, avg     22.752, dev      31.310 ,      19.000 tests
+(TOTAL RATIO (LM2) (STD20)): 
+          Tot     95.112, avg      5.006, dev       2.463 ,      19.000 tests
+(TOTAL RATIO (STDAPOLLO) (STD20)): 
+          Tot    106.651, avg      5.613, dev       2.300 ,      19.000 tests
+(TOTAL RATIO (STDHP9836) (STD20)): 
+          Tot    109.025, avg      5.738, dev       2.072 ,      19.000 tests
+(TOTAL RATIO (FRANZ750) (STD20)): 
+          Tot    168.689, avg      8.878, dev       7.563 ,      19.000 tests
+(TOTAL RATIO (STD750) (STD20)): 
+          Tot     85.098, avg      4.479, dev       0.923 ,      19.000 tests
+(TOTAL RATIO (FRANZ780) (STD20)): 
+          Tot    112.513, avg      5.922, dev       5.652 ,      19.000 tests
+(TOTAL RATIO (FAST780) (STD20)): 
+          Tot     46.153, avg      2.429, dev       0.517 ,      19.000 tests
+(TOTAL RATIO (STD780) (STD20)): 
+          Tot     56.645, avg      2.981, dev       0.672 ,      19.000 tests
+(TOTAL RATIO (FASTHP9836) (STD20)): 
+          Tot     44.557, avg      2.345, dev       0.849 ,      19.000 tests
+(TOTAL RATIO (TESTEXT20) (STD20)): 
+          Tot     24.473, avg      1.288, dev       0.539 ,      19.000 tests
+(TOTAL RATIO (EXT20) (STD20)): 
+          Tot     21.802, avg      1.147, dev       0.279 ,      19.000 tests
+(TOTAL RATIO (TEST20) (STD20)): 
+          Tot     22.377, avg      1.178, dev       0.336 ,      19.000 tests
+(TOTAL RATIO (STD20) (STD20)): 
+          Tot     19.000, avg      1.000, dev       0.000 ,      19.000 tests
+(TOTAL RATIO (TESTCRAY) (STD20)): 
+          Tot      3.605, avg      0.190, dev       0.095 ,      19.000 tests
+
+     68000 Total times
+(RATIO (TOTAL STDHP9836) (TOTAL FASTHP9836)): 
+          Tot      2.486, avg      2.486, dev       2.501 ,       1.000 tests
+(RATIO (TOTAL STDAPOLLO) (TOTAL STDHP9836)): 
+          Tot      0.923, avg      0.923, dev       0.849 ,       1.000 tests
+
+     68000 average ratios
+(TOTAL RATIO (STDHP9836) (FASTHP9836)): 
+          Tot     46.617, avg      2.454, dev       0.119 ,      19.000 tests
+(TOTAL RATIO (STDAPOLLO) (STDHP9836)): 
+          Tot     18.653, avg      0.982, dev       0.160 ,      19.000 tests
+-------
+
+

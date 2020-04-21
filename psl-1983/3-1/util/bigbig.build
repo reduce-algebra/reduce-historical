@@ -1,0 +1,8 @@
+% MLG, move BUILD info
+imports '(vector!-fix arith);
+
+Compiletime<<load syslisp;
+	     Load Fast!-Vector;
+             load inum;
+	     load if!-system>>;
+in "bigbig.red"$

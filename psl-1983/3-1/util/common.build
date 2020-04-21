@@ -1,0 +1,5 @@
+CompileTime <<
+load Useful;
+off UserMode;
+>>;
+in "common.sl"$

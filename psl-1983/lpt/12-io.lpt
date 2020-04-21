@@ -1,0 +1,1424 @@
+PSL Manual                    7 February 1983              Input and Output
+section 12.0                                                      page 12.1
+
+                                CHAPTER 12                                CHAPTER 12                                CHAPTER 12
+                             INPUT AND OUTPUT                             INPUT AND OUTPUT                             INPUT AND OUTPUT
+
+
+
+
+     12.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    12.1
+     12.2. The Underlying Primitives for Input and Output.  .  .  .    12.1
+     12.3. Opening, Closing, and Selecting Channels.  .  .  .  .  .    12.5
+     12.4. Functions for Printing.  .  .  .  .  .  .  .  .  .  .  .    12.8
+     12.5. Functions for Reading .  .  .  .  .  .  .  .  .  .  .  .   12.16
+          12.5.1. Reading S-Expression .  .  .  .  .  .  .  .  .  .   12.16
+          12.5.2. Reading Files into PSL  .  .  .  .  .  .  .  .  .   12.17
+          12.5.3. Reading Single Characters  .  .  .  .  .  .  .  .   12.20
+          12.5.4. Reading Tokens .  .  .  .  .  .  .  .  .  .  .  .   12.21
+          12.5.5. Read Macros .  .  .  .  .  .  .  .  .  .  .  .  .   12.30
+     12.6. Scan Table Utility Functions.  .  .  .  .  .  .  .  .  .   12.31
+     12.7. I/O to and from Lists and Strings .  .  .  .  .  .  .  .   12.32
+     12.8. Example of Simple I/O in PSL.  .  .  .  .  .  .  .  .  .   12.34
+
+
+
+
+12.1. Introduction12.1. Introduction12.1. Introduction
+
+  Most LISP programs are written with no sophisticated I/O, so this chapter
+may   be   skimmed   by  those  with  simple  I/O  requirements.    Section
+12.8 contains an example showing the use  of  some  I/O  functions.    This
+should  help  the  beginning  PSL  user  get  started.    Sections 12.5 and
+12.6 deal extensively with customizing the scanner and reader, which is  of
+interest only to the sophisticated user.
+
+
+
+12.2. The Underlying Primitives for Input and Output12.2. The Underlying Primitives for Input and Output12.2. The Underlying Primitives for Input and Output
+
+  All  input and output functions are implemented in terms of operations on
+                                              1
+                                       _______"channels".  A channel is just a small integer  which has 3  functions  and
+some other information associated with it.  The three functions are:
+
+
+   a. A  reading  function,  which  is  called with the channel as its
+                                  _______      argument and  returns  the  integer  ASCII  value  of  the  next
+
+
+_______________
+
+  1
+   The range of channel numbers is from 0 to MaxChannels, where MaxChannels
+is  a  system-dependent  constant,  currently  31,  defined in IO-DATA.RED.
+MaxChannels is a WCONST, and is not available for use at runtime.Input and Output              7 February 1983                    PSL Manual
+page 12.2                                                      section 12.2
+
+      character  of  the  input stream.  If the channel is for writing
+                             WriteOnlyChannel                             WriteOnlyChannel      only, this function is WriteOnlyChannel.  If the channel has not
+                                       ChannelNotOpen                                       ChannelNotOpen      been opened, this  function  is  ChannelNotOpen.    The  reading
+      function  is  responsible  for  echoing  characters  if the flag
+                                               WriteChar                                               WriteChar      !*ECHO is T.  It should use the function WriteChar to  echo  the
+      character.    It  may  not be appropriate for a read function to
+      echo characters.  For example, the "disk" reading function  does
+                                                              Compress                                                              Compress      echoing,  while  the  reader  used  to  implement  the  Compress
+      function does not.
+
+      The read function must also be concerned with  the  handling  of
+      ends  of "files" (actually, ends of channels) and ends of lines.
+      It should return the ASCII code for an  end  of  file  character
+      (system  dependent)  when  reaching  the  end  of a channel.  It
+      should return the ASCII  code  for  a  line  feed  character  to
+      indicate  an  end of line (or "newline").  This may require that
+      the ASCII code for carriage return be  ignored  when  read,  not
+      returned.
+
+   b. A  writing  function,  which  is  called with the channel as its
+                             _______      first argument and the integer ASCII value of the  character  to
+      write  as  its  second  argument.  If the channel is for reading
+                             ReadOnlyChannel                             ReadOnlyChannel      only, this function is ReadOnlyChannel.  If the channel has  not
+                                    ChannelNotOpen                                    ChannelNotOpen      been opened, this function is ChannelNotOpen.
+
+   c. A  closing  function,  which  is  called with the channel as its
+      argument and performs any  action  necessary  for  the  graceful
+      termination  of  input and/or output operations to that channel.
+                                                   ChannelNotOpen                                                   ChannelNotOpen      If the channel is not open, this function is ChannelNotOpen.
+
+
+  The other information associated with  a  channel  includes  the  current
+                                     Posn                                     Posnposition in the output line (used by Posn), the maximum line length allowed
+         LineLength         LineLength(used by LineLength and the printing functions), the single character input
+backup  buffer  (used  by  the  token  scanner), and other system-dependent
+information.
+
+  Ordinarily, the  user  need  not  be  aware  of  the  existence  of  this
+mechanism.  However, because of its generality, it is possible to implement
+operations  other than just reading from and writing to files using it.  In
+                                 Explode       Compress                                 Explode       Compressparticular, the LISP  functions  Explode  and  Compress  are  performed  by
+              ____                    ____writing  to a list and reading from a list, respectively (on channels 3 and
+4 respectively).
+
+  Ordinarily, user interaction with the system is done by reading from  the
+standard  input  channel and writing to the standard output channel.  These
+are 0 and 1  respectively,  to  which  the  GLOBAL  variables  STDIN!*  and
+STDOUT!*  are  bound.  These channels usually refer to the user's terminal,
+and cannot be closed.  Other files are accessed  by  calling  the  function
+OpenOpenOpen,  which  returns  a  channel.   Most functions which perform input and
+output come in two forms, one which takes a channel as its first  argument,
+                                                                    Rds                                                                    Rdsand one which uses the "currently selected channel".  The functions Rds andPSL Manual                    7 February 1983              Input and Output
+section 12.2                                                      page 12.3
+
+WrsWrsWrs  are  used  to change the currently selected input and output channels.
+The GLOBAL variables IN!* and OUT!* are bound to these channels.
+
+  GLOBAL variables containing information about channels are listed below.
+
+
+      __________                                                     ______IN!* [Initially: 0]                                                  global
+
+     Contains the currently selected input channel.  This  is  changed
+                     Rds                     Rds     by the function Rds.
+
+
+       __________                                                    ______OUT!* [Initially: 1]                                                 global
+
+     Contains  the currently selected output channel.  This is changed
+                     Wrs                     Wrs     by the function Wrs.
+
+
+         __________                                                  ______STDIN!* [Initially: 0]                                               global
+
+     The standard input channel.
+
+
+          __________                                                 ______STDOUT!* [Initially: 1]                                              global
+
+     The standard output channel.
+
+
+           __________                                                ______BREAKIN!* [Initially: NIL]                                           global
+
+                                BREAK                                BREAK     The channel from which the BREAK loop gets its  input.    It  has
+     been  set  to  default  to STDIN!*, but may have to be changed on
+     some systems with buffered-IO.
+
+
+            __________                                               ______BREAKOUT!* [Initially: NIL]                                          global
+
+                              BREAK                              BREAK     The channel to which the BREAK loop sends its  output.    It  has
+     been  set  to  default to STDOUT!*, but may have to be changed on
+     some systems with buffered-IO.
+
+
+          __________                                                 ______HELPIN!* [Initially: NIL]                                            global
+
+                                       Help                                       Help     The channel used for input by the Help mechanism.
+
+
+           __________                                                ______HELPOUT!* [Initially: NIL]                                           global
+
+                                        Help                                        Help     The channel used for output by the Help mechanism.Input and Output              7 February 1983                    PSL Manual
+page 12.4                                                      section 12.2
+
+          __________                                                 ______ERROUT!* [Initially: 1]                                              global
+
+                             ErrorPrintF                             ErrorPrintF     The channel used by the ErrorPrintF.
+
+
+                __________                                           ______PROMPTSTRING!* [Initially: "lisp>"]                                  global
+
+     Displayed  as  a  prompt  when any input is taken from TTY.  Thus
+     prompts should not be directly printed.  Instead the value should
+     be bound to PROMPTSTRING!*.
+
+
+
+12.3. Opening, Closing, and Selecting Channels12.3. Opening, Closing, and Selecting Channels12.3. Opening, Closing, and Selecting Channels
+
+
+ Open Open ________ ______  __________ __   _______ __ _______              ____(Open FILENAME:string  ACCESSTYPE:id): CHANNEL:io-channel              expr
+
+                      Eq        __________    Eq     If ACCESSTYPE is Eq to INPUT or OUTPUT, an  attempt  is  made  to
+                                  ________     access  the system-dependent FILENAME for reading or writing.  If
+     the attempt is unsuccessful, an error is generated;  otherwise  a
+     free   channel   is  returned  and  initialized  to  the  default
+     conditions for ordinary file input or output.
+
+                         Eq         __________      Eq     If  ACCESSTYPE  is  Eq  to  SPECIAL  and  the  GLOBAL   variables
+     SPECIALREADFUNCTION!*,         SPECIALWRITEFUNCTION!*,        and
+                                         __     SPECIALCLOSEFUNCTION!* are bound to ids, then a free  channel  is
+     returned  and  its  associated functions are set to the values of
+     these variables.  Other non system-dependent  status  is  set  to
+     default conditions, which can later be overridden.  The functions
+     ReadOnlyChannel       WriteOnlyChannel     ReadOnlyChannel       WriteOnlyChannel     ReadOnlyChannel  and  WriteOnlyChannel  are  available  as  error
+                               ________     handlers.  The parameter  FILENAME  is  used  only  if  an  error
+     occurs.
+
+       [???  We should replace these globals and SPECIAL option by a       [???  We should replace these globals and SPECIAL option by a       [???  We should replace these globals and SPECIAL option by a
+       (SPECIALOPEN Readfunction writefunction  closefunction)  call       (SPECIALOPEN Readfunction writefunction  closefunction)  call       (SPECIALOPEN Readfunction writefunction  closefunction)  call
+       ???]       ???]       ???]
+
+     If  none  of  these  conditions hold, a file is not available, or
+     there are no free channels, an error is generated.  
+
+     ***** Unknown access type
+
+     ***** Improperly set-up special IO open call
+
+     ***** File not found
+
+     ***** No free channels
+
+              FileP              FileP  One can use FileP to find out whether a file exists.PSL Manual                    7 February 1983              Input and Output
+section 12.3                                                      page 12.5
+
+ FileP FileP ____ ______   _______                                           ____(FileP NAME:string): boolean                                           expr
+
+                                           ____     This  function  will return T if file NAME can be opened, and NIL
+     if not, e.g. if it does not exist.
+
+
+ Close Close _______ __ _______   __ _______                                 ____(Close CHANNEL:io-channel): io-channel                                 expr
+
+                                            _______     The closing function associated  with  CHANNEL  is  called,  with
+     _______                                               _______     CHANNEL  as  its argument.  If it is illegal to close CHANNEL, if
+     _______                    _______     CHANNEL is not open, or if CHANNEL is associated with a file  and
+     the  file cannot be closed by the operating system, this function
+                                     _______     generates an error.  Otherwise, CHANNEL is marked as free and  is
+     returned.
+
+
+ Shut Shut  _ ______    ____ ________                                      _____(Shut [L:string]): None Returned                                      macro
+
+                                                       Shut                                         _             Shut     Closes the output files in the list L.  Note that Shut takes file
+                                 Close                                 Close          __ _______     names  as  arguments, while Close takes an io-channel.  The RLISP
+     IN     IN     IN  function  maintains  a  stack  of  file-name   .   io-channel
+                                              shut                                              shut     associations  for  this  purpose. Thus a shut will also correctly
+     select the previous file for further output.
+
+
+ EvShut EvShut _ ______ ____   ____ ________                                  ____(EvShut L:string-list): none Returned                                  expr
+
+                      Shut                      Shut     Does the same as Shut but evaluates its arguments.
+
+
+ Rds Rds  _______ __ _______  ___    __ _______                            ____(Rds {CHANNEL:io-channel, NIL}): io-channel                            expr
+
+     Rds     Rds     Rds sets IN!* to the value  of  its  argument,  and  returns  the
+     previous  value  of  IN!*.  In addition, if SPECIALRDSACTION!* is
+     non-NIL, it should be a function of 2 arguments, which is  called
+                  _______                                   _______     with the old CHANNEL as its first argument and the new CHANNEL as
+                           Rds                       Rds                           Rds                       Rds     its second argument.  Rds(NIL) does the same as Rds(STDIN!*).
+
+
+ Wrs Wrs  _______ __ _______  ___    __ _______                            ____(Wrs {CHANNEL:io-channel, NIL}): io-channel                            expr
+
+     Wrs     Wrs     Wrs  sets  OUT!*  to  the  value  of its argument and returns the
+     previous value of OUT!*.  In addition, if  SPECIALWRSACTION!*  is
+     non-NIL,  it should be a function of 2 arguments, which is called
+                  _______                                   _______     with the old CHANNEL as its first argument and the new CHANNEL as
+                           Wrs                       Wrs                           Wrs                       Wrs     its second argument.  Wrs(NIL) does the same as Wrs(STDOUT!*).
+
+
+ Out Out _ ______   ____ ________                                         _____(Out U:string): None Returned                                         macro
+
+                _     Opens file U for output, redirecting standard output.  Note  that
+     Out                                      Wrs     Out         ______                       Wrs          __ _______     Out takes a string as an argument, while Wrs takes an io-channel.Input and Output              7 February 1983                    PSL Manual
+page 12.6                                                      section 12.3
+
+ EvOut EvOut _ ______ ____   ____ ________                                   ____(EvOut L:string-list): None Returned                                   expr
+
+     _     L  is  a  list  containing  one file name which must be a string.
+     EvOut                  Out     EvOut                  Out     EvOut is the called by Out after evaluating its argument.
+
+  The reading and writing functions come in two flavors: those that read or
+                                                   RDS    WRS                                                   RDS    WRSwrite to the current channel, as set by a previous RDS or WRS into IN!*  or
+OUT!*,  and  those  that  explicitly  designate the desired input or output
+                                     Channel                                     Channelchannel. The latter typically have a Channel as part of their name.
+
+                                        ________  The following GLOBALs are used by the functions in this section.
+
+
+                        __________                                   ______SPECIALCLOSEFUNCTION!* [Initially: NIL]                              global
+
+
+                    __________                                       ______SPECIALRDSACTION!* [Initially: NIL]                                  global
+
+
+                       __________                                    ______SPECIALREADFUNCTION!* [Initially: NIL]                               global
+
+
+                        __________                                   ______SPECIALWRITEFUNCTION!* [Initially: NIL]                              global
+
+
+                    __________                                       ______SPECIALWRSACTION!* [Initially: NIL]                                  global
+
+
+
+12.4. Functions for Printing12.4. Functions for Printing12.4. Functions for Printing
+
+
+ ChannelWriteChar ChannelWriteChar _______ __ _______  __ _________   _________         ____(ChannelWriteChar CHANNEL:io-channel  CH:character): character         expr
+
+                            _______     Write one character to CHANNEL.  All output is defined  in  terms
+                              __     of  this  function.   If CH is equal to char EOL (ASCII LF, 8#12)
+                                           _______     the line counter POSN associated with CHANNEL  is  set  to  zero.
+     Otherwise,  it  is  increased  by  one.    The  writing  function
+                     _______                 _______       __     associated with CHANNEL is called with  CHANNEL  and  CH  as  its
+     arguments.
+
+
+ WriteChar WriteChar __ _________   _________                                    ____(WriteChar CH:character): character                                    expr
+
+     Write single character to current output.    
+
+        (de WRITECHAR (CH)
+            (CHANNELWRITECHAR OUT!* CH))PSL Manual                    7 February 1983              Input and Output
+section 12.4                                                      page 12.7
+
+ ChannelPrin1 ChannelPrin1 ____ __ _______  ___ ___   ___ ___                       ____(ChannelPrin1 CHAN:io-channel  ITM:any): ITM:any                       expr
+
+     ChannelPrin1     ChannelPrin1     ChannelPrin1   is   the   basic  LISP  printing  function.    For
+     well-formed, non-circular (non-self-referential) structures,  the
+                                          Read                                          Read     result can be parsed by the function Read.
+
+
+          ______        - Strings are printed surrounded by double quotes (").
+
+                              __        - Delimiters  inside  ids are preceded by the escape character
+          (!).
+
+          _____        - Floats are printed as {-}nnn.nnn{E{-}nn}.
+
+          _______        - Integers  are  printed  as  {-}nnn,  unless  the  value   of
+          OUTPUTBASE!*  is  not  10, in which case they are printed as
+          {-}r#nnn; r is the value of OutPutBase!*.
+
+          ____        - Pairs are printed in list-notation.  For example,
+
+
+              (a . (b . c))
+
+
+          is printed as 
+
+
+              (a b . c)
+
+
+          while 
+
+
+              (a . (b . (c . NIL)))
+
+
+          is printed as 
+
+
+              (a b c)
+
+
+          ______                                     ______        - Vectors are printed in vector-notation; a  vector  of  three
+          elements a, b, and c is printed as [a b c].
+
+
+                                                                 Read                                                                 Read     The following items can be printed, but cannot be parsed by Read.
+
+
+          ____ _______        - code-pointers            are            printed           as
+                 ________ _____ _____ _______            _____ _______          #<Code argument-count octal-address>.   where  octal-address
+          is  the octal machine address of the entry point of the codeInput and Output              7 February 1983                    PSL Manual
+page 12.8                                                      section 12.4
+
+          ______        ________ _____          vector,  and  argument-count is the number of arguments that
+          the code  takes.    The  argument  count  cannot  always  be
+          determined,  in  which  case  nothing  is  printed  for  the
+          ________ _____          argument-count.
+
+        - Anything else is printed as #<Unknown:nnnn>, where  nnnn  is
+          the  octal value found in the argument register.  Such items
+          are not legal LISP entities and may cause garbage  collector
+          errors if they are found in the heap.
+
+
+ Prin1 Prin1 ___ ___   ___ ___                                               ____(Prin1 ITM:any): ITM:any                                               expr
+
+
+ ErrPrin ErrPrin _ ___   ____ ________                                         ____(ErrPrin U:any): None Returned                                         expr
+
+     Prin1     Prin1                                  _     Prin1 with special quotes to highlight U.
+
+
+ ChannelPrin2 ChannelPrin2 ____ __ _______  ___ ___   ___ ___                       ____(ChannelPrin2 CHAN:io-channel  ITM:any): ITM:any                       expr
+
+     ChannelPrin2                ChannelPrin1     ChannelPrin2                ChannelPrin1              ______     ChannelPrin2  is similar to ChannelPrin1, except that strings are
+     printed without the surrounding  double  quotes,  and  delimiters
+            __     within ids are not preceded by the escape character.
+
+
+ Prin2 Prin2 ___ ___   ___ ___                                               ____(Prin2 ITM:any): ITM:any                                               expr
+
+
+ ChannelPrinC ChannelPrinC ____ __ _______ ___ ___   ___ ___                        ____(ChannelPrinC CHAN:io-channel ITM:any): ITM:any                        expr
+
+                      ChannelPrint2                      ChannelPrint2     Same function as ChannelPrint2.
+
+
+ PrinC PrinC ___ ___   ___ ___                                               ____(PrinC ITM:any): ITM:any                                               expr
+
+                      Prin2                      Prin2     Same function as Prin2.
+
+
+ ChannelPrint ChannelPrint ____ __ _______ _ ___   _ ___                            ____(ChannelPrint CHAN:io-channel U:any): U:any                            expr
+
+                           ChannelPrin1               _           ChannelPrin1     Display   U   using   ChannelPrin1   and   terminate  line  using
+     ChannelTerpri     ChannelTerpri     ChannelTerpri.
+
+
+ Print Print _ ___   _ ___                                                   ____(Print U:any): U:any                                                   expr
+
+     ChannelPrint     ChannelPrint _     ChannelPrint U to current output channel, OUT!*.PSL Manual                    7 February 1983              Input and Output
+section 12.4                                                      page 12.9
+
+ ChannelPrintF ChannelPrintF ____ __ _______ ______ ______  ____ ___    ___          ____(ChannelPrintF CHAN:io-channel FORMAT:string [ARGS:any]): NIL          expr
+
+     ChannelPrintF     ChannelPrintF     ChannelPrintF is a simple routine for formatted printing, similar
+                                                                ______     to the function with the same name in the C language[22].  FORMAT
+                                       ______     is  either  a  LISP  or  SYSLISP  string, which is printed on the
+     currently  selected  output  channel.    However,  if  a   %   is
+                           ______     encountered  in  the  string,  the  character  following  it is a
+     formatting directive, used  to  interpret  and  print  the  other
+                    ChannelPrintF                    ChannelPrintF     arguments  to  ChannelPrintF  in  order.    The  following format
+     characters are currently supported:  
+
+
+        - For SYSLISP arguments, use:
+
+
+                                                         _______          %d        print the next argument as a decimal integer
+                                                        _______          %o        print the next argument as an octal integer
+                                                             _______          %x        print the next argument as a hexadecimal integer
+          %c        print the next argument as a single character
+                                                 ______          %s        print the next argument as a string
+
+
+        - For LISP tagged items, use:
+
+
+          %p        print the next argument  as  a  LISP  item,  using
+                    Prin1                    Prin1                    Prin1
+          %w        print  the  next  argument  as  a LISP item, using
+                    Prin2                    Prin2                    Prin2
+          %r        print the next argument  as  a  LISP  item,  using
+                    ErrPrin               Prin2       Prin1      Prin2                    ErrPrin               Prin2       Prin1      Prin2                    ErrPrin  (Ordinarily  Prin2  "`"; Prin1 Arg; Prin2
+                    "'" )
+          %l        same as %w, except lists are printed  without  top
+                    level parens; NIL is printed as a blank
+          %e        eval  the  next  argument  for side-effect -- most
+                                        eval                                        eval                    useful if the thing evaled does some printing
+
+
+        - Control formats:
+
+
+          %b        take next argument as an integer  and  print  that
+                    many blanks
+          %f        "fresh-line",  print  an  end-of-line character if
+                    not at the beginning of the output line (does  not
+                    use a matching argument)
+          %n        print   end-of-line  character  (does  not  use  a
+                    matching argument)
+          %t        take  the  next  argument  as  an   integer,   and
+                    ChannelTab                    ChannelTab                    ChannelTab to that positionInput and Output              7 February 1983                    PSL Manual
+page 12.10                                                     section 12.4
+
+     If  the  character  following % is not either one of the above or
+     another %, it causes an error.  Thus,  to  include  a  %  in  the
+     format to be printed, use %%.
+
+     There  is  no  checking  for correspondence between the number of
+                   ______     arguments the FORMAT expects and the number given.  If the number
+                                          ______     given is less than the number in the FORMAT string, then  garbage
+     will  be inserted for the missing arguments.  If the number given
+                                       ______     is greater than the number in the FORMAT string, then  the  extra
+     ones are ignored.
+
+
+ PrintF PrintF ______ ______   ____ ___    ___                                ____(PrintF FORMAT:string  [ARGS:any]): NIL                                expr
+
+     ChannelPrintF     ChannelPrintF     ChannelPrintF to the current output channel, OUT!*.
+
+
+ ErrorPrintF ErrorPrintF ______ ______   ____ ___    ___                           ____(ErrorPrintF FORMAT:string  [ARGS:any]): NIL                           expr
+
+     ErrorPrintF                  PrintF     ErrorPrintF                  PrintF     ErrorPrintF  is  similar  to PrintF, except that instead of using
+     the currently selected output channel, ERROUT!* is used.    Also,
+     an end-of-line character is always printed after the message, and
+     an  end-of-line  character  is  printed before the message if the
+     line position of ERROUT!* is greater than zero.
+
+
+ ChannelTerPri ChannelTerPri ____ __ _______   ___                                   ____(ChannelTerPri CHAN:io-channel): NIL                                   expr
+
+                                      ____     Terminate OUTPUT line on channel CHAN, and reset the POSN counter
+     to 0.
+
+
+ TerPri TerPri    ___                                                         ____(TerPri ): NIL                                                         expr
+
+     Terminate current OUTPUT line, and reset the POSN counter to 0.
+
+
+ ChannelEject ChannelEject ____ __ _______   ___                                    ____(ChannelEject CHAN:io-channel): NIL                                    expr
+
+                                                ____     Skip to top of next output page on channel CHAN.
+
+
+ Eject Eject    ___                                                          ____(Eject ): NIL                                                          expr
+
+     Skip to top of next output page on current output channel.
+
+
+ ChannelPosn ChannelPosn ____ __ _______   _______                                 ____(ChannelPosn CHAN:io-channel): integer                                 expr
+
+     Returns number of characters  output  on  this  line  (i.e.  POSN
+     counter since last Terpri) on this channel.PSL Manual                    7 February 1983              Input and Output
+section 12.4                                                     page 12.11
+
+ Posn Posn    _______                                                       ____(Posn ): integer                                                       expr
+
+     Returns  number  of  characters  output  on  this line (i.e. POSN
+     counter since last Terpri)
+
+
+ ChannelLPosn ChannelLPosn ____ __ _______   _______                                ____(ChannelLPosn CHAN:io-channel): integer                                expr
+
+                                                        LPosn                                                        LPosn     Returns number of lines output on this page (i.e.  LPosn  counter
+     since last Eject) on this channel.
+
+
+ LPosn LPosn    _______                                                      ____(LPosn ): integer                                                      expr
+
+                                                         LPosn                                                         LPosn     Returns  number  of lines output on this page (i.e. LPosn counter
+     since last Eject).
+
+
+ ChannelLineLength ChannelLineLength ____ __ _______ ___  _______  ___    _______        ____(ChannelLineLength CHAN:io-channel LEN:{integer, NIL}): integer        expr
+
+                                       ____                   _______     Set maximum output line length on CHAN  if  a  positive  integer,
+     returning  previous  value.    If NIL just return previous value.
+                                         Terpri                                         Terpri     Controls the insertion of automatic Terpri's.
+
+
+ LineLength LineLength ___  _______  ___    _______                               ____(LineLength LEN:{integer, NIL}): integer                               expr
+
+     Set maximum output line length on  current  channel  OUT!*  if  a
+               _______     positive  integer,  returning previous value.  If NIL just return
+                                                          Terpri                                                          Terpri     previous value.  Controls the insertion of automatic Terpri's.
+
+
+ RPrint RPrint _ ____   ___                                                   ____(RPrint U:form): NIL                                                   expr
+
+     Print in RLISP format.  Autoloading.
+
+
+ PrettyPrint PrettyPrint _ ____   _                                                ____(PrettyPrint U:form): U                                                expr
+
+                  _     Prettyprints U.  Autoloading.
+
+
+ Prin2L Prin2L _ ___   _                                                      ____(Prin2L L:any): L                                                      expr
+
+     Prin2     Prin2                 ____     Prin2, except that a  list  is  printed  without  the  top  level
+     parens.
+
+
+ ChannelSpaces ChannelSpaces ____ __ _______ _ _______   ___                         ____(ChannelSpaces CHAN:io-channel N:integer): NIL                         expr
+
+     ChannelPrin2     ChannelPrin2  _                                                 _     ChannelPrin2  N  spaces. Will continue across multiple lines if N
+     is greater than the number of positions  in  the  output  buffer.Input and Output              7 February 1983                    PSL Manual
+page 12.12                                                     section 12.4
+
+          POSN     LINELENGTH          POSN     LINELENGTH     (See POSN and LINELENGTH)
+
+
+ Spaces Spaces _ _______   ___                                                ____(Spaces N:integer): NIL                                                expr
+
+     Prin2     Prin2 _     Prin2 N spaces.
+
+
+ ChannelPrin2T ChannelPrin2T ____ __ _______ _ ___   ___                             ____(ChannelPrin2T CHAN:io-channel X:any): any                             expr
+
+                          ChannelPrin2              _           ChannelPrin2     Output   X   using   ChannelPrin2   and   terminate   line   with
+     ChannelTerpri     ChannelTerpri     ChannelTerpri.
+
+
+ Prin2T Prin2T _ ___   ___                                                    ____(Prin2T X:any): any                                                    expr
+
+     ChannelPrin2T     ChannelPrin2T _     ChannelPrin2T X to the current output channel, OUT!*.
+
+
+ ChannelTab ChannelTab ____ __ _______ _ _______   ___                            ____(ChannelTab CHAN:io-channel N:integer): NIL                            expr
+
+                      _            ____     Move to position N on channel CHAN, emitting  spaces  as  needed.
+           ChannelTerPri           ChannelTerPri                _     Calls ChannelTerPri if past column N.
+
+
+ Tab Tab _ _______   ___                                                   ____(Tab N:integer): NIL                                                   expr
+
+                                                      TerPri                       _                              TerPri     Move  to position N, emitting spaces as needed.  TerPri() if past
+            _     column N.
+
+                      _________     __________  The fluid variables PRINLEVEL and PRINLENGTH allow the  user  to  control
+how  deep the printer will print and how many elements at a given level the
+printer will print.  This is useful for debugging or dealing large or  deep
+                                                Prin1  Prin2  PrinC  Print                                                Prin1  Prin2  PrinC  Printobjects.   These variables affect the functions Prin1, Prin2, PrinC, Print,
+    PrintF    PrintFand PrintF (and the corresponding Channel functions).  The documentation of
+these variables is from the Common Lisp Manual.
+
+
+           __________                                                ______PRINLEVEL [Initially: Nil]                                           global
+
+     Controls how many levels deep a nested data  object  will  print.
+        _________     If PRINLEVEL is NIL, then no control is exercised.  Otherwise the
+     value  should  be  an integer, indicating the maximum level to be
+     printed.  An object to be printed is at level 0.
+
+
+            __________                                               ______PRINLENGTH [Initially: Nil]                                          global
+
+     Controls how many elements at a given level are printed.  A value
+     of NIL indicates  that  there  be  no  limit  to  the  number  of
+                                                  __________     components  printed.  Otherwise the value of PRINLENGTH should be
+     an integer.PSL Manual                    7 February 1983              Input and Output
+section 12.5                                                     page 12.13
+
+12.5. Functions for Reading12.5. Functions for Reading12.5. Functions for Reading
+
+
+12.5.1. Reading S-Expression12.5.1. Reading S-Expression12.5.1. Reading S-Expression
+
+
+ ChannelRead ChannelRead ____ __ _______   ___                                     ____(ChannelRead CHAN:io-channel): any                                     expr
+
+                                                                 ____     Reads  and returns the next S-expression from input channel CHAN.
+     Valid input  forms  are:  vector-notation,  pair-notation,  list-
+                 ______    ____ _______    ______         __________     notation,   numbers,  code-pointers,  strings,  and  identifiers.
+                                       Intern     __________                        Intern     Identifiers are interned (see the Intern function in Chapter  6),
+                                                           ChannelRead                                                           ChannelRead     unless  the FLUID variable !*COMPRESSING is non-NIL.  ChannelRead
+     returns the value of the global variable !$EOF!$ when the end  of
+     the currently selected input channel is reached.
+
+     ChannelRead             ChannelReadToken     ChannelRead             ChannelReadToken     ChannelRead  uses  the  ChannelReadToken  function,  with  tokens
+     scanned according to the "Lisp scan table".  The user can  define
+     similar   read   functions   for  use  with  other  scan  tables.
+                          ____  _____                          ____  _____                          ____  _____     ChannelRead          Read  macro     ChannelRead          Read  macro     ChannelRead uses the Read  macro  mechanism  to  do  S-expression
+     parsing.   See section 12.5.5 for more information on read macros
+     and how to add extensions.  The following read macros are defined
+     initially:
+
+
+     (         Starts a scan  collecting  S-expressions  according  to
+               ____                                               ____               list  or  dot notation until terminated by a ).  A pair
+                  ____               or list is returned.
+
+     [         Starts a scan  collecting  S-expressions  according  to
+                                                             ______               vector  notation  until terminated by a ].  A vector is
+               returned.
+
+                     Read                     Read     '         Calls Read to get an S-expression, x, and then  returns
+                         Quote                         Quote               the list (Quote x).
+
+     !$EOF!$   Generates  an  error when still inside an S-expression:
+               
+
+     ***** Unexpected EOF while reading on channel
+
+               .  Otherwise !$EOF!$ is returned.
+
+
+ Read Read    ___                                                           ____(Read ): any                                                           expr
+
+     Reads and returns an S-expression from the current input channel.
+                        ChannelRead                        ChannelRead     That is, it does a ChannelRead(IN!*).Input and Output              7 February 1983                    PSL Manual
+page 12.14                                                     section 12.5
+
+12.5.2. Reading Files into PSL12.5.2. Reading Files into PSL12.5.2. Reading Files into PSL
+
+  The  following  procedures  are  used to read complete files into PSL, by
+              Open              Openfirst calling Open, and then looping until end of  file.    The  effect  is
+similar  to what would happen if the file were typed into PSL.  Recall that
+file names are strings, and therefore one needs  string-quotes  (")  around
+file  names.  File names may be given using full system dependent file name
+conventions,  including  directories  and  sub-directories,   "links"   and
+"logical-device-names", as appropriate on the specific system.
+
+
+        __________                                                   ______!*ECHO [Initially: Nil]                                              switch
+
+                   ____     The  switch !*ECHO is used to control the echoing of input.  When
+     (On Echo) is placed in an input file, the contents  of  the  file
+                                                 Dskin                                                 Dskin     are  echoed on the standard output device.  Dskin does not change
+                    ____     the value of !*ECHO, so one may  say  (On  Echo)  before  calling
+     Dskin     Dskin     Dskin, and the input will be echoed.
+
+
+ DskIn DskIn _ ______   ____ ________                                        ____(DskIn F:string): None Returned                                        expr
+
+                Read Eval Print                Read Eval Print                                     _     Enters  a  Read-Eval-Print  loop  on  the contents of the file F.
+     DskIn     DskIn                                   _     DskIn expects LISP syntax in the  file  F.    Use  the  following
+     format:  (DskIn "File").
+
+
+ LapIn LapIn _ ______   ____ ________                                        ____(LapIn U:string): None Returned                                        expr
+
+     Reads  a single LISP file as "quietly" as possible, i.e., it does
+                                           LapIn                                           LapIn     not echo or return values.  Note that LapIn can be used only  for
+     LISP  files.   By convention, files with the extension ".LAP" are
+                            LapIn                            LapIn     intended to be read by LapIn.  These files are typically used  to
+     load  modules  made  up  of  several  binary (also known as FASL)
+                            Load                            Load     files.  The use of the Load function is  normally  preferable  to
+            LapIn            LapIn     using  LapIn.    For  information  about fast loading of files of
+                                                      Load      FaslIn                                                      Load      FaslIn     compiled functions (FASL files) see FASL and the Load and  FaslIn
+     functions in Chapter 18.
+
+  The  following  functions  are  present  in  RLISP, they can be used from
+Bare-PSL by loading RLISP.
+
+
+ In In  _ ______    ____ ________                                        _____(In [L:string]): None Returned                                        macro
+
+                DskIn                DskIn     Similar to DskIn but expects RLISP syntax in the files  it  reads
+     unless  it  can determine that the files are not in RLISP syntax.
+          In          In     Also In can take more than one file name as an argument.  On most
+                          In                          In     systems the function In expects files with extension .LSP and .SL
+     to be written in LISP syntax, not in RLISP.  This  is  convenient
+     when  using both LISP and RLISP files.  It is conventional to use
+     the extension .RED (or .R) for RLISP files and use  .LSP  or  .SLPSL Manual                    7 February 1983              Input and Output
+section 12.5                                                     page 12.15
+
+     only  for  fully parenthesized LISP files.  There are some system
+     programs, such as TAGS on the DEC-20, which expect RLISP files to
+     have the extension .RED.
+
+     If it is not desired to have the contents of the file  echoed  as
+                                In                                In     it is read, either end the In command with a "$" in RLISP, as
+
+        In "FILE1.RED","FILE2.SL"$
+
+                               Off                               Off ____     or include the statement "Off ECHO;" in your file.
+
+
+ PathIn PathIn ________ ____ ______   ____ ________                           ____(PathIn FileName-Tail:string): None Returned                           expr
+
+                                                                    IN                                                                    IN     Allows  the  use  of  a  directory  search path with the Rlisp IN
+     function.  It finds a list of search paths in the fluid  variable
+     PATHIN!*.   These are successively concatenated onto the front of
+                            PathIn                            PathIn     the string argument to PathIn until an  existing  file  is  found
+             FileP                    In             FileP                    In     (using  FileP.  If one is found, In will be invoked on this file.
+     If not, a continuable error occurs.  For example on the VAX,     
+
+         (Setq PathIn!* '( "" "/u/psl/" "/u/smith/"))
+         (PathIn "foo.red")
+
+     will  attempt  to  open  "foo.red",  then  "/u/psl/foo.red",  and
+     finally "/u/smith/foo.red" until a successful open is achieved.
+
+            Pathin            Pathin     To use Pathin in Bare-PSL, load PATHIN as well as RLISP.
+
+
+ EvIn EvIn _ ______ ____   ____ ________                                    ____(EvIn L:string-list): None Returned                                    expr
+
+                                                           EvIn     _                                                     EvIn     L  must  be  a  list  of strings that are filenames.  EvIn is the
+                        In                                      In                        In                                      In     function called by In after evaluating  its  arguments.    In  is
+                                               EvIn                                               EvIn     useful  only  at  the  top-level,  while  EvIn can be used inside
+     functions with file names passed as parameters.
+
+
+12.5.3. Reading Single Characters12.5.3. Reading Single Characters12.5.3. Reading Single Characters
+
+
+ ChannelReadChar ChannelReadChar _______ __ _______   _________                        ____(ChannelReadChar CHANNEL:io-channel): character                        expr
+
+                             _______        _______     Reads one character (an integer) from  CHANNEL.    All  input  is
+                                             _______     defined  in terms of this function.  If CHANNEL is not open or is
+     open for writing only, an error is generated.    If  there  is  a
+                                                          _______     non-zero  value in the backup buffer associated with CHANNEL, the
+     buffer  is  emptied  (set  to  zero)  and  the  value   returned.
+                                                     _______     Otherwise, the reading function associated with CHANNEL is called
+          _______     with CHANNEL as argument, and the value it returns is returned by
+     ChannelReadChar     ChannelReadChar     ChannelReadChar.Input and Output              7 February 1983                    PSL Manual
+page 12.16                                                     section 12.5
+
+     ***** Channel not open
+
+     ***** Channel open for write only
+
+
+ ReadChar ReadChar    _________                                                 ____(ReadChar ): character                                                 expr
+
+     Reads one character from the current input channel.
+
+
+ ChannelReadCH ChannelReadCH ____ __ _______   __                                    ____(ChannelReadCH CHAN:io-channel): id                                    expr
+
+          ChannelReadChar          ChannelReadChar                  __     Like ChannelReadChar, but returns the id for the character rather
+     than its ASCII code.
+
+
+ ReadCH ReadCH    __                                                          ____(ReadCH ): id                                                          expr
+
+     ChannelReadCH     ChannelReadCH     ChannelReadCH from the current input channel.
+
+
+ ChannelUnReadChar ChannelUnReadChar ____ __ _______ __ _________   _________            ____(ChannelUnReadChar CHAN:io-channel CH:character): Undefined            expr
+
+                                  __     The  input backup function.  CH is deposited in the backup buffer
+                     ____     associated with CHAN.  This function should be only called  after
+     ChannelReadChar     ChannelReadChar     ChannelReadChar   is   called,   before   any  intervening  input
+     operations, since it is used by the token scanner.
+
+
+ UnReadChar UnReadChar __ _________   _________                                   ____(UnReadChar CH:character): Undefined                                   expr
+
+     Backup on the current input channel.
+
+
+12.5.4. Reading Tokens12.5.4. Reading Tokens12.5.4. Reading Tokens
+
+  The functions described here pertain to the  token  scanner  and  reader.
+Globals and switches used by these functions are defined at the end of this
+section.
+
+
+ ChannelReadToken ChannelReadToken _______ __ _______    __  ______  ______             ____(ChannelReadToken CHANNEL:io-channel): {id, number, string}            expr
+
+     This  is  the  basic LISP token scanner.  The value returned is a
+     LISP item corresponding to the next token from the input  stream.
+     __     Ids  are  interned,  unless  the  FLUID variable !*COMPRESSING is
+     non-NIL.  The GLOBAL variable TOKTYPE!* is set to:
+
+
+                                           __     0         if the token is an ordinary id,
+                                 ______     1         if the token is a string,
+                                 ______     2         if the token is a number, orPSL Manual                    7 February 1983              Input and Output
+section 12.5                                                     page 12.17
+
+     3         if the token is an unescaped delimiter.
+
+
+                                                   __     In  the  last case, the value returned is the id whose print name
+     is the same as the delimiter.
+
+     The precise behavior  of  this  function  depends  on  two  FLUID
+     variables:
+
+
+     CURRENTSCANTABLE!*
+                              ______               Is  bound to a vector known as a scan table.  Described
+               below.
+
+     CURRENTREADMACROINDICATOR!*
+                             __               Bound to  an  id  known  as  a  read  macro  indicator.
+               Described below.
+
+
+     Scan  tables  have  129  entries,  indexed  by  0 through 128.  0
+                                                               _______     through 127 are indexed by ASCII character code to get an integer
+     code determining the treatment of  the  corresponding  character.
+                                    _______                   __     The  last  entry  is  not  an  integer,  but  rather  an id which
+                 _________ _________     specifies a Diphthong Indicator for the token scanner.
+
+       [???  A  future  implementation   may   replace   the   FLUID       [???  A  future  implementation   may   replace   the   FLUID       [???  A  future  implementation   may   replace   the   FLUID
+       CURRENTREADMACROINDICATOR!*  with  another  entry in the scan       CURRENTREADMACROINDICATOR!*  with  another  entry in the scan       CURRENTREADMACROINDICATOR!*  with  another  entry in the scan
+       table. ???]       table. ???]       table. ???]
+
+     The following encoding for characters is used.
+
+
+     0 ... 9   DIGIT: indicates the character is a  digit,  and  gives
+               the corresponding numeric value.
+     10        LETTER: indicates that the character is a letter.
+     11        DELIMITER:  indicates that the character is a delimiter
+               which is not the starting character of a diphthong.
+     12        COMMENT: indicates that the character begins a  comment
+               terminated by an end of line.
+     13        DIPHTHONG:  indicates that the character is a delimiter
+               which may be the starting character of a diphthong.  (A
+               diphthong is a  two  character  sequence  read  as  one
+               token, i.e., "<<" or ":=".)
+     14        IDESCAPE:  indicates  that  the  character is an escape
+               character, to cause the following character to be taken
+                             __               as part of an id.  (Ordinarily  an  exclamation  point,
+               i.e. "!".)
+     15        STRINGQUOTE:  indicates  that the character is a string
+               quote.  (Ordinarily a double quote, i.e. '"'.)
+     16        PACKAGE:  indicates  that  the  character  is  used  to
+               introduce explicit package names.  (Ordinarily "\".)
+     17        IGNORE:  indicates that the character is to be ignored.Input and Output              7 February 1983                    PSL Manual
+page 12.18                                                     section 12.5
+
+               (Ordinarily BLANK, TAB, EOL and NULL.)
+     18        MINUS: indicates that the character is a minus sign.
+     19        PLUS: indicates that the character is a plus sign.
+     20        DECIMAL:  indicates  that  the  character  is a decimal
+               point.
+     21        IDSURROUND: indicates that the character is to act  for
+               identifiers   as  a  string  quote  acts  for  strings.
+               Although this is not used in the  default  scan  table,
+               the  intended character for this function is a vertical
+               bar, |.)
+
+
+     System builders who wish to define their own parsers can bind  an
+     appropriate  scan  table  to  CURRENTSCANTABLE!*  and  then  call
+     ChannelReadToken        ChannelReadTokenWithHooks     ChannelReadToken        ChannelReadTokenWithHooks     ChannelReadToken   or   ChannelReadTokenWithHooks   for   lexical
+     scanning.    Utility  functions  for  building  scan  tables  are
+     described in the next section.
+
+     The following standards for scanning tokens are used.
+
+
+          __        - Ids begin with a letter or  any  character  preceded  by  an
+          escape  character.    They  may  contain letters, digits and
+                               __          escaped characters.  Ids may also start with a digit, if the
+          first non-digit following is a plus  sign,  minus  sign,  or
+          letter  other than "b" or "e".  This is to allow identifiers
+          such as "1+" which occur in some LISPs.  Finally,  a  string
+          of characters bounded by the IDSURROUND character is treated
+                __          as an id.
+
+          If  !*RAISE  is  non-NIL,  unescaped  lower case letters are
+                                                          __          folded to upper case.  The maximum size of  an  id  (or  any
+          other token) is currently 5000 characters.
+
+                                                 __________          Note:  Using  lower  case  letters  in identifiers may cause
+          portability problems.  Lower case letters are  automatically
+          converted  to  upper  case if the !*RAISE switch is T.  This
+                                           __          case conversion is done only for id input,  not  for  single
+          character or string input.  
+
+            [??? Can we retain input Case, but Compare RAISEd ???]            [??? Can we retain input Case, but Compare RAISEd ???]            [??? Can we retain input Case, but Compare RAISEd ???]
+
+          Here  are  some  examples, using the RLISP scan table.  Note
+          that the first and second examples  are  read  as  the  same
+          identifier  if  !*RAISE is T.  The fourth and fifth examples
+          are read as the same identifier.
+
+
+             * ThisIsALongIdentifier
+             * THISISALONGIDENTIFIER
+             * ThisIsALongIdentifierAndDifferentFromTheOther
+             * this_is_a_long_identifier_with_underscoresPSL Manual                    7 February 1983              Input and Output
+section 12.5                                                     page 12.19
+
+             * this!_is!_a!_long!_identifier!_with!_underscores
+             * an!-identifier!-with!-dashes
+             * !*RAISE
+             * !2222
+
+
+          The  following  examples show the same identifiers in a form
+          accepted by the LISP scan table.  Note that most  characters
+          are  treated  as  letters by the LISP scan table, while they
+          are treated as delimiters by the RLISP scan table.
+
+
+             * ThisIsALongIdentifier
+             * THISISALONGIDENTIFIER
+             * ThisIsALongIdentifierAndDifferentFromTheOther
+             * this_is_a_long_identifier_with_underscores
+             * this!_is!_a!_long!_identifier!_with!_underscores
+             * an-identifier-with-dashes
+             * *RAISE
+             * !2222
+
+
+          ______        - Strings begin with  a  double  quote  (")  and  include  all
+          characters up to a closing double quote.  A double quote can
+                              ______                           ______          be  included  in  a string by doubling it.  An empty string,
+          consisting of only the enclosing quote  marks,  is  allowed.
+                               ______          The  characters of a string are not affected by the value of
+          the !*RAISE.  Examples:
+
+
+             * "This is a string"
+             * "This is a ""string"""
+             * ""
+
+
+          ____ _______        - Code-pointers cannot be read directly, but  can  be  printed
+          and      constructed.           Currently     printed     as
+                 ________ _____ _____ _______          #<Code argument-count octal-address>.
+
+          _______        - Integers begin with a digit, optionally preceded by a  +  or
+          -  sign, and consist only of digits.  The GLOBAL input radix
+          is 10; there is no way to change this.  However, numbers  of
+          different  radices  may be read by the following convention.
+          A decimal number from 2 to 36 followed by a sharp sign  (#),
+          causes  the  digits (and possibly letters) that follow to be
+                                                           2
+          read in the radix of the number preceding the  #.   Thus  63
+_______________
+
+  2
+   Octal  numbers can also be written as a string of digits followed by the
+letter "B".  This "feature" may be removed in the future.Input and Output              7 February 1983                    PSL Manual
+page 12.20                                                     section 12.5
+
+          may  be  entered  as  8#77,  or  255 as 16#ff or 16#FF.  The
+          output radix can be changed, by setting  OUTPUTBASE!*.    If
+                                                  _______          OutPutBase!*  is  not  10,  the printed integer appears with
+          appropriate radix.  Leading zeros are suppressed and a minus
+                                                _______          sign  precedes  the  digits  if  the  integer  is  negative.
+          Examples:
+
+
+             * 100
+             * +5234
+             * -8#44 (equal to -36)
+
+
+            [???  Should  we  permit  trailing  .  in  integers  for            [???  Should  we  permit  trailing  .  in  integers  for            [???  Should  we  permit  trailing  .  in  integers  for
+            compatibility with some LISPs and require digits on each            compatibility with some LISPs and require digits on each            compatibility with some LISPs and require digits on each
+            side of . for floats ???]            side of . for floats ???]            side of . for floats ???]
+
+          _____        - Floats have a period and/or a letter "e"  or  "E"  in  them.
+                                            _____          Any  of the following are read as floats.  The value appears
+          in the format [-]n.nn...nnE[-]mm if  the  magnitude  of  the
+          number  is  too  large  or  small to display in [-]nnnn.nnnn
+          format.    The  crossover  point  is   determined   by   the
+                                       _____          implementation.    In  BNF,  floats  are  recognized  by the
+          grammar:
+
+
+           <base>       ::= <unsigned-integer>.|
+                            .<unsigned-integer>|
+                            <unsigned-integer>.<unsigned-integer>
+           <ebase>      ::= <base>|<unsigned-integer>
+           <unsigned-float> ::= <base>|
+                                <ebase>e<unsigned-integer>|
+                                <ebase>e-<unsigned-integer>|
+                                <ebase>e+<unsigned-integer>|
+                                <ebase>E<unsigned-integer>|
+                                <ebase>E-<unsigned-integer>|
+                                <ebase>E+<unsigned-integer>
+           <float>          ::= <unsigned-float>|
+                                +<unsigned-float>|
+                                -<unsigned-float>
+
+
+          That is:
+
+
+             * [+|-][nnn][.]nnn{e|E}[+|-]nnn
+             * nnn.
+             * .nnn
+             * nnn.nnn
+
+
+          Examples:PSL Manual                    7 February 1983              Input and Output
+section 12.5                                                     page 12.21
+
+             * 1e6
+             * .2
+             * 2.
+             * 2.0
+             * -1.25E-9
+
+
+ RAtom RAtom     __  ______  ______                                          ____(RAtom ): {id, number, string}                                         expr
+
+     Reads  a  token  from  the  current  input  channel.  (Not called
+     ReadToken     ReadToken     ReadToken for historical reasons.)
+
+       [??? Should we bind CurrentScanTable!* for this function  too       [??? Should we bind CurrentScanTable!* for this function  too       [??? Should we bind CurrentScanTable!* for this function  too
+       ???]       ???]       ???]
+
+
+               __________                                            ______!*COMPRESSING [Initially: NIL]                                       switch
+
+                                      ChannelReadToken                                      ChannelReadToken     If  !*COMPRESSING  is  non-NIL,  ChannelReadToken does not intern
+     __     ids.
+
+
+                 __________                                          ______!*EOLINSTRINGOK [Initially: NIL]                                     switch
+
+     If !*EOLINSTRINGOK is non-NIL, the warning message 
+
+     *** STRING CONTINUED OVER END-OF-LINE
+
+     is suppressed.
+
+
+         __________                                                  ______!*RAISE [Initially: T]                                               switch
+
+                                                     __     If !*RAISE is non-NIL, all characters input for ids  through  PSL
+     input  functions  are  raised  to upper case.  If !*RAISE is NIL,
+                                    ______     characters are input as is.  A string is unaffected by !*RAISE.
+
+
+                    __________                                       ______CURRENTSCANTABLE!* [Initially: ]                                     global
+
+                                                    Read                                                    Read     This variable is set to LISPSCANTABLE!* by the Read function (the
+     "Lisp  syntax"  reader).    The   RLISP   reader   sets   it   to
+     RLISPSCANTABLE!*  or  LISPSCANTABLE!*  depending on the syntax it
+     expects.Input and Output              7 February 1983                    PSL Manual
+page 12.22                                                     section 12.5
+
+                 __________                                          ______LISPSCANTABLE!* [Initially: as shown in following table]             global
+
+
+0 ^@ IGNORE       32   IGNORE           64 @ LETTER     96 ` DELIMITER
+1 ^A LETTER       33 ! IDESCAPECHAR     65 A LETTER     97 a LETTER
+2 ^B LETTER       34 " STRINGQUOTE      66 B LETTER     98 b LETTER
+3 ^C LETTER       35 # LETTER           67 C LETTER     99 c LETTER
+4 ^D LETTER       36 $ LETTER           68 D LETTER     100 d LETTER
+5 ^E LETTER       37 % COMMENTCHAR      69 E LETTER     101 e LETTER
+6 ^F LETTER       38 & LETTER           70 F LETTER     102 f LETTER
+7 ^G LETTER       39 ' DELIMITER        71 G LETTER     103 g LETTER
+8 ^H LETTER       40 ( DELIMITER        72 H LETTER     104 h LETTER
+9 <tab> IGNORE    41 ) DELIMITER        73 I LETTER     105 i LETTER
+10 <lf> IGNORE    42 * LETTER           74 J LETTER     106 j LETTER
+11 ^K LETTER      43 + PLUSSIGN         75 K LETTER     107 k LETTER
+12 ^L IGNORE      44 , DIPHTHONGSTART   76 L LETTER     108 l LETTER
+13 <cr> IGNORE    45 - MINUSSIGN        77 M LETTER     109 m LETTER
+14 ^N LETTER      46 . DECIMALPOINT     78 N LETTER     110 n LETTER
+15 ^O LETTER      47 / LETTER           79 O LETTER     111 o LETTER
+16 ^P LETTER      48 0 DIGIT            80 P LETTER     112 p LETTER
+17 ^Q LETTER      49 1 DIGIT            81 Q LETTER     113 q LETTER
+18 ^R LETTER      50 2 DIGIT            82 R LETTER     114 r LETTER
+19 ^S LETTER      51 3 DIGIT            83 S LETTER     115 s LETTER
+20 ^T LETTER      52 4 DIGIT            84 T LETTER     116 t LETTER
+21 ^U LETTER      53 5 DIGIT            85 U LETTER     117 u LETTER
+22 ^V LETTER      54 6 DIGIT            86 V LETTER     118 v LETTER
+23 ^W LETTER      55 7 DIGIT            87 W LETTER     119 w LETTER
+24 ^X LETTER      56 8 DIGIT            88 X LETTER     120 x LETTER
+25 ^Y LETTER      57 9 DIGIT            89 Y LETTER     121 y LETTER
+26 ^Z DELIMITER   58 : LETTER           90 Z LETTER     122 z LETTER
+27 $ LETTER       59 ; LETTER           91 [ DELIMITER  123 { LETTER
+28 ^\ LETTER      60 < LETTER           92 \ PACKAGE    124 | LETTER
+29 ^] LETTER      61 = LETTER           93 ] DELIMITER  125 } LETTER
+30 ^^ LETTER      62 > LETTER           94 ^ LETTER     126 ~ LETTER
+31 ^_ LETTER      63 ? LETTER           95 _ LETTER     127 <rubout>
+                                                              LETTER
+
+
+        _________   _________  The   Diphthong   Indicator   in   the  128th  entry  is  the  identifier
+LISPDIPTHONG.
+
+  [??? Note that LISPDIPTHONG should be spelled LISPDIPHTHONG, this  will  [??? Note that LISPDIPTHONG should be spelled LISPDIPHTHONG, this  will  [??? Note that LISPDIPTHONG should be spelled LISPDIPHTHONG, this  will
+  probably be corrected in the future. ???]  probably be corrected in the future. ???]  probably be corrected in the future. ???]PSL Manual                    7 February 1983              Input and Output
+section 12.5                                                     page 12.23
+
+                  __________                                         ______RLISPSCANTABLE!* [Initially: as shown in following table]            global
+
+
+0 ^@ IGNORE       32   IGNORE           64 @ DELIMITER  96 ` DELIMITER
+1 ^A DELIMITER    33 ! IDESCAPECHAR     65 A LETTER     97 a LETTER
+2 ^B DELIMITER    34 " STRINGQUOTE      66 B LETTER     98 b LETTER
+3 ^C DELIMITER    35 # DELIMITER        67 C LETTER     99 c LETTER
+4 ^D DELIMITER    36 $ DELIMITER        68 D LETTER     100 d LETTER
+5 ^E DELIMITER    37 % COMMENTCHAR      69 E LETTER     101 e LETTER
+6 ^F DELIMITER    38 & DELIMITER        70 F LETTER     102 f LETTER
+7 ^G DELIMITER    39 ' DELIMITER        71 G LETTER     103 g LETTER
+8 ^H DELIMITER    40 ( DELIMITER        72 H LETTER     104 h LETTER
+9 <tab> IGNORE    41 ) DELIMITER        73 I LETTER     105 i LETTER
+10 <lf> IGNORE    42 * DIPHTHONGSTART   74 J LETTER     106 j LETTER
+11 ^K DELIMITER   43 + DELIMITER        75 K LETTER     107 k LETTER
+12 ^L IGNORE      44 , DELIMITER        76 L LETTER     108 l LETTER
+13 <cr> IGNORE    45 - DELIMITER        77 M LETTER     109 m LETTER
+14 ^N DELIMITER   46 . DECIMALPOINT     78 N LETTER     110 n LETTER
+15 ^O DELIMITER   47 / DELIMITER        79 O LETTER     111 o LETTER
+16 ^P DELIMITER   48 0 DIGIT            80 P LETTER     112 p LETTER
+17 ^Q DELIMITER   49 1 DIGIT            81 Q LETTER     113 q LETTER
+18 ^R DELIMITER   50 2 DIGIT            82 R LETTER     114 r LETTER
+19 ^S DELIMITER   51 3 DIGIT            83 S LETTER     115 s LETTER
+20 ^T DELIMITER   52 4 DIGIT            84 T LETTER     116 t LETTER
+21 ^U DELIMITER   53 5 DIGIT            85 U LETTER     117 u LETTER
+22 ^V DELIMITER   54 6 DIGIT            86 V LETTER     118 v LETTER
+23 ^W DELIMITER   55 7 DIGIT            87 W LETTER     119 w LETTER
+24 ^X DELIMITER   56 8 DIGIT            88 X LETTER     120 x LETTER
+25 ^Y DELIMITER   57 9 DIGIT            89 Y LETTER     121 y LETTER
+26 ^Z DELIMITER   58 : DIPHTHONGSTART   90 Z LETTER     122 z LETTER
+27 $ DELIMITER    59 ; DELIMITER        91 [ DELIMITER  123 { DELIMITER
+28 ^\ DELIMITER   60 < DIPHTHONGSTART   92 \ PACKAGE    124 | DELIMITER
+29 ^] DELIMITER   61 = DELIMITER        93 ] DELIMITER  125 } DELIMITER
+30 ^^ DELIMITER   62 > DIPHTHONGSTART   94 ^ DELIMITER  126 ~ DELIMITER
+31 ^_ DELIMITER   63 ? DELIMITER        95 _ LETTER     127 <rubout>
+                                                              DELIMITER
+
+
+        _________   _________  The   Diphthong   Indicator   in   the  128th  entry  is  the  identifier
+RLISPDIPTHONG.
+
+  [??? Note that RLISPDIPTHONG should  be  spelled  RLISPDIPHTHONG,  this  [??? Note that RLISPDIPTHONG should  be  spelled  RLISPDIPHTHONG,  this  [??? Note that RLISPDIPTHONG should  be  spelled  RLISPDIPHTHONG,  this
+  will probably be corrected in the future. ???]  will probably be corrected in the future. ???]  will probably be corrected in the future. ???]
+
+  [??? What about the RlispRead scantable ???]  [??? What about the RlispRead scantable ???]  [??? What about the RlispRead scantable ???]
+
+  [???  Perhaps  describe one basic table, and changes from one to other,  [???  Perhaps  describe one basic table, and changes from one to other,  [???  Perhaps  describe one basic table, and changes from one to other,
+  since mostly the same ???]  since mostly the same ???]  since mostly the same ???]Input and Output              7 February 1983                    PSL Manual
+page 12.24                                                     section 12.5
+
+              __________                                             ______OUTPUTBASE!* [Initially: 10]                                         global
+
+     This global can be set to control the radix in which integers are
+     printed out.  If the radix is not 10, the radix is given before a
+     sharp sign, e.g. 8#20 is"20" in base 8, or 16.
+
+
+           __________                                                ______TOKTYPE!* [Initially: 3]                                             global
+
+     ChannelReadToken     ChannelReadToken     ChannelReadToken sets TOKTYPE!* to:
+
+
+                                           __     0         if the token is an ordinary id,
+                                 ______     1         if the token is a string,
+                                 ______     2         if the token is a number, or
+     3         if the token is an unescaped delimiter.
+
+
+                                                   __     In  the  last case, the value returned is the id whose print name
+     is the same as the delimiter.
+
+
+12.5.5. Read Macros12.5.5. Read Macros12.5.5. Read Macros
+
+                               Channel  Token                               Channel  Token  A function of two arguments (Channel, Token) can be associated  with  any
+DELIMITER  or DIPHTHONG token (i.e. those that have TOKTYPE!*=3) by calling
+PutReadMacro                                      ChannelReadTokenWithHooksPutReadMacro     _________                        ChannelReadTokenWithHooksPutReadMacro.  A ReadMacro function is called by  ChannelReadTokenWithHooks
+                                                          ChannelReadToken                                                          ChannelReadTokenif  the appropriate token with TOKTYPE!*=3 is returned by ChannelReadToken.
+This function can then take over the reading (or scanning) process, finally
+returning a token (actually an S-expression) to be returned in place of the
+token itself.
+
+                                              Quote                                              Quote  Example:  The quote mark, 'x converting to (Quote  x),  is  done  by  the
+                                                      PutReadMacro                                                      PutReadMacrofollowing  example  which  makes  use of the function PutReadMacro which is
+defined in Section 12.6.
+
+   In LISP:
+
+       (de DOQUOTE (CHANNEL TOKEN))
+          (LIST 'QUOTE  (CHANNELREAD CHANNEL))
+
+       (PUTREADMACRO LISPSCANTABLE!* '!' (FUNCTION DOQUOTE))
+
+    _________  A ReadMacro is installed on the property list of the macro-character as a
+function under the indicators  'LISPREADMACRO,  'RLISPREADMACRO,  etc.    A
+_________Diphthong  is  installed  on  the  property  list of the first character as
+(second-character  .  diphthong)  under  the   indicators   'LISPDIPHTHONG,
+'RLISPDIPHTHONG, etc.PSL Manual                    7 February 1983              Input and Output
+section 12.6                                                     page 12.25
+
+12.6. Scan Table Utility Functions12.6. Scan Table Utility Functions12.6. Scan Table Utility Functions
+
+  The  following  functions  are  provided  to  manage  scan tables, in the
+READ-UTILS module (use via LOAD READ-UTILS):
+
+
+ PrintScanTable PrintScanTable _____ ______   ___                                     ____(PrintScanTable TABLE:vector): NIL                                     expr
+
+     Prints the entire scantable, gives the 0 ... 127 entries with the
+     name of the character class.  Also prints the indicator used  for
+     diphthongs.  
+
+       [???  Make smarter, reduce output, use nice names for control       [???  Make smarter, reduce output, use nice names for control       [???  Make smarter, reduce output, use nice names for control
+       characters, ala EMODE. ???]       characters, ala EMODE. ???]       characters, ala EMODE. ???]
+
+
+ CopyScanTable CopyScanTable ________  ______  ___    ______                         ____(CopyScanTable OLDTABLE:{vector, NIL}): vector                         expr
+
+     Copies the existing scantable  (or  CURRENTSCANTABLE!*  if  given
+                      GenSym                      GenSym     NIL).  Currently GenSym()'s the indicators used for diphthongs.
+
+       [???  Change when we use Property Lists in extra slots of the       [???  Change when we use Property Lists in extra slots of the       [???  Change when we use Property Lists in extra slots of the
+       Scan-Table ???]       Scan-Table ???]       Scan-Table ???]
+
+
+ PutDipthong PutDipthong _____ ______   __ __  ___ __  ___ __   ___                ____(PutDipthong TABLE:vector,  D1:id  ID2:id  DIP:id): NIL                expr
+
+              ___                              ___             ___     Installs DIP as the name of the diphthong ID1 followed by ID2  in
+     the given scan table.
+
+       [???  Note  that  PutDipthong should be spelled PutDiphthong,       [???  Note  that  PutDipthong should be spelled PutDiphthong,       [???  Note  that  PutDipthong should be spelled PutDiphthong,
+       this will probably be corrected in the future. ???]       this will probably be corrected in the future. ???]       this will probably be corrected in the future. ???]
+
+
+ PutReadMacro PutReadMacro _____ ______  ___ __  _____ __   ___                     ____(PutReadMacro TABLE:vector  ID1:id  FNAME:id): NIL                     expr
+
+                                       ____  _____                                       ____  _____                                       ____  _____                                       Read  macro              _____                    Read  macro     Installs FNAME as the name of the Read  macro  function  for  the
+                                                                   ___                                                                   ___                                                                   ___                                                                  [not                               ___                                [not     delimiter  or  diphthong  ID1  in  the  given  scan  table.  [not
+     ___________ ___     ___________ ___     ___________ ___     implemented yet]     implemented yet]     implemented yet]
+
+
+
+12.7. I/O to and from Lists and Strings12.7. I/O to and from Lists and Strings12.7. I/O to and from Lists and Strings
+
+
+ Digit Digit _ ___   _______                                                 ____(Digit U:any): boolean                                                 expr
+
+                  _     Returns T if U is a digit, otherwise NIL.  Effectively this is:
+
+        (de DIGIT (U)
+          (IF (MEMQ U '(!0 !1 !2 !3 !4 !5 !6 !7 !8 !9)) T NIL))Input and Output              7 February 1983                    PSL Manual
+page 12.26                                                     section 12.7
+
+ Liter Liter _ ___   _______                                                 ____(Liter U:any): boolean                                                 expr
+
+                     _     Returns  T  if  U  is a character of the alphabet, NIL otherwise.
+     This is effectively:
+
+        (de LITER(U)
+          (IF (MEMQ U '(A B C D E F G H I J K L M
+            N O P Q R S T U V W X Y Z a b c d e f
+            g h i j k l m n o p q r s t u v w x y
+            z))  T NIL)) 
+
+
+ Explode Explode _ ___   __ ____                                               ____(Explode U:any): id-list                                               expr
+
+     Explode     Explode     Explode takes the constituent characters of an  S-expression  and
+              ____                     __     forms  a list of single character ids.  It is implemented via the
+              ChannelPrin1              ChannelPrin1         ____     function ChannelPrin1, with a list rather than a file or terminal
+                                        ____     as destination.   Returned  is  a  list  of  interned  characters
+                                                                    _     representing  the  characters  required  to print the value of U.
+     Example: 
+
+
+        - Explode 'FOO; => (F O O)
+
+        - Explode '(A . B); => (!( A !  !. ! B !))
+
+
+  [???  add print macros.  cf. UCI lisp ???]  [???  add print macros.  cf. UCI lisp ???]  [???  add print macros.  cf. UCI lisp ???]
+
+
+ Explode2 Explode2 _  ____   ______    __ ____                                  ____(Explode2 U:{atom}-{vector}): id-list                                  expr
+
+     Prin2            Explode     Prin2            Explode     Prin2 version of Explode.
+
+
+ Compress Compress _ __ ____    ____   ______                                   ____(Compress U:id-list): {atom}-{vector}                                  expr
+
+     _      ____     U is a list of single character identifiers which is built into a
+                                               ______    ______     PSL entity and returned.  Recognized are  numbers,  strings,  and
+     __________     identifiers   with   the   escape   character  prefixing  special
+     characters.  The formats of these items appear in the  "Primitive
+                                          __________      ___     Data Types" Section, Section 4.1.2.  Identifiers are not interned
+                              ________ _______     on  the  ID-HASH-TABLE.  Function pointers may not be compressed.
+                                          _     If an entity cannot be parsed out of U  or  characters  are  left
+     over after parsing an error occurs:  
+
+     ***** Poorly formed atom in COMPRESS PSL Manual                    7 February 1983              Input and Output
+section 12.7                                                     page 12.27
+
+ Implode Implode _ __ ____   ____                                              ____(Implode U:id-list): atom                                              expr
+
+     Compress     Compress      __     Compress with ids interned.
+
+
+ FlatSize FlatSize _ ___   _______                                              ____(FlatSize U:any): integer                                              expr
+
+                         Prin1                         Prin1     Character length of Prin1 S-expression.
+
+
+ FlatSize2 FlatSize2 _ ___   _______                                             ____(FlatSize2 U:any): integer                                             expr
+
+     Prin2            flatsize     Prin2            flatsize     Prin2 version of flatsize.
+
+
+ BldMsg BldMsg ______ ______   ____ ___    ______                             ____(BldMsg FORMAT:string, [ARGS:any]): string                             expr
+
+     PrintF                 BldMsg     PrintF      ______     BldMsg             ______     PrintF  to  string.    BldMsg  returns  a string stating that the
+     ______     string could not be constructed if overflow occurs.
+
+
+
+12.8. Example of Simple I/O in PSL12.8. Example of Simple I/O in PSL12.8. Example of Simple I/O in PSL
+
+  In the following example a list of S-expressions is read, one  expression
+at  a  time,  from  a  file  STUFF.IN  and  is written to a file STUFF.OUT.
+Following is the contents of STUFF.IN:
+
+   (r e d)
+   (a b c)
+   (1 2 3 4)
+   "ho ho ho"
+   6.78
+   5000
+   xyz
+
+  The following shows the execution of the function TRYIO.             Input and Output              7 February 1983                    PSL Manual
+page 12.28                                                     section 12.8
+
+   @psl:psl
+   PSL 3.1, 15-Nov-82
+   1 lisp> (On Echo)
+   NIL
+   2 lisp> (Dskin "Exampio.Sl")
+   (De Tryio (Fil1 Fil2)
+      (Prog (Oldin Oldout Exp)
+         (Setq Oldin (Rds (Open Fil1 'input)))
+         (Setq Oldout (Wrs (Open Fil2 'output)))
+         (While (Neq (Setq Exp (Read)) !$EOF!$)
+                (Print Exp))
+         (Close (Rds Oldin))
+         (Close (Wrs Oldout))))
+   TRYIO
+   NIL
+   3 lisp> (Off Echo)
+   NIL
+   4 lisp> (Tryio "Stuff.In" "Stuff.Out")
+   NIL
+
+  The output file STUFF.OUT contains the following.
+
+   (R E D)
+   (A B C)
+   (1 2 3 4)
+   "ho ho ho"
+   6.78
+   5000
+   XYZ

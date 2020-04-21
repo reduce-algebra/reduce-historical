@@ -1,0 +1,15 @@
+; 20-main: simple driver to test MACRO version of 20 tests
+TITLE MAIN
+SEARCH MONSYM
+RADIX ^D10
+EXTERN INIT20,MAIN20,QUIT20
+
+ST=15
+MAIN:	RESET
+        MOVE ST,[-1000,Stack]
+        PUSHJ ST,INIT20
+	PUSHJ ST,MAIN20
+        PUSHJ ST,QUIT20
+
+stack:   block 1000
+	END MAIN

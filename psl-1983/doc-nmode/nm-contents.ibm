@@ -1,0 +1,17 @@
+,MOD
+- R 44X (28 February 1983) <PSL.NMODE-DOC>NM-CONTENTS.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+          201/Contents                       NMODE Manual                         Page \i
+
+
+          Chapter 1. Introduction

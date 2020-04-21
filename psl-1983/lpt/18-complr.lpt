@@ -1,0 +1,1285 @@
+PSL Manual                    7 February 1983           Compiler and Loader
+section 18.0                                                      page 18.1
+
+                                CHAPTER 18                                CHAPTER 18                                CHAPTER 18
+                            LOADER AND COMPILER                            LOADER AND COMPILER                            LOADER AND COMPILER
+
+
+
+
+     18.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    18.1
+     18.2. The Compiler .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    18.2
+          18.2.1. Compiling Functions into Memory  .  .  .  .  .  .    18.2
+          18.2.2. Compiling Functions into FASL Files .  .  .  .  .    18.3
+          18.2.3. Loading FASL Files.  .  .  .  .  .  .  .  .  .  .    18.3
+          18.2.4. Functions to Control the Time When Something is Done 18.5
+                  .  
+          18.2.5. Order of Functions for Compilation  .  .  .  .  .    18.6
+          18.2.6. Fluid and Global Declarations .  .  .  .  .  .  .    18.6
+          18.2.7. Switches Controlling Compiler .  .  .  .  .  .  .    18.8
+          18.2.8. Differences between Compiled and Interpreted Code   18.10
+          18.2.9. Compiler Errors.  .  .  .  .  .  .  .  .  .  .  .   18.11
+     18.3. The Loader.  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   18.13
+          18.3.1. Legal LAP Format and Pseudos  .  .  .  .  .  .  .   18.14
+          18.3.2. Examples of LAP for DEC-20, VAX and Apollo.  .  .   18.14
+          18.3.3. Lap Switches.  .  .  .  .  .  .  .  .  .  .  .  .   18.17
+     18.4. Structure and Customization of the Compiler.  .  .  .  .   18.18
+     18.5. First PASS of Compiler.  .  .  .  .  .  .  .  .  .  .  .   18.19
+          18.5.1. Tagging Information  .  .  .  .  .  .  .  .  .  .   18.19
+          18.5.2. Source to Source Transformations .  .  .  .  .  .   18.20
+     18.6. Second PASS - Basic Code Generation  .  .  .  .  .  .  .   18.20
+          18.6.1. The Cmacros .  .  .  .  .  .  .  .  .  .  .  .  .   18.20
+          18.6.2. Classes of Functions .  .  .  .  .  .  .  .  .  .   18.23
+          18.6.3. Open Functions .  .  .  .  .  .  .  .  .  .  .  .   18.24
+     18.7. Third PASS - Optimizations  .  .  .  .  .  .  .  .  .  .   18.29
+     18.8. Some Structural Notes on the Compiler.  .  .  .  .  .  .   18.30
+
+
+
+
+18.1. Introduction18.1. Introduction18.1. Introduction
+
+  The  functions  and  facilities  in  the  PSL  LISP/SYSLISP  compiler and
+supporting loaders (LAP and FASL) are described in this chapter.  
+
+  [??? This chapter is out of date and will be rewritten soon. ???]  [??? This chapter is out of date and will be rewritten soon. ???]  [??? This chapter is out of date and will be rewritten soon. ???]
+
+
+
+18.2. The Compiler18.2. The Compiler18.2. The Compiler
+
+  The compiler is a version  of  the  Portable  LISP  Compiler [Griss  81],Compiler and Loader           7 February 1983                    PSL Manual
+page 18.2                                                      section 18.2
+
+                       1
+modified  and  extended   to more efficiently support both LISP and SYSLISP
+compilation.  See the later sections in this chapter and  references [Griss
+81] and [Benson 81] for more details.
+
+
+18.2.1. Compiling Functions into Memory18.2.1. Compiling Functions into Memory18.2.1. Compiling Functions into Memory
+
+
+        __________                                                   ______!*COMP [Initially: NIL]                                              switch
+
+     If  the  compiler is loaded (which is usually the case, otherwise
+                                                                    on                                                                    on     execute LOAD COMPILER;), turning on the  switch  !*COMP  (via  on
+     comp;  in  RLISP)  causes all subsequent procedure definitions of
+     appropriate type to be compiled automatically and  a  message  of
+     the form 
+
+         <function-name> COMPILED, <words> WORDS, <words> LEFT
+
+     to be printed.  The first number is the number of words of binary
+     program  space  the compiled function took, and the second number
+     the number of words left unused in binary  program  space.    See
+     !*PWRDS in Section 18.2.7.
+
+              ____    _____    _____       _____              ____    _____    _____       _____              ____    _____    _____       _____              expr    fexpr    nexpr       macro              expr    fexpr    nexpr       macro  Currently,  exprs,  fexprs,  nexprs  and macros may be compiled.  This is
+controlled by a flag ('COMPILE) on the property list of the procedure type.
+
+  If desired, uncompiled functions already  resident  may  be  compiled  by
+using 
+
+
+ Compile Compile _____ __ ____   ___                                           ____(Compile NAMES:id-list): any                                           expr
+
+
+18.2.2. Compiling Functions into FASL Files18.2.2. Compiling Functions into FASL Files18.2.2. Compiling Functions into FASL Files
+
+                                                        Load    FaslIn                                                        Load    FaslIn  In  order  to  produce  files that may be input using Load or FaslIn, the
+FaslOut     FaslEndFaslOut     FaslEndFaslOut and FaslEnd pair may be used in RLISP mode:
+
+
+ FaslOut FaslOut ____ ______   ___                                             ____(FaslOut FILE:string): NIL                                             expr
+
+
+
+
+
+
+_______________
+
+  1
+   Many of the recent extensions  to  the  PLC  were  implemented  by  John
+Peterson.PSL Manual                    7 February 1983           Compiler and Loader
+section 18.2                                                      page 18.3
+
+ FaslEnd FaslEnd    ___                                                        ____(FaslEnd ): NIL                                                        expr
+
+                           FaslOut                           FaslOut     After   the  command  FaslOut  has  been  given,  all  subsequent
+     S-expressions and function definitions typed  in  or  input  from
+     files  are processed by the Compiler, LAP and FASL as needed, and
+               ____     output to FILE.  Functions are compiled and partially  assembled,
+     and  output  as  in a compressed binary form, involving blocks of
+     code and relocation bits.   This  activity  continues  until  the
+              FaslEnd              FaslEnd     function FaslEnd terminates this process.
+
+      FaslOut     FaslEnd      FaslOut     FaslEnd  The FaslOut and FaslEnd pair also use the DFPRINT!* mechanism, turning on
+the switch !*DEFN, and redefining DFPRINT!* to trap the parsed input in the
+RLISP top-loop.  Currently this is not useable from pure LISP level.  
+
+  [??? Fix, by adding !*DEFN mechanism to basic top-loop. ???]  [??? Fix, by adding !*DEFN mechanism to basic top-loop. ???]  [??? Fix, by adding !*DEFN mechanism to basic top-loop. ???]
+
+
+18.2.3. Loading FASL Files18.2.3. Loading FASL Files18.2.3. Loading FASL Files
+
+  Two  convenient procedures are available for loading FASL files (.b files
+on the VAX); see Section 18.2.2 for information on producing FASL files.
+
+
+ Load Load  ____  ______  __     ___                                       _____(Load [FILE:{string, id}]): NIL                                       macro
+
+           ____     Each  FILE  is  converted  into  a  file   name   of   the   form
+     "/u/local/lib/psl/file.b"  on the VAX, "pl:file.b" on the DEC-20.
+                                                FaslIn                                                FaslIn     An attempt is made to execute the function FaslIn on  it.    Once
+                            ____     loaded,   the  symbol  FILE  is  added  to  the  GLOBAL  variable
+     OPTIONS!*.
+
+
+ FaslIn FaslIn ________ ______   ___                                          ____(FaslIn FILENAME:string): NIL                                          expr
+
+     This is an efficient binary read loop, which  fetches  blocks  of
+                                          __     code, constants and compactly stored ids.  It uses a bit-table to
+     relocate  code  and to identify special LISP-oriented constructs.
+     ________     FILENAME must be a complete file name.
+
+
+ ReLoad ReLoad  ____  ______ __     ___                                      _____(ReLoad [FILE:{string,id}]): NIL                                      macro
+
+     Removes the filename from the list  OPTIONS!*  and  executes  the
+              Load              Load     function Load.
+
+
+ Imports Imports ___________ ____   ___                                        ____(Imports MODULENAMES:list): NIL                                        expr
+
+                                                               LOAD     ___________                __                             LOAD     MODULENAMES  is  a list of ids representing modules to be LOAD'ed
+     after the  module  containing  this  function  has  been  loaded.
+     Imports     Imports     Imports works only in compiled code.Compiler and Loader           7 February 1983                    PSL Manual
+page 18.4                                                      section 18.2
+
+                   __________                                        ______LOADDIRECTORIES!* [Initially: A list of strings]                     global
+
+     Contains  a  list of strings to append to the front of file names
+              Load              Load     given in Load commands.  This list may be one of  the  following,
+     if your system is an Apollo, Dec-20, or Vax:
+
+         ("" "/utah/psl/lap/")
+         ("" "pl:")
+         ("" "/usr/local/src/cmd/psl/dist/lap/")
+
+
+                  __________                                         ______LOADEXTENSIONS!* [Initially: An a-list]                              global
+
+     Contains an a-list of (str . fn) in which the str is an extension
+     to  append  to  the  end  of the filename and fn is a function to
+     apply.  The a-list contains 
+
+         ((".b" . FaslIn)(".lap" . LapIn)(".sl" . LapIN))
+
+  [??? Describe FASL format in more detail ???]  [??? Describe FASL format in more detail ???]  [??? Describe FASL format in more detail ???]
+
+
+18.2.4. Functions to Control the Time When Something is Done18.2.4. Functions to Control the Time When Something is Done18.2.4. Functions to Control the Time When Something is Done
+
+  Which expressions are evaluated during compilation ONLY, which output  to
+the  file  for  LOAD  TIME  evaluation,  and  which  do both (such as macro
+definitions) can be controlled by  the  properties  'EVAL  and  'IGNORE  on
+certain function names, or the following functions.
+
+
+ CommentOutCode CommentOutCode _ ____   ___                                          _____(CommentOutCode U:form): NIL                                          macro
+
+                                            _     Comment out a single expression; use <<U>> to comment out a block
+     of code.
+
+
+ CompileTime CompileTime _ ____   ___                                              ____(CompileTime U:form): NIL                                              expr
+
+                              _     Evaluate  the expression U at compile time only, such as defining
+     auxiliary smacros and macros that should not go into the file.
+
+     Certain functions have the FLAG 'IGNORE on their  property  lists
+     to  achieve the same effect.  E.g. FLAG('(LAPOUT LAPEND),'IGNORE)
+     has been done.
+
+
+ BothTimes BothTimes _ ____   _ ____                                             ____(BothTimes U:form): U:form                                             expr
+
+     Evaluate at compile and load time.  This is equivalent in  effect
+                  Flag                  Flag     to executing Flag('(f1 f2),'EVAL) for certain functions.PSL Manual                    7 February 1983           Compiler and Loader
+section 18.2                                                      page 18.5
+
+ LoadTime LoadTime _ ____   _ ____                                              ____(LoadTime U:form): U:form                                              expr
+
+     Evaluate  at  load time only.  Should not even compile code, just
+     pass direct to file.
+
+  [??? EVAL and IGNORE are for compatibility, and enable the  above  sort  [??? EVAL and IGNORE are for compatibility, and enable the  above  sort  [??? EVAL and IGNORE are for compatibility, and enable the  above  sort
+  of  functions  to  be  easily  written.  The user should AVOID EVAL and  of  functions  to  be  easily  written.  The user should AVOID EVAL and  of  functions  to  be  easily  written.  The user should AVOID EVAL and
+  IGNORE flags, if Possible ???]  IGNORE flags, if Possible ???]  IGNORE flags, if Possible ???]
+
+
+18.2.5. Order of Functions for Compilation18.2.5. Order of Functions for Compilation18.2.5. Order of Functions for Compilation
+
+      ____      ____      ____      expr      expr  Non-expr procedures must be  defined  before  their  use  in  a  compiled
+function, since the compiler treats the various function types differently.
+_____                                                    __________                                                    __________                                                    _____Macro                                                    fexprMacro                                                    fexprMacros are expanded and then compiled; the argument list fexprs quoted; the
+               _____               _____               _____               nexpr               nexprarguments  of  nexprs  are  collected  into a single list.  Sometimes it is
+convenient to define a Dummy version of the function of  appropriate  type,
+to  be  redefined later.  This acts as an "External or Forward" declaration
+of the function.  
+
+  [??? Add such a declaration. ???]  [??? Add such a declaration. ???]  [??? Add such a declaration. ???]
+
+
+18.2.6. Fluid and Global Declarations18.2.6. Fluid and Global Declarations18.2.6. Fluid and Global Declarations
+
+  The FLUID and GLOBAL declarations must be used to indicate variables that
+are to be used as non-LOCALs in compiled code.    Currently,  the  compiler
+defaults variables bound in a particular procedure to LOCAL.  The effect of
+this is that the variable only exists as an "anonymous" stack location; its
+name  is  compiled  away and called routines cannot see it (i.e. they would
+have to use the name).  Undeclared non-LOCAL  variables  are  automatically
+declared  FLUID  by the compiler with a warning.  In many cases, this means
+that a previous procedure that bound this variable should have known  about
+this  as  a  FLUID.  Declare it with FLUID, below, and recompile, since the
+caller cannot be automatically fixed.  
+
+  [??? Should we provide an !*AllFluid switch to make the default  Fluid,  [??? Should we provide an !*AllFluid switch to make the default  Fluid,  [??? Should we provide an !*AllFluid switch to make the default  Fluid,
+  or should we make Interpreter have a LOCAL variable as default, or both  or should we make Interpreter have a LOCAL variable as default, or both  or should we make Interpreter have a LOCAL variable as default, or both
+  ???]  ???]  ???]
+
+
+ Fluid Fluid _____ __ ____   ___                                             ____(Fluid NAMES:id-list): any                                             expr
+
+     Declares  each  variable FLUID (if not previously declared); this
+                                    Prog                                    Prog     means that it can be used as a Prog LOCAL, or as a parameter.  On
+     entry to the procedure, its current value is saved on the Binding
+     Stack (BSTACK), and all  access  is  always  to  the  VALUE  cell
+                                              Throw    Error                                              Throw    Error     (SYMVAL)  of  the  variable; on exit (or Throw or Error), the old
+     values are restored.Compiler and Loader           7 February 1983                    PSL Manual
+page 18.6                                                      section 18.2
+
+ Global Global _____ __ ____   ___                                            ____(Global NAMES:id-list): any                                            expr
+
+     Declares  each variable GLOBAL (if not previously declared); this
+     means that it cannot be used as  a  LOCAL,  or  as  a  parameter.
+     Access is always to the VALUE cell (SYMVAL) of the variable.
+
+  [??? Should we eliminate GLOBALs ???]  [??? Should we eliminate GLOBALs ???]  [??? Should we eliminate GLOBALs ???]
+
+
+18.2.7. Switches Controlling Compiler18.2.7. Switches Controlling Compiler18.2.7. Switches Controlling Compiler
+
+  The compilation process is controlled by a number of switches, as well as
+the above declarations and the !*COMP switch, of course.
+
+
+       __________                                                    ______!*R2I [Initially: T]                                                 switch
+
+         T         T     If  T, causes recursion removal if possible, converting recursive
+     calls on a function into a jump to its start.   If  this  is  not
+     possible,  it  uses  a  faster  call to its own "internal" entry,
+     rather than going via the Symbol Table function cell.  The effect
+     in both cases is that tracing this function  does  not  show  the
+     internal   or  eliminated  recursive  calls,  nor  the  backtrace
+     information.
+
+
+           __________                                                ______!*NOLINKE [Initially: NIL]                                           switch
+
+        T                                      NIL        T                                      NIL     If T, inhibits use of !*LINKE cmacro.  If NIL,  "exit"  calls  on
+     functions  that  would then immediately return.  For example, the
+     calls on FOO(x) and FEE(X) in 
+
+        PROCEDURE DUM(X,Y);
+         IF X=Y THEN FOO(X) ELSE FEE(X+Y);
+
+     can be converted into direct JUMP's to FEE or FOO's entry  point.
+     This  is  known  as  a "tail-recursive" call being converted to a
+     jump.  If this happens, there is no indication of the call of DUM
+     on the backtrace stack if FEE or FOO cause an error.
+
+
+       __________                                                    ______!*ORD [Initially: NIL]                                               switch
+
+        T        T     If T, forces the compiler  to  compile  arguments  in  Left-Right
+     Order, even though more optimal code can be generated.  
+
+       [??? !*ORD currently has a bug, and may not be fixed for some       [??? !*ORD currently has a bug, and may not be fixed for some       [??? !*ORD currently has a bug, and may not be fixed for some
+       time.    Thus  do  NOT depend on evaluation order in argument       time.    Thus  do  NOT depend on evaluation order in argument       time.    Thus  do  NOT depend on evaluation order in argument
+       lists ???]       lists ???]       lists ???]PSL Manual                    7 February 1983           Compiler and Loader
+section 18.2                                                      page 18.7
+
+          __________                                                 ______!*MODULE [Initially: NIL]                                            switch
+
+     Indicates   block   compilation   (a  future  extension  of  this
+     compiler).  When implemented, even  more  function  and  variable
+     names are "compiled away".
+
+  The  following  switches  control  the printing of information during the
+compilation process:
+
+
+         __________                                                  ______!*PWRDS [Initially: NIL]                                             switch
+
+        T        T     If T, causes the compiled size to be printed in the form
+
+     *** NAME: base NNN, length MMM
+
+     The base is in octal, the length is in current Radix.  
+
+       [??? more mnemonic name ???]       [??? more mnemonic name ???]       [??? more mnemonic name ???]
+
+
+        __________                                                   ______!*PLAP [Initially: NIL]                                              switch
+
+        T        T     If T, causes the printing of the portable cmacros produced by the
+     the compiler.
+
+  Most of this information is printed by the resident LAP,  and  controlled
+by its switches, described below.
+
+
+18.2.8. Differences between Compiled and Interpreted Code18.2.8. Differences between Compiled and Interpreted Code18.2.8. Differences between Compiled and Interpreted Code
+
+  The following just re-iterates some of the points made above and in other
+Sections of the manual regarding the "obscure" differences that compilation
+introduces.  
+
+  [???  This  needs  some careful work, and perhaps some effort to reduce  [???  This  needs  some careful work, and perhaps some effort to reduce  [???  This  needs  some careful work, and perhaps some effort to reduce
+  the list of differences ???]  the list of differences ???]  the list of differences ???]
+
+  In the process of compilation, many functions are open-coded,  and  hence
+cannot  be  redefined  or  traced in the compiled code.  Such functions are
+noted to be OPEN-CODED in the manual.  If called from  compiled  code,  the
+call  on  an  open-compiled  function  is  replaced  by  a series of online
+instructions.  Most of these functions have some sort of indicator on their
+property lists: 'OPEN, 'ANYREG, 'CMACRO, 'COMPFN, etc.  For example:  SETQ,
+CAR,  CDR,  COND,  WPLUS2, MAP functions, PROG, PROGN, etc.  Also note that
+                              _____                              _____                              _____                              macro                              macrosome functions are defined as macros, which  convert  to  some  other  form
+(such as PROG), which itself might compile open.
+
+  Some  optimizations  are  performed  that cause inaccessible or redundant
+code to be removed, e.g. 0*foo(x) could cause foo(x) not to be called.Compiler and Loader           7 February 1983                    PSL Manual
+page 18.8                                                      section 18.2
+
+                                                      _____    ______                                                      _____    ______                                                      _____    ______                                                      Fluid    global                                                      Fluid    global  Unless  variables  are declared (or detected) to be Fluid or global, they
+                _____                _____                _____                local                localare compiled as local variables.  This causes their names to disappear, and
+so are not visible on the Binding Stack.  Further more, these variables are
+NOT available to functions called in the  dynamic  scope  of  the  function
+containing their binding.
+
+                           _____   _____      _____                           _____   _____      _____                           _____   _____      _____                           macro   fexpr      nexpr                           macro   fexpr      nexpr  Since  compiled calls on macros, fexprs and nexprs are different from the
+        ____        ____        ____        expr        exprdefault exprs,  these  functions  must  be  declared  (or  defined)  before
+                                                   _____        _____                                                   _____        _____                                                   _____        _____                                                   fexpr        nexpr                                                   fexpr        nexprcompiling   the  code  that  uses  them.    While  fexprs  and  nexprs  may
+                                                                _____                                                                _____                                                                _____                                                                macro                                                                macrosubsequently be redefined (as new  functions  of  same  type),  macros  are
+executed  by  the  compiler  to  get  the  replacement  form, which is then
+compiled.  The interpreter of course picks up the most recent definition of
+ANY function, and so functions can switch type as well as body.  
+
+  [??? If we expand macros at PUTD time, then  this  difference  will  go  [??? If we expand macros at PUTD time, then  this  difference  will  go  [??? If we expand macros at PUTD time, then  this  difference  will  go
+  away. ???]  away. ???]  away. ???]
+
+  As  noted above, the !*R2I, !*NOLINKE and !*MODULE switches cause certain
+functions to call other functions (or themselves usually) by a faster route
+(JUMP or internal call).  This means that the recursion or call may not  be
+visible during tracing or backtrace.
+
+
+18.2.9. Compiler Errors18.2.9. Compiler Errors18.2.9. Compiler Errors
+
+  A  number  of compiler errors are listed below with possible explanations
+of the error.
+
+  *** Function form converted to APPLY
+
+                                Car                                CarThis message indicates that the Car of a form is either
+
+
+   a. Non-atomic,
+   b. a local variable, or
+   c. a global or fluid variable.
+
+
+The compiler converts (F X1 X2 ...), where F is one of the above, to (APPLY
+F (LIST X1 X2 ...)).
+
+  *** NAME already SYSLISP non-local
+
+This indicates that NAME is either a WVAR or WARRAY in SYSLISP mode, but is
+being used as a local variable in LISP mode.  No special action is taken.
+
+  *** WVAR NAME used as local
+
+This indicates that NAME is a WVAR, but is being used as a  bound  variable
+in SYSLISP mode.  The variable is treated as an an anonymous local variable
+within the scope of its binding.PSL Manual                    7 February 1983           Compiler and Loader
+section 18.2                                                      page 18.9
+
+  *** NAME already SYSLISP non-local
+
+This indicates that a variable was previously declared as a SYSLISP WVAR or
+WARRAY  and is now being used as a LISP fluid or global.  No special action
+is taken.
+
+  *** NAME already LISP non-local
+
+This indicates that a variable was previously declared as a LISP  fluid  or
+global  and  is  now  being  used  as a SYSLISP WVAR or WARRAY.  No special
+action is taken.
+
+  *** Undefined symbol NAME in Syslisp, treated as WVAR
+
+A variable was encountered in SYSLISP mode which is not local nor a WVAR or
+WARRAY.  The compiler declares it a WVAR.  This  is  an  error,  all  WVARs
+should be explicitly declared.
+
+  *** NAME declared fluid
+
+A variable was encountered in LISP mode which is not local nor a previously
+declared  fluid  or  global.    The  compiler  declares  it fluid.  This is
+sometimes an error, if the variable was used strictly locally in an earlier
+function definition, but was intended to be bound non-locally.  All  fluids
+should be declared before being used.
+
+
+
+18.3. The Loader18.3. The Loader18.3. The Loader
+
+  [??? update ???]  [??? update ???]  [??? update ???]
+
+  Currently, PSL on the DEC-20 provides a simple LISP assembler, LAP.  This
+is   modeled   after   the  original  LISP  1.6  LAP,  although  completely
+reimplemented to take advantage of  PSL  constructs,  and  to  support  the
+additional requirements of SYSLISP.  In the process of implementing the VAX
+LAP and developing the LAP-to-ASM translator required to bootstrap PSL onto
+the next machine (Apollo MC68000), a much more table-driven form of LAP was
+designed  to  make  all  LAP's,  LAP-to-ASM's  and  FASL's  (fast  loaders,
+sometimes called FAP) easier to maintain.  This is now in use  on  the  VAX
+and being used to implement Apollo PSL.
+
+  [??? FASL now works ???]  [??? FASL now works ???]  [??? FASL now works ???]
+
+  Until that is complete, we will briefly describe the available functions,
+and  give  a  sample  of  current  and  future  LAP;  this  Section will be
+completely rewritten in the next revision.  LAP is  currently  a  full  two
+pass  assembler;  on the VAX and Apollo it also includes a pass to optimize
+long and short jumps.Compiler and Loader           7 February 1983                    PSL Manual
+page 18.10                                                     section 18.3
+
+ LAP LAP ____ ____   ____ _______                                          ____(LAP CODE:list): code-pointer                                          expr
+
+     ____     CODE is a list of legal LAP forms, including:
+
+
+   a. Machine   specific   Mnemonics   (using  opcode-names  from  the
+      assembler on the DEC-20, VAX or Apollo).
+
+   b. Compiler cmacros (which  expand  in  a  machine  specific  way).
+      These   can   be   thought  of  as  "generic"  or  LISP-oriented
+      instructions.  See the next Section on the Compiler details, and
+      list of legal cmacros.
+
+   c. LAP pseudo instructions, to declare entry points, indicate  data
+      and constants, etc.
+
+
+  The  first  pass  of  LAP converts mnemonics into LISP integers, doing as
+much of the assembly as possible, allocating labels  and  constants.    The
+second  (and  third?)  pass  fills  in  labels  and completes the assembly,
+depositing code into the next available locations in BPS, or creating  FASL
+or LAP files.  
+
+  [??? What is BPS (binary program space) ???]  [??? What is BPS (binary program space) ???]  [??? What is BPS (binary program space) ???]
+
+
+18.3.1. Legal LAP Format and Pseudos18.3.1. Legal LAP Format and Pseudos18.3.1. Legal LAP Format and Pseudos
+
+  [??? Describe LAP format in detail ???]  [??? Describe LAP format in detail ???]  [??? Describe LAP format in detail ???]
+
+
+18.3.2. Examples of LAP for DEC-20, VAX and Apollo18.3.2. Examples of LAP for DEC-20, VAX and Apollo18.3.2. Examples of LAP for DEC-20, VAX and Apollo
+
+  The  following  is  a  piece of VAX specific LAP, using the current "new"
+format.  Apart from the VAX mnemonics, notice the  extra  tags  around  the
+register  names,  and the symbols to indicate addressing modes (essentially
+PREFIX syntax rather then INFIX @ etc.).  This  is  from  PV:APPLY-LAP.RED.
+Note  they  are almost ENTIRELY written in cmacros, to aid in re-coding for
+the next machine.PSL Manual                    7 February 1983           Compiler and Loader
+section 18.3                                                     page 18.11
+
+   lap '((!*entry FastApply expr 0)
+   %. Apply with arguments loaded
+   % Called with arguments in the registers and functional form in t1
+           (!*FIELD (reg t2) (reg t1)
+                    (WConst TagStartingBit) (WConst TagBitLength))
+           (!*FIELD (reg t1) (reg t1)
+                    (WConst InfStartingBit) (WConst InfBitLength))
+           (!*JUMPNOTEQ (Label NotAnID) (reg t2) (WConst ID))
+           (!*WTIMES2 (reg t1) (WConst AddressingUnitsPerFunctionCell))
+           (!*JUMP (MEMORY (reg t1) (WArray SymFnc)))
+   NotAnID
+           (!*JUMPNOTEQ (Label NotACodePointer) (reg t2) (WConst CODE))
+           (!*JUMP (MEMORY (reg t1) (WConst 0)))
+   NotACodePointer
+           (!*JUMPNOTEQ (Label IllegalFunctionalForm) (reg t2) (WConst
+           (!*MOVE (MEMORY (reg t1) (WConst 0)) (reg t2))
+                                           % CAR with pair already unta
+           (!*JUMPNOTEQ (Label IllegalFunctionalForm) (reg t2) (QUOTE L
+           (!*MOVE (reg t1) (reg t2))      % put lambda form in t2
+           (!*PUSH (QUOTE NIL))                    % align stack
+           (!*JCALL FastLambdaApply)
+   IllegalFunctionalForm
+           (!*MOVE (QUOTE "Illegal functional form in Apply") (reg 1))
+           (!*MOVE (reg t1) (reg 2))
+           (!*CALL List2)
+           (!*JCALL StdError)
+   );
+
+   lap '((!*entry UndefinedFunction expr 0)
+   %. Error Handler for non code
+   %  Called by JSB
+   %
+           (subl3 (immediate (plus2 (WArray SymFnc) 6))
+                  (autoincrement (reg st))
+                  (reg t1))
+           (divl2 6 (reg t1))
+           (!*MKITEM (reg t1) (WConst ID))
+           (!*MOVE (reg t1) (reg 2))
+           (!*MOVE (QUOTE "Undefined function %r called from compiled c
+                   (reg 1))
+           (!*CALL BldMsg)
+           (!*JCALL StdError)
+   );
+
+
+  The  following  is  a piece of Apollo specific LAP, using the current NEW
+format.  Apart from the MC68000 mnemonics, notice the extra tags around the
+register names, and the symbols to indicate addressing  modes  (essentially
+PREFIX  syntax  rather  then  INFIX @ etc.).  This is from P68:M68K-USEFUL-
+LAP.RED.Compiler and Loader           7 February 1983                    PSL Manual
+page 18.12                                                     section 18.3
+
+   % Signed multiply of 32 bits numbers in A1 and A2,
+   % returns 64 bits in A1 and A2, low in A1 high in A2
+   % Clobbers D1,D2,D3,D4,D5,D6,D7, no saving
+   %   [Can insert MOVEM!.L D1-D7,-(SP)
+   %    and        MOVEM!.L (SP)+,D1-D7]
+   LAP '((!*entry Mult32 expr 2)  % Arguments in A1 and A2
+         (move!.l (reg a1) (reg d1))
+         (move!.l (reg a1) (reg d6))
+         (move!.l (reg a2) (reg d2))
+         (move!.l (reg a2) (reg d7))  % Need copies
+    % Now do Unsigned Multiply
+         (move!.l (reg d1) (reg d3))
+         (move!.l (reg d1) (reg d4))
+         (swap    (reg d4))
+         (move!.l (reg d2) (reg d5))
+         (swap    (reg d5))           % Swapped for partial products
+         (mulu!.w (reg d2) (reg d1))  % partial products (pp1)
+         (mulu!.w (reg d4) (reg d2))  %                   pp2
+         (mulu!.w (reg d5) (reg d3))  %                   pp3
+         (mulu!.w (reg d5) (reg d4))  %                   pp4
+         (swap    (reg d1))           % sum1=pp#2low+pp#1hi
+         (add     (reg d2) (reg d1))
+         (clr!.l  (reg d5))
+         (addx!.l (reg d5) (reg d4))  % propagate carry
+         (add     (reg d3) (reg d1))  % sum2=sum1+pp#3low
+         (addx!.l (reg d5) (reg d4))  % carry inot pp#4
+         (swap    (reg d1))           % low order product
+         (clr     (reg d2))
+         (swap    (reg d2))
+         (clr     (reg d3))
+         (swap    (reg d3))
+         (add!.l  (reg d3) (reg d2)) % Sum3=pp2low+pp3Hi
+         (add!.l  (reg d4) (reg d2)) % Sum4=Sum3+pp4
+    % Now do adjustment
+         (tst!.l  (reg d7))          % Negative
+         (bpl!.s  chkd6)     %  nope
+         (sub!.l  (reg d6) (reg d2)) % Flip
+     chkd6
+         (tst!.l  (reg d6))          % Negative
+         (bpl!.s  done)     %  nope
+         (sub!.l  (reg d7) (reg d2)) % Flip
+     done
+         (movea!.l (reg d1) (reg a1)) % low part
+         (movea!.l (reg d2) (reg a2)) % high part
+         (rts));PSL Manual                    7 February 1983           Compiler and Loader
+section 18.3                                                     page 18.13
+
+18.3.3. Lap Switches18.3.3. Lap Switches18.3.3. Lap Switches
+
+  The  following  switches control the printing of information from LAP and
+other optional behavior of LAP:
+
+
+        __________                                                   ______!*PLAP [Initially: NIL]                                              switch
+
+     Causes LAP forms to printed before expansion.  Used mainly to see
+     output of compiler before assembly.
+
+
+        __________                                                   ______!*PGWD [Initially: NIL]                                              switch
+
+     Causes LAP to print the actual DEC-20 mnemonics and corresponding
+     assembled instruction  in  octal,  displaying  OPCODE,  REGISTER,
+     INDIRECT, INDEX and ADDRESS fields.
+
+
+         __________                                                  ______!*PWRDS [Initially: T]                                               switch
+
+     Prints a LAP message of the form 
+
+     *** NAME: base NNN, length MMM
+
+     The base is in octal, the length is in current Radix.
+
+
+           __________                                                ______!*SAVECOM [Initially: T]                                             switch
+
+     If  T, the LAP is deposited in BPS, and the returned Code-Pointer
+     used to (re)define the procedure  associated  with  the  (!*entry
+     name type n).
+
+
+           __________                                                ______!*SAVEDEF [Initially: NIL]                                           switch
+
+     If  T,  and  if  !*SAVECOM  is T, saves any preexisting procedure
+     definition under '!*SAVEDEF on the property list of the procedure
+     name, "just in case".
+
+  LAP also uses the following indicators on property lists:
+
+
+'MC       Cmacros and some mnemonics have associated  PASS1  expansions  in
+          terms of simpler instructions or operations.  The form (mc a1 ...
+          an) has its associated function applied to (a1 ... an).
+
+
+  For more details, see "P20:LAP.RED".Compiler and Loader           7 February 1983                    PSL Manual
+page 18.14                                                     section 18.4
+
+18.4. Structure and Customization of the Compiler18.4. Structure and Customization of the Compiler18.4. Structure and Customization of the Compiler
+
+  The  following  is  a  brief summary of the compiler structure and model.
+The purpose of this Section is to aid  the  user  to  add  new  compilation
+forms,  and  to  understand the task of bootstrapping a new version of PSL.
+The original paper on the Portable LISP Compiler [Griss  81]  has  complete
+details  on  the  original  version  of the compiler, and should be read in
+conjunction with this Section.  It might be  useful  to  also  examine  the
+paper on recent work on the compiler [Griss 82].
+
+  [??? This needs a LOT of work ???]  [??? This needs a LOT of work ???]  [??? This needs a LOT of work ???]
+
+  The compiler is basically three-pass:
+
+
+                                         ______                                         ______                                         ______                                         macros                                         macros   a. The  first  pass  expands ordinary macros, and compiler specific
+      cmacros.  It also  uses  some  special  purpose  'PA1REFORM  and
+      'PA1FN  functions  on the property lists of certain functions to
+      produce a simpler and more explicit  LISP  for  the  next  pass.
+      Variables  and constants, x, are explicitly tagged as (FLUID x),
+      (GLOBAL x), (QUOTE x), (WCONST x), etc.
+
+   b. The second pass recursively compiles the code,  using  'COMPFN's
+      to  handle  special  cases, and the recursive function !&COMPILE
+      for the general case.  In general, code  is  compiled  to  cause
+      function arguments to be loaded into R1...Rn in order, a CALL to
+      the function to be made, and the returned value to appear in R1.
+      Temporaries  and function arguments to be reused later are saved
+      on the stack.  The compiler allocates a  single  FRAME  for  the
+      maximum stack space that might be needed, and then trims it down
+      in  the  third  pass.  PSL requires registers R1 ... R15, though
+      not all need be "REAL registers"; the  extra  are  simulated  as
+      memory  locations.   Special cases avoid a lot of LOAD/STORES to
+      move arguments around.   The  compiled  code  is  emitted  as  a
+      sequence  of  abstract LISP machine cmacros.  The current set of
+      cmacros is described below.
+
+   c. The third pass scans the list of cmacros for patterns,  removing
+      LOADs and STOREs, redundant JUMP's and LABEL's, compressings the
+      stack  frame,  and  possibly  mapping  temporaries stored on the
+      stack into any of the REAL registers  that  would  otherwise  be
+      unused.  This optimized cmacro list is then passed to LAP.
+
+
+
+18.5. First PASS of Compiler18.5. First PASS of Compiler18.5. First PASS of CompilerPSL Manual                    7 February 1983           Compiler and Loader
+section 18.5                                                     page 18.15
+
+18.5.1. Tagging Information18.5.1. Tagging Information18.5.1. Tagging Information
+
+  This  affects  many  parts  of  the compiler.  The basic idea is that all
+information is to be tagged.  These tags fit in three categories:  variable
+tags, location (register and frame) tags, and constant tags.  Tags used for
+variables must be flagged 'VAR; tags for constants must be flagged  'CONST.
+Currently,  the  register  tag  is  REG  and the frame tag is FRAME.  Frame
+locations are always positive integers.
+
+  These tags are used everywhere; thus, register 1 is always  described  by
+(REG  1)  in both emitted cmacros and internally in the register list REGS.
+Pass 1 tags all variable references with a source to source  transformation
+of  the  variables  (suitably  obscure names must be used for these tags to
+prevent conflicts with named functions).
+
+  The purpose behind this tagging is to make the compiler  easier  to  work
+with  in  adding  new  features;  new  notions of registers, constants, and
+variables can all be accommodated through new tags.  Also,  the  components
+of the cmacros are more clearly identified for pass 3.
+
+
+18.5.2. Source to Source Transformations18.5.2. Source to Source Transformations18.5.2. Source to Source Transformations
+
+  A  PA1REFORMFN has been provided to augment PA1FN's.  The only difference
+between these functions is that the PA1REFORM function is passed code which
+has already been through PASS1.  This was previously done by calling pass 1
+within a PA1FN.
+
+
+
+18.6. Second PASS - Basic Code Generation18.6. Second PASS - Basic Code Generation18.6. Second PASS - Basic Code Generation
+
+
+18.6.1. The Cmacros18.6.1. The Cmacros18.6.1. The Cmacros
+
+  The compiler second pass  compiles  the  input  LISP  into  a  series  of
+abstract  machine instructions, called cmacros.  These are instructions for
+a LISP-oriented Register machine.
+
+
+___ _______ ______ _______The current DEC-20 cmacros
+
+Definitions of arguments
+
+ reg:   (REG n)       n = 1,2,... MAXNARGS
+ var:   frame | (GLOBAL name) | (FLUID name)
+ frame: (FRAME n)     n = 0,1,2, ..
+ const: (QUOTE value) | (WCONST value)
+ label: (LABEL symbol)
+ regn:  reg | NIL | frame
+ regf:  reg | frame
+ loc:   reg | var | constCompiler and Loader           7 February 1983                    PSL Manual
+page 18.16                                                     section 18.6
+
+ anyreg: (CAR anyreg) | (CDR anyreg) | loc
+Basic Cmacros for LISP and SYSLISP
+
+(!*ALLOC nframe)
+(!*DEALLOC nframe)
+(!*ENTRY fname ftype nargs)
+(!*EXIT  nframe)
+(!*FREERSTR (NONLOCALVARS f1 f2 ...))
+(!*JUMP label)
+(!*JUMPxx label loc loc')
+        where xx = ATOM, EQ, NOTEQ, NOTTYPE, PAIRP, TYPE
+(!*JUMPON lower upper (label-1 ... Label-n))
+(!*LINK fname ftype nargs)
+(!*LINKE nframe fn type nargs)
+(!*LINKF nargs reg) where reg contains the function name,
+                          nargs an integer
+(!*LINKEF nframe nargs reg) %/ ?
+(!*LBL label)
+(!*LAMBIND (REGISTERS reg1 reg2 ...) (NONLOCALVARS f1 f2 ...))
+         where f1, f2, ... = (FLUID name )
+          No frame location will be allocated (depends on switch)
+(!*LOAD reg anyreg)
+(!*PROGBIND (NONLOCALVARS f1 f2 ...))
+(!*PUSH reg)
+(!*RPLACA regf loc)
+(!*RPLACD regf loc)
+(!*STORE regn var) | (!*STORE regn reg)
+
+SYSLISP oriented Cmacros
+
+(!*ADDMEM loc)
+(!*ADJSP ?)
+(!*DECMEM loc)
+(!*INCMEM loc)
+(!*INTINF loc)
+(!*JUMPWGEQ label loc loc')
+(!*JUMPWGREATERP label loc loc')
+(!*JUMPWITHIN label loc loc')
+(!*JUMPWLEQ label loc loc')
+(!*JUMPWLESSP label loc loc')
+(!*MKITEM loc loc')
+(!*MPYMEM loc loc')
+(!*NEGMEM loc)
+(!*SUBMEM loc loc')
+(!*WAND loc loc')
+(!*WDIFFERENCE loc loc')
+(!*WMINUS loc)
+(!*WNOT loc)
+(!*WOR loc loc')
+(!*WPLUS2 loc loc')
+(!*WSHIFT loc loc')
+(!*WTIMES2 loc loc')PSL Manual                    7 February 1983           Compiler and Loader
+section 18.6                                                     page 18.17
+
+(!*WXOR loc loc')
+
+_____ _______68000 Cmacros
+
+Basic LISP and SYSLISP Cmacros
+
+(!*ALLOC nframe)
+(!*CALL fname)
+(!*DEALLOC nframe)
+(!*ENTRY fname ftype nargs)
+(!*EXIT nframe)
+(!*JCALL fname)
+(!*JUMP label)
+(!*JUMPEQ label loc loc')
+(!*JUMPINTYPE label type)
+(!*JUMPNOTEQ label loc loc')
+(!*JUMPNOTINTYPE label loc type)
+(!*JUMPNOTTYPE label loc type)
+(!*JUMPTYPE label loc type)
+(!*LAMBIND label loc loc')
+(!*LBL label)
+(!*LINK fname ftype nargs)
+(!*LINKE fname ftype nargs nframe)
+(!*MOVE loc loc')
+(!*PROGBIND label loc loc')
+(!*PUSH loc)
+
+SYSLISP specific Cmacros
+
+(!*APOLLOCALL label loc loc')
+(!*ASHIFT loc loc')
+(!*FIELD loc loc')
+(!*FOREIGNLINK loc loc')
+(!*INF loc loc')
+(!*JUMPON loc loc')
+(!*JUMPWGEQ loc loc')
+(!*JUMPWGREATERP loc loc')
+(!*JUMPWITHIN loc loc')
+(!*JUMPWLEQ loc loc')
+(!*JUMPWLESSP loc loc')
+(!*LOC loc loc')
+(!*MKITEM loc loc')
+(!*PUTFIELD loc loc')
+(!*PUTINF loc loc')
+(!*PUTTAG loc loc')
+(!*SIGNEDFIELD loc loc')
+(!*TAG loc loc')
+(!*WAND loc loc')
+(!*WDIFFERENCE loc loc')
+(!*WMINUS loc loc')
+(!*WNOT loc loc')
+(!*WOR loc loc')Compiler and Loader           7 February 1983                    PSL Manual
+page 18.18                                                     section 18.6
+
+(!*WPLUS2 loc loc')
+(!*WSHIFT loc loc')
+(!*WTIMES2 loc loc')
+(!*WXOR loc loc')
+
+
+
+18.6.2. Classes of Functions18.6.2. Classes of Functions18.6.2. Classes of Functions
+
+  The compiler groups functions into four basic classes:
+
+
+   a. ANYREG  functions.   No side effects and can be done in a single
+      register.  Passed directly to CMACROs.   Viewed  as  a  form  of
+      "extended addressing" mode.
+
+   b. Specially  compiled  or  "OPEN"  functions.  These are functions
+      have  a  special  compiling  function  stored  under  a  'COMPFN
+      indicator.    While many of these functions are specially coded,
+      many are written with the aid of supporting patterns; these  are
+      called  'OPENFN or 'OPENTST patterns.  Some OPEN functions alter
+      registers which are in use, allocate new frames or obtain unused
+      registers.  These open functions also include  open  compilation
+      of tests.
+
+   c. Built-in  or  'stable' functions.  These functions are called in
+      the standard fashion by the compiler, but they  have  properties
+      which are useful to the compiler and are assumed to always hold.
+      Currently,  a  function  may be flagged as NOSIDEEFFECT and have
+      the property  DESTROYS,  which  contains  a  list  of  registers
+      destroyed by the function.
+
+   d. All other functions are assumed to be totally random, destroying
+      every register and causing side effects.
+
+
+  [??? Mark non-random functions of various levels elsewhere ???]  [??? Mark non-random functions of various levels elsewhere ???]  [??? Mark non-random functions of various levels elsewhere ???]
+
+  The most important of these categories is the OPEN function.  It is hoped
+that  improved  OPEN  functions  will  eliminate  the  need  for  temporary
+registers to be allocated by the  assembler.    Most  OPEN  functions  emit
+cmacros especially tailored for each function.
+
+
+18.6.3. Open Functions18.6.3. Open Functions18.6.3. Open Functions
+
+  [??? Explain how to CODE them ???]  [??? Explain how to CODE them ???]  [??? Explain how to CODE them ???]
+
+  There are 3 basic kinds of open function:
+
+
+   a. Test: the destination is a LABEL.PSL Manual                    7 February 1983           Compiler and Loader
+section 18.6                                                     page 18.19
+
+   b. Value: the result is to be placed in a particular register.
+   c. Effect:  the  result  is  a  side  effect, and no destination is
+      needed.
+
+
+Note that an EFFECT open function does not have a destination.  It  is  not
+really a separate class of function, just a separate usage.  Example:
+
+   (PROGN (SETQ X 0) ... )
+
+  -  the  SETQ  is  for  effect  only - could be implemented with a "clear"
+instruction.
+
+   (FOO (SETQ X 0) ... )
+
+  - here the 0 is also placed in a register (the destination register).
+
+  The use of OPENTST is also derived from context: in 
+
+    (COND ((EQ A B) ...))
+
+- EQ is interpreted as a test.  
+
+   (RETURN (EQ A B))
+
+,  though,  must  have  a  value.    It  should  be  noted  that  a  pseudo
+source-source transformation occurs if an OPENTST is called for value:  
+
+   (RETURN (EQ A B)) ->
+     (RETURN (COND ((EQ A B) T) (T NIL)))
+
+An  OPENTST function always returns T/NIL if called for value.  No separate
+handling for non test cases is needed (as opposed to the effect/value cases
+for normal OPEN funs in which two separate expansions can be supplied)
+
+  Also, there are 3 basic issues encountered in generating the code:
+
+
+   a. Bringing arguments into registers as needed.
+   b. Emitting the actual code.
+   c. Updating the final register contents.
+
+
+  Initially, the arguments to an open  function  are  removed  of  all  but
+ANYREG functions.  Thus, these arguments fall into four classes:
+
+
+   a. Registers
+   b. Memory locations (FLUID, GLOBAL, FRAME, !*MEMORY)
+   c. Constants
+   d. ANYREG functions (viewed as extended addressing modes)Compiler and Loader           7 February 1983                    PSL Manual
+page 18.20                                                     section 18.6
+
+Also,  along  with  the arguments coming in is the destination (register or
+label).
+
+  The first step is to replace some  arguments  by  registers  by  emitting
+LOAD's.    This  step  can  be  controlled by a function, called the adjust
+function, which emits LOAD's and replaces the  corresponding  arguments  by
+registers.   Next, cmacros are emitted.  These cmacros are selected through
+a pattern which defines the format of the particular OPEN function call.
+
+  Note that the pattern is matching the locations of the arguments  to  the
+open function.  For example, assume that FOO is OPEN, and the call 
+
+   (FOO 'A (CDR B) C D)
+
+is  encountered.    Assume  also that B is frame 1, C is frame 2, and D was
+found in reg 1.
+
+  The argument list being matched is thus 
+
+   ('A (CDR (FRAME 1)) (FRAME 2) (REG 1))
+
+For most purposes, this would be interpreted as (const anyreg mem reg).  Of
+course, a pattern can use the value of  a  constant  (you  might  recognize
+(!*WPLUS2  1  X)  as  an  increment).    Also,  the  actual register may be
+important for register args, especially if one of  the  args  is  also  the
+destination.  You would probably emit different code for 
+
+   (REG 1) := (!*WPLUS2 (REG 2) (REG 3))
+
+than 
+
+   (REG 1) := (!*WPLUS2 (REG 1) (REG 2))
+
+  To avoid a profusion of properties which would be associated with an OPEN
+function,  two  properties  of  the  function  name  are  used  to hold all
+information associated with OPEN compiling.  These  properties  are  OPENFN
+and OPENTST.
+
+  The OPENFN and OPENTST properties have the following format:
+
+        (PATTERN MACRONAME PARAMETERS)
+   or   function name.
+
+  The  PATTERN  field contains either the pattern itself or a pattern name.
+                     __A pattern name is an id having the PATTERN  property.    In  the  following
+material,  DEST  refers  to  the destination label in an OPENTST and to the
+destination register in an OPENFN.  If the function is being evaluated  for
+effect only, DEST is a temporary register which need not be used.
+
+  A pattern has the following format:PSL Manual                    7 February 1983           Compiler and Loader
+section 18.6                                                     page 18.21
+
+   (ADJUST_FN
+    REG_FN
+    (P1 M11 M12 M13 ..)
+    (P2 M21 M22 M23 ..)
+    ...)
+
+The  Pi are patterns and Mij are cmacros or pseudo cmacros.  ADJUST_FN is a
+register adjustment function used to place things in registers as required,
+and to factor out basic properties of the function from the pattern.    For
+example,  you  almost never could do anything with ANYREG stuff except load
+it somewhere (emitting (!*WPLUS2 X (CDR (CAR Y))) directly  probably  won't
+work  - you must bring (CDR (CAR Y)) into a reg before further progress can
+be made).  The most common adjust  function  is  NOANYREG,  which  replaces
+ANYREG stuff with registers.  This eliminates the problem of having to test
+for ANYREG stuff in the patterns.
+
+  Some pattern elements currently supported are:
+
+
+ANY       matches anything
+DEST      matches the destination register or label
+NOTDEST   matches any register except the destination
+REG       matches any register
+REGN      Any register or 'NIL or a frame location
+VAR       A LOCAL, GLOBAL, or FLUID variable
+MEM       A memory address, currently constants + vars (NOT REGS)
+ANYREGFN  matches an ANYREG function
+'literal  matches the literal
+(p1 p2 ... pn)
+          matches a field whose components match p1 ... pn
+NOVAL     matches  only  if  STATUS  >  1; must be the first component of a
+          pattern, consumes no part of the subject.
+
+
+  The cmacros associated with the patterns fall into  two  classes:  actual
+cmacros  to  be  emitted  and  pseudo  cmacros which are interpreted by the
+compiler.  In either case, the components of the cmacros are handled in the
+same fashion.  The cmacros contain:
+
+
+Ai        replaced  by  the  ith  argument  to  the  OPEN  function  (after
+          adjustment)
+Ti        replaced by a temporary register
+Li        replaced by a temporary label
+Pi        replaced by corresponding parameter from OPENFN
+DEST      replaced  by  the  destination  register  or  label (depending on
+          OPENFN or OPENTST).
+FN        replaced by the name of the OPEN function
+MAC       synonym for P1, by convention a cmacro name
+'literal
+(x1 x2 ... )
+          xi as above, forms a listCompiler and Loader           7 February 1983                    PSL Manual
+page 18.22                                                     section 18.6
+
+  The pseudo cmacros currently supported are:  
+
+
+ !*DESTROY !*DESTROY __  __        ____                                        ______(!*DESTROY R1, R2, ...): list                                        cmacro
+
+                                     __     __     Remove any register values from R1 ... RN.
+
+
+ !*DO !*DO ________ ____ ____       ____                                  ______(!*DO FUNCTION ARG1 ARG2 ...): list                                  cmacro
+
+              ________     Call the FUNCTION.
+
+
+ !*SET !*SET ___ ___   ____                                                ______(!*SET REG VAL): list                                                cmacro
+
+                      ___    ___     Set the value in REG to VAL.
+
+  The cmacros which are known to the compiler are 
+
+
+ !*LOAD !*LOAD    ____                                                      ______(!*LOAD ): list                                                      cmacro
+
+
+ !*STORE !*STORE    ____                                                     ______(!*STORE ): list                                                     cmacro
+
+
+ !*JUMP !*JUMP    ____                                                      ______(!*JUMP ): list                                                      cmacro
+
+
+ !*LBL !*LBL    ____                                                       ______(!*LBL ): list                                                       cmacro
+
+  These  cmacros  have  special emit functions which are called as they are
+emitted; otherwise the cmacro is directly attached to CODELIST.
+
+
+
+18.7. Third PASS - Optimizations18.7. Third PASS - Optimizations18.7. Third PASS - Optimizations
+
+  The third pass of the compiler is responsible  for  doing  optimizations,
+getting  rid  of extra labels and jumps, removing redundant code, adjusting
+the stack frame to squeeze out "holes" or even reallocating temporaries  to
+excess registers if no "random" functions are called by this function.
+
+  This pass also does "peephole" optimizations (controlled by patterns that
+examine  the  Output  CMACRO  list  for cmacros that can be merged).  These
+tables can be adjusted by the user.  This pass also gathers information  on
+register  usage  that  may  be  accumulated  to  aid  block  compilation or
+recompilation of a set of functions that are NOT redefined, and so can  use
+information about each other (i.e. become "stable").
+
+  The  'OPTFN property is used to associate an optimization function with a
+particular CMACRO name.  This function looks at the  CMACRO  arguments  andPSL Manual                    7 February 1983           Compiler and Loader
+section 18.7                                                     page 18.23
+
+some  subsequent  CMACROs  in  the code-list, to see if a transformation is
+possible.  The OPTFN takes a single  argument,  the  code-list  in  reverse
+order  starting  at  the  associated  CMACRO.    The OPTFN can also examine
+certain parameters.  Currently !*LBL, !*MOVE and !*JUMP have 'OPTFNS.   For
+example,  !&STOPT,  associated  with  !*MOVE, checks if previous CMACRO was
+!*ALLOC, and that this !*MOVE moves a register to the slot just  allocated.
+If  so, it converts the !*ALLOC and !*MOVE into a single !*PUSH.  Likewise,
+!&LBLOPT removes duplicate labels defined at one place, aliasing  one  with
+the other, and so permitting certain JUMP optimizations to take place.
+
+  Tags  in  the cmacros are processed in a final pass through the code.  At
+this time the compiler can do substitutions  using  functions  attached  to
+these  tags.    Currently, (!*FRAMESIZE) is converted to the frame size and
+holes  are  squeezed  out  (using  the  FRAME   tag)   by   !&REFORMMACROS.
+Transformation functions are attached to tags (or any function) through the
+TRANFN property currently.
+
+
+
+18.8. Some Structural Notes on the Compiler18.8. Some Structural Notes on the Compiler18.8. Some Structural Notes on the Compiler
+
+  [???  This  Section  is  very  ROUGH,  just  to  give  some  additional  [???  This  Section  is  very  ROUGH,  just  to  give  some  additional  [???  This  Section  is  very  ROUGH,  just  to  give  some  additional
+  information in interim ???]  information in interim ???]  information in interim ???]
+
+  External variables and properties used by the compiler:
+
+  _________ ___ ________  Variables and Switches
+
+
+        __________                                                   ______!*ERFG [Initially: ]                                                 switch
+
+
+                  __________                                         ______!*INSTALLDESTROY [Initially: NIL]                                    switch
+
+     If true, causes the compiler to install the DESTROYS property  on
+     any   function  compiled  which  leaves  one  or  more  registers
+     unchanged
+
+
+       __________                                                    ______!*INT [Initially: T]                                                 switch
+
+
+                __________                                           ______!*NOFRAMEFLUID [Initially: T]                                        switch
+
+     If true, inhibits allocation of frame locations for FLUIDS
+
+
+            __________                                               ______!*SHOWDEST [Initially: NIL]                                          switch
+
+     If true, compiler prints out which registers a function  destroys
+     unless all are destroyedCompiler and Loader           7 February 1983                    PSL Manual
+page 18.24                                                     section 18.8
+
+           __________                                                ______!*SYSLISP [Initially: NIL]                                           switch
+
+     Switch  compilation  mode  from default of LISP to SYSLISP.  This
+     affects constant tagging, and in RLISP also causes LISP functions
+     to be replaced by SYSLISP equivalents.  Also, non-locals  default
+     to WVAR's rather than FLUIDs.  See Chapter 20.
+
+
+                __________                                           ______!*UNSAFEBINDER [Initially: NIL]                                      switch
+
+     for  Don's  BAKER  problem...GC  may be called in Binder, so regs
+     cannot be preserved, and Binder called as regular function.
+
+
+               __________                                            ______!*USEREGFLUID [Initially: NIL]                                       switch
+
+     If true, LAMBIND and PROGBIND cmacros may  contain  registers  as
+     well as frame locations (through FIXFRM).
+
+  _______  Globals:
+
+
+               __________                                            ______LASTACTUALREG [Initially: 5]                                         global
+
+     The  number  of the last real register; FIXFRM does not map stack
+     locations  into  registers  >  LASTACTUALREG.    Also,  temporary
+     registers are actual registers if possible.
+
+
+          __________                                                 ______MAXNARGS [Initially: 15]                                             global
+
+     Number of registers
+
+  __________ ___ _____  Properties and Flags:
+
+
+CONST     A tag property, indicates tags for constants (WCONST and QUOTE)
+EXTVAR    A   tag  property,  indicates  a  variable  type  whose  name  is
+          externally known (!$FLUID, !$GLOBAL, !$WVAR)
+MEMMOD    A cmacro property, indicates in place  memory  operations.    The
+          first argument to the cmacro is assumed to be the memory location
+          (var or !*MEMORY)
+NOSIDEEFFECT
+          A  function  property,  used  both  in  dealing with !*ORD and to
+          determine if the result should be placed in register status
+REG       A tag property, indicates a register (REG)
+TERMINAL  A tag property, indicates terminals (leaves) whose arguments  are
+          not  tagged items (!$FLUID !$GLOBAL !$WVAR REG LABEL QUOTE WCONST
+          FRAME !*FRAMESIZE IREG)
+TRANSFER  A  property  of  cmacros  and  functions,  indicates  cmacros   &
+          functions  which  cause  unconditional  transfers  (!*JUMP !*EXIT
+          !*LINKE !*LINKEF ERROR)PSL Manual                    7 February 1983           Compiler and Loader
+section 18.8                                                     page 18.25
+
+VAR       A  tag  property,  indicates  a  variable  type  (!$LOCAL !$FLUID
+          !$GLOBAL !$WVAR)
+
+
+  __________  Properties:
+
+
+ANYREG    A function property, non-NIL indicates an ANYREG function
+CFNTYPE   Used in compiler to relate to Recursion-to-iteration conversion.
+DESTROYS  A function  property,  contains  a  (tagged)  list  of  registers
+          destroyed by the function
+DOFN      A  function  property,  contains  the  name  of  a  compile  time
+          evaluation function for numeric arguments.
+EMITFN    A cmacro or pseudo  cmacro  property,  contains  the  name  of  a
+          special  function for emitting (or executing) the cmacro, such as
+          !&ATTJMP for !*JUMP.
+EXITING   A cmacro property, used in FIXLINKS.  Contains  the  name  of  an
+          associated exiting cmacro (!*LINK : !*LINKE, !*LINKF : !*LINKEF)
+FLIPTST   A  function property, contains the name of the opposite of a test
+          function.  All open compiled test functions must have one.  (EQ :
+          NOTEQ, ATOM : PAIRP)
+GROUPOPS  A function property, used in constant folding.  Attached  to  the
+          three  functions of a group, always a list of the three functions
+          in the order +, -, MINUS.  (!*WPLUS2, !*WDIFFERENCE,  !*WMINUS  :
+          (!*WPLUS2 !*WDIFFERENCE !*WMINUS))
+MATCHFN   A  property  attached to an atom in a pattern.  Contains the name
+          of a boolean function for use in pattern matching.
+NEGJMP    A cmacro property, contains the inverted test jump  cmacro  name.
+          (!*JUMPEQ : !*JUMPNOTEQ, !*JUMPNOTEQ : !*JUMPEQ ...)
+ONE       A  function property, contains the (numeric) value of an identity
+          associated with the function (!*WPLUS2 : 0, !*WTIMES2 : 1, ...)
+PATTERN   A property associated with atoms appearing in OPENFN  or  OPENTST
+          properties, contains a pattern for open coding of functions.
+SUBSTFN   A  property  of atoms found in cmacros which are inside patterns.
+          Contains a function name; the function value is substituted  into
+          the cmacro as emitted.
+ZERO      Like  ONE, designates a value which acts as a 0 in a ring over *.
+          (!*WTIMES2 : 0 , !*LOGAND : 0)

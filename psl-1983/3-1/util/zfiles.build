@@ -1,0 +1,3 @@
+CompileTime load(ZBoot, ZBasic, ZMacro, If!-System);
+in "zfiles.lsp"$
+in "zsys.lsp"$

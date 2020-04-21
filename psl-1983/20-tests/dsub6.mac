@@ -1,0 +1,33 @@
+	radix 10
+	extern L0001
+	extern L0002
+	extern SYMNAM
+	extern SYMVAL
+	extern SYMFNC
+	extern SYMPRP
+	extern L0003
+	extern L0004
+	extern ARG1
+	extern ARG2
+	extern ARG3
+	extern ARG4
+	extern ARG5
+	extern ARG6
+	extern ARG7
+	extern ARG8
+	extern ARG9
+	extern ARG10
+	extern ARG11
+	extern ARG12
+	extern ARG13
+	extern ARG14
+	extern ARG15
+BNDSTK:	block 2001
+	intern BNDSTK
+L1005:	BNDSTK+0
+	intern L1005
+L1006:	BNDSTK+1999
+	intern L1006
+L1007:	BNDSTK+0
+	intern L1007
+	end

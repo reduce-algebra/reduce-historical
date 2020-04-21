@@ -1,0 +1,66 @@
+
+			 8-Jun-83  9:32:07
+
+BATCON Version	104(4133)			GLXLIB Version	1(527)
+
+	    Job ALLOC Req #476 for KESSLER in Stream 0
+
+	OUTPUT:	 Nolog				TIME-LIMIT: 0:10:00
+	UNIQUE:	 Yes				BATCH-LOG:  Supersede
+	RESTART: No				ASSISTANCE: Yes
+						SEQUENCE:   1733
+
+	Input from => PS:<PSL.KERNEL.20.EXT>ALLOC.CTL.3
+	Output to  => PS:<PSL.KERNEL.20.EXT>ALLOC.LOG
+
+
+
+ 9:32:08 MONTR	 Univ of Utah Computer Science KL-20, TOPS-20AN Monitor 5.3(1500)
+ 9:32:08 MONTR	@SET TIME-LIMIT 600
+ 9:32:08 MONTR	@@LOGIN KESSLER SMALL
+ 9:32:11 MONTR	 Job 12 on TTY224 8-Jun-83 09:32:11
+ 9:32:11 MONTR	 Previous login at 8-Jun-83 09:29:18
+ 9:32:11 MONTR	 There is 1 other job logged in as user KESSLER
+ 9:32:21 MONTR	@
+ 9:32:21 MONTR	[PS Mounted]
+ 9:32:21 MONTR	
+ 9:32:21 MONTR	[CONNECTED TO PS:<PSL.KERNEL.20.EXT>]
+		;Modifications to this file may disappear, as this file is generated
+		;automatically using information in P20:20-KERNEL-GEN.SL.
+ 9:32:21 MONTR	def dsk: dsk:,p20e:,pk:,p20:
+ 9:32:22 MONTR	@S:EX-DEC20-CROSS.EXE
+ 9:32:27 USER	[17] ASMOut "alloc";
+ 9:32:28 USER	ASMOUT: IN files; or type in expressions
+ 9:32:28 USER	When all done execute ASMEND;
+ 9:32:33 USER	[18] PathIn "alloc.build";
+ 9:32:33 USER	%
+ 9:32:33 USER	% ALLOC.BUILD - Files dealing with allocation of memory blocks
+ 9:32:33 USER	% 
+ 9:32:33 USER	% Author:      Eric Benson
+ 9:32:33 USER	%              Symbolic Computation Group
+ 9:32:33 USER	%              Computer Science Dept.
+ 9:32:33 USER	%              University of Utah
+ 9:32:34 USER	% Date:        19 May 1982
+ 9:32:34 USER	% Copyright (c) 1982 University of Utah
+ 9:32:35 USER	%
+ 9:32:35 USER	
+ 9:32:35 USER	PathIn "allocators.red"$                % heap, symbol and code space alloc
+ 9:32:58 USER	PathIn "copiers.red"$                   % copying functions
+ 9:33:05 USER	PathIn "cons-mkvect.red"$               % SL constructor functions
+ 9:33:15 USER	PathIn "comp-support.red"$              % optimized CONS and LIST compilation
+ 9:33:16 USER	PathIn "system-gc.red"$                 % system-specific GC routines
+ 9:33:17 USER	PathIn "gc.red"$                        % the garbage collector
+ 9:33:42 USER	[19] ASMEnd;
+ 9:33:44 USER	*** Garbage collection starting
+ 9:33:49 USER	*** GC 8: time 1768 ms, 205573 recovered, 244793 free
+ 9:34:00 USER	0
+ 9:34:00 USER	[20] quit;
+ 9:34:00 MONTR	@compile alloc.mac, dalloc.mac
+ 9:34:03 USER	MACRO:  .MAIN
+ 9:34:11 USER	MACRO:  .MAIN
+ 9:34:11 USER	
+ 9:34:11 USER	EXIT
+ 9:34:12 MONTR	@
+ 9:34:13 MONTR	Killed by OPERATOR, TTY 221
+ 9:34:13 MONTR	Killed Job 12, User KESSLER, Account SMALL, TTY 224,
+ 9:34:13 MONTR	  at  8-Jun-83 09:34:13,  Used 0:00:49 in 0:02:01

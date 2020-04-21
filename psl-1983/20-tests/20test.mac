@@ -1,0 +1,57 @@
+; 20-TEST SIMPLE I/O TESTS, HANDCODED
+TITLE 20TEST
+; MLG, 20 JULY 1982
+
+SEARCH MONSYM
+RADIX ^D10
+EXTERN GETC20,PUTC20,PUTI20,ERR20,TIMC20,QUIT20
+ENTRY MAIN20
+ST=15
+MAIN20:	MOVEI 1,1
+	PUSHJ ST, PUTI20   ; Print a 1 for first test
+        MOVEI 1,10
+        PUSHJ ST, PUTC20   ; EOL to flush line
+
+	MOVEI 1,2
+	PUSHJ ST, PUTI20   ; Second test
+        MOVEI 1,65
+        PUSHJ ST, PUTC20  ; A capital A
+        MOVEI 1,66
+        PUSHJ ST, PUTC20  ; A capital B
+        MOVEI 1,10
+        PUSHJ ST, PUTC20  ; EOL to flush line
+
+        MOVEI 1,3
+	PUSHJ ST, PUTI20   ; Third test, type in AB <cr>
+        PUSHJ ST, GETC20
+         PUSHJ ST, PUTC20  ; Should print A65
+         PUSHJ ST, PUTI20
+         MOVEI 1,10
+         PUSHJ ST,PUTC20
+
+        PUSHJ ST, GETC20
+         PUSHJ ST, PUTC20  ; Should print B66
+         PUSHJ ST, PUTI20
+         MOVEI 1,10
+         PUSHJ ST,PUTC20
+
+        PUSHJ ST, GETC20
+         PUSHJ ST, PUTI20  ; should print 10 and EOL
+         PUSHJ ST, PUTC20
+         MOVEI 1,10
+         PUSHJ ST,PUTC20
+
+        movei 1,4
+	pushj st, puti20   ; last test
+        Pushj st,timc20
+        PushJ st, puti20
+
+	movei 1,100
+	pushj st, err20
+
+	movei 1,26
+        pushj st, putc20  ; eof to flush buffer
+        movei 1,0
+        pushj st, quit20
+	POPJ ST,	
+	END

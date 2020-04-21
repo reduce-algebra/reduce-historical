@@ -1,0 +1,3 @@
+CompileTime load Clcomp;
+off Usermode;
+in "loop.lsp"$

@@ -1,0 +1,35 @@
+APOLLO Graphics Routines in PLISP               JWP 12 June 1982
+---------------------------------
+
+/utah/com/plisp now has the ability to open a Window Pane in Graphics
+(Frame) mode; and have a 3 window dialogue with Text Input, Text Output
+(and the F8 and editing keys are Great!)  and Graphics output. The
+graphics primitives are:
+
+(L_INITPLOT)  % To split the 2 paned LISP window into 3 panes
+(L_ENDPLOT)   % to return to 2 pane mode
+(L_ERASE)     % to clear the graphics pane
+(L_MOVE x y)  
+(L_DRAW x y)
+
+[0,0] is in upper left corner, range x=0..799, y=0..1023 roughly. 
+
+The graphics pane is of course scrollable if you draw below visible edge.
+
+The get to RLISP mode, execute one of:
+
+(BEGIN) or (BEGINRLISP) or (RLISP), depending favorite flavor
+of top-loop. Then try:
+
+L_INITPLOT();          % To split screen
+
+Procedure Box(x,y,a,b);
+ <<L_Move(x,y);
+   L_Draw(x+a,y); L_Draw(x+a,y+b); L_Draw(x,y+a); L_Draw(x,y)>>;
+
+L_Erase();
+
+For i:=1:10 do Box(5*i,6*i,3*I+10,4*I+20);
+
+L_ENDPLOT();	       % To return to 2 pane mode.
+

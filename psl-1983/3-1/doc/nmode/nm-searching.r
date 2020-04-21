@@ -1,0 +1,105 @@
+.so pndoc:nman
+.part NM-SEARCHING manual
+@Chapter[Searching]
+@node("search")
+  Like other editors, NMODE has commands for searching for an
+occurrence of a string.  The search command is unusual in that it
+is @dfn[incremental]; it begins to search before you have finished typing
+the search string.  As you type in the search string, NMODE shows you
+where it would be found.  When you have typed enough characters to
+identify the place you want, you can stop.  Depending on what you will
+do next, you may or may not need to terminate the search explicitly
+with an Escape (Execute on the hp9836) first.
+@WideCommands[
+C-S	Search forward.
+
+C-R	Search backward.
+]
+@index{searching}
+@keyindex{C-S}
+@keyindex{C-R}
+@fncindex{incremental-search-command}
+@fncindex{reverse-search-command}
+  The command to search is C-S (@fnc{incremental-search-command}).  C-S reads in
+characters and positions the cursor at the first occurrence of the
+characters that you have typed.  If you type C-S and then F, the
+cursor moves right after the first "F".  Type an "O", and see
+the cursor move to after the first "FO".  After another "O", the
+cursor is after the first "FOO" after the place where you started
+the search.  At the same time, the "FOO" has echoed at the bottom of
+the screen.
+
+  If you type a mistaken character, you can delete it.  After the
+FOO, typing a Backspace makes the "O" disappear from the bottom of
+the screen, leaving only "FO".  The cursor moves back to the "FO".
+Deleting the "O" and "F" moves the cursor back to where you
+started the search.
+
+  When you are satisfied with the place you have reached, you can type
+an Escape, which stops searching, leaving the cursor where
+the search brought it.  Also, any command not specially meaningful in
+searches stops the searching and is then executed.
+@foot{A few other commands are not executed after a search.
+Most special function keys send commands which begin with Escape.
+This escape is taken as terminating the search, and the rest of the
+command is then executed.  ESC-A, for instance, will terminate the search
+and insert A, instead of terminating the search and jumping up a line.}
+Thus, typing C-A
+would exit the search and then move to the beginning of the line.
+escape is necessary only if the next command you want to
+type is a printing character, Rubout, Backspace, Escape,
+C-Q, or another search command, since those are the characters that
+have special meanings inside the search.
+
+  Sometimes you search for "FOO" and find it, but not the one you
+expected to find.  There was a second FOO that you forgot about,
+before the one you were looking for.  Then type another C-S and
+the cursor will find the next FOO.  This can be done any number of
+times.  If you overshoot, you can delete the C-S's.
+
+  After you exit a search, you can search for the same string again by
+typing just C-S C-S: one C-S command to start the search and then
+another C-S to mean "search again".
+
+  If your string is not found at all, the echo area says "Failing
+I-Search".  The cursor is after the place where NMODE found as
+much of your string as it could.  Thus, if you search for FOOT, and
+there is no FOOT, you might see the cursor after the FOO in FOOL.  At
+this point there are several things you can do.  If your string was
+mistyped, you can rub some of it out and correct it.  If you like the
+place you have found, you can type Escape or some other NMODE command
+to "accept what the search offered".  Or you can type C-G, which
+throws away the characters that could not be found (the "T" in "FOOT"),
+leaving those that were found (the "FOO" in "FOOT").  A second C-G
+at that point undoes the search entirely.
+
+@index{quitting}
+@keyindex{C-G}
+  The C-G "quit" command does special things during searches; just
+what, depends on the status of the search.  If the search has found
+what you specified and is waiting for input, C-G cancels the entire
+search.  The cursor moves back to where you started the search.  If
+C-G is typed while the search is actually searching for something or
+updating the display, or after search failed to find some of your
+input (having searched all the way to the end of the file), then only
+the characters which have not been found are discarded.  Having
+discarded them, the search is now successful and waiting for more
+input, so a second C-G will cancel the entire search.  Make sure you
+wait for the first C-G to ring the bell before typing the second one;
+if typed too soon, the second C-G may be confused with the first and
+effectively lost.
+
+  You can also type C-R at any time to start searching backwards.
+If a search fails because the place you started was too late in the
+file, you should do this.  Repeated C-R's keep looking for more
+occurrences backwards.  A C-S starts going forwards again.  C-R's
+can be rubbed out just like anything else.  If you know that you want
+to search backwards, you can use C-R instead of C-S to start the
+search, because C-R is also a command
+(@fnc{reverse-search-command})
+to search backward.
+
+@Index{Case Search}
+  All sorts of searches in NMODE normally ignore the case of the text
+they are searching through; if you specify searching for FOO, then Foo
+and foo are also considered a match.

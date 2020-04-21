@@ -1,0 +1,23 @@
+%
+% HEAP.BUILD - Declaration of the heap and BPS
+% 
+% Author:      Mark Swanson
+%              Symbolic Computation Group
+%              Computer Science Dept.
+%              University of Utah
+% Date:        4 March 1983
+% Copyright (c) 1983 University of Utah
+%
+
+on Syslisp;
+
+internal WArray BPS[BPSSize];
+
+exported WVar NextBPS = &BPS[0] + 8#1000000,
+	      LastBPS = &BPS[BPSSize] + 8#1000000;
+
+exported WConst Heap = 8#2000000;
+
+off Syslisp;
+
+END;

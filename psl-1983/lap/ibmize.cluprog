@@ -1,0 +1,9 @@
+%%% DebugFile: ps:<hp-psl.misc>ibmize.debug
+%%% ExecutableFile: ps:<hp-psl.misc>ibmize.exe
+%%% MainProcedure: main
+%%% MakeFile: ps:<hp-psl.misc>ibmize.cmd
+%%% Optimize: F
+%%% ProgramFile: ps:<hp-psl.misc>ibmize.cluprog
+%%% SourceFiles: ps:<hp-psl.misc>ibmize.clu ps:<clu.tlib>msg.clu
+%%%  ps:<perdue.utils>get_io.clu
+%%% XloadFile: ps:<hp-psl.misc>ibmize.xload

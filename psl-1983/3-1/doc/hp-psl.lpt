@@ -1,0 +1,276 @@
+
+
+
+
+
+
+                              Notes on PSL at HP
+                                 Cris Perdue
+                                 Alan Snyder
+                              28 September 1982
+
+1.  Introduction
+
+     This  memo  describes  PSL as it exists at HP, as opposed to the standard
+PSL distribution described in the PSL Users Manual.  PSL at  HP  differs  from
+standard  PSL  in  a  number  of  significant  ways.  This memo should be read
+carefully before trying to run PSL at HP.
+
+     This memo describes the version of PSL installed on Hulk on September 28,
+1982.  This version does not yet exist on the Vaxen.
+
+2.  Before Running PSL on HULK or THOR
+
+     In order to run PSL on HULK or THOR, you  must  first  perform  the  EXEC
+command:
+
+        @take PSL:LOGICAL-NAMES.CMD
+
+This  command defines a set of logical device names that are necessary for the
+proper execution of PSL.  If you intend to use PSL more than once, you  should
+include  the  above  command  in your LOGIN.CMD file.  These logical names are
+also referred to below and in other PSL documentation; the above command  must
+be performed before you can use any of these logical names.
+
+3.  PSL Documentation
+
+     A  printed  copy  of  the preliminary PSL manual can be obtained from Ira
+Goldstein's secretary.  There is also a complete online version of this manual
+on HULK, organized as a set of files, one per chapter.  These  are  stored  in
+files  "PLPT:nnnn-chaptername.LPT".   Please  do  not print your own copies of
+these files.  The manual is currently available  on  HEWEY  in  the  directory
+~psl/dist/lpt.
+
+     If  you have never used PSL at HP before, the memo "DEC-20 PSL New Users'
+Guide" may be helpful.  Copies are available from Ira Goldstein's secretary.
+
+     On HULK there is a set of short HELP files, on  directory  "PH:".   These
+help files are generally not very helpful.
+
+     There  is a log of PSL bugs, comments, and inquiries.  See the section on
+"PSL Bugs" below.  There is also a file of more substantial  PSL  news  items,
+(HULK:)  PSL:NEWS.TXT.    Be  sure  to  read  that file as a companion to this
+document.  In addition, there is a file listing  most  changes  made  to  PSL,
+(HULK:)  PSL:BUG-FIX.LOG.  This file is updated whenever a change is made to a
+PSL system source file; the changes may not actually be installed  until  some
+later time.
+
+4.  PSL Bugs
+
+     Send  bug  reports,  inquiries,  and comments via computer mail to "PSL".
+This procedure should work on any DEC-20 or VAX in CRC.
+
+     The file (HULK:) PSL:BUGS.TXT contains a log of inquiries, comments,  and
+bug reports concerning PSL and its documentation.  The file is kept up to date
+and  is  edited  somewhat.    Entries  are in chronological order, most recent
+first, so it is easy to find the latest and most wonderful  bugs.    The  file
+(HULK:) PSL:BUG-MAIL.TXT contains the unedited accumulation of mail to PSL.
+
+5.  Local PSL -- What's in it
+
+     PSL  at  HP has some modules preloaded on top of the "bare PSL", which is
+the minimum set of features now available in a PSL.  Some of these modules are
+described in the PSL manual and are part of  the  standard  PSL  distribution;
+these   are   preloaded  as  a  convenience  for  users.    Others  are  local
+contributions; these are described in greater detail below.
+
+     The following modules described in the PSL manual are loaded as  part  of
+"PSL"  at  HP.    We  have  chosen these modules as being most useful for most
+people.
+
+   useful         This module provides a variety of useful  features,  many
+                  or  all  of  them documented in the PSL manual, including
+                  the "extended" FOR loop.  These functions generally  have
+                  an  obscure annotation in the manual saying that they are
+                  available in the USEFUL library.
+
+   strings        This module defines  all  of  the  string  and  character
+                  functions  defined  in  section 8.7 of the manual, except
+                  for Char and String,  whose  definitions  there  conflict
+                  with definitions specified elsewhere in PSL.
+
+   nstruct        This  module  provides  a "defstruct" facility said to be
+                  the same as the one available on the LISP machines.  This
+                  is a fancy package that allows the  user  to  define  and
+                  make  use  of  record  or structure-like objects in LISP.
+                  See the LISP machine documentation for details, but  note
+                  that  in  PSL,  colons  should  not  be  used  to  prefix
+                  keywords.
+
+   debug          This  module  provides  various  debugging  features   as
+                  described  in  the PSL manual.  Most of them are not very
+                  high-powered.
+
+   gsort          This module defines some functions for sorting lists  and
+                  some predicates useful in sorting.
+
+   common         This  module  defines  some  functions  of "Common LISP".
+                  This module is incomplete in many ways: many Common  LISP
+                  functions  are  either  not provided or are provided in a
+                  limited form.  This module is intended as a compatibility
+                  package rather than an extension to PSL.  Common LISP  is
+                  a  relative  of  MacLISP, and is described in the "Common
+                  LISP Reference Manual",  copies  of  which  are  floating
+                  around the Application Technology Department.
+
+     Many  other modules, although mentioned in the PSL manual, are not loaded
+in "PSL" at HP.  Most notable of these are RLISP, the Pascal-like  syntax  for
+Standard  Lisp,  COMPILER,  the PSL compiler, and EMODE, a screen editor.  See
+below for information on compiling PSL programs.  EMODE has been  replaced  by
+NMODE, a locally written editor that is described below.
+
+     The following are locally-contributed modules that are preloaded in "PSL"
+at   HP.     These  modules  are  not  described  in  the  PSL  Users  Manual.
+Unfortunately, as a result, there is no easy way to prevent your programs from
+clashing with symbols defined in these modules.  Only the most important  such
+modules are listed here.
+
+   nmode          NMODE  is  an  EMACS-like  screen  editor.  It provides a
+                  different LISP interface than that described in  the  PSL
+                  manual.  See below for more information.
+
+   objects        OBJECTS   is   a   primitive   package   for   supporting
+                  object-oriented programming.  It is used  extensively  in
+                  NMODE  and  other  HP  contributions.  It supports a very
+                  limited subset  of  the  Lisp  Machine  flavors  package.
+                  Notably  missing is any support for inheritance.  See the
+                  file <AS.PSL>OBJECTS.SL on Hulk for further information.
+
+   input-stream   INPUT-STREAM is a class of objects implemented using  the
+                  OBJECTS package that provide for buffered file input.  It
+                  is    used    primarily   by   NMODE.    See   the   file
+                  <AS.PSL>INPUT-STREAM.SL on Hulk for details.
+
+   output-stream  OUTPUT-STREAM is a class of objects implemented using the
+                  OBJECTS package that provide for  buffered  file  output.
+                  It   is   used   primarily   by   NMODE.   See  the  file
+                  <AS.PSL>OUTPUT-STREAM.SL on Hulk for details.
+
+   pathnames      PATHNAMES is a  compatible  subset  of  the  Common  Lisp
+                  pathname  package.    It  provides  a  system-independent
+                  interface for manipulating file  names.    See  the  file
+                  P20SUP:PATHNAMES.SL   for   information   on  the  DEC-20
+                  version, and the "Common Lisp Reference Manual".
+
+
+6.  NMODE
+
+     NMODE is an EMACS-like screen editor.   It  currently  supports  only  HP
+terminals,  and does not support HP262X terminals well.   It supports a useful
+subset of the EMACS command interface, although many significant features  are
+missing.   A  list  of  the  NMODE commands is attached as an appendix to this
+document.  Available documentation on NMODE includes the following memos:  (1)
+"NMODE  for  EMODE Users" - a brief description of NMODE written primarily for
+those users  already  familiar  with  EMODE.   (2)  "Customizing  NMODE"  -  a
+description  of  how to customize NMODE by defining new commands or redefining
+existing commands.  These memos are available on the directory PSL: on Hulk.
+
+     NMODE provides a display-oriented Lisp interface  that  is  significantly
+different than the "standard" PSL interface described in the PSL Users Manual.
+At  HP,  PSL  starts  up  in  NMODE.    However,  it is possible to get to the
+"standard" PSL interface simply by executing the command C-] L.    (For  those
+not  familiar  with  EMACS,  this  means  to type two characters: "CONTROL-]",
+followed by "L".)  From the PSL interface, you can return to NMODE by invoking
+the function NMODE (with no arguments), or by RESETing (invoking the  function
+RESET  or aborting from a break loop), or reSTARTing (returning to EXEC via ^C
+and using the "START" command).
+
+     The proper way to leave NMODE and return to EXEC is to  use  the  command
+C-X  C-Z.  While ^C will get you back to EXEC, it may leave your terminal in a
+funny state.  Using C-X C-Z allows NMODE  to  restore  your  terminal  to  the
+proper state before returning control to the EXEC.
+
+     NMODE's  display-oriented  Lisp interface is based on the idea of reading
+from and writing to NMODE text buffers.  The NMODE command "Lisp-E" (which  is
+typed  as  C-]  E)  causes  PSL  to read and evaluate the form starting on the
+current line of the current buffer.  The output resulting from that evaluation
+is appended to the buffer named "OUTPUT" (which is the current buffer when PSL
+starts up).
+
+     If the evaluation of a Lisp form causes an error, a Break Handler will be
+entered.  Terminal input will continue to be directed to NMODE, and NMODE  can
+still  be used as an editor while the Break Handler is active.  NMODE provides
+a number of special commands for interacting with an active Break handler: The
+command "Lisp-Q" (typed as C-] Q) quits out of the  innermost  break  handler.
+The command "Lisp-A" (typed as C-] A) aborts all the way back to the top level
+and restarts NMODE.  The command "Lisp-R" attempts to retry the failing action
+that  caused  the  error  (which  must be a "continuable" error).  The command
+"Lisp-C" is similar, except that rather than reevaluating the "errorform",  it
+uses  the result of the last expression evaluated using "Lisp-E".  The command
+"Lisp-B" prints a backtrace.  The "Lisp-" commands are available only in  LISP
+mode.  To enter Lisp mode, use the command "M-X Lisp Mode".
+
+7.  Compiling PSL
+
+     As  mentioned above, the PSL compiler is not normally loaded in PSL.  The
+recommended way to compile  PSL  programs  is  to  use  the  program  PSLCOMP.
+PSLCOMP  compiles  a  PSL  source  file  (e.g. "foo.sl") and produces a binary
+object file (e.g. "foo.b").  PSLCOMP is invoked by the EXEC command
+
+        @PSLCOMP foo
+or      @PSLCOMP foo.sl
+
+PSLCOMP may be given multiple source file names (separated by spaces) and will
+produce a separate binary file for each source file; however, this practice is
+dangerous because the "compilation context" created for one source  file  will
+remain and may affect the compilation of a later source file.
+
+     The  object  file "foo.b" created by PSLCOMP may be loaded into PSL using
+either LOAD or FASLIN, as follows:
+
+        (LOAD FOO)
+        (FASLIN "FOO.B")
+
+The difference between LOAD and FASLIN is that LOAD will  not  reload  a  file
+that has already been loaded.
+
+     If you use any non-standard macros, fexprs, or nexprs that are defined in
+other  files,  you must cause definitions of those functions to be loaded into
+PSLCOMP when it compiles your source file.  The way to do this is to include a
+statement of the form
+
+        (CompileTime (load Module1 Module2 ... ))
+
+at the beginning of  your  source  file,  where  Module1,  Module2,  ...   are
+LOADable  modules  that  define  the  macros,  etc.  that you use.  PSLCOMP is
+preloaded with  the  following  modules:  COMMON,  USEFUL,  STRINGS,  OBJECTS,
+PATHNAMES, NSTRUCT.
+
+8.  PSL Directories and Subdirectories -- HULK
+
+     HULK  has  a  complete  set of source files, command files, object files,
+etc.  THOR currently does not, and  has  only  a  single  directory  for  PSL.
+Status  of PSL directories and subdirectories on HEWEY is subject to change at
+any time, so it isn't discussed here.
+
+     Sources  on  Hulk  reside  in  SS:<PSL>  and  its  subdirectories.    The
+subdirectories  of  SS:<PSL>  are  organized  in  a logical fashion.  The file
+"PSL:-THIS-.DIRECTORY" contains short descriptions of the  files  in  SS:<PSL>
+and the subdirectories of SS:<PSL>.  To see the complete set of subdirectories
+of  SS:<PSL>,  type  "DSKUSE SS:<PSL*>" to EXEC.  Note that the source code is
+kept separate from the object code, which is all on PL:.
+
+8.1  TAGS -- Finding the Definitions of PSL System Functions
+
+     The EMACS editor has a feature that is of great help  in  finding  source
+code,  the TAGS package.  To use this package, first load a "tag table", which
+is a database that records what source file definitions appear in.    One  tag
+table  can  hold  definitions  that appear in many different source files.  We
+have a very large tag table for all of PSL,  which  is  in  the  file  (HULK:)
+PSL:PSL.TAGS.
+
+     To  load a tag table file, do "M-X Visit Tag Table" in EMACS and give the
+file name as an argument.  Once a file is  loaded,  search  for  a  definition
+using  "M-.".    You  may  wish  to set the EMACS variable Tags Find File to 1
+before searching for definitions.  Note also that tag table files  may  become
+somewhat out of date.  Do not expect perfection.
+
+     The  program  TAGS  is  used to create tag table files.  The version that
+handles PSL (and RLISP) syntax, as well as understanding the  file  types  .SL
+and  .RED  is  PSL:TAGS.EXE.    The  system  version  of  TAGS  may eventually
+understand these things.
+
+     Full information on the EMACS TAGS package is only available in the EMACS
+manual and through the INFO facility.   Do  not  bother  the  PSL  group  with
+questions   and   complaints   about   TAGS  until  you  have  read  the  full
+documentation.  We will not improve the TAGS package itself in any case.

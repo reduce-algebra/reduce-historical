@@ -1,0 +1,1038 @@
+PSL Manual                    7 February 1983                  Parser Tools
+section 22.0                                                      page 22.1
+
+                                CHAPTER 22                                CHAPTER 22                                CHAPTER 22
+                               PARSER TOOLS                               PARSER TOOLS                               PARSER TOOLS
+
+
+
+
+     22.1. Introduction .  .  .  .  .  .  .  .  .  .  .  .  .  .  .    22.1
+     22.2. The Table Driven Parser  .  .  .  .  .  .  .  .  .  .  .    22.2
+          22.2.1. Flow Diagram for the Parser.  .  .  .  .  .  .  .    22.2
+          22.2.2. Associating the Infix Operator with a Function  .    22.4
+          22.2.3. Precedences .  .  .  .  .  .  .  .  .  .  .  .  .    22.5
+          22.2.4. Special Cases of 0 <-0 and 0 0.  .  .  .  .  .  .    22.5
+          22.2.5. Parenthesized Expressions  .  .  .  .  .  .  .  .    22.5
+          22.2.6. Binary Operators in General.  .  .  .  .  .  .  .    22.6
+          22.2.7. Assigning Precedences to Key Words  .  .  .  .  .    22.7
+          22.2.8. Error Handling .  .  .  .  .  .  .  .  .  .  .  .    22.7
+          22.2.9. The Parser Program for the RLISP Language .  .  .    22.7
+          22.2.10. Defining Operators  .  .  .  .  .  .  .  .  .  .    22.8
+     22.3. The MINI Translator Writing System.  .  .  .  .  .  .  .   22.10
+          22.3.1. A Brief Guide to MINI.  .  .  .  .  .  .  .  .  .   22.10
+          22.3.2. Pattern Matching Rules  .  .  .  .  .  .  .  .  .   22.12
+          22.3.3. A Small Example.  .  .  .  .  .  .  .  .  .  .  .   22.12
+          22.3.4. Loading Mini.  .  .  .  .  .  .  .  .  .  .  .  .   22.13
+          22.3.5. Running Mini.  .  .  .  .  .  .  .  .  .  .  .  .   22.13
+          22.3.6. MINI Error messages and Error Recovery .  .  .  .   22.13
+          22.3.7. MINI Self-Definition .  .  .  .  .  .  .  .  .  .   22.13
+          22.3.8. The Construction of MINI.  .  .  .  .  .  .  .  .   22.15
+          22.3.9. History of MINI Development.  .  .  .  .  .  .  .   22.16
+     22.4. BNF Description of RLISP Using MINI  .  .  .  .  .  .  .   22.17
+
+
+
+
+22.1. Introduction22.1. Introduction22.1. Introduction
+
+  In   many   applications,   it   is   convenient   to  define  a  special
+"problem-oriented" language, tailored to provide a  natural  input  format.
+Examples  include the RLISP ALGOL-like surface language for algebraic work,
+graphics languages, boolean query languages for data-base,  etc.    Another
+                                                  ________important  case  is  the  requirement  to  accept existing programs in some
+language, either to translate them  to  another  language,  to  compile  to
+machine  language,  to  be  able  to  adapt  existing  code  into  the  PSL
+environment (e.g. mathematical libraries, etc.), or because we wish to  use
+PSL  based  tools  to  analyze  a program written in another language.  One
+approach is to  hand-code  a  program  in  PSL  (called  a  "parser")  that
+translates  the  input  language  to  the desired form; this is tedious and
+error prone, and it is more convenient to use a "parser-writing-tool".
+
+  In this Chapter we describe in detail two important parser writing  tools
+available  to the PSL programmer: an extensible table-driven parser that is
+used for the RLISP parser (described in Chapter 3),  and  the  MINI  parser
+generator.    The table-driven parser is most useful for languages that areParser Tools                  7 February 1983                    PSL Manual
+page 22.2                                                      section 22.1
+
+simple  extensions  of  RLISP,  or in fact for rapidly adding new syntactic
+constructs to RLISP.  The MINI system is used for the development  of  more
+complete user languages.
+
+
+
+22.2. The Table Driven Parser22.2. The Table Driven Parser22.2. The Table Driven Parser
+
+  The  parser is a top-down recursive descent parser, which uses a table of
+___________Precedences to control the parse; if numeric precedence  is  not  adequate,
+LISP functions may be inserted into the table to provide more control.  The
+parser  described  here  was  developed by Nordstrom [Nordstrom 73], and is
+very similar to parser described by Pratt [Pratt 73], and  apparently  used
+for the CGOL language, another LISP surface language.
+
+                                                                Scan   Scan                                                                Scan   Scan  The parser reads tokens from an input stream using a function Scan.  Scan
+            ChannelReadToken            ChannelReadTokencalls  the  ChannelReadToken function described in Chapter 12, and performs
+some additional checks, described below.  Each token is defined to  be  one
+of the following:
+
+
+                    non-operator          O
+                    right operator        O->
+                    binary operator     <-O->
+
+
+  All  combinations  of . . .O-> O. . . and O <-O->. . . are supposed to be
+legal, while the  combinations  . . .O-> <-O->. . .,  . . .<-O-> <-O->. . .
+and  O O. . . are normally illegal (error ARG MISSING and error OP MISSING,
+respectively).
+
+                                       __  With each operator (which must be an id)  is  associated  a  construction
+function, a right precedence, and for binary operators, a left precedence.
+
+  The  Unary  Prefix  operators  have  this  information  stored  under the
+indicator  'RLISPPREFIX  and  Binary  operators  have   it   stored   under
+'RLISPINFIX.    (Actually, the indicator used at any time during parsing is
+the VALUE of GRAMPREFIX or GRAMINFIX, which may be changed by the user).
+
+
+22.2.1. Flow Diagram for the Parser22.2.1. Flow Diagram for the Parser22.2.1. Flow Diagram for the Parser
+
+  In this diagram RP stands for Right Precedence, LP  for  Left  Precedence
+and  CF for Construction Function.  OP is a global variable which holds the
+current token.PSL Manual                    7 February 1983                  Parser Tools
+section 22.2                                                      page 22.3
+
+
+     procedure PARSE(RP);
+      RDRIGHT(RP,SCAN()); % SCAN reads next token
+
+                 RDRIGHT(RP,Y)
+                       |
+                      \|/
+                       |
+            ------------------------
+            |                      |yes
+            |      Y is Right OP   |-----> Y:=APPLY(Y.CF,
+            |                      |                RDRIGHT(Y.RP));
+            ------------------------                .
+                       |                            .
+                      \|/ no                        .
+                       |                            .
+            ------------------------                .
+ERROR    yes|                      | no             .
+ARG    <----|      Y is Binary OP  |----> OP:=      .
+MISSING     |                      |       SCAN();  .
+            ------------------------           .    .
+                       |--------<------------<------*
+            RDLEFT:   \|/                           ^
+                       |                            ^
+            ------------------------                ^
+ERROR     no|                      |                ^
+ OP    <----|    OP is Binary      |                ^
+MISSING     |                      |                ^
+            ------------------------                ^
+                       |                            ^
+                      \|/  yes                      ^
+                       |                            ^
+            ------------------------                ^
+RETURN   yes|                      |no              ^
+ (Y)   <----|   RP > OP.lp         |---> Y:=APPLY(OP.cf,Y,
+            ------------------------       PARSE(OP.lp,SCAN());Parser Tools                  7 February 1983                    PSL Manual
+page 22.4                                                      section 22.2
+
+  This  diagram  reflects the major behavior, though some trivial additions
+are included in the RLISP case to handle cases such as OP-> <-OP, '!;, etc.
+[See PU:RLISP-PARSER.RED for full details.]
+
+  The technique involved may also be described by the following figure:
+
+
+                           . . . 0-> Y <-0 . . .
+                                     rp lp
+
+
+  Y is a token or an already parsed expression between  two  operators  (as
+indicated).    If 0->'s RP is greater than <-0's LP, then 0-> is the winner
+and Y goes to 0->'s construction function (and vice  versa).    The  result
+from the construction function is a "new Y" in another parse situation.
+
+  By associating precedences and construction functions with the operators,
+we are now able to parse arithmetic expressions (except for function calls)
+and  a  large  number of syntactical constructions such as IF - THEN - ELSE
+- ; etc.  The following discussion of how to expand the parser to  cover  a
+language  such  as  RLISP  (or ALGOL) may also be seen as general tools for
+handling the parser and defining construction functions and precedences.
+
+
+22.2.2. Associating the Infix Operator with a Function22.2.2. Associating the Infix Operator with a Function22.2.2. Associating the Infix Operator with a Function
+
+      Scan                RAtomHook      Scan                RAtomHook         __              __  The Scan, after calling RAtomHook, checks ids and special ids (those with
+TOKTYPE!* = 3) to see if they should  be  renamed  from  external  form  to
+                             Plus2                             Plus2internal  form  (e.g. '!+ to Plus2).  This is done by checking for a NEWNAM
+                              __               __or NEWNAM!-OP property on the id.  For special ids, the NEWNAM!-OP property
+is first checked.  The value of the property is a replacement token, i.e.  
+
+
+PUT('!+,'NEWNAM!-OP,'PLUS2)
+
+
+has been done.
+
+  Scan                                  RlispRead  Scan                                  RlispRead  Scan also handles the ' mark, calling RlispRead to get the  S-expression.
+RlispRead                           ReadRlispRead                           ReadRlispRead   is   a   version   of   Read,   using   a   special  SCANTABLE,
+RLISPREADSCANTABLE!*.
+
+               Scan               Scan  The function Scan also sets SEMIC!* to '!; or '!$ if CURSYM!* is detected
+to be '!*SEMICOL!* (the internal name for '!; and "!$).  This controls  the
+RLISP  echo/no-echo  capability.  Finally, if the renamed token is 'COMMENT
+                    ReadCh                    ReadChthen characters are ReadCh'd until a '!; or '!$ .PSL Manual                    7 February 1983                  Parser Tools
+section 22.2                                                      page 22.5
+
+22.2.3. Precedences22.2.3. Precedences22.2.3. Precedences
+
+  To  set up precedences, it is often helpful to set up a precedence matrix
+of the operators involved.  If  any  operator  has  one  "precedence"  with
+respect to one particular operator and another "precedence" with respect to
+some  other,  it  is  sometimes  not  possible  to run the parser with just
+numbered precedences for the operators without introducing ambiguities.  If
+this is the case, replace the number RP by the operator RP  and  test  with
+something like:
+
+
+                         IF RP *GREATER* OP . . .
+
+
+*GREATER*  may  check in the precedence matrix.  An example in which such a
+scheme might be used is the case for which ALGOL uses ":"  both as a  label
+marker  and  as  an index separator (although in this case there is no need
+for the change above).  It is also a good policy to have even  numbers  for
+right precedences and odd numbers for left precedences (or vice versa).
+
+
+22.2.4. Special Cases of 0 <-0 and 0 022.2.4. Special Cases of 0 <-0 and 0 022.2.4. Special Cases of 0 <-0 and 0 0
+
+  If  . . .0 0. . .  is  a  legal  case  (i.e. F A may translate to (F A)),
+ERROR OP MISSING is replaced by:
+
+
+                Y:=REPCOM(Y,RDRIGHT(99,OP)); GO TO RDLEFT;
+
+
+The value 99 is chosen in order to have the first object (F)  behave  as  a
+right  operator  with  maximum precedence.  If . . .0 <-0. . . is legal for
+some combinations of operators, replace  ERROR  ARG  MISSING  by  something
+equivalent to the illegal RLISP statement:
+
+
+IF ISOPOP(OP,RP,Y)
+         THEN <<OP:=Y;
+                Y:=(something else, i.e. NIL);
+                GOTO RDLEFT>>
+       ELSE ERROR ARG MISSING;
+
+
+ISOPOP is supposed to return T if the present situation is legal.
+
+
+22.2.5. Parenthesized Expressions22.2.5. Parenthesized Expressions22.2.5. Parenthesized Expressions
+
+
+                       (a) is to be translated to a.
+
+                                   E.g.Parser Tools                  7 February 1983                    PSL Manual
+page 22.6                                                      section 22.2
+
+                    BEGIN a END translates to (PROG a).
+
+
+  Define  "("  and  BEGIN as right operators with low precedences (2 and -2
+respectively).  Also define ")" and END as binary operators  with  matching
+left  precedences  (1 and -3 respectively).  The construction functions for
+"(" and BEGIN are then something like:  [See pu:RLISP-PARSER.RED for  exact
+details on ParseBEGIN]
+
+
+BEGIN     (X);PROG2(OP:=SCAN();MAKEPROG(X));
+"("       (X);PROG2(IF OP=') THEN OP:=SCAN()
+                                  ELSE ERROR, x);
+
+
+  Note that the construction functions in these cases have to read the next
+token;  that  is the effect of ")" closing the last "(" and not all earlier
+"("'s.  This is also an example of binary operators declared only  for  the
+purpose of having a left precedence.
+
+
+22.2.6. Binary Operators in General22.2.6. Binary Operators in General22.2.6. Binary Operators in General
+
+  As almost all binary operators have a construction function like
+
+
+                               LIST(OP,X,Y);
+
+
+it  is  assumed to be of that kind if no other is given.  If OP is a binary
+operator, then "a OP b OP c" is interpreted as "(a OP b) OP c" only if OP's
+LP is less than OP's RP.
+
+  Example:
+
+
+                    A + B + C translates to (A + B) + C
+                          because +'RP = 20 and +'LP = 19
+
+                    A ^ B ^ C translates to A ^ (B ^ C)
+                          because ^'RP = 20 and ^'LP = 21
+
+
+  If you want some operators to translate to n-ary expressions, you have to
+define a proper construction function for that operator.
+
+  Example:  
+
+
+PLUS   (X,Y); IF CAR(X) = 'PLUS THEN NCONC(X,LIST(Y))
+                              ELSE LIST('PLUS,X,Y);PSL Manual                    7 February 1983                  Parser Tools
+section 22.2                                                      page 22.7
+
+  By  defining  ","  and  ";"  as  ordinary  binary  operators,  the parser
+automatically takes care  of  constructions  like  . . .e,e,e,e,e. . .  and
+. . . stm;stm;stm;stm;. . .    It  is  then  up  to some other operators to
+remove the "," or the ";" from the parsed result.
+
+
+22.2.7. Assigning Precedences to Key Words22.2.7. Assigning Precedences to Key Words22.2.7. Assigning Precedences to Key Words
+
+  If you want some operators to have control immediately, insert
+
+
+                      IF RP = NIL THEN RETURN Y ELSE
+
+
+as the very first test in RDRIGHT and set the right precedence of those  to
+NIL.    This  is  sometimes useful for key-word expressions.  If entering a
+construction function of such an operator, X is the token immediately after
+the operator.  E.g.:  We want to parse PROCEDURE EQ(X,Y); .  .  .    Define
+PROCEDURE  as  a  right  operator with NIL as precedence.  The construction
+function for PROCEDURE can always call the parser and set the rest  of  the
+expression.    Note  that if PROCEDURE was not defined as above, the parser
+would misunderstand the expression in the case  of  EQ  as  declared  as  a
+binary operator.
+
+
+22.2.8. Error Handling22.2.8. Error Handling22.2.8. Error Handling
+
+  For  the  present, if an error occurs a message is printed but no attempt
+is made to correct or handle the error.  Mostly the parser goes wild for  a
+while (until a left precedence less than current right precedence is found)
+and then goes on as usual.
+
+
+22.2.9. The Parser Program for the RLISP Language22.2.9. The Parser Program for the RLISP Language22.2.9. The Parser Program for the RLISP Language
+
+  SCAN();
+
+  The  purpose  of  this  function is to read the next token from the input
+stream.  It uses the general purpose table driven token  scanner  described
+in  Chapter  12,  with  a specially set up ReadTable, RLISPSCANTABLE!*.  As
+                                                            Scan                   __________                               ScanRLISP has multiple identifiers  for  the  same  operators,  Scan  uses  the
+following translation table:
+                    =  EQUAL            >= GEQ
+                    +  PLUS             >  GREATERP
+                    -  DIFFERENCE       <= LEQ
+                    /  QUOTIENT         <  LESSP
+                    .  CONS             *  TIMES
+                    := SETQ             ** EXPT
+
+
+                     Scan                     Scan  In  these  cases,  Scan  returns the right hand side of the table values.
+                                             Scan                                             ScanAlso, two special cases are taken care of in Scan:Parser Tools                  7 February 1983                    PSL Manual
+page 22.8                                                      section 22.2
+
+   a. '  is  the  QUOTE mark.  If a parenthesized expression follows '
+      then the syntax within the parenthesis is that of LISP, using  a
+      special  scan  table,  RLISPREADSCANTABLE!*.    The  only  major
+      difference from ordinary LISP is that  !  is  required  for  all
+      special characters.
+
+   b. ! in RLISP means actually two things:
+
+
+         i. the  following  symbol  is not treated as a special symbol
+            (but belongs to the print name of the atom in process);
+
+        ii. the atom created cannot be an operator.
+
+
+  Example: !( in the text behaves as the atom "(".
+
+  To signal to the parser that this is the case, the flag variable ESCAPEFL
+must be set to T if this situation occurs.
+
+
+22.2.10. Defining Operators22.2.10. Defining Operators22.2.10. Defining Operators
+
+  To define operators use:
+
+
+DEFINEROP(op,p{,stm});
+          For right or prefix operators.
+
+DEFINEBOP(op,lp,rp{,stm});
+          For binary operators.
+
+
+  These use the VALUE of DEFPREFIX and DEFINFIX to  store  the  precedences
+and  construction  functions.    The  default  is  set  for  RLISP,  to  be
+                                        __________'RLISPPREFIX and 'RLISPINFIX.  The same identifier can be defined  both  as
+the right and binary operator.  The context defines which one applies.
+
+  Stm is the construction function.  If stm is omitted, the common defaults
+are used:
+
+
+LIST(OP,x)
+          prefix     case,    x    is    parsed    expression    following,
+          x=RDRIGHT(p,SCAN()).
+
+LIST(OP,x,y)
+          binary case, x is previously parsed expression, y  is  expression
+          following, y=RDRIGHT(rp,SCAN()).
+
+
+               __  If stm is an id, it is assumed to be a procedure of one or two arguments,PSL Manual                    7 February 1983                  Parser Tools
+section 22.2                                                      page 22.9
+
+for   "x"   or  "x,y".    If  it  is  an  expression,  it  is  embedded  as
+(LAMBDA(X) stm) or (LAMBDA(X Y) stm), and should  refer  to  X  and  Y,  as
+needed.
+
+  Also  remember  that  the free variable OP holds the last token (normally
+the binary operator which stopped the parser).  If  "p"  or  "rp"  is  NIL,
+RDRIGHT  is  not called by default, so that only SCAN() (the next token) is
+passed.
+
+
+For example,
+
+DEFINEBOP('DIFFERENCE,17,18);
+        % Most common case, left associative, stm=LIST(OP,x,y);
+
+DEFINEBOP('CONS,23,21);
+        % Right Associative, default stm=LIST(OP,x,y)
+
+DEFINEBOP('AND,11,12,ParseAND);
+        % Left Associative, special function
+    PROCEDURE ParseAND(X,Y);
+       NARY('AND,X,Y);
+
+DEFINEBOP('SETQ,7,6,ParseSETQ);
+        % Right Associative, Special Function
+    PROCEDURE ParseSETQ(LHS,RHS);
+      LIST(IF ATOM LHS THEN 'SETQ ELSE 'SETF, LHS, RHS);
+
+DEFINEROP('MINUS,26);    % default C-fn, just (list OP arg)
+
+DEFINEROP('PLUS,26,ParsePLUS1); %
+
+DEFINEROP('GO,NIL,ParseGO );
+       % Special Function, DO NOT use default PARSE ahead
+    PROCEDURE ParseGO X;   X is now JUST next-token
+      IF X EQ 'TO THEN LIST('GO,PARSE0(6,T))
+                % Explicit Parse ahead
+           ELSE <<OP := SCAN(); % get Next Token
+                  LIST('GO,X)>>;
+
+DEFINEROP('GOTO,NIL,ParseGOTO );
+        % Suppress Parse Ahead, just pass NextToken
+   PROCEDURE ParseGOTO X;
+     <<OP := SCAN();
+       LIST('GO,X)>>;Parser Tools                  7 February 1983                    PSL Manual
+page 22.10                                                     section 22.3
+
+22.3. The MINI Translator Writing System22.3. The MINI Translator Writing System22.3. The MINI Translator Writing System
+
+  Note that MINI is now autoloading.
+
+
+22.3.1. A Brief Guide to MINI22.3.1. A Brief Guide to MINI22.3.1. A Brief Guide to MINI
+
+  The  following  is  a  brief introduction to MINI, the reader is referred
+to [Marti 79] for a more detailed discussion of the  META/RLISP  operators,
+which are very similar to those of MINI.
+
+  The  MINI  system reads in a definition of a translator, using a BNF-like
+form.  This is processed by MINI into a set of LISP functions, one for each
+production, which make calls on each other, and a set of  support  routines
+that  recognize  a  variety  of  simple  constructs.   MINI uses a stack to
+perform parsing, and the user can access sub-trees already  on  the  stack,
+replacing  them  by  other trees built from these sub-trees.  The primitive
+                         __   _______functions that recognize ids, integers, etc. each  place  their  recognized
+token on this stack.
+
+  For example,
+
+
+  FOO: ID '!- ID +(PLUS2 #2 #1) ;
+
+
+defines  a  rule FOO, which recognizes two identifiers separated by a minus
+                                    __________sign (each ID pushes the recognized identifier onto the stack).   The  last
+expression  replaces  the top 2 elements on the stack (#2 pops the first ID
+pushed onto the stack, while #1 pops the other) with a LISP statement.
+
+
+ Id Id    _______                                                         ____(Id ): boolean                                                         expr
+
+                                __________     See if current token is an identifier and not a keyword.   If  it
+     is, then push onto the stack and fetch the next token.
+
+
+ AnyId AnyId    _______                                                      ____(AnyId ): boolean                                                      expr
+
+                                __     See if current token is an id whether or not it is a key word.
+
+
+ AnyTok AnyTok    _______                                                     ____(AnyTok ): boolean                                                     expr
+
+     Always succeeds by pushing the current token onto the stack.
+
+
+ Num Num    _______                                                        ____(Num ): boolean                                                        expr
+
+                                               ______     Tests  to  see  if the current token is a number, if so it pushes
+         ______     the number onto the stack and fetches the next token.PSL Manual                    7 February 1983                  Parser Tools
+section 22.3                                                     page 22.11
+
+ Str Str    _______                                                        ____(Str ): boolean                                                        expr
+
+             Num             Num             ______     Same as Num, except for strings.
+
+  Specification of a parser using MINI consists of defining the syntax with
+BNF-like  rules  and  semantics  with LISP expressions.  The following is a
+brief list of the operators:
+
+
+'         Used to designate a terminal symbol (i.e. 'WHILE, 'DO, '!=).
+
+Identifier
+          Specifies a nonterminal.
+
+( )       Used for grouping (i.e. (FOO BAR)  requires  rule  FOO  to  parse
+          followed immediately by BAR).
+
+< >       Optional  parse,  if  it fails then continue (i.e. <FOO> tries to
+          parse FOO).
+
+/         Optional rules (i.e. FOO / BAR allows either FOO or BAR to parse,
+          with FOO tested first).
+
+STMT*     Parse any number of STMT.
+
+STMT[ANYTOKEN]*
+          Parse any number of STMT separated by ANYTOKEN, create a list and
+                                                                __________          push onto the stack (i.e. ID[,]* parses a number  of  identifiers
+          separated by commas, like in an argument list).
+
+                                                        _______##n       Refer to the nth stack location (n must be an integer).
+
+                                                   _______#n        Pop the nth stack location (n must be an integer).
+
++(STMT)   Push the unevaluated (STMT) onto the stack.
+
+.(SEXPR)  Evaluate the SEXPR and ignore the result.
+
+=(SEXPR)  Evaluate the SEXPR and test if result non-NIL.
+
++.(SEXPR) Evaluate the SEXPR and push the result on the stack.
+
+@ANYTOKEN Specifies  a  statement  terminator;  used  in the error recovery
+          mechanism to search for the occurrence of errors.
+
+@@ANYTOKEN
+          Grammar terminator;  also  stops  scan,  but  if  encountered  in
+          error-recovery, terminates grammar.Parser Tools                  7 February 1983                    PSL Manual
+page 22.12                                                     section 22.3
+
+22.3.2. Pattern Matching Rules22.3.2. Pattern Matching Rules22.3.2. Pattern Matching Rules
+
+  In addition to the BNF-like rules that define procedures with 0 arguments
+and  which  scan  tokens  by calls on NEXT!-TOK() and operate on the stack,
+MINI also includes a simple TREE  pattern  matcher  and  syntax  to  define
+PatternProcedures that accept and return a single argument, trying a series
+of patterns until one succeeds.
+
+
+E.g.        template    ->  replacement
+
+PATTERN = (PLUS2 &1 0) -> &1,
+          (PLUS2 &1 &1) -> (LIST 'TIMES2 2 &1),
+          &1            -> &1;
+
+
+defines  a pattern with 3 rules.  &n is used to indicate a matched sub-tree
+in both the template and replacement.  A repeated  &n,  as  in  the  second
+               Equal               Equalrule, requires Equal sub-trees.
+
+
+22.3.3. A Small Example22.3.3. A Small Example22.3.3. A Small Example
+
+
+% A simple demo of MINI, to produce a LIST-NOTATION reader.
+% INVOKE 'LSPLOOP reads S-expressions, separated by ;
+
+mini 'lsploop;                  % Invoke MINI, give name of ROOT
+                                % Comments can appear anywhere,
+                                % prefix by % to end-of-line
+lsploop:lsp* @@# ;              % @@# is GRAMMAR terminator
+                                %  like '# but stops TOKEN SCAN
+lsp:    sexp @;                 % @; is RULE terminator, like ';
+        .(print #1)             %  but stops SCAN, to print
+        .(next!-tok) ;          %  so call NEXT!-TOK() explicitly
+sexp:   id / num / str / '( dotexp ') ;
+dotexp: sexp* < '. sexp +.(attach #2 #1)  > ;
+fin
+
+symbolic procedure attach(x,y);
+<<for each z in reverse x do y:=z . y; y>>;
+
+
+22.3.4. Loading Mini22.3.4. Loading Mini22.3.4. Loading Mini
+
+  MINI is loaded from PH: using LOAD MINI;.PSL Manual                    7 February 1983                  Parser Tools
+section 22.3                                                     page 22.13
+
+22.3.5. Running Mini22.3.5. Running Mini22.3.5. Running Mini
+
+                                          Invoke                                          Invoke  A  MINI  grammar  is  run  by  calling  Invoke  rootname;.  This installs
+appropriate Key Words (stored on the property list of rootname), and  start
+the grammar by calling the Rootname as first procedure.
+
+
+22.3.6. MINI Error messages and Error Recovery22.3.6. MINI Error messages and Error Recovery22.3.6. MINI Error messages and Error Recovery
+
+  If  MINI detects a non-fatal error, a message be printed, and the current
+token and stack is shown.  MINI then  calls  NEXT!-TOK()  repeatedly  until
+either a statement terminator (@ANYTOKEN) or grammar terminator (@ANYTOKEN)
+is seen.  If a grammar terminator, the grammar is exited; otherwise parsing
+resumes from the ROOT.
+
+  [??? Interaction with BREAK loop rather poor at the moment ???]  [??? Interaction with BREAK loop rather poor at the moment ???]  [??? Interaction with BREAK loop rather poor at the moment ???]
+
+
+22.3.7. MINI Self-Definition22.3.7. MINI Self-Definition22.3.7. MINI Self-Definition
+
+
+% The following is the definition of the MINI meta system in terms of
+% itself.  Some support procedures are needed, and exist in a
+% separate file.
+% To define a grammar, call the procedure MINI with the argument
+% being the root rule name.   Then when the grammar is defined it may
+% be called by using INVOKE root rule name.
+
+%   The following is the MINI Meta self definition.
+
+MINI 'RUL;
+
+%   Define the diphthongs to be used in the grammar.
+DIP: !#!#, !-!>, !+!., !@!@ ;
+
+%   The root rule is called RUL.
+RUL: ('DIP ': ANYTOK[,]* .(DIPBLD #1) '; /
+     (ID  .(SETQ !#LABLIST!# NIL)
+       ( ': ALT            +(DE #2 NIL #1) @; /
+         '= PRUL[,]* @;    .(RULE!-DEFINE '(PUT(QUOTE ##2)(QUOTE RB)
+                             (QUOTE #1)))
+                           +(DE ##1 (A)
+                             (RBMATCH A (GET (QUOTE #1) (QUOTE RB))
+                                                               NIL)))
+       .(RULE!-DEFINE #1) .(NEXT!-TOK) ))* @@FIN ;
+
+%   An alternative is a sequence of statements separated by /'s;
+ALT: SEQ < '/ ALT +(OR #2 #1) >;
+
+%   A sequence is a list of items that must be matched.
+SEQ: REP < SEQ +(AND #2 (FAIL!-NOT #1)) >;Parser Tools                  7 February 1983                    PSL Manual
+page 22.14                                                     section 22.3
+
+%   A repetition may be 0 or more single items (*) or 0 or more items
+%    separated by any token (ID[,]* parses a list of ID's separated
+%    by ,'s.
+REP: ONE
+      <'[ (ID +(#1) /
+           '' ANYKEY +(EQTOK!-NEXT (QUOTE #1)) /
+     ANYKEY +(EQTOK!-NEXT (QUOTE #1))) '] +(AND #2 #1) '* BLD!-EXPR /
+        '* BLD!-EXPR>;
+
+%   Create an sexpression to build a repetition.
+BLD!-EXPR: +(PROG (X) (SETQ X (STK!-LENGTH))
+                   $1 (COND (#1 (GO $1)))
+                      (BUILD!-REPEAT X)
+                      (RETURN T));
+
+ANYKEY: ANYTOK .(ADDKEY ##1) ;  % Add a new KEY
+
+%   One defines a single item.
+ONE: '' ANYKEY  +(EQTOK!-NEXT (QUOTE #1)) /
+     '@ ANYKEY  .(ADDRTERM ##1)  +(EQTOK (QUOTE #1)) /
+     '@@ ANYKEY .(ADDGTERM ##1)  +(EQTOK (QUOTE #1)) /
+     '+ UNLBLD  +(PUSH #1) /
+     '. EVLBLD  +(PROGN #1 T) /
+     '= EVLBLD  /
+     '< ALT '>  +(PROGN #1 T) /
+     '( ALT ')  /
+     '+. EVLBLD +(PUSH #1) /
+     ID         +(#1) ;
+
+%   This rule defines an un evaled list.  It builds a list with
+%   everything quoted.
+UNLBLD: '( UNLBLD ('. UNLBLD ') +(CONS #2 #1) /
+                    UNLBLD* ') +(LIST . (#2 . #1)) /
+                   ') +(LIST . #1)) /
+        LBLD    /
+        ID      +(QUOTE #1) ;
+
+%   EVLBLD builds a list of evaled items.
+EVLBLD: '( EVLBLD ('. EVLBLD ') +(CONS #2 #1) /
+                    EVLBLD* ') +(#2 . #1) /
+                   ') ) /
+        LBLD /
+        ID      ;
+
+LBLD: '# NUM    +(EXTRACT #1) /
+      '## NUM   +(REF #1) /
+      '$ NUM    +(GENLAB #1) /
+      '& NUM    +(CADR (ASSOC #1 (CAR VARLIST))) /
+      NUM       /
+      STR       /
+      '' ('( UNLBLD* ') +(LIST . #1) /
+           ANYTOK +(QUOTE #1));PSL Manual                    7 February 1983                  Parser Tools
+section 22.3                                                     page 22.15
+
+
+%   Defines the pattern matching rules (PATTERN -> BODY).
+PRUL: .(SETQ INDEXLIST!* NIL)
+      PAT '-> (EVLBLD)*
+             +(LAMBDA (VARLIST T1 T2 T3) (AND . #1))
+             .(SETQ PNAM (GENSYM))
+             .(RULE!-DEFINE (LIST 'PUTD (LIST 'QUOTE PNAM)
+                '(QUOTE EXPR) (LIST 'QUOTE #1)))
+             +.(CONS #1 PNAM);
+
+%   Defines a pattern.
+%   We now allow the . operator to be the next to last in a ().
+PAT: '& ('< PSIMP[/]* '> NUM
+             +.(PROGN (SETQ INDEXLIST!* (CONS ##1 INDEXLIST!*))
+                  (LIST '!& #2 #1) ) /
+             NUM
+               +.(COND ((MEMQ ##1 INDEXLIST!*)
+                         (LIST '!& '!& #1))
+                  (T (PROGN (SETQ INDEXLIST!* (CONS ##1 INDEXLIST!*))
+                         (LIST '!& #1)))) )
+        / ID
+        / '!( PAT* <'. PAT +.(APPEND #2 #1)> '!)
+        / '' ANYTOK
+        / STR
+        / NUM ;
+
+%   Defines the primitives in a pattern.
+PSIMP: ID / NUM / '( PSIMP* ') / '' ANYTOK;
+
+%   The grammar terminator.
+FIN
+
+
+
+22.3.8. The Construction of MINI22.3.8. The Construction of MINI22.3.8. The Construction of MINI
+
+  MINI  is  actually  described  in  terms  of  a  support  package for any
+MINI-generated parser and a self-description of MINI.  The useful files (on
+PU: and PL:) are as follows:
+
+
+MINI.MIN  The self definition of MINI in MINI.
+MINI.SL   A Standard LISP version of MINI.MIN, translated by MINI itself.
+MINI.RED  The support RLISP for MINI.
+MINI-PATCH.RED and MINI.FIX
+          Some additions being tested.
+MINI.LAP  The precompiled LAP file.  Use LOAD MINI.
+MINI-LAP-BUILD.CTL
+          A batch file that builds PL:MINI.LAP from the above files.
+MINI-SELF-BUILD.CTL
+          A batch  file  that  builds  the  MINI.SL  file  by  loading  and
+          translating MINI.MIN.Parser Tools                  7 February 1983                    PSL Manual
+page 22.16                                                     section 22.3
+
+22.3.9. History of MINI Development22.3.9. History of MINI Development22.3.9. History of MINI Development
+
+  The MINI Translator Writing System was developed in two steps.  The first
+was the enhancement of the META/RLISP [Marti 79] system with the definition
+of  pattern  matching  primitives  to  aid  in  describing  and  performing
+tree-to-tree transformations.  META/RLISP is very proficient at translating
+an input programming language into LISP or LISP-like  trees,  but  did  not
+have  a good method for manipulating the trees nor for direct generation of
+target machine code.  PMETA  (as  it  was  initially  called) [Kessler  79]
+solved  these  problems  and  created  a  very  good  environment  for  the
+development of compilers.  In fact, the PMETA enhancements have been  fully
+integrated into META/RLISP.
+
+  The  second step was the elimination of META/RLISP and the development of
+a smaller, faster system (MINI).  Since META/RLISP was designed to  provide
+maximum  flexibility  and  full generality, the parsers that is creates are
+large and slow.  One of its most significant problems is that it  uses  its
+own   single  character  driven  LISP  functions  for  token  scanning  and
+recognition.    Elimination  of  this  overhead  has  produced   a   faster
+translator.  MINI uses the hand coded scanner in the underlying RLISP.  The
+other  main  aspect  of  MINI  was  the  elimination  of various META/RLISP
+features  to  decrease  the  size  of  the  system  (also  decreasing   the
+flexibility, but MINI has been successful for the various purposes in COG).
+MINI  is  now small enough to run on small LISP systems (as long as a token
+scanner is provided).  The META/RLISP features that  MINI  has  changed  or
+eliminated include the following:
+
+
+   a. The ability to backup the parser state upon failure is supported
+      in  META/RLISP.  However, by modifying a grammar definition, the
+      need  for  backup  can  be  mostly  avoided  and  was  therefore
+      eliminated from MINI.
+
+   b. META/RLISP  has  extensive  mechanisms to allow arbitrary length
+      diphthongs.    MINI  only  supports  two  character  diphthongs,
+      declared prior to their use.
+
+   c. The  target  machine  language and error specification operators
+      are not supported because they can be implemented  with  support
+      routines.
+
+   d. RLISP  subsyntax for specification of semantic operations is not
+      supported (only LISP is provided).
+
+
+Although MINI lacks many of the features of META/RLISP, it still  has  been
+quite sufficient for a variety of languages.PSL Manual                    7 February 1983                  Parser Tools
+section 22.4                                                     page 22.17
+
+22.4. BNF Description of RLISP Using MINI22.4. BNF Description of RLISP Using MINI22.4. BNF Description of RLISP Using MINI
+
+  The  following  formal scheme for the translation of RLISP syntax to LISP
+syntax is presented to eliminate misinterpretation of the definitions.   We
+have used the above MINI syntactic form since it is close enough to BNF and
+has also been checked mechanically.
+
+  Recall   that   the   transformation   scheme  produces  an  S-expression
+corresponding to the input RLISP expression.  A rule has a name by which it
+is known and is defined by what follows the meta symbol :.   Each  rule  of
+the set consists of one or more "alternatives" separated by the meta symbol
+/,  being  the  different ways in which the rule is matched by source text.
+Each rule ends with a ;.  Each alternative is composed  of  a  "recognizer"
+and  a "generator".  The "generator" is a MINI + expression which builds an
+S-expression from constants and elements loaded on the stack.   The  result
+is  then  loaded  on the stack.  The #n and ##n refer to elements loaded by
+MINI primitives or other rules.  The "generator" is thus  a  template  into
+which previously generated items are substituted.  Recall that terminals in
+both recognizer and generator are quoted with a ' mark.
+
+  This  RLISP/SYSLISP  syntax  is  based  on  a  series  of  META  and MINI
+definitions, started by R. Loos in 1970, continued by M. Griss,  R. Kessler
+and A. Wang.
+
+  [??? This MINI.RLISP grammar is a bit out of date ???]  [??? This MINI.RLISP grammar is a bit out of date ???]  [??? This MINI.RLISP grammar is a bit out of date ???]
+
+
+  [??? Need to confirm for latest RLISP ???]  [??? Need to confirm for latest RLISP ???]  [??? Need to confirm for latest RLISP ???]
+
+
+
+mini 'rlisp;
+
+dip: !: , !<!< , !>!> , !:!= , !*!* , !<!= , !>!= , !' , !#!# ;
+
+termin: '; / '$ ;               % $ used to not echo result
+rtermin: @; / @$ ;
+
+rlisp: ( cmds rtermin  .(next!-tok) )* ; % Note explicit Scan
+
+cmds:  procdef / rexpr ;
+
+%------ Procedure definition:
+
+procdef: emodeproc (ftype procs/ procs) /
+         ftype procs / procs ;
+
+ftype:   'fexpr .(setq FTYPE!* 'fexpr) /  % function type
+         'macro .(setq FTYPE!* 'macro) /
+         'smacro .(setq FTYPE!* 'smacro) /
+         'nmacro .(setq FTYPE!* 'nmacro) /
+         ('expr / =T) .(setq FTYPE!* 'expr) ;Parser Tools                  7 February 1983                    PSL Manual
+page 22.18                                                     section 22.4
+
+
+
+emodeproc: 'syslsp .(setq EMODE!* 'syslsp)/
+           ('lisp/'symbolic/=T)  .(setq EMODE!* 'symbolic) ;
+
+
+procs: 'procedure id proctail
+           +(putd (quote #2) (quote FTYPE!* ) #1) ;
+
+proctail: '( id[,]* ')  termin  rexpr +(quote (lambda #2 #1)) /
+           termin  rexpr +(quote (lambda nil #1)) /
+          id  termin  rexpr +(quote (lambda (#2) #1)) ;
+
+%------ Rexpr definition:
+
+rexpr: disjunction ;
+
+disjunction: conjunction (disjunctail / =T) ;
+
+disjunctail: ('or conjunction ('or conjunction)*)
+              +.(cons 'or  (cons #3 (cons #2 #1))) ;
+
+conjunction: negation (conjunctail / =T) ;
+
+conjunctail: ('and negation ('and negation)*)
+             +.(cons (quote and) (cons #3 (cons #2 #1))) ;
+
+negation: 'not negation +(null #1) /
+          'null negation +(null #1) /
+          relation ;
+
+relation: term reltail ;
+
+reltail: relop term +(#2 #2 #1) / =T ;
+
+term: ('- factor +(minus #1) / factor) termtail ;
+
+termtail: (plusop factor +(#2 #2 #1) termtail) / =T ;
+
+factor: powerexpr factortail ;
+
+factortail: (timop powerexpr +(#2 #2 #1) factortail) / =T ;
+
+powerexpr: dotexpr powtail ;
+
+powtail: ('** dotexpr +(expt #2 #1) powtail) / =T ;
+
+dotexpr: primary dottail ;
+
+dottail: ('. primary +(cons #2 #1) dottail) / =T ;
+
+primary: ifstate / groupstate / beginstate /PSL Manual                    7 February 1983                  Parser Tools
+section 22.4                                                     page 22.19
+
+         whilestate / repeatstate / forstmts /
+         definestate / onoffstate / lambdastate /
+         ('( rexpr ') ) /
+         ('' (lists / id / num) +(quote #1)) /
+         id primtail / num ;
+
+primtail:(':= rexpr +(setq #2 #1)) /
+         (': labstmts ) /
+         '( actualst / (primary +(#2 #1)) / =T ;
+
+lists: '( (elements)* ') ;
+
+elements: lists / id / num ;
+
+%------ If statement:
+
+ifstate: 'if rexpr 'then rexpr elserexpr
+              +(cond (#3 #2) (T #1)) ;
+
+elserexpr: 'else rexpr / =T +nil ;
+
+%------ While statement:
+
+whilestate: 'while rexpr 'do rexpr
+            +(while #2 #1) ;
+
+%----- Repeat statement:
+
+repeatstate: 'repeat rexpr 'until rexpr
+             +(repeat #2 #1) ;
+
+%---- For statement:
+
+forstmts: 'for fortail ;
+
+fortail: ('each foreachstate) / forstate ;
+
+foreachstate: id inoron rexpr actchoice rexpr
+              +(foreach #5 #4 #3 #2 #1) ;
+
+inoron: ('in +in / 'on +on) ;
+
+actchoice: ('do +do / 'collect +collect / 'conc +conc) ;
+
+forstate: id ':= rexpr loops ;
+
+loops: (': rexpr types rexpr
+       +(for #5 (#4 1 #3) #2 #1) ) /
+       ('step rexpr 'until rexpr types rexpr
+       +(for #6 (#5 #4 #3) #2 #1) ) ;
+
+types: ('do +do / 'sum +sum / 'product +product) ;Parser Tools                  7 February 1983                    PSL Manual
+page 22.20                                                     section 22.4
+
+
+%----- Function call parameter list:
+
+actualst: ') +(#1) / rexpr[,]* ') +.(cons #2 #1) ;
+
+%------ Compound group statement:
+
+groupstate: '<< rexprlist '>> +.(cons (quote progn) #1) ;
+
+%------ Compound begin-end statement:
+
+beginstate: 'begin blockbody 'end ;
+
+blockbody: decllist blockstates
+            +.(cons (quote prog) (cons #2 #1)) ;
+
+decllist: (decls[;]* +.(flatten #1)) / (=T +nil) ;
+
+decls: ('integer  / 'scalar) id[,]* ;
+
+blockstates: labstmts[;]* ;
+
+labstmts: ('return rexpr +(return #1)) /
+          (('goto / 'go 'to) id +(go #1)) /
+          ('if rexpr 'then labstmts blkelse
+               +(cond (#3 #2) (T #1))) /
+          rexpr ;
+
+blkelse: 'else labstmts / =T +nil ;
+
+rexprlist: rexpr [;]* ;
+
+lambdastate: 'lambda lamtail ;
+
+lamtail: '( id[,]* ')  termin  rexpr +(lambda #2 #1) /
+          termin  rexpr +(lambda nil #1) /
+         id  termin  rexpr +(lambda (#2) #1) ;
+
+%------ Define statement: (id and value are put onto table
+%       named DEFNTAB:
+
+definestate: 'define delist +.(cons (quote progn) #1) ;
+
+delist: (id '= rexpr +(put (quote #2)  (quote defntab)
+              (quote #1)))[,]* ;
+
+%------ On or off statement:
+
+onoffstate: ('on +T / 'off +nil) switchlists ;
+
+switchlists: 'defn +(set '!*defn #1) ;PSL Manual                    7 February 1983                  Parser Tools
+section 22.4                                                     page 22.21
+
+timop: ('* +times / '/ +quotient) ;
+
+plusop: ('+ +plus2 / '- +difference) ;
+
+relop: ('< +lessp / '<= +lep / '= +equal /
+           '>= +gep / '> +greaterp) ;
+
+
+FIN

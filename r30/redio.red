@@ -1,0 +1,304 @@
+COMMENT General Purpose I/O package ... sorting and positioning;
+
+SYMBOLIC;
+
+!*RAISE := NIL;
+
+GLOBAL '(!*FORMFEED   ORIG!*  RCCNUMS!* BTIME!* LNNUM!* MAXLN!* TITLE!*
+	 PGNUM!*);
+
+% FLAGS: FORMFEED (ON)  controls ^L or spacer of ====;
+
+SYMBOLIC PROCEDURE INITIO();
+% Set-up common defaults;
+   BEGIN
+	!*FORMFEED:=T;
+	ORIG!*:=0;
+	LNNUM!*:=0;
+	LINELENGTH(75);
+	MAXLN!*:=55;
+	TITLE!*:=NIL;
+	PGNUM!*:=1;
+   END;
+
+SYMBOLIC PROCEDURE LPOSN();
+   LNNUM!*;
+
+INITIO();
+
+SYMBOLIC PROCEDURE RCCBLD();
+% Initialises RCC as number 0 to RCCNUMS!*-1 on Plist of all 
+% characters;
+  BEGIN SCALAR L,N,V;
+	N:=0; % digits are now ids;
+	L:='(!0 !1 !2 !3 !4 !5 !6 !7 !8 !9
+             A B C D E F G H I J K L M N O P Q
+	     R S T U V W X Y Z
+	     a b c d e f g h i j k l m n o p q
+	     r s t u v w x y z
+	!{ !! !" !# !; !% !& !' !( !) !_
+	!= !} !\ !^ !@ !+ !* !< !> !? ![ 
+	!- !] !| !~ !` !; !: !, !. !/ !$
+	!  
+
+	  );
+    RCCNUMS!*:=1 . NIL;
+    FOR I:=1:7 DO RCCNUMS!*:=(CAR(RCCNUMS!*) * 128 ) . RCCNUMS!*;
+	WHILE L DO <<V:=CAR L;L:=CDR L;
+	 	IF V  THEN PUT(V,'RCC,N);
+		N:=N+1>>;
+	END;
+
+RCCBLD();
+
+SYMBOLIC PROCEDURE SETPGLN(P,L);
+  BEGIN IF P THEN MAXLN!*:=P;
+	IF L THEN LINELENGTH(L);
+  END;
+
+% We use EXPLODE to produce a list of chars from atomname,
+% and TERPRI() to terminate a buffer..all else
+% done in package..spaces,tabs,etc. ;
+
+COMMENT Character lists are (length . chars), for FITS;
+
+
+SYMBOLIC  PROCEDURE GETES U;
+% Returns for U , E=(Length . List of char);
+   BEGIN SCALAR E;
+	IF NOT IDP U THEN RETURN<<E:=EXPLODE U;LENGTH(E).E>>;
+   	IF NOT(E:=GET(U,'RCCNAM)) THEN <<E:=EXPLODE(U);
+				   E:=LENGTH(E) . E;
+				   PUT(U,'RCCNAM,E)>>;
+	RETURN E;
+   END;
+
+SYMBOLIC SMACRO PROCEDURE PRTWRD U;
+   IF NUMBERP U THEN PRTNUM U
+    ELSE PRTATM U;
+
+SYMBOLIC PROCEDURE PRTATM U;
+	PRIN2 U;	% For a nice print;
+
+SYMBOLIC PROCEDURE PRTLST U;
+ IF ATOM U THEN PRIN2 U ELSE FOR EACH X IN U DO PRIN2 X;
+
+SYMBOLIC PROCEDURE PRTNUM N;
+	PRIN2 N;
+
+SYMBOLIC PROCEDURE PRIN2N E;
+% output a list of chars, update POSN();
+	 WHILE (E:=CDR E) DO PRIN2 CAR E;
+
+SYMBOLIC PROCEDURE SPACES N;
+	FOR I:=1:N DO PRIN2 '!  ;
+
+SYMBOLIC PROCEDURE SPACES2 N;
+   BEGIN SCALAR X;
+        X := N - POSN();
+	IF X<1 THEN NEWLINE N
+	 ELSE SPACES X;
+   END;
+
+SYMBOLIC PROCEDURE SETPAGE(TITLE,PAGE);
+% Initialise current page and title;
+   BEGIN
+	TITLE!*:= TITLE ;
+	PGNUM!*:=PAGE;
+   END;
+
+SYMBOLIC PROCEDURE NEWLINE N;
+% Begins a fresh line at posn N;
+   BEGIN
+	LNNUM!*:=LNNUM!*+1;
+	IF LNNUM!*>=MAXLN!* THEN NEWPAGE()
+	 ELSE TERPRI();
+	SPACES(ORIG!*+N);
+   END;
+
+SYMBOLIC PROCEDURE NEWPAGE();
+% Start a fresh page, with PGNUM and TITLE, if needed;
+   BEGIN SCALAR A;
+	A:=LPOSN();
+	LNNUM!*:=0;
+	IF POSN() NEQ 0 THEN NEWLINE 0;
+	IF A NEQ 0 THEN FORMFEED();
+	IF TITLE!* THEN
+	  <<SPACES2 5; PRTLST TITLE!*>>;
+	SPACES2 (LINELENGTH(NIL)-4);
+	IF PGNUM!* THEN <<PRTNUM PGNUM!*; PGNUM!*:=PGNUM!*+1>>
+	 ELSE PGNUM!*:=2;
+	NEWLINE 10;
+	NEWLINE 0;
+   END;
+
+SYMBOLIC PROCEDURE UNDERLINE2 N;
+	IF N>=LINELENGTH(NIL) THEN
+	  <<N:=LINELENGTH(NIL)-POSN();
+	    FOR I:=0:N DO PRIN2 '!- ;
+	    NEWLINE(0)>>
+	 ELSE BEGIN SCALAR J;
+		J:=N-POSN();
+		FOR I:=0:J DO PRIN2 '!-;
+	      END;
+
+SYMBOLIC PROCEDURE LPRINT(U,N);
+% prints a list of atoms within block LINELENGTH(NIL)-n;
+   BEGIN SCALAR E; INTEGER L,M;
+	SPACES2 N;
+	L := LINELENGTH NIL-POSN();
+	IF L<=0 THEN ERROR(13,"WINDOW TOO SMALL FOR LPRINT");
+	WHILE U DO
+	   <<E:=GETES CAR U; U:=CDR U;
+	    IF LINELENGTH NIL<POSN() THEN NEWLINE N;
+	     IF CAR E<(M := LINELENGTH NIL-POSN()) THEN PRIN2N E
+	      ELSE IF CAR E<L THEN <<NEWLINE N; PRIN2N E>>
+	      ELSE BEGIN
+		 E := CDR E;
+	      A: FOR I := 1:M DO <<PRIN2 CAR E; E := CDR E>>;
+		 NEWLINE N;
+		 IF NULL E THEN NIL
+		  ELSE IF LENGTH E<(M := L) THEN PRIN2N(NIL . E)
+		  ELSE GO TO A
+		END;
+	     PRIN2 '! >>
+   END;
+
+SYMBOLIC PROCEDURE REMPROPSS(ATMLST,LST);
+ WHILE ATMLST DO
+  <<WHILE LST DO <<REMPROP(CAR ATMLST,CAR LST); LST:=CDR LST>>;
+    ATMLST:=CDR ATMLST>>;
+
+SYMBOLIC PROCEDURE REMFLAGSS(ATMLST,LST);
+	WHILE LST DO <<REMFLAG(ATMLST,CAR LST); LST:=CDR LST>>;
+
+SYMBOLIC PROCEDURE FORMFEED;
+	IF !*FORMFEED THEN EJECT()
+	 ELSE <<TERPRI();
+		PRIN2 " ========================================= ";
+		TERPRI()>>;
+
+% ======= Extended IO and ALPHA-SORT package, Needs BIGNUMS;
+
+
+%Establish RCC (Reduce charactercode) for collating
+% and then each atom to be printed will be
+% lst of chars stored under 'RCCNAM
+% with numeric  collating order under 'RCCORD ;
+
+SYMBOLIC SMACRO PROCEDURE GETRCC CHAR;
+	GET(CHAR,'RCC);
+
+SYMBOLIC PROCEDURE GETORD U;
+% Given an atom, it is RCCNAM, stored under 'RCCNAM
+% and its RCCORD evaluated(essentially packed pname);
+   BEGIN SCALAR E,N,NN;
+	IF NOT IDP U THEN GOTO L1;
+	IF (N:=GET(U,'RCCORD)) THEN RETURN (U .N);
+  L1:	E:=GETES U;
+	N:=0;
+	NN:=RCCNUMS!*;
+	WHILE (E:=CDR E) AND NN 
+	   DO <<N:=GETRCC(CAR E)*CAR(NN)+N;
+		NN:=CDR NN>>;
+	IF IDP U THEN PUT(U,'RCCORD,N);
+	RETURN (U . N);
+  END;
+
+%   ****  SORTING SECTION ******
+%  routines modified from funtr for alphabetic sorting
+% and i/o...merge of cref,alp RCC etc;
+% TREE SORT OF LIST OF ATOMS;
+%
+% TREE IS  NIL or STRUCT(VAL:value,SONS:node-pair)
+%		node-pair=STRUCT(LNODE:tree,RNODE:tree);
+
+SYMBOLIC PROCEDURE NEWNODE(ELEM);
+	LIST(ELEM,NIL);
+
+SYMBOLIC SMACRO PROCEDURE VAL NODE;
+% will have (ATOM . lst) as elem;
+	CAAR NODE;
+
+SYMBOLIC SMACRO PROCEDURE PREPVAL ELEM;
+	GETORD ELEM;
+
+SYMBOLIC SMACRO PROCEDURE LNODE NODE;
+	CADR NODE;
+
+SYMBOLIC SMACRO PROCEDURE RNODE NODE;
+	CDDR NODE;
+
+SYMBOLIC SMACRO PROCEDURE NEWLFT(NODE,ELEM);
+	RPLACA(CDR NODE,NEWNODE ELEM);
+
+SYMBOLIC SMACRO PROCEDURE NEWRGT(NODE,ELEM);
+	RPLACD(CDR NODE,NEWNODE ELEM);
+
+SYMBOLIC SMACRO PROCEDURE MSORT LST;
+% Build tree then collapse;
+ TREE2LST(TREESORT(LST),NIL);
+
+SYMBOLIC PROCEDURE TREESORT LST;
+% Uses insert of elemnt to tree;
+   BEGIN SCALAR TREE;
+	IF NULL LST THEN RETURN NIL;
+	TREE:=NEWNODE PREPVAL(    CAR LST);
+	WHILE (LST:=CDR LST) DO PUTTREE(PREPVAL(CAR LST),TREE);
+	RETURN TREE;
+   END;
+
+SYMBOLIC SMACRO PROCEDURE TORGT( ELEM,NODE);
+% RETURNS T if ELEM to go to right of VAL(NODE);
+	CDR(ELEM)>CDAR(NODE);
+
+SYMBOLIC PROCEDURE PUTTREE(ELEM,NODE);
+  BEGIN
+  DWN:	IF TORGT(ELEM,NODE)  THEN GOTO RGT;
+	IF LNODE NODE THEN <<NODE:=LNODE NODE;GO TO DWN>>;
+		NEWLFT(NODE,ELEM);
+		RETURN;
+  RGT:	IF RNODE NODE THEN <<NODE:=RNODE NODE;GO TO DWN>>;
+		NEWRGT(NODE,ELEM);
+		RETURN;
+  END;
+
+SYMBOLIC PROCEDURE TREE2LST(TREE,LST);
+  BEGIN
+	WHILE TREE DO 
+	   <<LST:=VAL(TREE) .TREE2LST(RNODE TREE,LST);
+	    TREE:=LNODE TREE>>;
+ 	RETURN LST;
+   END;
+
+SYMBOLIC PROCEDURE UNION(X,Y);
+IF NULL X THEN Y
+ ELSE UNION(CDR X,IF CAR X MEMBER Y THEN Y ELSE CAR X . Y);
+
+!*RAISE := T;   %system standard?;
+
+% Convert a file specification from lisp format to a string.
+% This is essentially the inverse of MKFILE;
+SYMBOLIC PROCEDURE FILEMK U;
+ BEGIN SCALAR DEV,NAME,FLG,FLG2;
+  IF NULL U THEN RETURN NIL
+   ELSE IF ATOM U THEN NAME := EXPLODEC U
+   ELSE FOR EACH X IN U DO
+    IF X EQ 'DIR!: THEN FLG := T
+     ELSE IF ATOM X THEN
+      IF FLG THEN DEV := '!< . NCONC(EXPLODEC X,LIST '!>)
+       ELSE IF X EQ 'DSK!: THEN DEV:=NIL
+       ELSE IF !%DEVP X THEN DEV := EXPLODEC X
+       ELSE NAME := EXPLODEC X
+     ELSE IF ATOM CDR X THEN
+      NAME := NCONC(EXPLODEC CAR X,'!. . EXPLODEC CDR X)
+     ELSE <<FLG2 := T;
+            DEV := '![ . NCONC(EXPLODEC CAR X,
+                               '!, . NCONC(EXPLODEC CADR X,LIST '!]))>>;
+  U := IF FLG2 THEN NCONC(NAME,DEV)
+        ELSE NCONC(DEV,NAME);
+  RETURN COMPRESS('!" . NCONC(U,'(!")))
+ END;
+
+
+END;

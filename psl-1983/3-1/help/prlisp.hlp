@@ -1,0 +1,41 @@
+3D version of PictureRLISP		MLG 4 Jan 1983
+------------------------------------------------------
+
+This is a brief guide to the 3D version of Picture RLISP. This is much
+slower than the PRLISP2D subset, which is better if only planar
+displays are required. PRLISP can now be run under PSL as well, though
+of course with no syntax.
+
+RLISP Use:
+
+LOAD PRLISP;    % Load 3D version of PictureRLISP
+HP!.INIT();     % Select Driver, this is most common HP2648a version
+
+Line := {0,0} _ {10,10};  % Line from center towards upper-right
+Show Line;                % Draw it
+Show Line | ZROT(25);     % Draw rotated by 25 degrees
+Erase();                  % Clear screen
+Show Line & (Line | scale 3 | zrot 20 ) | xmove 10;
+
+For more examples, see PU:PR-DEMO.RED, use IN "PU:PR-DEMO.RED"$
+
+PRLISP can also be loaded and run from PSL, but no syntax is
+available:
+
+(LOAD PRLISP)
+(HP!.INIT)
+
+(setq LINE (POINTSET (ONEPOINT 0 0) (ONEPOINT 10 10)))
+
+(SHOW LINE)
+(SHOW (TRANSFORM LINE  (ZROT 25)))
+
+(ERASE)
+
+(SHOW (GROUP LINE (TRANSFORM
+		    (TRANSFORM	 (TRANSFORM Line  (SCALE 3))
+			         (ZROT 20))
+		    (XMOVE 10))))
+
+For more examples, see PU:PR-DEMO.SL, run with
+(LAPIN "PU:PR-DEMO.SL")

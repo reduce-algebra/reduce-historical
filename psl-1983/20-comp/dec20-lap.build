@@ -1,0 +1,6 @@
+CompileTime <<
+load Syslisp;
+>>;
+in "p20:system-faslout.red"$
+in "dec20-lap.red"$
+in "instrs.sl"$

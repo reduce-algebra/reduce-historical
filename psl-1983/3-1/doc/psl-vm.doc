@@ -1,0 +1,401 @@
+                NOTES ON THE PSL VIRTUAL MACHINE
+                           Cris Perdue
+                             3-8-83
+              -------------------------------------
+
+NOTES ON THE SYSLISP DATATYPES
+------------------------------
+
+Most of the PSL low-level operators deal with values that are of
+a standard size for a given machine.  Tagged LISP "items" are of
+this size, as are "machine-integers" and "machine-pointers" (see
+below for details on these datatypes).
+
+A machine-integer is a value to which operations such as WPLUS2,
+WOR and WSHIFT apply.  These are listed in the documentation for
+SYSLISP.  The arithmetic operators are all signed arithmetic.
+
+A machine-pointer is a machine-integer which may be an argument
+to byte, memory, putmem, wgetv, etc..  It is legitimate to use
+address arithmetic, but the difference between the addresses of
+two adjacent items may be an integer greater than one.  The
+difference between the addresses of two adjacent items (words) is
+the value of the WCONST AddressingUnitsPerItem.
+
+PROBLEMS WITH THE USE OF MACHINE-INTEGERS AND MACHINE-POINTERS
+
+In the current implementation of PSL a machine-integer serves as
+the representation for every LISP integer of less than a certain
+size.  Within this range of values, no conversion is required and
+machine integers can neither confuse the garbage collector nor be
+trashed by the garbage collector.
+
+If a machine integer outside this range resides where the garbage
+collector expects an item, for example in the stack, it is liable
+to be taken as a tagged pointer.  If it appears to have a legal
+tag, the garbage collector is likely to try to examine the word
+pointed to and this may cause an odd address error or memory bus
+error.  Also the integer may well be "relocated", i.e. altered to
+"point" to the new location of the data after the garbage
+collection -- the garbage collectors move heap objects.  Even if
+none of these catastrophic events occurs, the garbage collector
+may be prevented from collecting some garbage because the integer
+gave the appearance of pointing to it.
+
+Machine-pointers suffer from some similar problems.  If a garbage
+collection should occur during the active lifetime of a
+machine-pointer that points into the heap, that pointer will
+cease to point to the intended object.
+
+A NOTE ON PREDICATES
+
+All of the predicates described in this document return LISP
+boolean values, i.e. NIL or not-NIL.  When used to affect flow of
+control, they compile just as the corresponding tests would in C
+or PASCAL, without reference to any LISPy values.
+
+
+ARITHMETIC AND LOGICAL OPERATIONS
+---------------------------------
+
+WPLUS2, WDIFFERENCE, WTIMES2, WQUOTIENT, WREMAINDER
+
+Signed arithmetic with word-sized arguments and result.
+
+(WSHIFT value amount)
+
+Logical shift left or right.  Positive shift amounts mean
+shifting to the left.  The absolute value of the shift amount
+should be less than the number of bits per item.
+
+WMINUS
+
+Unary negation.
+
+WAND, WOR, WXOR
+
+Binary bitwise logical operators.
+
+WNOT
+
+Unary logical complement (logical negation).
+
+WEQ, WNEQ
+
+Equality of item-sized values.  Serves for both logical and
+arithmetic equality.  The result is a LISP boolean value (NIL or
+not NIL), which is not necessarily materialized.
+
+WGREATERP, WLESSP, WGEQ, WLEQ
+
+Signed arithmetic booleans.  The result is a LISP boolean value
+(NIL or not NIL) which is not necessarily materialized.
+
+(FIELD value startingbit length), (SIGNEDFIELD value startingbit length)
+
+These operators extract fields from item-sized quantities.  The
+extracted field is right-justified.  FIELD pads the result with
+zeroes, and SIGNEDFIELD pads the result with ones if the most
+significant bit of the field is a one.  Bits are numbered with
+the most significant bit as bit zero.  The startingbit and length
+arguments must be compile-time constants.
+
+
+MEMORY-ORIENTED OPERATIONS
+--------------------------
+
+(GETMEM pointer)
+
+Given a machine pointer, returns the word pointed to.
+
+(PUTMEM pointer value)
+
+Given a machine pointer and a word-sized value, stores the value
+into the word pointed to.
+
+(PUTFIELD pointer startingbit length value)
+
+Given a machine pointer, compile-time constants startingbit and
+length, and a word-sized value, the low-order bits of the value
+are stored into the specified field of the word referred to by
+pointer.  Is a value returned?
+
+(WGETV pointer offset), (WPUTV pointer offset value)
+
+These provide access to words at addresses that are offset from
+some address.  (WGETV pointer 0) is equivalent to (GETMEM
+pointer).  Does WPUTV return a value?
+
+(BYTE pointer index), (PUTBYTE pointer index value)
+
+These provide access to vectors of byte-sized quantities.  The
+pointer is a machine-pointer to the first word in which the bytes
+may be stored.  The index must be zero or greater.  BYTE extracts
+a byte and pads with zeroes.  PUTBYTE stores the low-order bits
+of the value into a byte in memory.  Does PUTBYTE return a value?
+
+(HALFWORD pointer index), (PUTHALFWORD pointer index value)
+
+These provide access to vectors of quantities packable 2 per
+word.  They are analagous to BYTE and PUTBYTE, and the value of
+HALFWORD is zero-padded.
+
+LOC
+
+Use with variable names including WVARs and WARRAYs?  Also with
+WGETV expressions?
+
+WCONST
+
+WCONSTs can be used in any LISP code by writing a compile-time
+constant expression: (WCONST <expression>).  The expression may
+use WCONSTs by name.  If WDECLARE is loaded (as in SYSLISP),
+named WCONSTs (and only WCONSTs) may be declared using the
+WDECLARE function.
+
+CROSS-COMPILER ONLY -- WVAR, WARRAY, WSTRING
+
+For WVARs, declare them first then use by name.  <<So why say
+LISPVAR at all in SysLisp?>>
+
+Use WCONSTs as (WCONST expression) or alternatively (I think)
+declare first and use by name.
+
+Use of WARRAY or WSTRING by name means address of zeroth element,
+rather like a WCONST.(?)
+
+DECLARING WVARS, WARRAYS, WSTRINGS, AND WCONSTS
+
+(WDeclare scope type (name bound init) (name [bound init]) . . . )
+
+Scope is EXPORTED, EXTERNAL, or DEFAULT.  (Meaning of DEFAULT?)
+Type is WVAR, WARRAY, WSTRING, or WCONST.
+Bound and Init are optional and mutually exclusive.  Bound can
+  only apply to a WARRAY or WSTRING, and gives the upper bound of
+  the array or string.  Init is a compile-time constant
+  expression in the case of a WVAR, or a list (of constant
+  expressions?) in the case of a WARRAY, or a string in the case
+  of a WSTRING.  I think the list form is legal for a string, in
+  which case the members are taken as ASCII codes for characters.
+  (This information is not guaranteed!)
+
+
+CONVERSION BETWEEN LISP- AND MACHINE-VALUES
+-------------------------------------------
+
+INUMs need no conversion.  For machine-integers in general, the
+functions SYS2INT and INT2SYS convert to and from LISP numeric
+values.
+
+
+ON "ITEMS"
+----------
+
+All PSL "pointers" are "items", also known as "tagged items".  An
+item consists of a tag part and an information part.  In current
+implementations the parts occupy fixed fields of a fixed-size
+quantity, but this has not been so in every implementation.
+
+In what follows note that BYTES are only partially implemented
+and that from the user's point of view, HALFWORDS are
+an experiment.  Use them with the understanding that a redesign
+of the system datatypes might cause them to be eliminated.
+
+
+TAGGED ITEM CONSTRUCTORS
+------------------------
+
+(MkBTR MkID MkFIXN MkFLTN MkBIGN MkPAIR
+       MkVEC MkEVECT MkWRDS MkSTR MkBYTES
+       MkHalfWords MkCODE)
+
+Given a machine-integer data part, these return a tagged item of
+the type suggested by the name of the constructor, with data part
+same as the argument.
+
+
+TAGGED ITEM COMPONENTS
+----------------------
+
+(IDInf StrInf VecInf EvecInf PairInf WrdInf HalfWordInf CodeInf
+       FixInf FltInf BigInf)
+
+
+(PutIDInf PutStrInf PutVecInf PutPairInf PutWrdInf
+	  PutHalfWordInf PutEvecInf
+	  PutFixInf PutFltInf PutBigInf)
+
+Given a machine pointer to an item, these fetch or store the data
+part of the item pointed to.  The value returned by the accessors
+is in machine format.
+
+Note:  ByteInf and PutByteInf are missing.
+
+(Tag U)
+
+Gets the tag part of an item.  Clear enough what this does now,
+but what are its specifications?
+
+
+PREDICATES ON TAGS
+------------------
+
+Each of these predicates takes a LISP item as its argument and
+returns a LISP boolean if used for its value.
+
+NOTE: By clever ordering of the values of the type tags, ALL of
+these tests are comparable in speed.  In fact, on the 9836 they
+may soon all be just about the same speed, so don't hesitate to
+use the most appropriate one!
+
+PAIRP, STRINGP, VECTORP, CODEP, IDP, BYTESP, WRDSP, HALFWORDSP
+
+These are all independent predicates on the type of an item.
+
+FIXNP, FLOATP, BIGP
+
+These are checks for specific sorts of numbers.  Testing for
+FLOATP is probably the most legitimate for use in user code,
+though see the function FLOAT also.
+
+INTP, FIXP, NUMBERP
+
+These are related type tests.  FIXP and NUMBERP are quite
+legitimate to use in general user-level programs.  INTP tests
+whether a number is in the "INUM range", that is, is represented
+directly by an item rather than using space in the heap.  If a
+number is INTP, at present it has the same representation as a
+machine-integer of the same value.
+
+POSINTP, NEGINTP
+
+POSINTP checks for a positive INUM (or zero), and NEGINTP checks
+for a negative INUM.  These happen at present to be separate type
+tags.
+
+There are actually even more obscure tags, but these are of very
+limited use in the author's view.
+
+
+ALLOCATORS AND DEALLOCATORS
+---------------------------
+
+(GtStr N)
+
+Space for a string of upper bound N.  Returns a machine
+pointer.  Header is initialized, last byte cleared.
+
+(GtConstStr N)
+
+Like GtStr, but gets space in BPS (using GtBPS).  Used for print
+name storage of INTERNed IDs.
+
+(GtHalfWords N) (GtVect N) (GtEvect N) (GtWrds N)
+
+Gets enough heap space for an object of upper bound N and
+initializes the header.
+
+(GtBPS N)
+
+Gets N items of BPS (from the bottom).  Returns a machine pointer.
+
+(DelBPS Bottom Top)
+
+Returns the space from bottom up to (not including) top, provided
+that it is the last space allocated but not deallocated
+(stack-like).
+
+(GtWarray N)
+
+Gets N words of BPS, but from the opposite end to GtBPS.
+
+(DelWarray Bottom Top)
+
+Returns WArray space like DelBPS does BPS.
+
+
+UPPER BOUNDS OF COMPOUND TYPES
+------------------------------
+
+(StrLen ByteLen VecLen EVecLen WrdLen HalfWordLen)
+
+Given a machine pointer to an object of the suggested type,
+returns the upper bound on indexes permitted for the object.
+
+
+ELEMENT RETRIEVAL
+-----------------
+
+(StrByte U N)
+
+U is a machine pointer to a string.  Retrieves the Nth byte.
+
+(VecItm U N) (EVecItm U N) (WrdItm U N) (HalfWordItem U N)
+
+Returns the Nth element given a machine pointer U.
+
+
+WHAT?
+-----
+
+(StrBase U)
+
+Pointer to string translated to pointer to beginning of data part
+which can be accessed via Byte.
+
+So what about VectBase, etc.?
+
+
+FIXNUMS AND FLOATNUMS
+---------------------
+
+(FixVal U)
+
+Gets the data part of a fixnum.
+
+DO WE REALLY BELIEVE THIS STUFF ABOUT FLOATNUMS?
+
+(FloatBase U)
+
+Pointer to first word of data part of floatnum.
+
+(FloatHighOrder U)
+
+Gets high order part of floatnum representation.
+
+(FloatLowOrder U)
+
+Gets low order part of floatnum representation.
+
+(%code-number-of-arguments U)
+
+Gets the number of arguments information given a code pointer to
+a routine.
+
+
+ULTRAPRIMITIVES
+---------------
+
+The following functions appear in some system code, but are
+usually not needed even by system-level programmers because other
+slightly higher-level functions exist to serve most needs.  One
+would use them if writing a new garbage collector, for example.
+
+(GtHeap N)
+
+Ultraprimitive.  Gets N items from the heap.  Returns a machine
+pointer.  If an appropriate header is not installed in those
+words immediately the heap could be left in an inconsistent state
+and the garbage collector might break.
+
+(PairPack dum)
+
+Number of items in the representation of a pair.
+
+(StrPack N) (VectPack N) (EVectPack N) (WrdPack N) (HalfWordPack N)
+
+Number of items required to be allocated for data part of object
+of N+1 elements (upper bound of N).  Many of these suffer from
+"off by one" errors in the conservative direction.
+
+Note: BytePack is missing.

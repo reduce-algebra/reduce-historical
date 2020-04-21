@@ -1,0 +1,5 @@
+CompileTime <<
+load(Useful, CLComp);
+put('Space, 'CharConst, 32);	% temporary patch
+>>;
+in "chars.lsp"$

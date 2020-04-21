@@ -1,0 +1,4 @@
+(setq OrderedIDList!* (NCons NIL))
+(setq UncompiledExpressions!* (NCons NIL))
+(setq ToBeCompiledExpressions!* (NCons NIL))
+(setq NextIDNumber!* 129)

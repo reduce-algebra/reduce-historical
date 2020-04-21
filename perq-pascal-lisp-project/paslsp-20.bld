@@ -1,0 +1,21 @@
+; Command file to assemble PASn pieces together and then compile them.
+; for Dec-20 version
+;
+COP PAS3.INI PASLSP.INI
+APP PAS1.SLI PASLSP.INI
+APP PAS2.SLI PASLSP.INI
+APP PAS3.SLI PASLSP.INI
+APP USER.SLI PASLSP.INI
+filter d <pas0.pre >s:pl20.pas
+append pas1.pas S:PL20.PAS
+append pas2.pas S:PL20.PAS
+append pas3.pas S:PL20.PAS
+append exec.pas S:PL20.PAS
+filter d <pasn.pre >s:pl20n.pas
+append s:pl20n.pas S:PL20.PAS
+pascal
+S:PL20.rel
+S:PL20.lst
+S:PL20.PAS
+load S:PL20.REL
+save S:PL20.EXE

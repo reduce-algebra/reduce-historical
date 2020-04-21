@@ -1,0 +1,36 @@
+(de errorprintf(a1 a2 a3 a4 a5)
+ (prin2 a1)
+ (prin2 " ")
+ (prin2 a2)
+ (prin2 " ")
+ (prin2 a3)
+ (prin2 " ")
+ (prin2 a4)
+ (prin2 " ")
+ (prin2t a5))
+
+(setq knt 0)
+(df tr (z)
+   (setq old (car z))
+   (setq new (cadr z))
+   (setq args (cddr z))      
+   (copyd new old)
+   (putd old 'expr (list 'lambda args 
+            	    '(setq knt (add1 knt))
+                     (list 'print (list 'list ">>>>" (list 'quote old)  'knt))
+                      (list 'setq 'ans  (cons new args))
+                      (list 'print (list 'list "   <" (list 'quote old)  'knt))
+             	    '(setq knt (sub1 knt))
+                      'ans)))
+
+(df m (z)
+   (setq old (car z))
+   (setq new (cadr z))
+   (setq args (cddr z))      
+   (copyd new old)
+   (print (list old (inf old)))
+   (putd old 'expr (list 'lambda args 
+                     (list 'print (list 'inf old))
+                      (cons new args))))
+
+

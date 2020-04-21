@@ -1,0 +1,3127 @@
+,MOD
+- R 44X (11 February 1983) <PSL.NMODE-DOC>MANUAL.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                     201/NMODE Reference Manual
+
+
+                                        Preliminary Edition
+
+
+
+
+                                    11 February 1983 11:07:16
+
+
+
+
+
+
+
+
+
+
+          This document is a preliminary edition of the NMODE Reference
+          Manual.  Do not distribute this document!
+
+                                              201/- 2 -                      NMODE Manual
+          201/NMODE Manual                      - 5 -                        Introduction
+
+
+          202/1.  Introduction
+
+          201/This document describes the NMODE text editor.  NMODE is an interactive,
+          multiple-window, screen-oriented editor written in PSL (Portable Standard
+          Lisp).  NMODE provides a compatible subset of the EMACS text editor,
+          developed at M.I.T.  It also contains a number of extensions, most notably an
+          interface to the underlying Lisp system for Lisp programmers.
+
+          NMODE was developed at the Hewlett-Packard Laboratories Computer Research
+          Center by Alan Snyder.  A number of significant extensions have been
+          contributed by Jeff Soreff.
+
+          NMODE is based on an earlier editor, EMODE, written in PSL by William F.
+          Galway  at  the  University  of  Utah.   Many of the basic ideas and the
+          underlying structure of the NMODE editor come directly from EMODE.
+
+          This document is only partially complete, but is being reprinted at this time
+          for the benefit of new users that are not familiar with EMACS.  The bulk of
+          this document has been borrowed from EMACS documentation and modified
+          appropriately in areas where NMODE and EMACS differ.
+          201/Introduction                        - 6 -                      NMODE Manual
+          201/NMODE Manual                      - 7 -                       Action Types
+
+
+          202/2.  Action Types
+
+          201/This section defines a number of 203/action types201/, which are used in the
+          descriptions of NMODE commands.
+
+
+
+
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Alter Display Format
+
+          201/This type of command alters how text is displayed without altering the
+          contents of existing buffers.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Alter Existing Text
+
+          201/This type of command alters some part of the existing text, generally
+          transforming and/or moving text rather than just inserting or deleting it.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Change Mode
+
+          201/This type of command turns some feature(s) of the editor on or off.  This
+          may include major modes, minor modes, timing, or scripting.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Escape
+
+          201/Escape from the current level.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Inform
+
+          201/This type of command informs the user of some property of the text being
+          worked with, or of the state of the editor (including where point is, what the
+          existing buffer(s) is(are), what is in the documentation, etc.).
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Insert Constant
+
+          201/This type of command inserts a character constant like tab or space or a
+          multiple thereof.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Mark
+
+          201/This type of command sets mark.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Action Types                       - 8 -                      NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Move Data
+
+          201/This command copies some data (which is not a constant wired into the
+          program) from one place to another.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Move Point
+
+          201/This type of command moves point.  It may move it within a buffer or from
+          buffer to buffer.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Preserve
+
+          201/Make a copy of something current and put it somewhere else (usually disc).
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Remove
+
+          201/This type of command allows a user to get rid of data, either killing or
+          deleting text or removing files or directory entries.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Select
+
+          201/This type of command finds particular strings in text, and may perform some
+          action upon them, such as counting, replacement, or deletion.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Set Global Variable
+
+          201/This type of command sets some global variable which tends to remain stable
+          for some time, such as prefix variables and key bindings.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Subsequent Command Modifier
+
+          201/This type of command modifies the meaning of the keys that immediately follow
+          it, as the prefix commands and the argument commands do.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                      - 9 -                          Definitions
+
+
+          202/3.  Definitions
+
+          201/This section defines a number of terms used in the descriptions of NMODE
+          commands.
+
+
+
+
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Definition: Defun
+
+          201/A defun is a list whose ( falls in column 0.  Its end is after the CRLF
+          following its ).
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Definition: Paragraph
+
+          201/Paragraphs are delimited by blank lines and psuedo-blank lines, which are
+          lines which don't match the existing fill prefix (when there is one), and,
+          when in text mode, also by indentation and by text justifier command lines,
+          which are currently defined as lines starting with a period and which are
+          treated as another type of psuedo-blank line.  Paragraphs contain the final
+          CRLF after their last test, and contain any immediately preceding empty line.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Definition: Region
+
+          201/The region is that portion of text between point, the current buffer position,
+          and mark.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Definition: Sentence
+
+          201/A sentence is ended by a ., ? or ! followed by two spaces or a CRLF (with
+          optional space), with any number of "closing characters" ", ', ) and ]
+          between.  A sentence also starts at the start of a paragraph.  A sentence
+          also ends at the end of a paragraph.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Definitions                         - 10 -                     NMODE Manual
+          201/NMODE Manual                     - 11 -                             Globals
+
+
+          202/4.  Globals
+
+          201/This section defines a number of conceptual 203/global variables201/, which are
+          referred to in the descriptions of NMODE commands.  These 203/globals 201/represent
+          state information that can affect the behavior of various NMODE commands.
+          The value of NMODE globals are set as the result  of  various  NMODE
+          commands.
+
+
+
+
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Global Explanation: Fill Column
+
+          201/The fill column is the column beyond which all the fill commands: auto fill, fill
+          paragraph, fill region, and fill comment, will try to break up lines.  The fill
+          column can be set by the Set Fill Column command.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Global Explanation: Fill Prefix
+
+          201/The fill prefix, if present, is a string that the fill paragraph and fill region
+          commands expect to see on the areas that they are filling. It is useful, for
+          instance, in filling indented text.  Only the indented area will be filled, and
+          any new lines created by the filling will be properly indented.  Autofill will
+          also insert it on each new line it starts.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Global Explanation: Goal Column
+
+          201/This is not yet correctly implemented
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Global Explanation: Kill Ring
+
+           201/The kill ring is a stack of the 16 most recently killed pieces of text.  The
+          Insert Kill Buffer command reads text on the top of the kill ring and inserts
+          it back into the buffer.  It can accept an argument, specifying an argument
+          other than the top one.  If one knows that the text one wants is on the kill
+          ring, but is not certain how deeply it is buried, one can retrieve the top
+          item with the Insert Kill Buffer command, then look through the other items
+          one by one with the Unkill Previous command.  This rotates the items on the
+          kill ring, displaying them one by one in a cycle.
+           Most kill commands push their text onto the top of the kill ring.  If two kill
+          commands are performed right after each  other,  the  text  they  kill  is
+          concatenated.  Commands the kill forward add onto the end of the previously
+          killed text.  Commands that kill backward add onto the beginning. That way,
+          the text is assembled in its original order.  If intervening commands have
+          taken place one can issue an Append Next Kill command before the next kill
+          in order to assemble the next killed text together with the text on top of the
+          kill ring.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Globals                             - 12 -                     NMODE Manual
+          201/NMODE Manual                     - 13 -              Command Descriptions
+
+
+          202/5.  Command Descriptions
+
+          201/This section defines the basic NMODE commands.  Each command description
+          includes the following information:
+
+          203/command   201/A descriptive name of the command.
+
+          203/function    201/The name of the Lisp function that implements the command.
+
+          203/key        201/The logical keys on the keyboard that normally have this command
+                      attached to them.  A 203/logical key 201/includes ordinary keys such as
+                      Tab or Rubout, 203/shifted 201/keys using the 202/Control 201/and/or 202/Meta
+                      201/modifiers (e.g., C-F, M-F, and C-M-F), 203/prefixed commands 201/using
+                      C-X, C-], or Escape (e.g., C-X C-F, C-] E, and Esc-L), and
+                      203/extended commands 201/using 202/Meta-X 201/(e.g., M-X Delete Matching
+                      Lines).
+
+          203/action type 201/One of a number of descriptive terms that categorize the behavior
+                      of commands.  Action types are defined in Chapter 2.
+
+          203/mode       201/Some commands are defined only in certain modes.  If present,
+                      this attribute specifies the mode or modes in which the command
+                      is normally defined.
+
+          203/topic       201/A keyword that describes the command.  Topics are listed in the
+                      Topic Index, Chapter 9.
+          201/Command Descriptions              - 14 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Append Next Kill
+
+          201/Function: append-next-kill-command
+          Key: C-M-W
+          See Global: Kill Ring
+          Action Type: Move Data
+
+          Make following kill commands append to last batch.  Thus, C-K C-K, cursor
+          motion, this command, and C-K C-K, generate one block of killed stuff,
+          containing two lines.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Append To Buffer
+
+          201/Function: append-to-buffer-command
+          Key: C-X A
+          Topic: Buffers
+          See Definition: Region
+          Action Type: Move Data
+
+          Append region to specified buffer.   The buffer's name is read from the
+          keyboard; the buffer is created if nonexistent.  A numeric argument causes
+          us to "prepend" instead.  We always insert the text at that buffer's pointer,
+          but when "prepending" we leave the pointer before the inserted text.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Append To File
+
+          201/Function: append-to-file-command
+          Key: M-X Append To File
+          Topic: Files
+          See Definition: Region
+          Action Type: Move Data
+
+          Append region to end of specified file.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Apropos
+
+          201/Function: apropos-command
+          Key: M-X Apropos
+          Action Type: Inform
+
+          M-X Apropos lists functions with names containing a string for which the user
+          is prompted.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 15 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Argument Digit
+
+          201/Function: argument-digit
+          Key: C-0
+          Key: C-1
+          Key: C-2
+          Key: C-3
+          Key: C-4
+          Key: C-5
+          Key: C-6
+          Key: C-7
+          Key: C-8
+          Key: C-9
+          Key: C-M-0
+          Key: C-M-1
+          Key: C-M-2
+          Key: C-M-3
+          Key: C-M-4
+          Key: C-M-5
+          Key: C-M-6
+          Key: C-M-7
+          Key: C-M-8
+          Key: C-M-9
+          Key: M-0
+          Key: M-1
+          Key: M-2
+          Key: M-3
+          Key: M-4
+          Key: M-5
+          Key: M-6
+          Key: M-7
+          Key: M-8
+          Key: M-9
+          Action Type: Subsequent Command Modifier
+
+          Specify numeric argument for next command.  Several such digits typed in a
+          row all accumulate.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Auto Fill Mode
+
+          201/Function: auto-fill-mode-command
+          Key: M-X Auto Fill Mode
+          See Command: Set Fill Column
+          Action Type: Change Mode
+
+          Break lines between words at the right margin.  A positive argument turns
+          Auto Fill mode on; zero or negative, turns it off.  With no argument, the
+          mode is toggled.  When Auto Fill mode is on, lines are broken at spaces to fit
+          the right margin (position controlled by Fill Column).  You can set the Fill
+          Column with the Set Fill Column command.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 16 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Back To Indentation
+
+          201/Function: back-to-indentation-command
+          Key: C-M-M
+          Key: C-M-RETURN
+          Key: M-M
+          Key: M-RETURN
+          Action Type: Move Point
+
+          Move to end of this line's indentation.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Backward Kill Sentence
+
+          201/Function: backward-kill-sentence-command
+          Key: C-X RUBOUT
+          See Global: Kill Ring
+          See Definition: Sentence
+          Action Type: Remove
+
+          Kill  back to beginning of sentence.  With a command argument n kills
+          backward (n>0) or forward (n>0) by |n| sentences.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Backward Paragraph
+
+          201/Function: backward-paragraph-command
+          Key: M-[
+          See Definition: Paragraph
+          Action Type: Move Point
+
+          Move backward to start of paragraph.  When given argument moves backward
+          (n>0) or forward (n<0) by |n| paragraphs where n is the command argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Backward Sentence
+
+          201/Function: backward-sentence-command
+          Key: M-A
+          See Definition: Sentence
+          Action Type: Move Point
+
+          Move to beginning of sentence.  When given argument moves backward (n>0)
+          or forward (n<0) by |n| sentences where n is the command argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 17 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Backward Up List
+
+          201/Function: backward-up-list-command
+          Key: C-(
+          Key: C-M-(
+          Key: C-M-U
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Move Point
+
+          Move up one level of list structure, backward.  Given a command argument n
+          move up |n| levels backward (n>0) or forward (n<0).
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Buffer Browser
+
+          201/Function: buffer-browser-command
+          Key: C-X C-B
+          Key: M-X List Buffers
+          Topic: Buffers
+          Action Type: Inform
+
+          Put up a buffer browser subsystem. If an argument is given, then include
+          buffers whose names begin with "+".
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Buffer Not Modified
+
+          201/Function: buffer-not-modified-command
+          Key: M-~
+          Topic: Buffers
+          Action Type: Set Global Variable
+
+          Pretend that this buffer hasn't been altered.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: C-X Prefix
+
+          201/Function: c-x-prefix
+          Key: C-X
+          Action Type: Subsequent Command Modifier
+
+          The command Control-X is an escape-prefix for more commands.  It reads a
+          character (subcommand) and dispatches on it.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 18 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Center Line
+
+          201/Function: center-line-command
+          Key: M-S
+          Topic: Text
+          See Global: Fill Column
+          Action Type: Alter Existing Text
+
+          Center this line's text within the line.  With argument, centers that many
+          lines and moves past.  Centers current and preceding lines with negative
+          argument.  The width is Fill Column.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Copy Region
+
+          201/Function: copy-region
+          Key: M-W
+          See Global: Kill Ring
+          See Definition: Region
+          Action Type: Preserve
+
+          Stick region into kill-ring without killing it.  Like killing and getting back,
+          but doesn't mark buffer modified.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Count Occurrences
+
+          201/Function: count-occurrences-command
+          Key: M-X Count Occurrences
+          Key: M-X How Many
+          Action Type: Inform
+
+          Counts occurrences of a string, after point.  The user is prompted for the
+          string.  Case is ignored in the count.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Delete And Expunge File
+
+          201/Function: delete-and-expunge-file-command
+          Key: M-X Delete And Expunge File
+          Topic: Files
+          Action Type: Remove
+
+          This command prompts the user for the name of the file. NMODE will fill in
+          defaults in a partly specified filename (eg filetype can be defaulted).  If
+          possible, the file will then be deleted and expunged, and a message to that
+          effect will be displayed. If the operation fails, the bell will sound.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 19 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Delete Backward Hacking Tabs
+
+          201/Function: delete-backward-hacking-tabs-command
+          Key: BACKSPACE
+          Key: C-RUBOUT
+          Key: RUBOUT
+          Mode: Lisp
+          Action Type: Remove
+
+          Delete character before point, turning tabs into spaces.  Rather than deleting
+          a whole tab, the tab is converted into the appropriate number of spaces and
+          then  one  space  is  deleted.   With  positive  arguments  this  operation is
+          performed multiple times on the text before point.  With negative arguments
+          this operation is performed multiple times on the text after point.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Delete Blank Lines
+
+          201/Function: delete-blank-lines-command
+          Key: C-X C-O
+          Action Type: Remove
+
+          Delete all blank lines around this line's end.  If done on a non-blank line,
+          deletes all spaces and tabs at the end of it, and all following blank lines
+          (Lines are blank if they contain only spaces and tabs).  If done on a blank
+          line, deletes all preceding blank lines as well.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Delete File
+
+          201/Function: delete-file-command
+          Key: M-X Delete File
+          Key: M-X Kill File
+          Topic: Files
+          Action Type: Remove
+
+          Delete a file.  Prompts for filename.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Delete Forward Character
+
+          201/Function: delete-forward-character-command
+          Key: C-D
+          Key: ESC-P
+          See Global: Kill Ring
+          Action Type: Remove
+
+          Delete character after point.  With argument, kill that many  characters
+          (saving them).  Negative args kill characters backward.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 20 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Delete Horizontal Space
+
+          201/Function: delete-horizontal-space-command
+          Key: M-\
+          Action Type: Remove
+
+          Delete all spaces and tabs around point.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Delete Indentation
+
+          201/Function: delete-indentation-command
+          Key: M-^
+          Action Type: Remove
+
+          Delete CRLF and indentation at front of line.  Leaves one space in place of
+          them.  With argument, moves down one line first (deleting CRLF after current
+          line).
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Delete Matching Lines
+
+          201/Function: delete-matching-lines-command
+          Key: M-X Delete Matching Lines
+          Key: M-X Flush Lines
+          Action Type: Select
+          Action Type: Remove
+
+          Delete Matching Lines: Prompts user for string.  Deletes all lines containing
+          specified string.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Delete Non-Matching Lines
+
+          201/Function: delete-non-matching-lines-command
+          Key: M-X Delete Non-Matching Lines
+          Key: M-X Keep Lines
+          Action Type: Select
+          Action Type: Remove
+
+          Delete Non-Matching Lines: Prompts user for string.  Deletes all lines not
+          containing specified string.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Dired
+
+          201/Function: dired-command
+          Key: C-X D
+
+          Run Dired on the directory of the current buffer file.  With no argument,
+          edits that directory.  With an argument of 1, shows only the versions of the
+          file in the buffer.  With an argument of 4, asks for input, only versions of
+          that file are shown.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 21 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Down List
+
+          201/Function: down-list
+          Key: C-M-D
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Move Point
+
+          Move  down  one  level  of  list  structure,  forward.   Command  argument
+          sensitivity not yet implemented.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Edit Directory
+
+          201/Function: edit-directory-command
+          Key: M-X Dired
+          Key: M-X Edit Directory
+
+          DIRED: Edit a directory.  The string argument may contain the filespec (with
+          wildcards of course)
+                  D deletes the file which is on the current line. (also K,^D,^K)
+                  U undeletes the current line file.
+                  Rubout undeletes the previous line file.
+                  Space is like ^N - moves down a line.
+                  E edit the file.
+                  S sorts files according to size, read or write date.
+                  R does a reverse sort.
+                  ? types a list of commands.
+                  Q lists files to be deleted and asks for confirmation:
+                    Typing YES deletes them; X aborts; N resumes DIRED.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: End Of Defun
+
+          201/Function: end-of-defun-command
+          Key: C-M-E
+          Key: C-M-]
+          Mode: Lisp
+          Topic: Lisp
+          See Definition: Defun
+          Action Type: Move Point
+
+          Move to end of this or next defun.  With argument of 2, finds end of
+          following defun.  With argument of -1, finds end of previous defun, etc.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 22 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Esc Prefix
+
+          201/Function: esc-prefix
+          Key: ESCAPE
+          Action Type: Subsequent Command Modifier
+
+          The command esc-prefix is an escape-prefix for more commands.  It reads a
+          character (subcommand) and dispatches on it.  Used for escape sequences
+          sent by function keys on the keyboard.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Exchange Point And Mark
+
+          201/Function: exchange-point-and-mark
+          Key: C-X C-X
+          Action Type: Mark
+          Action Type: Move Point
+
+          Exchange positions of point and mark.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Exchange Windows
+
+          201/Function: exchange-windows-command
+          Key: C-X E
+          Action Type: Alter Display Format
+
+          Exchanges the current window with the other window, which becomes current.
+          In two window mode, the windows swap physical positions.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Execute Buffer
+
+          201/Function: execute-buffer-command
+          Key: M-X Execute Buffer
+          Topic: Buffers
+
+          This command makes NMODE take input from the specified buffer as if it were
+          typed in.  This command supercedes any such previous request.  Newline
+          characters are ignored when reading from a buffer.  If a command argument
+          is given then only the last refresh of the screen triggered by the commands
+          actually occurs, otherwise all of the updating of the screen is visible.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Execute File
+
+          201/Function: execute-file-command
+          Key: M-X Execute File
+          Topic: Files
+
+          This command makes NMODE take input from the specified file as if it were
+          typed in.  This command supercedes any such previous request.  Newline
+          characters are ignored when reading from a buffer.  If a command argument
+          is given then only the last refresh of the screen triggered by the commands
+          actually occurs, otherwise all of the updating of the screen is visible.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 23 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Execute Form
+
+          201/Function: execute-form-command
+          Key: Lisp-E
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Mark
+
+          Causes the Lisp reader to read and evaluate a form starting at the beginning
+          of the current line.  We arrange for output to go to the end of the output
+          buffer.  The mark is set at the current location in the input buffer, in case
+          user wants to go back.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Exit Nmode
+
+          201/Function: exit-nmode
+          Key: Lisp-L
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Escape
+
+          Leave NMODE, return to normal listen loop.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Fill Comment
+
+          201/Function: fill-comment-command
+          Key: M-Z
+          See Global: Fill Prefix
+          See Global: Fill Column
+          See Definition: Paragraph
+          Action Type: Alter Existing Text
+
+          This command creates a temporary fill prefix from the start of the current
+          line.  It replaces the surrounding paragraph (determined using fill-prefix)
+          with a filled version.  It leaves point at the a position bearing the same
+          relation to the filled text that the old point did to the old text.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Fill Paragraph
+
+          201/Function: fill-paragraph-command
+          Key: M-Q
+          Topic: Text
+          See Global: Fill Prefix
+          See Global: Fill Column
+          See Definition: Paragraph
+          Action Type: Alter Existing Text
+
+          This fills (or justifies) this (or next) paragraph.  It leaves point at the a
+          position bearing the same relation to the filled text that the old point did to
+          the old text.  A numeric argument triggers justification rather than filling.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 24 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Fill Region
+
+          201/Function: fill-region-command
+          Key: M-G
+          Topic: Text
+          See Command: Set Fill Column
+          See Command: Set Fill Prefix
+          See Global: Fill Prefix
+          See Global: Fill Column
+          See Definition: Paragraph
+          See Definition: Sentence
+          Action Type: Alter Existing Text
+
+          Fill text from point to mark.  Fill Column specifies the desired text width.
+          Fill Prefix if present is a string that goes at the front of each line and is not
+          included in the filling.  See Set Fill Column and Set Fill Prefix.  An explicit
+          argument causes justification instead of filling.  Each sentence which ends
+          within a line is followed by two spaces.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Find File
+
+          201/Function: find-file-command
+          Key: C-X C-F
+          Key: M-X Find File
+          Topic: Files
+          Topic: Buffers
+          Action Type: Move Data
+          Action Type: Move Point
+
+          Visit a file in its own buffer.  If the file is already in some buffer, select
+          that buffer.  Otherwise, visit the file in a buffer named after the file.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Forward Paragraph
+
+          201/Function: forward-paragraph-command
+          Key: M-]
+          Topic: Text
+          See Definition: Paragraph
+          Action Type: Move Point
+
+          Move forward to end of this or the next paragraph.  When given argument
+          moves forward (n>0) or backward (n<0) by |n| paragraphs where n is the
+          command argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 25 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Forward Sentence
+
+          201/Function: forward-sentence-command
+          Key: M-E
+          Topic: Text
+          See Definition: Sentence
+          Action Type: Move Point
+
+          Move forward to end of this or the next sentence.  When given argument
+          moves forward (n>0) or backward (n<0) by |n| sentences.  where n is the
+          command argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Forward Up List
+
+          201/Function: forward-up-list-command
+          Key: C-)
+          Key: C-M-)
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Move Point
+
+          Move up one level of list structure, forward.  Given a command argument n
+          move up |n| levels forward (n>0) or backward (n<0).
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Get Register
+
+          201/Function: get-register-command
+          Key: C-X G
+          Action Type: Move Data
+          Action Type: Mark
+
+          Get contents of register (reads name from keyboard).  The name is a single
+          letter or digit.  Usually leaves the pointer before, and the mark after, the
+          text.  With argument, puts point after and mark before.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Grow Window
+
+          201/Function: grow-window-command
+          Key: C-X ^
+          Action Type: Alter Display Format
+
+          Make this window use more lines.  Argument is number of extra lines (can be
+          negative).
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 26 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Help Dispatch
+
+          201/Function: help-dispatch
+          Key: C-?
+          Key: M-/
+          Key: M-?
+          Action Type: Inform
+
+          Prints the documentation of a command (not a function).  The command
+          character is read from the terminal.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Incremental Search
+
+          201/Function: incremental-search-command
+          Key: C-S
+          Action Type: Move Point
+          Action Type: Select
+
+          Search for character string as you type it.  C-Q quotes special characters.
+          Rubout cancels last character.  C-S repeats the search, forward, and C-R
+          repeats it backward.  C-R or C-S with search string empty changes the
+          direction of search or brings back search string from previous search.
+          Altmode exits the search.  Other Control and Meta chars exit the search and
+          then are executed.  If not all the input string can be found, the rest is not
+          discarded.  You can rub it out, discard it all with C-G, exit, or use C-R or
+          C-S to search the other way.  Quitting a successful search aborts the search
+          and moves point back; quitting a failing search just discards whatever input
+          wasn't found.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Indent New line
+
+          201/Function: indent-new-line-command
+          Key: NEWLINE
+          Action Type: Insert Constant
+
+          This function performs the following actions: Executes whatever function, if
+          any, is associated with <CR>.  Executes whatever function, if  any,  is
+          associated with TAB, as if no command argument was given.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Insert Buffer
+
+          201/Function: insert-buffer-command
+          Key: M-X Insert Buffer
+          Topic: Buffers
+          Action Type: Move Data
+
+          Insert contents of another buffer into existing text.  The user is prompted
+          for the buffer name.  Point is left just before the inserted material, and mark
+          is left just after it.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 27 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Insert Closing bracket
+
+          201/Function: insert-closing-bracket
+          Key: )
+          Key: ]
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Insert Constant
+
+          Insert the character typed, which should be a closing bracket, then display
+          the matching opening bracket.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Insert Comment
+
+          201/Function: insert-comment-command
+          Key: M-;
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Insert Constant
+
+          Move to the end of the current line, then add a "%" and a space at its end.
+          Leave point after the space.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Insert Date
+
+          201/Function: insert-date-command
+          Key: M-X Insert Date
+          Action Type: Move Data
+
+          Insert the current time and date after point.  The mark is put after the
+          inserted text.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Insert File
+
+          201/Function: insert-file-command
+          Key: M-X Insert File
+          Topic: Files
+          Action Type: Move Data
+
+          Insert contents of file into existing text.  File name is string argument.  The
+          pointer is left at the beginning, and the mark at the end.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 28 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Insert Kill Buffer
+
+          201/Function: insert-kill-buffer
+          Key: C-Y
+          See Global: Kill Ring
+          Action Type: Move Data
+          Action Type: Mark
+
+          Re-insert the last stuff killed.  Puts point after it and the mark before it.
+          An argument n says un-kill the n'th most recent string of killed stuff (1 =
+          most recent).  A null argument (just C-U) means leave point before, mark
+          after.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Insert Next Character
+
+          201/Function: insert-next-character-command
+          Key: C-Q
+          Action Type: Move Data
+
+          Reads a character and inserts it.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Insert Parens
+
+          201/Function: insert-parens
+          Key: M-(
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Insert Constant
+
+          Insert () putting point between them.  Also make a space before them if
+          appropriate.  With argument, put the ) after the specified number of already
+          existing s-expressions.  Thus, with argument 1, puts extra parens around
+          the following s-expression.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Kill Backward Form
+
+          201/Function: kill-backward-form-command
+          Key: C-M-RUBOUT
+          Mode: Lisp
+          Topic: Lisp
+          See Global: Kill Ring
+          Action Type: Remove
+
+          Kill the last form.  With a command argument kill the last (n>0) or next (n<0)
+          |n| forms, where n is the command argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 29 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Kill Backward Word
+
+          201/Function: kill-backward-word-command
+          Key: M-RUBOUT
+          Topic: Text
+          See Global: Kill Ring
+          Action Type: Remove
+
+          Kill last word.  With a command argument kill the last (n>0) or next (n<0)
+          |n| words, where n is the command argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Kill Buffer
+
+          201/Function: kill-buffer-command
+          Key: C-X K
+          Key: M-X Kill Buffer
+          Topic: Buffers
+          Action Type: Remove
+
+          Kill the buffer with specified name.  The buffer name is taken from the
+          keyboard.  Name completion is performed by SPACE and RETURN.  If the
+          buffer has changes in it, the user is asked for confirmation.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Kill Forward Form
+
+          201/Function: kill-forward-form-command
+          Key: C-M-K
+          Mode: Lisp
+          Topic: Lisp
+          See Global: Kill Ring
+          Action Type: Remove
+
+          Kill the next form.  With a command argument kill the next (n>0) or last
+          (n<0) |n| forms, where n is the command argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Kill Forward Word
+
+          201/Function: kill-forward-word-command
+          Key: M-D
+          Topic: Text
+          See Global: Kill Ring
+          Action Type: Remove
+
+          Kill the next word.  With a command argument kill the next (n>0) or last
+          (n<0) |n| words, where n is the command argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 30 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Kill Line
+
+          201/Function: kill-line
+          Key: C-K
+          Key: ESC-M
+          See Global: Kill Ring
+          Action Type: Remove
+
+          Kill to end of line, or kill an end of line.  At the end of a line (only blanks
+          following) kill through the CRLF.  Otherwise, kill the rest of the line but not
+          the CRLF.  With argument (positive or negative), kill specified number of
+          lines forward or backward respectively.  An argument of zero means kill to
+          the beginning of the ine, nothing if at the beginning.  Killed text is pushed
+          onto the kill ring for retrieval.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Kill Region
+
+          201/Function: kill-region
+          Key: C-W
+          See Global: Kill Ring
+          See Definition: Region
+          Action Type: Remove
+
+          Kill from point to mark.  Use Control-Y and Meta-Y to get it back.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Kill Sentence
+
+          201/Function: kill-sentence-command
+          Key: M-K
+          Topic: Text
+          See Global: Kill Ring
+          See Definition: Sentence
+          Action Type: Remove
+
+          Kill forward to end of sentence.  With minus one as an argument it kills back
+          to the beginning of the sentence.  Positive or negative arguments mean to kill
+          that many sentences forward or backward respectively.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Kill Some Buffers
+
+          201/Function: kill-some-buffers-command
+          Key: M-X Kill Some Buffers
+          Topic: Buffers
+          Action Type: Remove
+
+          Kill Some Buffers: Offer to kill each buffer, one by one.  If the buffer
+          contains a modified file and you say to kill it, you are asked for confirmation.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 31 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Lisp Abort
+
+          201/Function: lisp-abort-command
+          Key: Lisp-A
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Escape
+
+          This command will pop out of an arbitrarily deep break loop.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Lisp Backtrace
+
+          201/Function: lisp-backtrace-command
+          Key: Lisp-B
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Inform
+
+          This lists all the function calls on the stack. It is a good way to see how the
+          offending expression got generated.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Lisp Continue
+
+          201/Function: lisp-continue-command
+          Key: Lisp-C
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Escape
+
+          This causes the expression last printed to be returned as the value of the
+          offending expression.  This allows a user to recover from a low level error in
+          an involved calculation if they know what should have been returned by the
+          offending expression.  This is also often useful as an automatic stub: If an
+          expression containing an undefined function is evaluated, a Break loop is
+          entered, and this may be used to return the value of the function call.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Lisp Help
+
+          201/Function: lisp-help-command
+          Key: Lisp-?
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Inform
+
+          If in break print:
+              "Lisp break commands: Q-quit;A-abort;R-retry;C-continue;B-backtrace"
+          else print:
+              "Lisp  commands:  E-execute  form;Y-yank  last  output;L-invoke  Lisp
+          Listener"
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 32 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Lisp Indent Region
+
+          201/Function: lisp-indent-region-command
+          Key: C-M-\
+          Mode: Lisp
+          Topic: Lisp
+
+          Indent all lines between point and mark.  With argument, indents each line to
+          exactly that column.  Otherwise, lisp indents each line.  A line is processed
+          if its first character is in the region.  It tries to preserve the textual
+          context of point and mark.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Lisp Indent sexpr
+
+          201/Function: lisp-indent-sexpr
+          Key: C-M-Q
+          Mode: Lisp
+          Topic: Lisp
+
+          Lisp Indent each line contained in the next form.  This command does NOT
+          respond to command arguments.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Lisp Mode
+
+          201/Function: lisp-mode-command
+          Key: M-X Lisp Mode
+          Topic: Lisp
+          Action Type: Change Mode
+
+          Set things up for editing Lisp code.  Tab indents for Lisp.  Rubout hacks
+          tabs.  Lisp execution commands availible.  Paragraphs are delimited only by
+          blank lines.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Lisp Prefix
+
+          201/Function: lisp-prefix
+          Key: C-]
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Subsequent Command Modifier
+
+          The command lisp-prefix is an escape-prefix for more commands.  It reads a
+          character (subcommand) and dispatches on it.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 33 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Lisp Quit
+
+          201/Function: lisp-quit-command
+          Key: Lisp-Q
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Escape
+
+          This exits the current break loop. It only pops up one level, unlike abort.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Lisp Retry
+
+          201/Function: lisp-retry-command
+          Key: Lisp-R
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Escape
+
+          This tries to evaluate the offending expression again, and to continue the
+          computation.   This is often useful after defining a missing function, or
+          assigning a value to a variable.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Lisp Tab
+
+          201/Function: lisp-tab-command
+          Key: C-M-I
+          Key: C-M-TAB
+          Key: TAB
+          Mode: Lisp
+          Topic: Lisp
+          See Command: Tab To Tab Stop
+          Action Type: Alter Existing Text
+
+           Indent this line for a Lisp-like language.  With arg, moves over and indents
+          that many lines.  With negative argument, indents preceding lines.
+           Note that the binding of TAB to this function holds only in Lisp mode.  In
+          text mode TAB is bound to the Tab To Tab Stop command and the other keys
+          bound to this function are undefined.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Lowercase Region
+
+          201/Function: lowercase-region-command
+          Key: C-X C-L
+          See Definition: Region
+          Action Type: Alter Existing Text
+
+          Convert region to lower case.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 34 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Lowercase Word
+
+          201/Function: lowercase-word-command
+          Key: M-L
+          Topic: Text
+          Action Type: Alter Existing Text
+
+          Convert one word to lower case, moving past it.  With arg, applies to that
+          many words backward or forward.  If backward, the cursor does not move.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: M-X Prefix
+
+          201/Function: m-x-prefix
+          Key: C-M-X
+          Key: M-X
+          Action Type: Subsequent Command Modifier
+
+          Read an extended command from the terminal with completion.  Completion is
+          performed by SPACE and RETURN.  This command reads the name of an
+          extended command, with completion,  then  executes  that  command.   The
+          command may itself prompt for input.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Mark Beginning
+
+          201/Function: mark-beginning-command
+          Key: C-<
+          Action Type: Mark
+
+          Set mark at beginning of buffer.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Mark Defun
+
+          201/Function: mark-defun-command
+          Key: C-M-BACKSPACE
+          Key: C-M-H
+          Key: M-BACKSPACE
+          Mode: Lisp
+          Topic: Lisp
+          See Definition: Defun
+          Action Type: Mark
+
+          Put point and mark around this defun (or next).
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 35 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Mark End
+
+          201/Function: mark-end-command
+          Key: C->
+          Action Type: Mark
+
+          Set mark at end of buffer.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Mark Form
+
+          201/Function: mark-form-command
+          Key: C-M-@
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Mark
+
+          Set mark after (n>0) or before (n<0) |n| forms from point where n is the
+          command argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Mark Paragraph
+
+          201/Function: mark-paragraph-command
+          Key: M-H
+          Topic: Text
+          See Definition: Paragraph
+          Action Type: Mark
+          Action Type: Move Point
+
+          Put point and mark around this paragraph.  In between paragraphs, puts it
+          around the next one.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Mark Whole Buffer
+
+          201/Function: mark-whole-buffer-command
+          Key: C-X H
+          Action Type: Mark
+          Action Type: Move Point
+
+          Set point at beginning and mark at end of buffer.  Pushes the old point on
+          the mark first, so two pops restore it.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Mark Word
+
+          201/Function: mark-word-command
+          Key: M-@
+          Topic: Text
+          Action Type: Mark
+
+          Set mark after (n>0) or before (n<0) |n| words from point where n is the
+          command argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 36 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move Backward Character
+
+          201/Function: move-backward-character-command
+          Key: C-B
+          Key: ESC-D
+          Action Type: Move Point
+
+          Move  back  one  character.   With  argument,  move  that  many characters
+          backward.  Negative arguments move forward.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move Backward Defun
+
+          201/Function: move-backward-defun-command
+          Key: C-M-A
+          Key: C-M-[
+          Mode: Lisp
+          Topic: Lisp
+          See Definition: Defun
+          Action Type: Move Point
+
+          Move to beginning of this or previous defun.  With a negative argument,
+          moves forward to the beginning of a defun.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move Backward Form
+
+          201/Function: move-backward-form-command
+          Key: C-M-B
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Move Point
+
+          Move back one form.  With argument, move that many forms backward.
+          Negative arguments move forward.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move Backward List
+
+          201/Function: move-backward-list-command
+          Key: C-M-P
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Move Point
+
+          Move back  one  list.   With  argument,  move  that  many  lists  backward.
+          Negative arguments move forward.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 37 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move Backward Word
+
+          201/Function: move-backward-word-command
+          Key: ESC-4
+          Key: M-B
+          Topic: Text
+          Action Type: Move Point
+
+          Move back one word.  With argument, move that many words backward.
+          Negative arguments move forward.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move Down
+
+          201/Function: move-down-command
+          Key: ESC-B
+          See Global: Goal Column
+          Action Type: Move Point
+
+          Move point down a line.  If a command argument n is given, move point down
+          (n>0) or up (n<0) by |n| lines.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move Down Extending
+
+          201/Function: move-down-extending-command
+          Key: C-N
+          See Global: Goal Column
+          Action Type: Move Point
+
+          Move down vertically to next line.  If given an argument moves down (n>0)
+          or up (n<0) |n| lines where n is the command argument.  If given without an
+          argument after the last LF in the buffer, makes a new one at the end.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move Forward Character
+
+          201/Function: move-forward-character-command
+          Key: C-F
+          Key: ESC-C
+          Action Type: Move Point
+
+          Move forward one character.  With argument, move that many characters
+          forward.  Negative args move backward.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 38 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move Forward Form
+
+          201/Function: move-forward-form-command
+          Key: C-M-F
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Move Point
+
+          Move forward one form.  With argument, move that many forms forward.
+          Negative args move backward.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move Forward List
+
+          201/Function: move-forward-list-command
+          Key: C-M-N
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Move Point
+
+          Move forward one list.  With argument, move that many  lists  forward.
+          Negative args move backward.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move Forward Word
+
+          201/Function: move-forward-word-command
+          Key: ESC-5
+          Key: M-F
+          Topic: Text
+          Action Type: Move Point
+
+          Move forward one word.  With argument, move that many words forward.
+          Negative args move backward.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move To Buffer End
+
+          201/Function: move-to-buffer-end-command
+          Key: ESC-F
+          Key: M->
+          Action Type: Move Point
+
+          Go to end of buffer (leaving mark behind).
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 39 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move To Buffer Start
+
+          201/Function: move-to-buffer-start-command
+          Key: ESC-H
+          Key: M-<
+          Action Type: Move Point
+
+          Go to beginning of buffer (leaving mark behind).
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move To End Of Line
+
+          201/Function: move-to-end-of-line-command
+          Key: C-E
+          Action Type: Move Point
+
+          Move point to end of line.  With positive argument n goes down n-1 lines,
+          then to the end of line.  With zero argument goes up a line, then to line
+          end.  With negative argument n goes up |n|+1 lines, then to the end of line.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move To Screen Edge
+
+          201/Function: move-to-screen-edge-command
+          Key: M-R
+          Action Type: Move Point
+
+          Jump to top or bottom of screen.  Like Control-L except that point is
+          changed instead of the window.  With no argument, jumps to the center.  An
+          argument specifies the number of lines from the top, (negative args count
+          from the bottom).
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move To Start Of Line
+
+          201/Function: move-to-start-of-line-command
+          Key: C-A
+          Action Type: Move Point
+
+          Move point to beginning of line.  With positive argument n goes down n-1
+          lines, then to the beginning of line.  With zero argument goes up a line, then
+          to line beginning.  With negative argument n goes up |n|+1 lines, then to the
+          beginning of line.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Move Up
+
+          201/Function: move-up-command
+          Key: C-P
+          Key: ESC-A
+          See Global: Goal Column
+          Action Type: Move Point
+
+          Move up vertically to next line.  If given an argument moves up (n>0) or
+          down (n<0) |n| lines where n is the command argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 40 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Negative Argument
+
+          201/Function: negative-argument
+          Key: C--
+          Key: C-M--
+          Key: M--
+          Action Type: Subsequent Command Modifier
+
+          Make argument to next command negative.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Next Screen
+
+          201/Function: next-screen-command
+          Key: C-V
+          Action Type: Move Point
+
+          Move down to display next screenful of text.  With argument, moves window
+          down <arg> lines (negative moves up).  Just minus as an argument moves up
+          a full screen.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Nmode Abort
+
+          201/Function: nmode-abort-command
+          Key: C-G
+          Action Type: Escape
+
+          This command provides a way of aborting input requests.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Nmode Exit To Superior
+
+          201/Function: nmode-exit-to-superior
+          Key: C-X C-Z
+          Action Type: Escape
+
+          Go back to EMACS's superior job.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Nmode Full Refresh
+
+          201/Function: nmode-full-refresh
+          Key: ESC-J
+          Action Type: Alter Display Format
+
+          This function refreshes the screen after first clearing the display.  It it used
+          when the state of the display is in doubt.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 41 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Nmode Gc
+
+          201/Function: nmode-gc
+          Key: M-X Make Space
+
+          Reclaims any internal wasted space.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Nmode Invert Video
+
+          201/Function: nmode-invert-video
+          Key: C-X V
+          Action Type: Alter Display Format
+
+          Toggle between normal and inverse video.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Nmode Refresh
+
+          201/Function: nmode-refresh-command
+          Key: C-L
+          Action Type: Alter Display Format
+
+          Choose  new  window  putting  point  at  center, top or bottom.  With no
+          argument, chooses a window to put point at the center.  An argument gives
+          the line to put point on;  negative args count from the bottom.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: One Window
+
+          201/Function: one-window-command
+          Key: C-X 1
+          Action Type: Alter Display Format
+
+          Display only one window.  Normally, we display what used to be in the top
+          window, but a numeric argument says to display what was in the bottom one.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Open Line
+
+          201/Function: open-line-command
+          Key: C-O
+          Key: ESC-L
+          Action Type: Insert Constant
+
+          Insert a CRLF after point.  Differs from ordinary insertion in that point
+          remains before the inserted characters.  With positive argument, inserts
+          several CRLFs.  With negative argument does nothing.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 42 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Other Window
+
+          201/Function: other-window-command
+          Key: C-X O
+          Action Type: Alter Display Format
+          Action Type: Move Point
+
+          Switch to the other window.  In two-window mode, moves cursor to other
+          window.  In one-window mode, exchanges contents of visible window with
+          remembered contents of (invisible) window two.  An argument means switch
+          windows but select the same buffer in the other window.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Prepend To File
+
+          201/Function: prepend-to-file-command
+          Key: M-X Prepend To File
+          Topic: Files
+          See Definition: Region
+          Action Type: Move Data
+
+          Append region to start of specified file.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Previous Screen
+
+          201/Function: previous-screen-command
+          Key: M-V
+          Action Type: Move Point
+
+          Move up to display previous screenful of text.  When an argument is present,
+          move the window back (n>0) or forward (n<0) |n| lines, where n is the
+          command argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Put Register
+
+          201/Function: put-register-command
+          Key: C-X X
+          Action Type: Preserve
+
+          Put point to mark into register (reads name from keyboard).  With an
+          argument, the text is also deleted.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Query Replace
+
+          201/Function: query-replace-command
+          Key: M-%
+          Key: M-X Query Replace
+          Action Type: Alter Existing Text
+          Action Type: Select
+
+          Replace occurrences of a string from point to the end of the buffer, asking
+          about each occurrence.  Query Replace prompts for the string to be replaced
+          and for its potential replacement.  Query Replace displays each occurrence of
+          201/NMODE Manual                     - 43 -              Command Descriptions
+
+
+          the string to be replaced, you then type a character to say what to do.
+          Space => replace it with the potential replacement and show the next copy.
+          Rubout => don't replace, but show next copy.  Comma => replace this copy
+          and show result, waiting for next command.  ^ => return to site of previous
+          copy.  ^L => redisplay screen.  Exclamation mark => replace all remaining
+          copys without asking.  Period => replace this copy and exit.  Escape => just
+          exit.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Rename Buffer
+
+          201/Function: rename-buffer-command
+          Key: M-X Rename Buffer
+          Topic: Buffers
+          Action Type: Set Global Variable
+
+          Change the name of the current buffer.  The new name is read from the
+          keyboard.  If the user provides an empty string, the buffer name will be set
+          to a truncated version of the filename associated with the buffer.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Replace String
+
+          201/Function: replace-string-command
+          Key: C-%
+          Key: M-X Replace String
+          Action Type: Alter Existing Text
+          Action Type: Select
+
+          Replace string with another from point to buffer end.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Reposition Window
+
+          201/Function: reposition-window-command
+          Key: C-M-R
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Alter Display Format
+
+          Reposition screen window appropriately.  Tries to get all of current defun on
+          screen.  Never moves the pointer.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Return
+
+          201/Function: return-command
+          Key: RETURN
+          Action Type: Insert Constant
+
+          Insert CRLF, or move onto empty line.  Repeated by positive argument.  No
+          action with negative argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 44 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Reverse Search
+
+          201/Function: reverse-search-command
+          Key: C-R
+          See Command: Incremental Search
+          Action Type: Move Point
+          Action Type: Select
+
+          Incremental Search Backwards.  Like Control-S but in reverse.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Revert File
+
+          201/Function: revert-file-command
+          Key: M-X Revert File
+          Topic: Files
+          Action Type: Remove
+
+          Undo changes to a file.  Reads back the file being edited from disk
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Save All Files
+
+          201/Function: save-all-files-command
+          Key: M-X Save All Files
+          Topic: Buffers
+          Topic: Files
+          Action Type: Preserve
+
+          Offer to write back each buffer which may need it.  For each buffer which is
+          visiting a file and which has been modified, you are asked whether to save
+          it.  A numeric arg means don't ask;  save everything.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Save File
+
+          201/Function: save-file-command
+          Key: C-X C-S
+          Topic: Files
+          Action Type: Preserve
+
+          Save visited file on disk if modified.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Scroll Other Window
+
+          201/Function: scroll-other-window-command
+          Key: C-M-V
+          Action Type: Alter Display Format
+
+          Scroll other window up several lines.  Specify the number as a numeric
+          argument, negative for down.  The default is a whole screenful up.  Just
+          Meta-Minus as argument means scroll a whole screenful down.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 45 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Scroll Window Down Line
+
+          201/Function: scroll-window-down-line-command
+          Key: ESC-T
+          Action Type: Alter Display Format
+
+          Scroll the contents of the window down (n > 0) or up (n < 0) by |n| lines
+          where n is the command argument.  The "window position" may be adjusted to
+          keep it within the window.  Ding if the window contents does not move.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Scroll Window Down Page
+
+          201/Function: scroll-window-down-page-command
+          Key: ESC-V
+          Action Type: Alter Display Format
+
+          Scroll the contents of the window down (n > 0) or up (n < 0) by |n|
+          screenfuls where n is the command argument.  The "window position" may be
+          adjusted to keep it within the window.  Ding if the window contents does not
+          move.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Scroll Window Left
+
+          201/Function: scroll-window-left-command
+          Key: C-X <
+          Action Type: Alter Display Format
+
+          Scroll the contents of the specified window right (n > 0) or left (n < 0) by
+          |n| columns where n is the command argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Scroll Window Right
+
+          201/Function: scroll-window-right-command
+          Key: C-X >
+          Action Type: Alter Display Format
+
+          Scroll the contents of the specified window left (n > 0) or right (n < 0) by
+          |n| columns where n is the command argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Scroll Window Up Line
+
+          201/Function: scroll-window-up-line-command
+          Key: ESC-S
+          Action Type: Alter Display Format
+
+          Scroll the contents of the window up (n > 0) or down (n < 0) by |n| lines
+          where n is the command argument.  The "window position" may be adjusted to
+          keep it within the window.  Ding if the window contents does not move.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 46 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Scroll Window Up Page
+
+          201/Function: scroll-window-up-page-command
+          Key: ESC-U
+          Action Type: Alter Display Format
+
+          Scroll the contents of the window up (n > 0) or down (n < 0) by |n|
+          screenfuls where n is the command argument.  The "window position" may be
+          adjusted to keep it within the window.  Ding if the window contents does not
+          move.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Select Buffer
+
+          201/Function: select-buffer-command
+          Key: C-X B
+          Key: M-X Select Buffer
+          Topic: Buffers
+          Action Type: Move Point
+
+          Select or create buffer with specified name.  Buffer name is read from
+          keyboard.  Name completion is performed by SPACE and RETURN.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Select Previous Buffer
+
+          201/Function: select-previous-buffer-command
+          Key: C-M-L
+          Topic: Buffers
+          Action Type: Move Point
+
+          Select  the  previous  buffer  of  the  current buffer, if it exists and is
+          selectable.  Otherwise, select the MAIN buffer.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Set Fill Column
+
+          201/Function: set-fill-column-command
+          Key: C-X F
+          See Global: Fill Column
+          Action Type: Set Global Variable
+
+          Set fill column to numeric arg or current column.  If there is an argument,
+          that is used.  Otherwise, the current position of the cursor is used.  The
+          Fill Column variable controls where Auto Fill mode and the fill commands put
+          the right margin.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 47 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Set Fill Prefix
+
+          201/Function: set-fill-prefix-command
+          Key: C-X .
+          See Global: Fill Prefix
+          Action Type: Set Global Variable
+
+          Defines Fill Prefix from current line.  All of the current line up to point
+          becomes the value of Fill Prefix.  Auto Fill Mode inserts the prefix on each
+          line;  the Fill Paragraph command assumes that each non-blank line starts
+          with the prefix (which is ignored for filling purposes).  To stop using a Fill
+          Prefix, do Control-X .  at the front of a line.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Set Goal Column
+
+          201/Function: set-goal-column-command
+          Key: C-X C-N
+          Action Type: Set Global Variable
+
+          Set (or flush) a permanent goal for vertical motion.  With no argument, makes
+          the current column the goal for vertical motion commands.  They will always
+          try to go to that column.  With argument, clears out any previously set goal.
+          Only Control-P and Control-N are affected.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Set Key
+
+          201/Function: set-key-command
+          Key: M-X Set Key
+          Action Type: Set Global Variable
+
+          Put a function on a key.  The function name is a string argument.  The key
+          is always read from the terminal (not a string argument).  It may contain
+          metizers and other prefix characters.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Set Mark
+
+          201/Function: set-mark-command
+          Key: C-@
+          Key: C-SPACE
+          Action Type: Mark
+
+          Sets or pops the mark.  With no ^U's, pushes point as the mark.  With one
+          ^U, pops the mark into point.  With two ^U's, pops the mark and throws it
+          away.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 48 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Set Visited Filename
+
+          201/Function: set-visited-filename-command
+          Key: M-X Set Visited Filename
+          Topic: Files
+          Action Type: Set Global Variable
+
+          Change visited filename, without writing file.  The user is prompted for a
+          filename.  What NMODE believes to be the name of the visited file associated
+          with the current buffer is set from the user's input.  No file's name is
+          actually changed.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Split Line
+
+          201/Function: split-line-command
+          Key: C-M-O
+          Action Type: Insert Constant
+
+          Move rest of this line vertically down.  Inserts a CRLF, and then enough
+          tabs/spaces so that what had been the rest of the current line is indented as
+          much as it had been.  Point does not move, except to skip over indentation
+          that originally followed it. With positive argument, makes extra blank lines in
+          between.  No action with negative argument.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Start Scripting
+
+          201/Function: start-scripting-command
+          Key: M-X Start Scripting
+          Action Type: Change Mode
+
+          This function prompts the user for a buffer name, into which it will copy all
+          the   user's   commands   (as   well   as   executing   them)   until   the
+          stop-scripting-command is invoked.  This  command  supercedes  any  such
+          previous request.  Note that to keep the lines of reasonable length, free
+          Newlines will be inserted from time to time.  Because of this, and because
+          many file systems cannot represent stray Newlines, the Newline character is
+          itself scripted as a CR followed by a TAB, since this is its normal definition.
+          Someday, perhaps, this hack will be replaced by a better one.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Start Timing
+
+          201/Function: start-timing-command
+          Key: M-X Start Timing Nmode
+          Action Type: Change Mode
+
+          This cleans up a number of global variables associated with timing, prompts
+          for a file in which to put the timing data (or defaults to a file named
+          "timing", of type "txt"), and starts the timing. Information is collected on
+          the total time, refresh time, read time, command execution time, total number
+          of cons cells built, and total number of garbage collections performed.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 49 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Stop Scripting
+
+          201/Function: stop-scripting-command
+          Key: M-X Stop Scripting
+          Action Type: Change Mode
+
+          This command stops the echoing of user commands into a script buffer.  This
+          command is itself echoed before the creation of the script stops.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Stop Timing
+
+          201/Function: stop-timing-command
+          Key: M-X Stop Timing Nmode
+          Action Type: Change Mode
+
+          This stops the timing, formats the output data, and closes the file into which
+          the timing information is going.  Information is collected on the total time,
+          refresh time, read time, command execution time, total number of cons cells
+          built, and total number of garbage collections performed.  In addition to
+          these numbers, some ratios are printed.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Tab To Tab Stop
+
+          201/Function: tab-to-tab-stop-command
+          Key: M-I
+          Key: M-TAB
+          Key: TAB
+          See Command: Lisp Tab
+          Action Type: Insert Constant
+
+          Insert a tab character.  Note that the binding of TAB to this command only
+          holds in text mode, not in lisp mode, where it is bound to the Lisp Tab
+          command. In lisp mode, the other keys continue to be bound to this command.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Text Mode
+
+          201/Function: text-mode-command
+          Key: M-X Text Mode
+          Topic: Text
+          Action Type: Change Mode
+
+          Set things up for editing English text.  Tab inserts tab characters.  There
+          are no comments.  Auto Fill does not indent new lines.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 50 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Transpose Characters
+
+          201/Function: transpose-characters-command
+          Key: C-T
+          See Command: Transpose Words
+          Action Type: Alter Existing Text
+
+          Transpose the characters before and after the cursor.  For more details, see
+          Meta-T, reading "character" for "word".  However: at the end of a line, with
+          no argument, the preceding two characters are transposed.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Transpose Forms
+
+          201/Function: transpose-forms
+          Key: C-M-T
+          Mode: Lisp
+          Topic: Lisp
+          See Command: Transpose Words
+          Action Type: Alter Existing Text
+
+          Transpose the forms before and after the cursor.  For more details, see
+          Meta-T, reading "Form" for "Word".
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Transpose Lines
+
+          201/Function: transpose-lines
+          Key: C-X C-T
+          See Command: Transpose Words
+          Action Type: Alter Existing Text
+
+          Transpose the lines before and after the cursor.  For more details, see
+          Meta-T, reading "Line" for "Word".
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Transpose Regions
+
+          201/Function: transpose-regions
+          Key: C-X T
+          See Definition: Region
+          Action Type: Alter Existing Text
+
+          Transpose regions defined by cursor and last 3 marks.  To transpose two
+          non-overlapping regions, set the mark successively at three of the four
+          boundaries, put point at the fourth, and call this function.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 51 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Transpose Words
+
+          201/Function: transpose-words
+          Key: M-T
+          Topic: Text
+          Action Type: Alter Existing Text
+
+          Transpose the words before and after the cursor.  With a positive argument
+          it transposes the words before and after the cursor, moves right, and
+          repeats the specified number of times, dragging the word to the left of the
+          cursor right.  With a negative argument, it transposes the two words to the
+          left of the cursor, moves between them, and repeats the specified number of
+          times, exactly undoing the positive argument form.  With a zero argument, it
+          transposes the words at point and mark.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Two Windows
+
+          201/Function: two-windows-command
+          Key: C-X 2
+          Action Type: Alter Display Format
+
+          Show two windows and select window two.  An argument > 1 means give
+          window 2 the same buffer as in Window 1.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Undelete File
+
+          201/Function: undelete-file-command
+          Key: M-X Undelete File
+          Topic: Files
+          Action Type: Move Data
+          Action Type: Preserve
+
+          This command prompts the user for the name of the file. NMODE will fill in a
+          partly specified filename (eg filetype can be defaulted).  If possible, the file
+          will then be undeleted, and a message to that effect will be displayed. If the
+          operation fails, the bell will sound.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Universal Argument
+
+          201/Function: universal-argument
+          Key: C-U
+          Action Type: Subsequent Command Modifier
+
+          Sets argument or multiplies it by four.  Followed by digits, uses them to
+          specify the argument for the command after the digits.  If not followed by
+          digits, multiplies the argument by four.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 52 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Unkill Previous
+
+          201/Function: unkill-previous
+          Key: M-Y
+          See Global: Kill Ring
+          See Definition: Region
+          Action Type: Alter Existing Text
+
+          Delete (without saving away) the current region, and then unkill (yank) the
+          specified entry in the kill ring.   "Ding" if the current region does not
+          contain the same text as the current entry in the kill ring.  If one has just
+          retrieved the top entry from the kill ring this has the effect of displaying the
+          item just beneath it, then the item beneath that and so on until the original
+          top entry rotates back into view.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Upcase Digit
+
+          201/Function: upcase-digit-command
+          Key: M-'
+          Action Type: Alter Existing Text
+
+          Convert last digit to shifted character.  Looks on current line back from
+          point, and previous line.  The first time you use this command, it asks you
+          to type the row of digits from 1 to 9 and then 0, holding down Shift, to
+          determine how your keyboard is set up.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Uppercase Initial
+
+          201/Function: uppercase-initial-command
+          Key: M-C
+          Topic: Text
+          Action Type: Alter Existing Text
+
+          Put next word in lower case, but capitalize initial.  With arg, applies to that
+          many words backward or forward.  If backward, the cursor does not move.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Uppercase Region
+
+          201/Function: uppercase-region-command
+          Key: C-X C-U
+          See Definition: Region
+          Action Type: Alter Existing Text
+
+          Convert region to upper case.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 53 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Uppercase Word
+
+          201/Function: uppercase-word-command
+          Key: M-U
+          Topic: Text
+          Action Type: Alter Existing Text
+
+          Convert one word to upper case, moving past it.  With arg, applies to that
+          many words backward or forward.  If backward, the cursor does not move.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: View Two Windows
+
+          201/Function: view-two-windows-command
+          Key: C-X 3
+          Action Type: Alter Display Format
+
+          Show two windows but stay in first.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Visit File
+
+          201/Function: visit-file-command
+          Key: C-X C-V
+          Key: M-X Visit File
+          Topic: Files
+          Action Type: Move Data
+          Action Type: Move Point
+
+          Visit new file in current buffer.  The user is prompted for the filename.  If
+          the current buffer is modified, the user is asked whether to write it out.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Visit In Other Window
+
+          201/Function: visit-in-other-window-command
+          Key: C-X 4
+          Topic: Files
+          Topic: Buffers
+          Action Type: Move Point
+          Action Type: Alter Display Format
+
+          Find buffer or file in other window.  Follow this command by B and a buffer
+          name, or by F and a file name.  We find the buffer or file in the other
+          window, creating the other window if necessary.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 54 -                     NMODE Manual
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: What Cursor Position
+
+          201/Function: what-cursor-position-command
+          Key: C-=
+          Key: C-X =
+          Action Type: Inform
+
+          Print various things about where cursor is.  Print the X position, the Y
+          position, the octal code for the following character, point absolutely and as a
+          percentage of the total file size, and the virtual boundaries, if any.  If a
+          positive argument is given point will jump to the line number specified by the
+          argument.  A negative argument triggers a jump to the first line in the
+          buffer.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Write File
+
+          201/Function: write-file-command
+          Key: C-X C-W
+          Key: M-X Write File
+          Topic: Files
+          Action Type: Preserve
+
+          Prompts for file name.  Stores the current buffer in specified file.  This file
+          becomes the one being visited.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Write Region
+
+          201/Function: write-region-command
+          Key: M-X Write Region
+          Topic: Files
+          See Definition: Region
+          Action Type: Preserve
+
+          Write region to file.  Prompts for file name.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Write Screen Photo
+
+          201/Function: write-screen-photo-command
+          Key: C-X P
+          Topic: Files
+          Action Type: Preserve
+
+          Ask for filename, write out the screen to the file.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/NMODE Manual                     - 55 -              Command Descriptions
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Command: Yank Last Output
+
+          201/Function: yank-last-output-command
+          Key: Lisp-Y
+          Mode: Lisp
+          Topic: Lisp
+          Action Type: Move Data
+
+          Insert "last output" typed in the OUTPUT buffer.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Command Descriptions              - 56 -                     NMODE Manual
+          201/NMODE Manual                     - 57 -                     Command Index
+
+
+          202/6.  Command Index
+
+          201/Append Next Kill  . . . . . . . . . . . . . . . . . . . . 14
+          Append To Buffer . . . . . . . . . . . . . . . . . . . . 14
+          Append To File  . . . . . . . . . . . . . . . . . . . . . 14
+          Apropos . . . . . . . . . . . . . . . . . . . . . . . . . 14
+          Argument Digit  . . . . . . . . . . . . . . . . . . . . . 15
+          Auto Fill Mode . . . . . . . . . . . . . . . . . . . . . . 15
+
+          Back To Indentation . . . . . . . . . . . . . . . . . . . 16
+          Backward Kill Sentence  . . . . . . . . . . . . . . . . . 16
+          Backward Paragraph . . . . . . . . . . . . . . . . . . . 16
+          Backward Sentence . . . . . . . . . . . . . . . . . . . . 16
+          Backward Up List  . . . . . . . . . . . . . . . . . . . . 17
+          Buffer Browser  . . . . . . . . . . . . . . . . . . . . . 17
+          Buffer Not Modified  . . . . . . . . . . . . . . . . . . . 17
+
+          C-X Prefix . . . . . . . . . . . . . . . . . . . . . . . . 17
+          Center Line  . . . . . . . . . . . . . . . . . . . . . . . 18
+          Copy Region . . . . . . . . . . . . . . . . . . . . . . . 18
+          Count Occurrences . . . . . . . . . . . . . . . . . . . . 18
+
+          Delete And Expunge File . . . . . . . . . . . . . . . . . 18
+          Delete Backward Hacking Tabs . . . . . . . . . . . . . . 19
+          Delete Blank Lines . . . . . . . . . . . . . . . . . . . . 19
+          Delete File . . . . . . . . . . . . . . . . . . . . . . . . 19
+          Delete Forward Character  . . . . . . . . . . . . . . . . 19
+          Delete Horizontal Space  . . . . . . . . . . . . . . . . . 20
+          Delete Indentation  . . . . . . . . . . . . . . . . . . . . 20
+          Delete Matching Lines  . . . . . . . . . . . . . . . . . . 20
+          Delete Non-Matching Lines . . . . . . . . . . . . . . . . 20
+          Dired  . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+          Down List  . . . . . . . . . . . . . . . . . . . . . . . . 21
+
+          Edit Directory . . . . . . . . . . . . . . . . . . . . . . 21
+          End Of Defun  . . . . . . . . . . . . . . . . . . . . . . 21
+          Esc Prefix . . . . . . . . . . . . . . . . . . . . . . . . 22
+          Exchange Point And Mark  . . . . . . . . . . . . . . . . 22
+          Exchange Windows . . . . . . . . . . . . . . . . . . . . 22
+          Execute Buffer . . . . . . . . . . . . . . . . . . . . . . 22
+          Execute File . . . . . . . . . . . . . . . . . . . . . . . 22
+          Execute Form  . . . . . . . . . . . . . . . . . . . . . . 23
+          Exit Nmode  . . . . . . . . . . . . . . . . . . . . . . . 23
+
+          Fill Comment . . . . . . . . . . . . . . . . . . . . . . . 23
+          Fill Paragraph . . . . . . . . . . . . . . . . . . . . . . 23
+          Fill Region . . . . . . . . . . . . . . . . . . . . . . . . 24
+          Find File . . . . . . . . . . . . . . . . . . . . . . . . . 24
+          Forward Paragraph . . . . . . . . . . . . . . . . . . . . 24
+          Forward Sentence  . . . . . . . . . . . . . . . . . . . . 25
+          Forward Up List . . . . . . . . . . . . . . . . . . . . . 25
+          201/Command Index                     - 58 -                     NMODE Manual
+
+
+          Get Register . . . . . . . . . . . . . . . . . . . . . . . 25
+          Grow Window . . . . . . . . . . . . . . . . . . . . . . . 25
+
+          Help Dispatch  . . . . . . . . . . . . . . . . . . . . . . 26
+
+          Incremental Search . . . . . . . . . . . . . . . . . . . . 26
+          Indent New line  . . . . . . . . . . . . . . . . . . . . . 26
+          Insert Buffer  . . . . . . . . . . . . . . . . . . . . . . 26
+          Insert Closing bracket . . . . . . . . . . . . . . . . . . 27
+          Insert Comment  . . . . . . . . . . . . . . . . . . . . . 27
+          Insert Date  . . . . . . . . . . . . . . . . . . . . . . . 27
+          Insert File . . . . . . . . . . . . . . . . . . . . . . . . 27
+          Insert Kill Buffer  . . . . . . . . . . . . . . . . . . . . 28
+          Insert Next Character  . . . . . . . . . . . . . . . . . . 28
+          Insert Parens  . . . . . . . . . . . . . . . . . . . . . . 28
+
+          Kill Backward Form  . . . . . . . . . . . . . . . . . . . 28
+          Kill Backward Word  . . . . . . . . . . . . . . . . . . . 29
+          Kill Buffer . . . . . . . . . . . . . . . . . . . . . . . . 29
+          Kill Forward Form  . . . . . . . . . . . . . . . . . . . . 29
+          Kill Forward Word  . . . . . . . . . . . . . . . . . . . . 29
+          Kill Line . . . . . . . . . . . . . . . . . . . . . . . . . 30
+          Kill Region . . . . . . . . . . . . . . . . . . . . . . . . 30
+          Kill Sentence . . . . . . . . . . . . . . . . . . . . . . . 30
+          Kill Some Buffers  . . . . . . . . . . . . . . . . . . . . 30
+
+          Lisp Abort . . . . . . . . . . . . . . . . . . . . . . . . 31
+          Lisp Backtrace . . . . . . . . . . . . . . . . . . . . . . 31
+          Lisp Continue  . . . . . . . . . . . . . . . . . . . . . . 31
+          Lisp Help  . . . . . . . . . . . . . . . . . . . . . . . . 31
+          Lisp Indent Region . . . . . . . . . . . . . . . . . . . . 32
+          Lisp Indent sexpr  . . . . . . . . . . . . . . . . . . . . 32
+          Lisp Mode  . . . . . . . . . . . . . . . . . . . . . . . . 32
+          Lisp Prefix  . . . . . . . . . . . . . . . . . . . . . . . 32
+          Lisp Quit  . . . . . . . . . . . . . . . . . . . . . . . . 33
+          Lisp Retry . . . . . . . . . . . . . . . . . . . . . . . . 33
+          Lisp Tab . . . . . . . . . . . . . . . . . . . . . . . . . 33
+          Lowercase Region  . . . . . . . . . . . . . . . . . . . . 33
+          Lowercase Word  . . . . . . . . . . . . . . . . . . . . . 34
+
+          M-X Prefix . . . . . . . . . . . . . . . . . . . . . . . . 34
+          Mark Beginning  . . . . . . . . . . . . . . . . . . . . . 34
+          Mark Defun  . . . . . . . . . . . . . . . . . . . . . . . 34
+          Mark End  . . . . . . . . . . . . . . . . . . . . . . . . 35
+          Mark Form . . . . . . . . . . . . . . . . . . . . . . . . 35
+          Mark Paragraph  . . . . . . . . . . . . . . . . . . . . . 35
+          Mark Whole Buffer . . . . . . . . . . . . . . . . . . . . 35
+          Mark Word . . . . . . . . . . . . . . . . . . . . . . . . 35
+          Move Backward Character  . . . . . . . . . . . . . . . . 36
+          Move Backward Defun  . . . . . . . . . . . . . . . . . . 36
+          Move Backward Form . . . . . . . . . . . . . . . . . . . 36
+          Move Backward List  . . . . . . . . . . . . . . . . . . . 36
+          Move Backward Word . . . . . . . . . . . . . . . . . . . 37
+          201/NMODE Manual                     - 59 -                     Command Index
+
+
+          Move Down . . . . . . . . . . . . . . . . . . . . . . . . 37
+          Move Down Extending  . . . . . . . . . . . . . . . . . . 37
+          Move Forward Character . . . . . . . . . . . . . . . . . 37
+          Move Forward Form  . . . . . . . . . . . . . . . . . . . 38
+          Move Forward List . . . . . . . . . . . . . . . . . . . . 38
+          Move Forward Word  . . . . . . . . . . . . . . . . . . . 38
+          Move To Buffer End . . . . . . . . . . . . . . . . . . . 38
+          Move To Buffer Start  . . . . . . . . . . . . . . . . . . 39
+          Move To End Of Line  . . . . . . . . . . . . . . . . . . 39
+          Move To Screen Edge  . . . . . . . . . . . . . . . . . . 39
+          Move To Start Of Line . . . . . . . . . . . . . . . . . . 39
+          Move Up . . . . . . . . . . . . . . . . . . . . . . . . . 39
+
+          Negative Argument . . . . . . . . . . . . . . . . . . . . 40
+          Next Screen . . . . . . . . . . . . . . . . . . . . . . . 40
+          Nmode Abort . . . . . . . . . . . . . . . . . . . . . . . 40
+          Nmode Exit To Superior  . . . . . . . . . . . . . . . . . 40
+          Nmode Full Refresh  . . . . . . . . . . . . . . . . . . . 40
+          Nmode Gc  . . . . . . . . . . . . . . . . . . . . . . . . 41
+          Nmode Invert Video  . . . . . . . . . . . . . . . . . . . 41
+          Nmode Refresh . . . . . . . . . . . . . . . . . . . . . . 41
+
+          One Window  . . . . . . . . . . . . . . . . . . . . . . . 41
+          Open Line . . . . . . . . . . . . . . . . . . . . . . . . 41
+          Other Window  . . . . . . . . . . . . . . . . . . . . . . 42
+
+          Prepend To File  . . . . . . . . . . . . . . . . . . . . . 42
+          Previous Screen  . . . . . . . . . . . . . . . . . . . . . 42
+          Put Register . . . . . . . . . . . . . . . . . . . . . . . 42
+
+          Query Replace . . . . . . . . . . . . . . . . . . . . . . 42
+
+          Rename Buffer . . . . . . . . . . . . . . . . . . . . . . 43
+          Replace String . . . . . . . . . . . . . . . . . . . . . . 43
+          Reposition Window  . . . . . . . . . . . . . . . . . . . . 43
+          Return . . . . . . . . . . . . . . . . . . . . . . . . . . 43
+          Reverse Search  . . . . . . . . . . . . . . . . . . . . . 44
+          Revert File  . . . . . . . . . . . . . . . . . . . . . . . 44
+
+          Save All Files  . . . . . . . . . . . . . . . . . . . . . . 44
+          Save File  . . . . . . . . . . . . . . . . . . . . . . . . 44
+          Scroll Other Window  . . . . . . . . . . . . . . . . . . . 44
+          Scroll Window Down Line . . . . . . . . . . . . . . . . . 45
+          Scroll Window Down Page . . . . . . . . . . . . . . . . . 45
+          Scroll Window Left . . . . . . . . . . . . . . . . . . . . 45
+          Scroll Window Right  . . . . . . . . . . . . . . . . . . . 45
+          Scroll Window Up Line . . . . . . . . . . . . . . . . . . 45
+          Scroll Window Up Page . . . . . . . . . . . . . . . . . . 46
+          Select Buffer  . . . . . . . . . . . . . . . . . . . . . . 46
+          Select Previous Buffer . . . . . . . . . . . . . . . . . . 46
+          Set Fill Column  . . . . . . . . . . . . . . . . . . . . . 46
+          Set Fill Prefix . . . . . . . . . . . . . . . . . . . . . . 47
+          Set Goal Column . . . . . . . . . . . . . . . . . . . . . 47
+          201/Command Index                     - 60 -                     NMODE Manual
+
+
+          Set Key  . . . . . . . . . . . . . . . . . . . . . . . . . 47
+          Set Mark . . . . . . . . . . . . . . . . . . . . . . . . . 47
+          Set Visited Filename  . . . . . . . . . . . . . . . . . . . 48
+          Split Line  . . . . . . . . . . . . . . . . . . . . . . . . 48
+          Start Scripting . . . . . . . . . . . . . . . . . . . . . . 48
+          Start Timing . . . . . . . . . . . . . . . . . . . . . . . 48
+          Stop Scripting . . . . . . . . . . . . . . . . . . . . . . 49
+          Stop Timing  . . . . . . . . . . . . . . . . . . . . . . . 49
+
+          Tab To Tab Stop  . . . . . . . . . . . . . . . . . . . . 49
+          Text Mode . . . . . . . . . . . . . . . . . . . . . . . . 49
+          Transpose Characters  . . . . . . . . . . . . . . . . . . 50
+          Transpose Forms . . . . . . . . . . . . . . . . . . . . . 50
+          Transpose Lines . . . . . . . . . . . . . . . . . . . . . 50
+          Transpose Regions . . . . . . . . . . . . . . . . . . . . 50
+          Transpose Words . . . . . . . . . . . . . . . . . . . . . 51
+          Two Windows . . . . . . . . . . . . . . . . . . . . . . . 51
+
+          Undelete File . . . . . . . . . . . . . . . . . . . . . . . 51
+          Universal Argument  . . . . . . . . . . . . . . . . . . . 51
+          Unkill Previous  . . . . . . . . . . . . . . . . . . . . . 52
+          Upcase Digit . . . . . . . . . . . . . . . . . . . . . . . 52
+          Uppercase Initial . . . . . . . . . . . . . . . . . . . . . 52
+          Uppercase Region  . . . . . . . . . . . . . . . . . . . . 52
+          Uppercase Word  . . . . . . . . . . . . . . . . . . . . . 53
+
+          View Two Windows . . . . . . . . . . . . . . . . . . . . 53
+          Visit File  . . . . . . . . . . . . . . . . . . . . . . . . 53
+          Visit In Other Window  . . . . . . . . . . . . . . . . . . 53
+
+          What Cursor Position . . . . . . . . . . . . . . . . . . . 54
+          Write File  . . . . . . . . . . . . . . . . . . . . . . . . 54
+          Write Region . . . . . . . . . . . . . . . . . . . . . . . 54
+          Write Screen Photo . . . . . . . . . . . . . . . . . . . . 54
+
+          Yank Last Output  . . . . . . . . . . . . . . . . . . . . 55
+          201/NMODE Manual                     - 61 -                     Function Index
+
+
+          202/7.  Function Index
+
+          201/append-next-kill-command  . . . . . . . . . . . . . . . . 14
+          append-to-buffer-command . . . . . . . . . . . . . . . . 14
+          append-to-file-command  . . . . . . . . . . . . . . . . . 14
+          apropos-command . . . . . . . . . . . . . . . . . . . . . 14
+          argument-digit . . . . . . . . . . . . . . . . . . . . . . 15
+          auto-fill-mode-command . . . . . . . . . . . . . . . . . . 15
+
+          back-to-indentation-command . . . . . . . . . . . . . . . 16
+          backward-kill-sentence-command  . . . . . . . . . . . . . 16
+          backward-paragraph-command  . . . . . . . . . . . . . . 16
+          backward-sentence-command  . . . . . . . . . . . . . . . 16
+          backward-up-list-command  . . . . . . . . . . . . . . . . 17
+          buffer-browser-command . . . . . . . . . . . . . . . . . 17
+          buffer-not-modified-command . . . . . . . . . . . . . . . 17
+
+          c-x-prefix . . . . . . . . . . . . . . . . . . . . . . . . 17
+          center-line-command  . . . . . . . . . . . . . . . . . . . 18
+          copy-region  . . . . . . . . . . . . . . . . . . . . . . . 18
+          count-occurrences-command  . . . . . . . . . . . . . . . 18
+
+          delete-and-expunge-file-command . . . . . . . . . . . . . 18
+          delete-backward-hacking-tabs-command . . . . . . . . . . 19
+          delete-blank-lines-command . . . . . . . . . . . . . . . . 19
+          delete-file-command  . . . . . . . . . . . . . . . . . . . 19
+          delete-forward-character-command  . . . . . . . . . . . . 19
+          delete-horizontal-space-command  . . . . . . . . . . . . . 20
+          delete-indentation-command . . . . . . . . . . . . . . . . 20
+          delete-matching-lines-command  . . . . . . . . . . . . . . 20
+          delete-non-matching-lines-command . . . . . . . . . . . . 20
+          dired-command . . . . . . . . . . . . . . . . . . . . . . 20
+          down-list  . . . . . . . . . . . . . . . . . . . . . . . . 21
+
+          edit-directory-command . . . . . . . . . . . . . . . . . . 21
+          end-of-defun-command . . . . . . . . . . . . . . . . . . 21
+          esc-prefix . . . . . . . . . . . . . . . . . . . . . . . . 22
+          exchange-point-and-mark . . . . . . . . . . . . . . . . . 22
+          exchange-windows-command  . . . . . . . . . . . . . . . 22
+          execute-buffer-command  . . . . . . . . . . . . . . . . . 22
+          execute-file-command . . . . . . . . . . . . . . . . . . . 22
+          execute-form-command  . . . . . . . . . . . . . . . . . . 23
+          exit-nmode . . . . . . . . . . . . . . . . . . . . . . . . 23
+
+          fill-comment-command . . . . . . . . . . . . . . . . . . . 23
+          fill-paragraph-command . . . . . . . . . . . . . . . . . . 23
+          fill-region-command  . . . . . . . . . . . . . . . . . . . 24
+          find-file-command  . . . . . . . . . . . . . . . . . . . . 24
+          forward-paragraph-command  . . . . . . . . . . . . . . . 24
+          forward-sentence-command . . . . . . . . . . . . . . . . 25
+          forward-up-list-command . . . . . . . . . . . . . . . . . 25
+          201/Function Index                     - 62 -                     NMODE Manual
+
+
+          get-register-command  . . . . . . . . . . . . . . . . . . 25
+          grow-window-command  . . . . . . . . . . . . . . . . . . 25
+
+          help-dispatch  . . . . . . . . . . . . . . . . . . . . . . 26
+
+          incremental-search-command  . . . . . . . . . . . . . . . 26
+          indent-new-line-command . . . . . . . . . . . . . . . . . 26
+          insert-buffer-command . . . . . . . . . . . . . . . . . . 26
+          insert-closing-bracket  . . . . . . . . . . . . . . . . . . 27
+          insert-comment-command  . . . . . . . . . . . . . . . . . 27
+          insert-date-command . . . . . . . . . . . . . . . . . . . 27
+          insert-file-command  . . . . . . . . . . . . . . . . . . . 27
+          insert-kill-buffer . . . . . . . . . . . . . . . . . . . . . 28
+          insert-next-character-command . . . . . . . . . . . . . . 28
+          insert-parens  . . . . . . . . . . . . . . . . . . . . . . 28
+
+          kill-backward-form-command  . . . . . . . . . . . . . . . 28
+          kill-backward-word-command . . . . . . . . . . . . . . . 29
+          kill-buffer-command  . . . . . . . . . . . . . . . . . . . 29
+          kill-forward-form-command . . . . . . . . . . . . . . . . 29
+          kill-forward-word-command . . . . . . . . . . . . . . . . 29
+          kill-line  . . . . . . . . . . . . . . . . . . . . . . . . . 30
+          kill-region . . . . . . . . . . . . . . . . . . . . . . . . 30
+          kill-sentence-command  . . . . . . . . . . . . . . . . . . 30
+          kill-some-buffers-command  . . . . . . . . . . . . . . . . 30
+
+          lisp-abort-command . . . . . . . . . . . . . . . . . . . . 31
+          lisp-backtrace-command  . . . . . . . . . . . . . . . . . 31
+          lisp-continue-command  . . . . . . . . . . . . . . . . . . 31
+          lisp-help-command  . . . . . . . . . . . . . . . . . . . . 31
+          lisp-indent-region-command . . . . . . . . . . . . . . . . 32
+          lisp-indent-sexpr  . . . . . . . . . . . . . . . . . . . . 32
+          lisp-mode-command . . . . . . . . . . . . . . . . . . . . 32
+          lisp-prefix . . . . . . . . . . . . . . . . . . . . . . . . 32
+          lisp-quit-command  . . . . . . . . . . . . . . . . . . . . 33
+          lisp-retry-command . . . . . . . . . . . . . . . . . . . . 33
+          lisp-tab-command . . . . . . . . . . . . . . . . . . . . . 33
+          lowercase-region-command  . . . . . . . . . . . . . . . . 33
+          lowercase-word-command . . . . . . . . . . . . . . . . . 34
+
+          m-x-prefix . . . . . . . . . . . . . . . . . . . . . . . . 34
+          mark-beginning-command . . . . . . . . . . . . . . . . . 34
+          mark-defun-command . . . . . . . . . . . . . . . . . . . 34
+          mark-end-command . . . . . . . . . . . . . . . . . . . . 35
+          mark-form-command  . . . . . . . . . . . . . . . . . . . 35
+          mark-paragraph-command . . . . . . . . . . . . . . . . . 35
+          mark-whole-buffer-command  . . . . . . . . . . . . . . . 35
+          mark-word-command  . . . . . . . . . . . . . . . . . . . 35
+          move-backward-character-command . . . . . . . . . . . . 36
+          move-backward-defun-command . . . . . . . . . . . . . . 36
+          move-backward-form-command  . . . . . . . . . . . . . . 36
+          move-backward-list-command . . . . . . . . . . . . . . . 36
+          move-backward-word-command  . . . . . . . . . . . . . . 37
+          201/NMODE Manual                     - 63 -                     Function Index
+
+
+          move-down-command  . . . . . . . . . . . . . . . . . . . 37
+          move-down-extending-command . . . . . . . . . . . . . . 37
+          move-forward-character-command . . . . . . . . . . . . . 37
+          move-forward-form-command  . . . . . . . . . . . . . . . 38
+          move-forward-list-command . . . . . . . . . . . . . . . . 38
+          move-forward-word-command . . . . . . . . . . . . . . . 38
+          move-to-buffer-end-command . . . . . . . . . . . . . . . 38
+          move-to-buffer-start-command  . . . . . . . . . . . . . . 39
+          move-to-end-of-line-command . . . . . . . . . . . . . . . 39
+          move-to-screen-edge-command  . . . . . . . . . . . . . . 39
+          move-to-start-of-line-command  . . . . . . . . . . . . . . 39
+          move-up-command  . . . . . . . . . . . . . . . . . . . . 39
+
+          negative-argument . . . . . . . . . . . . . . . . . . . . 40
+          next-screen-command . . . . . . . . . . . . . . . . . . . 40
+          nmode-abort-command  . . . . . . . . . . . . . . . . . . 40
+          nmode-exit-to-superior . . . . . . . . . . . . . . . . . . 40
+          nmode-full-refresh . . . . . . . . . . . . . . . . . . . . 40
+          nmode-gc  . . . . . . . . . . . . . . . . . . . . . . . . 41
+          nmode-invert-video . . . . . . . . . . . . . . . . . . . . 41
+          nmode-refresh-command  . . . . . . . . . . . . . . . . . 41
+
+          one-window-command . . . . . . . . . . . . . . . . . . . 41
+          open-line-command . . . . . . . . . . . . . . . . . . . . 41
+          other-window-command . . . . . . . . . . . . . . . . . . 42
+
+          prepend-to-file-command . . . . . . . . . . . . . . . . . 42
+          previous-screen-command . . . . . . . . . . . . . . . . . 42
+          put-register-command  . . . . . . . . . . . . . . . . . . 42
+
+          query-replace-command . . . . . . . . . . . . . . . . . . 42
+
+          rename-buffer-command  . . . . . . . . . . . . . . . . . 43
+          replace-string-command  . . . . . . . . . . . . . . . . . 43
+          reposition-window-command . . . . . . . . . . . . . . . . 43
+          return-command  . . . . . . . . . . . . . . . . . . . . . 43
+          reverse-search-command  . . . . . . . . . . . . . . . . . 44
+          revert-file-command  . . . . . . . . . . . . . . . . . . . 44
+
+          save-all-files-command  . . . . . . . . . . . . . . . . . . 44
+          save-file-command  . . . . . . . . . . . . . . . . . . . . 44
+          scroll-other-window-command . . . . . . . . . . . . . . . 44
+          scroll-window-down-line-command . . . . . . . . . . . . . 45
+          scroll-window-down-page-command  . . . . . . . . . . . . 45
+          scroll-window-left-command . . . . . . . . . . . . . . . . 45
+          scroll-window-right-command . . . . . . . . . . . . . . . 45
+          scroll-window-up-line-command . . . . . . . . . . . . . . 45
+          scroll-window-up-page-command  . . . . . . . . . . . . . 46
+          select-buffer-command  . . . . . . . . . . . . . . . . . . 46
+          select-previous-buffer-command  . . . . . . . . . . . . . 46
+          set-fill-column-command  . . . . . . . . . . . . . . . . . 46
+          set-fill-prefix-command . . . . . . . . . . . . . . . . . . 47
+          set-goal-column-command . . . . . . . . . . . . . . . . . 47
+          201/Function Index                     - 64 -                     NMODE Manual
+
+
+          set-key-command . . . . . . . . . . . . . . . . . . . . . 47
+          set-mark-command  . . . . . . . . . . . . . . . . . . . . 47
+          set-visited-filename-command . . . . . . . . . . . . . . . 48
+          split-line-command . . . . . . . . . . . . . . . . . . . . 48
+          start-scripting-command  . . . . . . . . . . . . . . . . . 48
+          start-timing-command . . . . . . . . . . . . . . . . . . . 48
+          stop-scripting-command  . . . . . . . . . . . . . . . . . 49
+          stop-timing-command . . . . . . . . . . . . . . . . . . . 49
+
+          tab-to-tab-stop-command . . . . . . . . . . . . . . . . . 49
+          text-mode-command . . . . . . . . . . . . . . . . . . . . 49
+          transpose-characters-command  . . . . . . . . . . . . . . 50
+          transpose-forms  . . . . . . . . . . . . . . . . . . . . . 50
+          transpose-lines . . . . . . . . . . . . . . . . . . . . . . 50
+          transpose-regions  . . . . . . . . . . . . . . . . . . . . 50
+          transpose-words . . . . . . . . . . . . . . . . . . . . . 51
+          two-windows-command  . . . . . . . . . . . . . . . . . . 51
+
+          undelete-file-command  . . . . . . . . . . . . . . . . . . 51
+          universal-argument . . . . . . . . . . . . . . . . . . . . 51
+          unkill-previous . . . . . . . . . . . . . . . . . . . . . . 52
+          upcase-digit-command  . . . . . . . . . . . . . . . . . . 52
+          uppercase-initial-command  . . . . . . . . . . . . . . . . 52
+          uppercase-region-command . . . . . . . . . . . . . . . . 52
+          uppercase-word-command . . . . . . . . . . . . . . . . . 53
+
+          view-two-windows-command . . . . . . . . . . . . . . . . 53
+          visit-file-command  . . . . . . . . . . . . . . . . . . . . 53
+          visit-in-other-window-command . . . . . . . . . . . . . . 53
+
+          what-cursor-position-command  . . . . . . . . . . . . . . 54
+          write-file-command . . . . . . . . . . . . . . . . . . . . 54
+          write-region-command  . . . . . . . . . . . . . . . . . . 54
+          write-screen-photo-command  . . . . . . . . . . . . . . . 54
+
+          yank-last-output-command  . . . . . . . . . . . . . . . . 55
+          201/NMODE Manual                     - 65 -                          Key Index
+
+
+          202/8.  Key Index
+
+          201/)  . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+
+          BACKSPACE . . . . . . . . . . . . . . . . . . . . . . . 19
+
+          C-%  . . . . . . . . . . . . . . . . . . . . . . . . . . . 43
+          C-(  . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+          C-)  . . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+          C--  . . . . . . . . . . . . . . . . . . . . . . . . . . . 40
+          C-0  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-1  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-2  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-3  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-4  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-5  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-6  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-7  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-8  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-9  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-<  . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+          C-=  . . . . . . . . . . . . . . . . . . . . . . . . . . . 54
+          C->  . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+          C-?  . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+          C-@  . . . . . . . . . . . . . . . . . . . . . . . . . . . 47
+          C-A . . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+          C-B . . . . . . . . . . . . . . . . . . . . . . . . . . . 36
+          C-D . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+          C-E  . . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+          C-F  . . . . . . . . . . . . . . . . . . . . . . . . . . . 37
+          C-G . . . . . . . . . . . . . . . . . . . . . . . . . . . 40
+          C-K . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+          C-L  . . . . . . . . . . . . . . . . . . . . . . . . . . . 41
+          C-M-\ . . . . . . . . . . . . . . . . . . . . . . . . . . 32
+          C-M-( . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+          C-M-) . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+          C-M-- . . . . . . . . . . . . . . . . . . . . . . . . . . 40
+          C-M-0 . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-M-1 . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-M-2 . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-M-3 . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-M-4 . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-M-5 . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-M-6 . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-M-7 . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-M-8 . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-M-9 . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          C-M-@ . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+          C-M-A . . . . . . . . . . . . . . . . . . . . . . . . . . 36
+          C-M-B . . . . . . . . . . . . . . . . . . . . . . . . . . 36
+          C-M-BACKSPACE  . . . . . . . . . . . . . . . . . . . . 34
+          C-M-D . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+          C-M-E . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+          201/Key Index                          - 66 -                     NMODE Manual
+
+
+          C-M-F . . . . . . . . . . . . . . . . . . . . . . . . . . 38
+          C-M-H . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+          C-M-I  . . . . . . . . . . . . . . . . . . . . . . . . . . 33
+          C-M-K . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+          C-M-L . . . . . . . . . . . . . . . . . . . . . . . . . . 46
+          C-M-M . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+          C-M-N . . . . . . . . . . . . . . . . . . . . . . . . . . 38
+          C-M-O . . . . . . . . . . . . . . . . . . . . . . . . . . 48
+          C-M-P . . . . . . . . . . . . . . . . . . . . . . . . . . 36
+          C-M-Q . . . . . . . . . . . . . . . . . . . . . . . . . . 32
+          C-M-R . . . . . . . . . . . . . . . . . . . . . . . . . . 43
+          C-M-RETURN  . . . . . . . . . . . . . . . . . . . . . . 16
+          C-M-RUBOUT  . . . . . . . . . . . . . . . . . . . . . . 28
+          C-M-T . . . . . . . . . . . . . . . . . . . . . . . . . . 50
+          C-M-TAB  . . . . . . . . . . . . . . . . . . . . . . . . 33
+          C-M-U . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+          C-M-V . . . . . . . . . . . . . . . . . . . . . . . . . . 44
+          C-M-W . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+          C-M-X . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+          C-M-[ . . . . . . . . . . . . . . . . . . . . . . . . . . 36
+          C-M-] . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+          C-N . . . . . . . . . . . . . . . . . . . . . . . . . . . 37
+          C-O . . . . . . . . . . . . . . . . . . . . . . . . . . . 41
+          C-P  . . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+          C-Q . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+          C-R . . . . . . . . . . . . . . . . . . . . . . . . . . . 44
+          C-RUBOUT  . . . . . . . . . . . . . . . . . . . . . . . 19
+          C-S  . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+          C-SPACE  . . . . . . . . . . . . . . . . . . . . . . . . 47
+          C-T . . . . . . . . . . . . . . . . . . . . . . . . . . . 50
+          C-U . . . . . . . . . . . . . . . . . . . . . . . . . . . 51
+          C-V . . . . . . . . . . . . . . . . . . . . . . . . . . . 40
+          C-W . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+          C-X . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+          C-X < . . . . . . . . . . . . . . . . . . . . . . . . . . 45
+          C-X . . . . . . . . . . . . . . . . . . . . . . . . . . . 47
+          C-X 1 . . . . . . . . . . . . . . . . . . . . . . . . . . 41
+          C-X 2 . . . . . . . . . . . . . . . . . . . . . . . . . . 51
+          C-X 3 . . . . . . . . . . . . . . . . . . . . . . . . . . 53
+          C-X 4 . . . . . . . . . . . . . . . . . . . . . . . . . . 53
+          C-X = . . . . . . . . . . . . . . . . . . . . . . . . . . 54
+          C-X > . . . . . . . . . . . . . . . . . . . . . . . . . . 45
+          C-X A . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+          C-X B . . . . . . . . . . . . . . . . . . . . . . . . . . 46
+          C-X C-B . . . . . . . . . . . . . . . . . . . . . . . . . 17
+          C-X C-F . . . . . . . . . . . . . . . . . . . . . . . . . 24
+          C-X C-L . . . . . . . . . . . . . . . . . . . . . . . . . 33
+          C-X C-N . . . . . . . . . . . . . . . . . . . . . . . . . 47
+          C-X C-O . . . . . . . . . . . . . . . . . . . . . . . . . 19
+          C-X C-S . . . . . . . . . . . . . . . . . . . . . . . . . 44
+          C-X C-T . . . . . . . . . . . . . . . . . . . . . . . . . 50
+          C-X C-U . . . . . . . . . . . . . . . . . . . . . . . . . 52
+          C-X C-V . . . . . . . . . . . . . . . . . . . . . . . . . 53
+          201/NMODE Manual                     - 67 -                          Key Index
+
+
+          C-X C-W . . . . . . . . . . . . . . . . . . . . . . . . . 54
+          C-X C-X . . . . . . . . . . . . . . . . . . . . . . . . . 22
+          C-X C-Z . . . . . . . . . . . . . . . . . . . . . . . . . 40
+          C-X D . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+          C-X E . . . . . . . . . . . . . . . . . . . . . . . . . . 22
+          C-X F . . . . . . . . . . . . . . . . . . . . . . . . . . 46
+          C-X G . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+          C-X H . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+          C-X K . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+          C-X O . . . . . . . . . . . . . . . . . . . . . . . . . . 42
+          C-X P . . . . . . . . . . . . . . . . . . . . . . . . . . 54
+          C-X RUBOUT  . . . . . . . . . . . . . . . . . . . . . . 16
+          C-X T . . . . . . . . . . . . . . . . . . . . . . . . . . 50
+          C-X V . . . . . . . . . . . . . . . . . . . . . . . . . . 41
+          C-X X . . . . . . . . . . . . . . . . . . . . . . . . . . 42
+          C-X ^ . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+          C-Y . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+          C-]  . . . . . . . . . . . . . . . . . . . . . . . . . . . 32
+
+          ESC-4 . . . . . . . . . . . . . . . . . . . . . . . . . . 37
+          ESC-5 . . . . . . . . . . . . . . . . . . . . . . . . . . 38
+          ESC-A . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+          ESC-B . . . . . . . . . . . . . . . . . . . . . . . . . . 37
+          ESC-C . . . . . . . . . . . . . . . . . . . . . . . . . . 37
+          ESC-D . . . . . . . . . . . . . . . . . . . . . . . . . . 36
+          ESC-F . . . . . . . . . . . . . . . . . . . . . . . . . . 38
+          ESC-H . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+          ESC-J . . . . . . . . . . . . . . . . . . . . . . . . . . 40
+          ESC-L . . . . . . . . . . . . . . . . . . . . . . . . . . 41
+          ESC-M . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+          ESC-P . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+          ESC-S . . . . . . . . . . . . . . . . . . . . . . . . . . 45
+          ESC-T . . . . . . . . . . . . . . . . . . . . . . . . . . 45
+          ESC-U . . . . . . . . . . . . . . . . . . . . . . . . . . 46
+          ESC-V . . . . . . . . . . . . . . . . . . . . . . . . . . 45
+          ESCAPE  . . . . . . . . . . . . . . . . . . . . . . . . . 22
+
+          Lisp-? . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+          Lisp-A . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+          Lisp-B . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+          Lisp-C . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+          Lisp-E . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+          Lisp-L . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+          Lisp-Q . . . . . . . . . . . . . . . . . . . . . . . . . . 33
+          Lisp-R . . . . . . . . . . . . . . . . . . . . . . . . . . 33
+          Lisp-Y . . . . . . . . . . . . . . . . . . . . . . . . . . 55
+
+          M-\  . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+          M-%  . . . . . . . . . . . . . . . . . . . . . . . . . . . 42
+          M-'  . . . . . . . . . . . . . . . . . . . . . . . . . . . 52
+          M-(  . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+          M--  . . . . . . . . . . . . . . . . . . . . . . . . . . . 40
+          M-/  . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+          201/Key Index                          - 68 -                     NMODE Manual
+
+
+          M-0  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          M-1  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          M-2  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          M-3  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          M-4  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          M-5  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          M-6  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          M-7  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          M-8  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          M-9  . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+          M-;  . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+          M-<  . . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+          M->  . . . . . . . . . . . . . . . . . . . . . . . . . . . 38
+          M-?  . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+          M-@  . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+          M-A . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+          M-B . . . . . . . . . . . . . . . . . . . . . . . . . . . 37
+          M-BACKSPACE . . . . . . . . . . . . . . . . . . . . . . 34
+          M-C . . . . . . . . . . . . . . . . . . . . . . . . . . . 52
+          M-D . . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+          M-E  . . . . . . . . . . . . . . . . . . . . . . . . . . . 25
+          M-F  . . . . . . . . . . . . . . . . . . . . . . . . . . . 38
+          M-G . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
+          M-H . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+          M-I  . . . . . . . . . . . . . . . . . . . . . . . . . . . 49
+          M-K . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+          M-L  . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+          M-M . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+          M-Q . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+          M-R . . . . . . . . . . . . . . . . . . . . . . . . . . . 39
+          M-RETURN . . . . . . . . . . . . . . . . . . . . . . . . 16
+          M-RUBOUT  . . . . . . . . . . . . . . . . . . . . . . . 29
+          M-S  . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+          M-T . . . . . . . . . . . . . . . . . . . . . . . . . . . 51
+          M-TAB . . . . . . . . . . . . . . . . . . . . . . . . . . 49
+          M-U . . . . . . . . . . . . . . . . . . . . . . . . . . . 53
+          M-V . . . . . . . . . . . . . . . . . . . . . . . . . . . 42
+          M-W . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+          M-X . . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+          M-X Append To File . . . . . . . . . . . . . . . . . . . 14
+          M-X Apropos . . . . . . . . . . . . . . . . . . . . . . . 14
+          M-X Auto Fill Mode  . . . . . . . . . . . . . . . . . . . 15
+          M-X Count Occurrences  . . . . . . . . . . . . . . . . . 18
+          M-X Delete And Expunge File  . . . . . . . . . . . . . . 18
+          M-X Delete File  . . . . . . . . . . . . . . . . . . . . . 19
+          M-X Delete Matching Lines . . . . . . . . . . . . . . . . 20
+          M-X Delete Non-Matching Lines . . . . . . . . . . . . . . 20
+          M-X Dired . . . . . . . . . . . . . . . . . . . . . . . . 21
+          M-X Edit Directory . . . . . . . . . . . . . . . . . . . . 21
+          M-X Execute Buffer  . . . . . . . . . . . . . . . . . . . 22
+          M-X Execute File . . . . . . . . . . . . . . . . . . . . . 22
+          M-X Find File  . . . . . . . . . . . . . . . . . . . . . . 24
+          M-X Flush Lines . . . . . . . . . . . . . . . . . . . . . 20
+          201/NMODE Manual                     - 69 -                          Key Index
+
+
+          M-X How Many . . . . . . . . . . . . . . . . . . . . . . 18
+          M-X Insert Buffer . . . . . . . . . . . . . . . . . . . . 26
+          M-X Insert Date . . . . . . . . . . . . . . . . . . . . . 27
+          M-X Insert File  . . . . . . . . . . . . . . . . . . . . . 27
+          M-X Keep Lines  . . . . . . . . . . . . . . . . . . . . . 20
+          M-X Kill Buffer  . . . . . . . . . . . . . . . . . . . . . 29
+          M-X Kill File . . . . . . . . . . . . . . . . . . . . . . . 19
+          M-X Kill Some Buffers . . . . . . . . . . . . . . . . . . 30
+          M-X Lisp Mode . . . . . . . . . . . . . . . . . . . . . . 32
+          M-X List Buffers . . . . . . . . . . . . . . . . . . . . . 17
+          M-X Make Space . . . . . . . . . . . . . . . . . . . . . 41
+          M-X Prepend To File . . . . . . . . . . . . . . . . . . . 42
+          M-X Query Replace  . . . . . . . . . . . . . . . . . . . 42
+          M-X Rename Buffer  . . . . . . . . . . . . . . . . . . . 43
+          M-X Replace String  . . . . . . . . . . . . . . . . . . . 43
+          M-X Revert File  . . . . . . . . . . . . . . . . . . . . . 44
+          M-X Save All Files . . . . . . . . . . . . . . . . . . . . 44
+          M-X Select Buffer  . . . . . . . . . . . . . . . . . . . . 46
+          M-X Set Key . . . . . . . . . . . . . . . . . . . . . . . 47
+          M-X Set Visited Filename . . . . . . . . . . . . . . . . . 48
+          M-X Start Scripting  . . . . . . . . . . . . . . . . . . . 48
+          M-X Start Timing Nmode . . . . . . . . . . . . . . . . . 48
+          M-X Stop Scripting  . . . . . . . . . . . . . . . . . . . 49
+          M-X Stop Timing Nmode  . . . . . . . . . . . . . . . . . 49
+          M-X Text Mode  . . . . . . . . . . . . . . . . . . . . . 49
+          M-X Undelete File  . . . . . . . . . . . . . . . . . . . . 51
+          M-X Visit File  . . . . . . . . . . . . . . . . . . . . . . 53
+          M-X Write File . . . . . . . . . . . . . . . . . . . . . . 54
+          M-X Write Region  . . . . . . . . . . . . . . . . . . . . 54
+          M-Y . . . . . . . . . . . . . . . . . . . . . . . . . . . 52
+          M-Z  . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+          M-[  . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+          M-]  . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
+          M-^  . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+          M-~  . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+
+          NEWLINE . . . . . . . . . . . . . . . . . . . . . . . . . 26
+
+          RETURN . . . . . . . . . . . . . . . . . . . . . . . . . 43
+          RUBOUT . . . . . . . . . . . . . . . . . . . . . . . . . 19
+
+          TAB . . . . . . . . . . . . . . . . . . . . . . . . . . . 33, 49
+
+          ]  . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+          201/Key Index                          - 70 -                     NMODE Manual
+          201/NMODE Manual                     - 71 -                        Topic Index
+
+
+          202/9.  Topic Index
+
+          201/Alter Display Format . . . . . . . 7, 22, 25, 40, 41, 42, 43, 44, 45, 46, 
+                                              51, 53
+          Alter Existing Text  . . . . . . . 7, 18, 23, 24, 33, 34, 42, 43, 50, 51, 
+                                              52, 53
+
+          Buffers  . . . . . . . . . . . . . 14, 17, 22, 24, 26, 29, 30, 43, 44, 46, 53
+
+          Change Mode . . . . . . . . . . . 7, 15, 32, 48, 49
+
+          Defun  . . . . . . . . . . . . . . 9, 21, 34, 36
+
+          Escape . . . . . . . . . . . . . . 7, 23, 31, 33, 40
+
+          Files . . . . . . . . . . . . . . . 14, 18, 19, 22, 24, 27, 42, 44, 48, 51, 
+                                              53, 54
+          Fill Column  . . . . . . . . . . . 11, 18, 23, 24, 46
+          Fill Prefix . . . . . . . . . . . . 11, 23, 24, 47
+
+          Goal Column . . . . . . . . . . . 11, 37, 39
+
+          Inform . . . . . . . . . . . . . . 7, 14, 17, 18, 26, 31, 54
+          Insert Constant  . . . . . . . . . 7, 26, 27, 28, 41, 43, 48, 49
+
+          Kill Ring . . . . . . . . . . . . . 11, 14, 16, 18, 19, 28, 29, 30, 52
+
+          Lisp . . . . . . . . . . . . . . . 17, 21, 23, 25, 27, 28, 29, 31, 32, 33, 
+                                              34, 35, 36, 38, 43, 50, 55
+
+          Mark . . . . . . . . . . . . . . . 7, 22, 23, 25, 28, 34, 35, 47
+          Move Data . . . . . . . . . . . . 8, 14, 24, 25, 26, 27, 28, 42, 51, 53, 55
+          Move Point . . . . . . . . . . . . 8, 16, 17, 21, 22, 24, 25, 26, 35, 36, 
+                                              37, 38, 39, 40, 42, 44, 46, 53
+
+          Paragraph . . . . . . . . . . . . 9, 16, 23, 24, 35
+          Preserve . . . . . . . . . . . . . 8, 18, 42, 44, 51, 54
+
+          Region . . . . . . . . . . . . . . 9, 14, 18, 30, 33, 42, 50, 52, 54
+          Remove  . . . . . . . . . . . . . 8, 16, 18, 19, 20, 28, 29, 30, 44
+
+          Select  . . . . . . . . . . . . . . 8, 20, 26, 42, 43, 44
+          Sentence . . . . . . . . . . . . . 9, 16, 24, 25, 30
+          Set Global Variable . . . . . . . . 8, 17, 43, 46, 47, 48
+          Subsequent Command Modifier  . . 8, 15, 17, 22, 32, 34, 40, 51
+
+          Text . . . . . . . . . . . . . . . 18, 23, 24, 25, 29, 30, 34, 35, 37, 38, 
+                                              49, 51, 52, 53
+          201/Topic Index                        - 72 -                     NMODE Manual
+          201/NMODE Manual                      - 3 -                   Table of Contents
+
+
+
+
+
+                                            202/CONTENTS
+
+
+
+          1.  Introduction ..................................................... 5
+
+          2.  Action Types .................................................... 7
+
+          3.  Definitions ....................................................... 9
+
+          4.  Globals ......................................................... 11
+
+          5.  Command Descriptions ........................................... 13
+
+          6.  Command Index ................................................. 57
+
+          7.  Function Index .................................................. 61
+
+          8.  Key Index ...................................................... 65
+
+          9.  Topic Index ..................................................... 71

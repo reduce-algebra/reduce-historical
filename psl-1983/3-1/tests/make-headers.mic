@@ -1,0 +1,66 @@
+@conn pt:
+@get psl:rlisp
+@st
+*load "g:proc-headers";
+*on nocomment, noprefix;  % Set up for smallest output
+*remd ''ImportantLine;
+*copyd(''ImportantLine,''ImportantLine2);
+
+*Manyheaders(''(main2 sub2 stubs2
+	        main3 sub3 stubs3
+    	        main4 sub4 stubs4
+	        main5 sub5a sub5b stubs5
+	        main6 sub6 stubs6
+	        main7 sub7 stubs7
+	        main8 sub8 stubs8
+	        main9 sub9 stubs9
+		mini!-allocators 
+		mini!-arithmetic
+		pk!:carcdr
+		pk!:catch!-throw
+		mini!-char!-io
+		pk!:comp!-support 
+		mini!-cons!-mkvect 
+		mini!-dskin
+		mini!-easy!-non!-sl 
+		mini!-easy!-sl 
+		mini!-equal
+		mini!-error!-errorset
+		mini!-error!-handlers
+		mini!-eval!-apply
+                mini!-fluid!-global
+                mini!-gc
+		mini!-io!-errors
+		pk!:known!-to!-comp!-sl
+		mini!-loop!-macros
+		mini!-oblist 
+		mini!-open!-close 
+		mini!-others!-sl
+		mini!-printers 
+		mini!-printf 
+		mini!-property-list
+		mini!-putd!-getd 
+		mini!-rds!-wrs
+		mini!-read
+		mini!-sequence
+		mini!-symbol!-values
+		mini!-token
+		mini!-top!-loop
+		mini!-type!-conversions
+		mini!-type!-errors
+		p!-apply!-lap 
+		p!-fast!-binder 
+	        pk!:binding
+		p!-function!-primitives
+	        p!-comp!-gc
+		p20t!:xxx!-gc
+		p20t!:xxx!-header
+		p20t!:xxx!-system!-gc
+		p20t!:xxx!-system!-io
+		p20t!:20!-test!-global!-data
+	    ), ''all!-test);
+
+*load "g:sort-file";
+*sort!-file("all-test.headers","all-test.sorted");
+*quit;
+@reset .

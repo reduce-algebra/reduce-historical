@@ -1,0 +1,259 @@
+@@ex @@main1
+LINK:	Loading
+[LNKXCT	MAIN1 execution]
+Call on Init
+AB
+9
+10
+8
+90
+7
+720
+6
+5040
+5
+30240
+4
+151200
+3
+604800
+2
+1814400
+1
+3628800
+3628800
+
+Ctime:    98662 ms,  98662 ms
+ 
+
+Ctime:    99412 ms,  750 ms
+ 
+
+Ctime:    99450 ms,  38 ms
+ 7
+
+Ctime:    99913 ms,  463 ms
+ 
+Quitting
+@NEWPAGE()
+@@ex @@main2
+LINK:	Loading
+[LNKXCT	MAIN2 execution]
+Call on Init
+StrInf
+55688 55688
+Strlen
+51 51
+Byte
+0 65 A
+1 97 a
+2 66 B
+3 98 b
+4 67 C
+5 99 c
+6 68 D
+7 100 d
+8 69 E
+9 101 e
+10 70 F
+String
+AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUnVvWwXxYyZz
+"----- Now input characters until #" 
+
+11223344556677
+
+aaaabbbbccddeeffgg
+
+#"----- First Print Called" 
+1
+ANATOM 
+(1 . 2) 
+(AA  (B1  . B2 )  . B3 ) 
+(AA  (B1 ) ) 
+
+Quitting
+@NEWPAGE()
+@@ex @@main3
+LINK:	Loading
+[LNKXCT	MAIN3 execution]
+Call on Init
+"MAIN3: Casetest" 
+Test case from -1 to 11
+Will classify argument
+Show for N=-1, expect default case
+Show for N=0, expect 0 case
+Show for N=1, expect 1,2,3 case
+Show for N=2, expect 1,2,3 case
+Show for N=3, expect 1,2,3 case
+Show for N=4, expect default case
+Show for N=5, expect default case
+Show for N=6, expect 6 ... 10 case
+Show for N=7, expect 6 ... 10 case
+Show for N=8, expect 6 ... 10 case
+Show for N=9, expect 6 ... 10 case
+Show for N=10, expect 6 ... 10 case
+Show for N=11, expect default case
+Show for N=12, expect default case
+"MAIN3: test CONS" 
+(2 . 1) 
+(3 2 . 1) 
+(4 3 2 . 1) 
+(5 4 3 2 . 1) 
+(6 5 4 3 2 . 1) 
+(7 6 5 4 3 2 . 1) 
+(8 7 6 5 4 3 2 . 1) 
+(9 8 7 6 5 4 3 2 . 1) 
+
+Quitting
+@NEWPAGE()
+@@ex @@main4
+LINK:	Loading
+[LNKXCT	MAIN4 execution]
+1. --- Test EQSTR
+----- For EqStr(AB,AB) T  should be T   OK ------
+----- For EqStr(AB,AB) T  should be T   OK ------
+----- For EqStr(AB,Ab) NIL  should be NIL   OK ------
+----- For EqStr(AB,ABC) NIL  should be NIL   OK ------
+2. --- Test FindId on existing ID's
+Lookup string="A" 
+Found In LookUpId=65
+----- For FindId(A) A  should be A   OK ------
+Lookup string="AB" 
+Found In LookUpId=190
+----- For FindId(AB) AB  should be AB   OK ------
+3. --- Test FindId on new ID, make sure same place
+Lookup string="ABC" 
+Not Found in LookupId
+New ID# 192
+Lookup string="ABC" 
+Found In LookUpId=192
+----- For FindId(ABC) ABC  should be ABC   OK ------
+Lookup string="FOO" 
+Not Found in LookupId
+New ID# 193
+Lookup string="ABC" 
+Found In LookUpId=192
+----- For FindId(ABC) again ABC  should be ABC   OK ------
+4. --- Test RATOM loop. Type various ID's, STRING's and INTEGER's
+   Move to next part of test by typing the id Q
+   Inspect printout carefully
+NextSymbol =194
+1
+Item read= <0:1> 1
+"123"Item read= <4:5890> "123" 
+A
+Lookup string="A" 
+Found In LookUpId=65
+Item read= <30:65> A 
+a
+Lookup string="a" 
+Found In LookUpId=97
+Item read= <30:97> a 
+AA
+Lookup string="AA" 
+Not Found in LookupId
+New ID# 194
+Item read= <30:194> AA 
+aa
+Lookup string="aa" 
+Not Found in LookupId
+New ID# 195
+Item read= <30:195> aa 
+abc
+Lookup string="abc" 
+Not Found in LookupId
+New ID# 196
+Item read= <30:196> abc 
+ABC
+Lookup string="ABC" 
+Found In LookUpId=192
+Item read= <30:192> ABC 
+abc
+Lookup string="abc" 
+Found In LookUpId=196
+Item read= <30:196> abc 
+Q
+Lookup string="Q" 
+Found In LookUpId=81
+Item read= <30:81> Q 
+5. --- Test READ loop. Type various S-expressions
+   Move to next part of test by typing the id Q
+   Inspect printout carefully
+'A
+  Item read= <9:5912> (QUOTE  A ) 
+(12 '(34) (5 (6)))  Item read= <9:5930> (12 (QUOTE  (34) )  (5 (6) ) ) 
+
+Q
+  Item read= <30:81> Q 
+
+Quitting
+@NEWPAGE()
+@@ex @@main5
+LINK:	Loading
+[LNKXCT	MAIN5 execution]
+(very) MINI-PSL: A Read-Eval-Print Loop, terminate with Q
+1 lisp> 1
+
+1
+2 lisp> 'A
+
+A 
+3 lisp> (SETQ A 3)
+3
+4 lisp> A
+
+3
+5 lisp> (PRINT (CONS A A))
+(3 . 3) 
+(3 . 3) 
+6 lisp> (QUIT)
+
+Quitting
+@NEWPAGE()
+@@ex @@main6
+LINK:	Loading
+%LNKFTH	Fullword value RESET being truncated to halfword
+%LNKMDS	Multiply-defined global symbol RESET
+	Detected in module .MAIN from file DSK:SUB6.REL
+	Defined value = 104000000147, this value = 163306
+[LNKXCT	MAIN6 execution]
+Test BINDING Primitives
+----- For 3rd bound AA 3 should be 3  OK ------
+----- For 2rd bound AA NIL  should be NIL   OK ------
+----- For Original AA 1 should be 1  OK ------
+MINI-PSL: A Read-Eval-Print Loop, terminate with Q
+1 lisp> (DE FOO (X) (COND ((NULL X) 2) (T 3)))
+FOO 
+2 lisp> (FOO NIL)
+2
+3 lisp> (FOO 2)
+3
+4 lisp> (DF E (TIM) (TIMEEVAL TIM))
+E 
+5 lisp> (TESTSETUP)
+(SETQ  FOO  (CADR  (QUOTE  (1 2 3) ) ) ) 
+6 lisp> (E EMPTYTEST 10000)
+
+Ctime:    118090 ms,  118090 ms
+ 
+Ctime:    118127 ms,  37 ms
+ 37
+7 lisp> (E SLOWEMPTYTEST 10000)
+
+Ctime:    118259 ms,  132 ms
+ 
+Ctime:    118413 ms,  154 ms
+ 154
+8 lisp> (E LISTONLYCDRTEST1)
+
+Ctime:    118534 ms,  121 ms
+ 
+Ctime:    120275 ms,  1741 ms
+ 1741
+9 lisp> (FUM)
+ **** Uncompiled function in APPLY: FUM  NIL 
+NIL 
+10 lisp> (QUIT)
+
+Quitting
+

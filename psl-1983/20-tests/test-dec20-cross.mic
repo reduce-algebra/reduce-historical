@@ -1,0 +1,15 @@
+@delete s:test-dec20-cross.exe,
+ exp
+
+@get psl:rlisp
+@st
+*Options!*:=NIL; % Force reload of ALL
+*load(zboot, syslisp, if!-system, lap!-to!-asm);
+*load(dec20!-comp,dec20!-cmac,dec20!-asm);
+*remflag(''(extrareg),''terminaloperand);
+*off usermode;
+*in "P20T:DEC20-PATCHES.sl"$
+*Date!* := "PATCHED Dec 20 cross compiler";
+*Dumplisp "S:TEST-DEC20-CROSS.EXE";
+*Quit;
+@reset .

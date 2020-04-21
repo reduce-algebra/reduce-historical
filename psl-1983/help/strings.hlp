@@ -1,0 +1,60 @@
+A Common Lisp compatible package of string and character functions in
+PSL is available by LOADing STRINGS.  The following functions are
+defined, from Chapters 13 and 14 of the Common Lisp manual.  CHAR and
+STRING are not defined because of other functions with the same name.
+
+;;;; STANDARD-CHARP - non-control character
+;;;; GRAPHICP - printable character
+;;;; STRING-CHARP - a character that can be an element of a string
+;;;; ALPHAP - an alphabetic character
+;;;; UPPERCASEP - an uppercase letter
+;;;; LOWERCASEP - a lowercase letter
+;;;; BOTHCASEP - same as ALPHAP
+;;;; DIGITP - a digit character (optional radix not supported)
+;;;; ALPHANUMERICP - a digit or an alphabetic
+;;;; CHAR= - strict character comparison
+;;;; CHAR-EQUAL - similar character objects
+;;;; CHAR< - strict character comparison
+;;;; CHAR> - strict character comparison
+;;;; CHAR-LESSP - ignore case and bits for CHAR<
+;;;; CHAR-GREATERP - ignore case and bits for CHAR>
+;;;; CHAR-CODE - character to integer conversion
+;;;; CHAR-BITS - bits attribute of a character
+;;;; CHAR-FONT - font attribute of a character
+;;;; CODE-CHAR - integer to character conversion, optional bits, font ignored
+;;;; CHARACTER - character plus bits and font, which are ignored
+;;;; CHAR-UPCASE - raise a character
+;;;; CHAR-DOWNCASE - lower a character
+;;;; DIGIT-CHAR - convert character to digit (optional radix, bits, font NYI)
+;;;; CHAR-INT - convert character to integer
+;;;; INT-CHAR - convert integer to character
+;;;; CHAR - fetch a character in a string
+;;;; RPLACHAR - store a character in a string
+;;;; STRING= - compare two strings (substring options not implemented)
+;;;; STRING-EQUAL - compare two strings, ignoring case, bits and font
+;;;; STRING< - lexicographic comparison of strings
+;;;; STRING> - lexicographic comparison of strings
+;;;; STRING<= - lexicographic comparison of strings
+;;;; STRING>= - lexicographic comparison of strings
+;;;; STRING<> - lexicographic comparison of strings
+;;;; STRING-LESSP - lexicographic comparison of strings
+;;;; STRING-GREATERP - lexicographic comparison of strings
+;;;; STRING-NOT-GREATERP - lexicographic comparison of strings
+;;;; STRING-NOT-LESSP - lexicographic comparison of strings
+;;;; STRING-NOT-EQUAL - lexicographic comparison of strings
+;;;; MAKE-STRING - construct a string
+;;;; STRING-TRIM - remove leading and trailing characters from a string
+;;;; STRING-LEFT-TRIM - remove leading characters from string
+;;;; STRING-RIGHT-TRIM - remove trailing characters from string
+;;;; STRING-UPCASE - copy and raise all alphabetic characters in string
+;;;; NSTRING-UPCASE - destructively raise all alphabetic characters in string
+;;;; STRING-DOWNCASE - copy and lower all alphabetic characters in string
+;;;; NSTRING-DOWNCASE - destructively raise all alphabetic characters in string
+;;;; STRING-CAPITALIZE - copy and raise first letter of all words in string
+;;;; NSTRING-CAPITALIZE - destructively raise first letter of all words
+;;;; STRING - coercion to a string
+;;;; STRING-TO-LIST - unpack string characters into a list
+;;;; STRING-TO-VECTOR - unpack string characters into a vector
+;;;; SUBSTRING - subsequence restricted to strings
+;;;; STRING-LENGTH - last index of a string, plus one
+

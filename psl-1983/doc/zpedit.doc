@@ -1,0 +1,873 @@
+
+			THE UCI-LISP EDITOR
+		    (Translated to Standard LISP)
+
+SLISP provides an extremely powerful form-oriented editor.  This
+facility allows the user to easily alter function definitions,
+variable values and property list entries.  It thereby makes it
+entirely unnecessary for the user to employ a conventional text
+editor in the maintenance of programs.  This document is a guide
+to using the editor.  Certain features of the UCI-LISP editor have
+not been incorporated in the translated editor, and we have tried 
+to mark all such differences.
+
+
+	Section 1: User Entry to Editor
+
+This section describes normal user entry to the editor (EDITF, 
+EDITP and EDITV) and the editing commands which are available.
+This section is by no means complete.  In particular, material
+covering programmed calls to the editor routines is not treated.
+Consult the UCI LISP manual for further details.
+
+To edit a function named FOO do
+*(EDITF FOO)
+
+To edit the value of an atom named BAZ do
+*(EDITV FOO)
+
+To edit the property list of an atom named FOOBAZ do
+*(EDITP FOO)
+Warning, editing the property list of an atom may position pointers at
+unprintable structures. It is best to use the F (find) command before
+trying to print property lists.  This editor capability is variable from
+implementation to implementatio. 
+
+The Editor will prompt with 
+-E-
+*
+You can then input any editor command.  The input scanner is not very smart.
+It terminaes its scan and begins processing when it sees a printable character
+immediately followed by a carriage return.  Do not use escape to terminate
+an editor command.  If the editor seems to be repeatedly requesting input
+type P<ret> (print the current expression) or some other command that will 
+ordinarily do no damage, but will terminate the input soliciitation.
+
+
+The following set of topics makes a good 'first glance' at the
+editor.
+	Entering the editor: EDITF, EDITV.
+	Leaving the editor:  OK.
+	Editor's attention:  CURRENT-EXP.
+	Changing attention:  POS-INTEGER, NEG-INTEGER, 0, ^, NX, BK.
+	Printing:	     P, PP.
+	Modification:	     POS-INTEGER, NEG-INTEGER, A, B, :, N.
+	Changing parens:     BI, BO.
+	Undoing changes:     UNDO.
+
+For the more discriminating user, the next topics might be some
+of the following.
+	Searches:	     PATTERN, F, BF.
+	Complex commands:    R, SW, XTR, MBD, MOVE.
+	Changing parens:     LI, LO, RI, RO.
+	Undoing changes:     TEST, UNBLOCK, !UNDO.
+
+Other features should be skimmed but not studied until it appears
+that they may be useful.
+	
+
+SECTION 2:  Editor Command Reference
+
+(A exp1 exp2 ... expn)					edit cmnd
+This command inserts exp1 thru expn (arbitrary LISP expressions)
+after the current expression.  This is accomplished by doing an UP 
+and a (-2 exp1 exp2 ... expn) or an (N exp1 exp2 ... expn), as 
+appropriate.  Note the way in which the current expression is 
+changed by the UP.
+
+(B exp1 exp2 ... expn)					edit cmnd
+This command inserts exp1 thru expn (arbitrary LISP forms) before
+the current expression.  This is accomplished by doing an UP
+followed by a (-1 exp1 exp2 ... expn).  Note the way in which the
+current expression is changed by the UP.
+
+(BELOW com n)						edit cmnd
+This command changes the current expression in the following manner.
+The edit command com is executed.  If com is not a recognized 
+command, then (_ com) is executed instead.  Note that com should
+cause ascent in the edit chain (i.e., should be equivalent to
+some number of zeroes).  BELOW then evaluates (note!) n and
+descends n links in the resulting edit chain.  That is, BELOW
+ascends the edit chain (does repeated 0s) looking for the link 
+specified by com and stops n links below that (backs off n 0s).
+
+If n is not given, 1 is assumed.
+
+BF pat							edit cmnd
+(BF pat flg)						edit cmnd
+This command performs a backwards find, searching for pat (an
+edit pattern).  Search begins with the expression immediately
+before the current expression and proceeds in reverse print
+order.  (If the current expression is the top level expression,
+the entire expression is searched in reverse print order.)
+Search begins at the end of each list, and descends into each
+element before attempting to match that element.  If the match
+fails, proceed to the previous element, etc. until the front
+of the list is reached.  At that point, BF ascends and backs
+up, etc.  
+
+The search algorithm may be slightly modified by use of the second
+form of the command.  Possible flgs and their meanings are as
+follows.
+	T - begins search with the current expression rather than
+		with the preceeding expression at this level.
+	NIL or missing - same as BF pat.
+
+NOTE:  if the variable UPFINDFLG is non-NIL, the editor does
+an UP after the expression matching pat is located.  Thus,
+doing a BF for a function name yields a current expression
+which is the entire function call.  If this is not desired,
+UPFINDFLG may be set to NIL.  UPFINDFLG is initially T.
+
+BF is protected from circular searches by the variable MAXLEVEL.
+If the total number of CARs and CDRs descended into reaches
+MAXLEVEL (initially 300), search of that tail or element is
+abandoned exactly as though a complete search had failed.
+
+(BI n1 n2)						edit cmnd
+This command inserts a pair of parentheses in the current
+expression.  (Note that parentheses are ALWAYS balanced, and
+hence must be added or removed in pairs.)  A left paren is
+inserted before element n1 of the current expression.  A right
+paren is inserted after element n2 of the current expression.
+Both n1 and n2 are usually integers, and element n2 must be to
+the right of element n1.
+
+(BI n1) is equivalent to (BI n1 n1).
+
+The NTH command is used in the search, so that n1 and n2 may 
+be any location specifications.  The expressions used will
+be the first element of the current expression in which the
+specified form is found at any level.
+
+(BIND coms)						edit cmnd
+This command provides the user with temporary variables for
+use during the execution of the sequence of edit commands coms.
+There are three variables available: #1, #2 and #3.  The binding
+is recursive and BIND may be executed recursively if necessary.
+All variables are initialized to NIL.  This feature is useful
+chiefly in defining edit macros.
+
+BK 							edit cmnd
+The current expression becomes the expression immediately preceeding
+the present current expression.  This command generates an error
+if the current expression is the first expression in the list.
+
+(BO n)							edit cmnd
+The BO command removes a pair of parentheses from the nth element
+of the current expression.  The parameter n is usually an integer.
+The NTH command is used in the search, however, so that any 
+location specification may be used.  The expression referenced is
+the first element of the current expression in which the specified
+form is found at any level.
+
+(CHANGE loc TO exp1 exp2 ... expn)			edit cmnd
+This command replaces the current expression after executing the
+location specification loc by exp1 ... expn.
+
+(COMS arg1 arg2 ... argn)				edit cmnd
+This command evaluates its argi and executes them as edit commands.
+
+(COMSQ com1 com2 ... comn)				edit cmnd
+This command executes each comi as an edit command
+
+At any given time, the attention of the editor is focused on a
+single expression or form.  We call that form the current expression.
+Editor commands may be divided into two broad classes.  Those
+commands which change the current expression are called attention-
+changing commands.  Those commands which modify structure are
+called structure modification commands.
+
+DELETE							edit cmnd
+This command deletes the current expression.  If the current
+expression is a tail, only the first element is deleted.  This
+command is equivalent to (:).
+
+E form							edit cmnd
+(E form)						edit cmnd
+(E form T)						edit cmnd
+This command evaluates form.  The first form of the command is
+valid only when typed in from the TTY.  (E form) evaluates form
+and prints the value on the terminal.  The form (E form T)
+evaluates form but does not print the result.
+
+(EDITF fn coms)							fsubr
+This function initiates editing of the function whose name is
+fn.  The argument coms is an optional sequence of edit
+commands.  If coms is present, no terminal input is requested
+or required.  The commands in coms are executed and EDITF
+returns fn.  If coms is not present, then the editor will
+ask for keyboard input.
+
+(EDITFNS fn-list coms)						fsubr
+This function applies the sequence of editor commands, coms, to each
+of several functions.  The argument fn-list is evaluated, and should
+evaluate to a list of function names.  Coms will be applied to each
+function in fn-list, in turn.  Errors in editing one function will
+not affect editing of others.  The editor call is via EDITF, so that
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        values may also be edited in this way.  The value of the function 
+is NIL.
+
+(EDITP at coms)							fsubr
+This function initiates editing of the property list of the 
+atom whose name is at.  The argument coms is a possibly null
+sequence of edit commands which will be executed before calling
+for input from the terminal.
+
+(EDITV at coms)							fsubr
+This function initiates editing of the value of the atom whose
+name is at.  The argument coms is a possibly null sequence of
+edit commands which will be executed before calling for input
+from the terminal.
+
+(EMBED loc IN arg)					edit cmnd
+This command replaces the expression which would be current after
+executing the location specification loc by another expression
+which has that expression as a sub-expression.  The manner in
+which the transformation is carried out depends on the form of
+arg.  If arg is a list, then each occurrence of the atom '*' in
+arg is replaced by the expression which would be current after
+doing loc.  (NOTE: a fresh copy is used for each substitution.)
+If arg is atomic, the result is equivalent to:
+	(EMBED loc IN (arg *)).
+A call of the form (EMBED loc IN exp1 exp2 ... expn) is equivalent
+to:
+	(EMBED loc IN (exp1 exp2 ... expn *)).
+
+If the expression after doing loc is a tail, EMBED behaves as
+though the expression were the first element of that tail.
+
+(EXTRACT loc1 FROM loc2)				edit cmnd
+This command replaces the expression which would be current after
+doing the location specification loc2 by the expression which
+would be current after doing loc1.  The expression specified
+by loc1 must be a sub-expression of that specified by loc2.
+
+F pat							edit cmnd
+(F pat flg)						edit cmnd
+This command causes the next command, pat, to be interpreted
+as a pattern.  The current expression is searched for the
+next occurrence of pat.  If pat is a top level element of the
+current expression, then pat matches that top level occurrence
+and a full recursive search is not attempted.  Otherwise, the
+search proceeds in print order.  Recursion is done first in
+the CAR and then in the CDR direction.
+
+The second form of the command, (F pat flg) may be used to
+modify the search algorithm according to the value of flg.
+Possible values and their actions are:
+	N - suppresses the top-level check.  That is, finds
+		the next print order occurrence of pat regardless
+		of any top level occurrences.
+	T - like N, but may succeed without changing the 
+		current expression.  That is, succeeds even
+		when the current expression itself is the
+	   	only occurrence of pat.
+	positive integer - finds the nth place at which pat is
+		matched.  This is equivalent to (F pat T)
+		followed by n-1 (F pat N)s.  If n occurrences
+		are not found, the current expression is unchanged.
+	NIL or missing - Only searches top level elements of the
+		current expression.  May succeed without changing
+		the current expression.
+
+NOTE:  If the variable UPFINDFLG is non-NIL, F does an UP after
+locating a match.  This ensures that F fn, where fn is a function
+name, will result in a current expression which is the entire
+function call.  If this is undesirable, set UPFINDFLG to NIL.
+Its initial value is T.
+
+As protection against searching circular lists, the search will
+be abandoned if the total number of CAR-CDR descents exceeds
+the value of the variable MAXLEVEL.  (The initial value is
+300.)  The search fails just as if the entire element had
+been unsuccessfully searched.
+
+(FS pat1 pat2 ... patn)					edit cmnd
+The FS command does sequential finds.  That is, it searches
+(in print order) first for pat1, then for pat2, etc.  If any
+search fails, the current expression is left at that form which
+matched in the last successful search.  This command is,
+therefore, equivalent to a sequence of F commands.
+
+(F= exp flg)						edit cmnd
+This command is equivalent to (F (== exp) flg).  That is, it
+searches, in the manner specified by flg, for a form which is EQ
+to exp.  Note that for keyboard typeins, this will always fail
+unless exp is atomic.
+
+HELP							edit cmnd
+This command provides an easy way of invoking the HELP system
+from the editor.
+
+(I com arg1 arg2 ... argn)				edit cmnd
+This command evaluates the argi and executes com on the resulting
+values.  This command is thus equivalent to:
+	(com val1 val2 ... valn),
+where each vali is equal to (EVAL argi).
+
+(IF arg)						edit cmnd
+This command, useful in edit macros, conditionally causes an
+editor error.  If (EVAL arg) is NIL (or if evaluation of arg
+causes a LISP error), then IF generates an editor error.
+
+(INSERT exp1 exp2 ... expn AFTER loc)			edit cmnd
+(INSERT exp1 exp2 ... expn BEFORE loc)			edit cmnd
+(INSERT exp1 exp2 ... expn FOR loc)			edit cmnd
+The INSERT command provides equivalents of the A, B and : commands
+incorporating a location specification, loc.  This command inserts
+exp1 thru expn AFTER, BEFORE or FOR (in place of) the expression
+which is current after executing loc.  Note, however, that the
+current expression is not changed.
+
+(LC loc)						edit cmnd
+This command, which takes as an argument a location specification,
+explicitly invokes the location specification search.  The current
+expression is changed to that which is current after executing loc.
+
+See LOC-SPEC for details on the definition of loc and the search
+method in question.
+
+(LCL loc)						edit cmnd
+This command, which takes as an argument a location specification,
+explicitly invokes the location specification search.  However,
+the search is limited to the current expression itself.  The
+current expression is changed to that which is current after
+executing loc.
+
+(LI n)							edit cmnd
+This command inserts a left parenthesis (and, of course, a matching
+right paren).  The left paren is inserted before the nth element
+of the current expression and the right paren at the end of the
+current expression.  Thus, this command is equivalent to
+(BI n -1).
+
+The NTH command is used in the search, so that n, which is usually
+an integer, may be any location specification.  The expression
+referenced is the first element of the current expression which
+contains the form specified at any level.
+
+(LO n)							edit cmnd
+This command removes a left parenthesis (and a matching right
+paren, of course) from the nth element of the current expression.
+All elements after the nth are deleted.
+
+The command uses the NTH command for the search.  The parameter n,
+which is usually an integer, may be any location specification.
+The expression actually referenced is the first element of the
+current expression which contains the specified form at any depth.
+
+Many of the more complex edit commands take as an argument a
+location specification (abbreviated loc throughout this
+document).  A location specification is a list of edit commands,
+which are, with two exceptions, executed in the normal way.
+Any command not recognized by the editor is treated as though
+it were preceeded by F.  Furthermore, if one of the commands
+causes an error and the current expression has been changed by
+prior commands, the location operation continues rather than
+aborting.  This is a sort of back-up operation.  For example,
+suppose the location specification is (COND 2 3), and the
+first clause of the first COND has only 2 forms.  The location
+operation will proceed by searching for the next COND and
+trying again.  If a point were reached in which there were
+no more CONDs, the location operation would then fail.
+
+(LP coms)						edit cmnd
+This command, useful in macros, repeatedly executes coms (a sequence
+of edit commands) until an editor error occurs.  When LP exits,
+it prints the number of OCCURRENCES;  that is, the number of times
+coms was successfully executed.  After execution of the command,
+the current expression is left at what it was after the last complete
+successful execution of coms.
+
+The command terminates if the number of iterations exceeds the value
+of the variable MAXLOOP (initially 30).
+
+(LPQ coms)						edit cmnd
+This command, useful in macros, repeatedly executes coms (a sequence
+of edit commands) until an editor error occurs.  After execution
+of the command, the current expression is left at what it was after
+the last complete successful execution of coms.
+
+The command terminates if the number of iterations exceeds the 
+value of the variable MAXLOOP (initially 30).
+
+This command is equivalent to LP, except that OCCURRENCES is not
+printed.
+
+(M nam coms)						edit cmnd
+(M (nam) (arg1 arg2 ... argn) coms)			edit cmnd
+(M (nam) arg coms)					edit cmnd
+The editor provides the user with a macro facility.  The user
+may define frequently used command sequences to be edit macros,
+which may then be invoked simply by giving the macro name as
+an edit command.  The M command provides the user with a
+method of defining edit macros.
+
+The first form of the command defines an atomic command which takes
+no arguments.  The argument nam is the atomic name of the macro.
+This defines nam to be an edit macro equivalent to the sequence
+of edit commands coms.  If nam previously had definition as an
+edit macro, the new definition replaces the old.  NOTE:  edit
+command names take precedence over macros.  It is not possible
+to redefine edit command names.
+
+The second form of the M command defines a list command, which
+takes a fixed number of arguments.  In this case, nam is defined 
+to be an edit macro equivalent to the sequence of edit commands 
+coms.  However, when (nam exp1 exp2 ... expn) is executed, the 
+expi are substituted for the corresponding argi in coms before 
+coms are executed.
+
+The third form of the M command defines a list command which may
+take an arbitrary number of arguments.  Execution of the macro
+nam is accomplished by substituting (exp1 exp2 ... expn) (that
+is, the CDR of the macro call (nam exp1 exp2 ... expn)) for
+all occurrences of the atom arg in coms, and then executing
+coms.
+
+(MAKEFN (nam vars) args n1 n2)				edit cmnd
+This command defines a portion of the current expression as a
+function and replaces that portion of the expression by a call
+to the function.  The form (nam vars) is the call which replaces
+the n1st thru n2nd elements of the current expression.  Thus,
+nam is the name of the function to be defined.  Vars is a sequence
+of local variables (in the current expression), and args is a 
+list of dummy variables.  The function definition is formed by
+replacing each occurrence of an element in vars (the CDR of
+(nam vars)) by the corresponding element of args.  Thus, args
+are the names of the formal parameters in the newly defined 
+function.
+
+If n2 is omitted, it is assumed equal to n1.
+
+MARK							edit cmnd
+This command saves the current position within the form in such
+a way that it can later be returned to.  The return is accomplished
+via _ or __.
+
+(MBD arg)						edit cmnd
+This command replaces the current expression by some form which
+has the current expression as a sub-expression.  If arg is a
+list, MBD substitutes a fresh copy of the current expression for
+each occurrence of the atom '*' in arg.  If arg is a sequence
+of expressions, as:
+		(MBD exp1 exp2 ... expn),
+then the call is equivalent to one of the form:
+		(MBD (exp1 exp2 ... expn *)).
+The same is true if arg is atomic:
+		(MBD atom) = (MBD (atom *)).
+
+(MOVE loc1 TO com loc2)					edit cmnd
+The MOVE command allows the user to move structure from one point
+to another.  The user may specify the form to be moved (via loc1,
+the first location specification), the position to which it is
+to be moved (via loc2, the second location specification) and
+the action to be performed there (via com).  The argument com
+may be BEFORE, AFTER or the name of a list command (e.g., :,
+N, etc.).  This command performs in the following manner.  Take
+the current expression after executing loc1 (or its first element,
+if it is a tail); call it expr.  Execute loc2 (beginning at the
+current expression AS OF ENTRY TO MOVE -- NOT the expression which
+would be current after execution of loc1), and then execute
+(com expr).  Now go back and delete expr from its original 
+position.  The current expression is not changed by this command.
+
+If loc1 is NIL (that is, missing), the current expression is moved.
+In this case, the current expression becomes the result of
+the execution of (com expr).
+
+If loc2 is NIL (that is missing) or HERE, then the current
+expression specifies the point to which the form given by
+loc2 is to be moved.
+
+(N exp1 exp2 ... expn)					edit cmnd
+This command adds exp1 thru expn to the end of the current
+expression.  This compensates for the fact that the negative
+integer command does not allow insertion after the last element.
+
+-n							edit cmnd
+(-n exp1 exp2 ... expn)				edit cmnd
+This is really two separate commands.  The atomic form is an
+attention changing command.  The current expression becomes the
+nth form from the end of the old current expression.  That is,
+-1 specifies the last element, -2 the second from last, etc.
+
+The list form of the command is a structure modification command.
+This command inserts exp1 thru expn (at least one expi must be
+present) before the nth element (counting from the BEGINNING)
+of the current expression.  That is, -1 inserts before the
+first element, -2 before the second, etc.
+
+
+(NEX com)						edit cmnd
+NEX							edit cmnd
+This command is equivalent to (BELOW com) followed by NX.  That
+is, it does repeated 0s until a current expression matching
+com is found.  It then backs off by one 0 and does a NX.
+
+The atomic form of the command is equivalent to (NEX _).  This
+is useful if the user is doing repeated (NEX x)s.  He can
+MARK at x and then use the atomic form.
+
+(NTH loc)						edit cmnd
+This command effectively performs (LCL loc), (BELOW <), UP.
+The net effect is to search the current expression only for the
+form specified by the location specification loc.  From there,
+return to the initial level and set the current expression to
+be the tail whose first element contains the form specified by
+loc at any level.
+
+NX							edit cmnd
+(NX n)							edit cmnd
+The atomic form of this command makes the current expression the
+expression following the present current expression (at the
+same level).  
+
+The list form of the command is equivalent to n (an integer number)
+repetitions of NX.  If an error occurs (e.g., if there are not
+n expressions following the current expression), the current
+expression is unchanged.
+
+OK							edit cmnd
+This command causes normal exit from the editor.
+
+The state of the edit will be saved on property LASTVALUE of the
+atom EDIT.  If the next form edited is the same, the edit will
+be restored.  That is, it will be (with the exception of a 
+BLOCK on the undo-list) as though the editor had never been
+exited.
+
+It is possible to save edit states for more than one form by
+exiting from the editor via the SAVE command.
+
+(ORF pat1 pat2 ... patn)				edit cmnd
+This command searches the current expression, in print order,
+for the first occurrence of any form which matches one of the
+pati.  When found, an UP is executed, and the current expression
+becomes the expression so specified.  This command is equivalent
+to (F (*ANY* pat1 pat2 ... patn) N).  Note that the top level
+check is not performed.
+
+(ORR coms1 coms2 ... comsn)				edit cmnd
+This command operates in the following manner.  Each comsi is a
+list of edit commands.  ORR first executes coms1.  If no error
+occurs, ORR terminates, leaving the current expression as it
+was at the end of executing coms1.  Otherwise, it restores the
+current expression to what it was on entry and repeats this
+operation on coms2, etc.  If no comsi is successfully executed
+without error, ORR generates an error and the current expression
+is unchanged.
+
+P							edit cmnd
+(P n1)							edit cmnd
+(P n1 n2)						edit cmnd
+This command prints the current expression.  The atomic form of
+the command prints the current expression to a depth of 2.
+More deeply nested forms are printed as &.
+
+The second form of the command, (P n1) prints the n1st element of
+the current expression to a depth of 2.  The argument, n1, need
+not be an integer.  It may be a general location specification.
+The NTH command is used in the search, so that the expression
+printed will be the first element of the current expression
+which contains the desired form at any level.
+
+The third form of the command prints the n1st element of the
+current expression to a depth of n2.  Again, n1 may be a general
+location specification.
+
+If n1 is 0, the current expression is printed.
+
+Many of the editor commands, particularly those which search,
+take as an argument a pattern (abbreviated pat).  A pattern
+may be any combination of literal list structure and special
+pattern elements.  
+
+The special elements are as follows.
+	& - this matches any single element.
+	*ANY* - if (CAR pat) is the atom *ANY*, then (CDR pat)
+		must be a list of patterns.  Pat matches any 
+		form which matches any of the patterns in (CDR pat).
+	@ - if an element of pat is a literal atom whose last 
+		character is @, then that element matches any
+		literal atom whose initial characters match the
+		initial characters of the element.  That is,
+		VER@ matches VERYLONGATOM.
+	-- - this matches any tail of a list or any interior
+		segment of a list.
+	== - if (CAR pat) is ==, then pat matches X iff (CDR pat)
+		is EQ to X.
+	::: - if pat begins with :::, the CDR of pat is matched
+		against tails of the expression.
+
+n							edit cmnd
+(n exp1 exp2 ... expn)					edit cmnd
+This command, a strictly positive integer n, is really two
+commands.  The atomic form of the command is an attention-
+changing command.  The current expression becomes the nth
+element of the current expression.
+
+The list form of the command is a structure modification command.
+It replaces the nth element of the current  expression by the
+forms exp1 thru expn.  If no forms are given, then the nth element
+of the current expression is deleted.
+
+PP							edit cmnd
+This command pretty-prints the current expression.
+
+(R exp1 exp2)						edit cmnd
+This command replaces all occurrences of exp1 by exp2 in the
+current expression.  
+
+Note that exp1 may be either the literal s-expression to be
+replaced, or it may be an edit pattern.  If a pattern is given,
+the form which first matches that pattern will be replaced
+throughout.  All forms which match the pattern will NOT be
+replaced.
+
+REPACK							edit cmnd
+(REPACK loc)						edit cmnd
+This command allows the editing of long strings (or atom names)
+one character at a time.  REPACK calls the editor recursively
+on UNPACK of the specified atom.  (In the atomic form of the
+command, the current expression is used unless it is a list;
+then, the first element is used.  In the list form of the
+command, the form specified by the location specification is
+treated in the same way.)  If the lower editor is exited via
+OK, the result is repacked and replaces the original atom.
+If STOP is used, no replacement is done.  The new atom is
+always printed.
+
+(RI n1 n2)						edit cmnd
+This command moves a right parenthesis.  The paren is moved from
+the end of the the n1st element of the current expression to after 
+the n2nd element of the n1st element.  Remaining elements of the
+n1st element are raised to the top level of the current expression.
+
+The arguments, n1 and n2, are normally integers.  However, because
+the NTH command is used in the search, they may be any location
+specifications.  The expressions referenced will be the first
+element of the current expression in which the specified form
+is found at any level, and the first element of that expression
+in which the form specified by n2 is found at any level.
+
+(RO n)							edit cmnd
+This command moves the right parenthesis from the end of the nth
+element of the current expression to the end of the current 
+expression.  All elements following the nth are moved inside
+the nth element.
+
+Because the NTH command is used for the search, the argument n,
+which is normally an integer, may be any location specification.
+The expression referenced is the first element of the current
+expression in which the specified form is found at any depth.
+
+(S var loc)						edit cmnd
+This command sets (via SETQ) the variable whose name is var to
+the current expression after executing the location specification
+loc.  The current expression is not changed.
+
+SAVE							edit cmnd
+This command exits normally from the editor.  The state of the
+edit is saved on the property EDIT-SAVE of the atom being edited.
+When the same atom is next edited, the state of the edit will
+be restored and (with the exception of a BLOCK on the undo-list)
+it will be as if the editor had never been exited.  It is not
+necessary to use the SAVE command if only a single atom is being
+edited.  See the OK command.
+
+(SECOND loc)						edit cmnd
+This command changes the current expression to what it would be
+after the location specification loc is executed twice.  The
+current expression is unchanged if either execution of loc fails.
+
+STOP							edit cmnd
+This command exits abnormally from the editor.  This command is
+useful mainly in conjunction with TTY: commands which the user
+wishes to abort.  For example, if the user is executing
+	(MOVE 3 TO AFTER COND TTY:),
+and he exits from the lower editor via OK, the MOVE command
+will complete its operation.  If, on the other hand, the user
+exits via STOP, TTY: will produce an error and MOVE will abort.
+
+(SW n1 n2)						edit cmnd
+This command swaps the n1st and n2nd elements of the current
+expression.  The arguments are normally but not necessarily 
+integers.  SW uses NTH to perform the search, so that any
+location specifiations may be used.  In each case, the first element
+of the current expression which contains the specified form at any
+depth will be used.
+
+TEST							edit cmnd
+This command adds an undo-block to the undo-list.  This block
+limits the scope of UNDO and !UNDO commands to changes made
+after the block was inserted.  The block may be removed via
+UNBLOCK.
+
+(THIRD loc)						edit cmnd
+This command executes the location specification loc three times.
+It is equivalent to three repetitions of (LC loc).  Note, however,
+that if any of the executions causes an editor error, the current
+expression remains unchanged.
+
+(loc1 THRU loc2)					edit cmnd
+This command makes the current expression the segment from the
+form specified by loc1 thru (including) the form specified by
+loc2.  It is equivalent to (LC loc1), UP, (BI 1 loc2), 1.
+Thus, it makes a single element of the specified elements and
+makes that the current expression.  
+
+This command is meant for use in the location specifications
+given to the DELETE, EMBED, EXTRACT and REPLACE commands, and
+is not particularly useful by itself.  Use of THRU with these
+commands sets a special flag so that the editor removes the
+extra set of parens added by THRU.
+
+(loc1 TO loc2)						edit cmnd
+This command makes the current expression the segment from the
+form specified by loc1 up to (but not including) the form specified
+by loc2.  It is equivalent to (LC loc1), UP, (BI 1 loc), (RI 1 -2),
+1.  Thus, it makes a single element of the specified elements and
+makes that the current expression.
+
+This command is meant for use in the location specifications
+given to the DELETE, EMBED, EXTRACT and REPLACE commands, and is
+not particularly useful by itself.  Use of TO with these commands
+sets a special flag so that the editor removes the extra set of
+parens added by TO.
+
+TTY:							edit cmnd
+This command calls the editor recursively, invoking a 'lower editor.'
+The user may execute any and all edit commands in this lower editor.
+The TTY: command terminates when the lower editor is exited via
+OK or STOP.
+
+The form being edited in the lower editor is the same as that being
+edited in the upper editor.  Upon entry, the current expression in
+the lower is the same as that in the upper editor.
+
+UNBLOCK							edit cmnd
+This command removes an undo-block from the undo-list, allowing
+UNDO and !UNDO to operate on changes which were made before the
+block was inserted.
+
+Blocks may be inserted by exiting from the editor and by the TEST
+command.
+
+UNDO							edit cmnd
+UNDO com						edit cmnd
+This command udoes editing changes.  All editing changes are
+undoable, provided that the information is available to the 
+editor.  (The necessary information is always available, unless
+several forms are being edited and the SAVE command is not
+used.)  Changes made in the current editing session are ALWAYS
+undoable.  
+
+The first form of the command undoes the most recent change.
+Note, however, that UNDO and !UNDO changes are skipped, even
+though they are themselves undoable.
+
+The second form of the command allows the user to undo an
+arbitrary command, not necessarily the most recent.  UNDO
+and !UNDO may also be undone in this manner.
+
+UP							edit cmnd
+If the current expression is a tail of the next higher expression,
+UP has no effect.  Otherwise, the current expression becomes the
+form whose first element is the old current expression.
+
+(XTR loc)						edit cmnd
+This command replaces the current expression by one of its
+subexpressions.  The location specification, loc, gives the
+form to be used.  Note that only the current expression is
+searched.  If the current expression is a tail, the command
+operates on the first element of the tail.
+
+0							edit cmnd
+This command makes the current expression the next higher 
+expression.  This usually, but not always, corresponds to
+returning to the next higher left parenthesis.  This command
+is, in some sense, the inverse of the POS-INTEGER and NEG-
+INTEGER atomic commands.
+
+(## com1 com2 ... comn)						fsubr
+The value of this fsubr, useful mainly in macros, is the
+expression which would be current after executing all of
+the comi in sequence.  The current expression is not changed.
+
+Commands in which this fsubr might be used (e.g., CHANGE,
+INSERT and REPLACE) make special checks and use a copy
+of the expression returned.
+
+^							edit cmnd
+This command makes the top level expression the current expression.
+
+?							edit cmnd
+This command prints the current expression to a level of 100.
+It is equivalent to (P 0 100).
+
+??							edit cmnd
+This command displays the entries on the undo-list.
+
+_							edit cmnd
+This command returns to the position indicated by the most
+recent MARK command.  The MARK is not removed.
+
+(_ pat)							edit cmnd
+This command ascends (does repeated 0s), testing the current
+expression at each ascent for a match with pat.  The current
+expression becomes the first form to match.  If pattern is
+atomic, it is matched with the first element of each expression;
+otherwise, it is matched against the entire form.
+
+__							edit cmnd
+This command returns to the position indicated by the most
+recent MARK command and removes the MARK.
+
+(: exp1 exp2 ... expn)					edit cmnd
+(:)							edit cmnd
+This command replaces the current expression by the forms exp1
+thru expn.  If no forms are given (as in the second form of the
+command), the current expression is deleted.
+
+(pat :: loc)						edit cmnd
+This command sets the current expression to the first form
+(in print order) which matches pat and contains the form
+specified by the location specification loc at any level.
+The command is equivalent to (F pat N), (LCL loc), (_ pat).
+
+\							edit cmnd
+This command returns to the expression which was current before
+the last 'big jump.'  Big jumps are caused by these commands:
+^, _, __, !NX, all commands which perform a search or use a
+location specification, \ itself, and \P.  NOTE: \ is shift-L
+on a teletype.
+
+\P							edit cmnd
+This command returns to the expression which was current before
+the last print operation (P, PP or ?).  Only the two most recent
+locations are saved.  NOTE: \ is shift-L on a teletype.
+
+!NX							edit cmnd
+This command makes the next expression at a higher level the
+current expression.  That is, it goes thru any number of right
+parentheses to get to the next expression.
+
+
+!UNDO							edit cmnd
+This command undoes all changes made in the current editing session
+(back to the most recent block).  All changes are undoable.  
+
+Blocks may be inserted by exiting the editor or by the TEST
+command.  They may be removed with the UNBLOCK command.
+
+!0							edit cmnd
+This command does repeated 0s until it reaches an expression which
+is not a tail of the next higher expression.  That expression becomes
+the new current expression.  That is, this command returns to
+the next higher left parenthesis, regardless of intervening tails."
+
+
+
+   

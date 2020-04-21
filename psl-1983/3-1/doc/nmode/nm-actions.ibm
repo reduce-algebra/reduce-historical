@@ -1,0 +1,113 @@
+,MOD
+- R 44X (11 April 1983) <PSL.NMODE-DOC>NM-ACTIONS.ibm
+PLA 97_LAS 80 0_FIR 2_INT 1 6.0_TYP 160 163 162 193_INP 12 101_MAR 2
+,END
+,PRO
+201 OUT 160_202 OUT 163_203 OUT 162_204 OUT 193
+205 INP 12 101_206 INP 12 102
+,END
+,DEFINE
+ UNIT SPACE
+ FUNCTION
+,END
+
+          201/NMODE Manual (Action Types)                                      Page 24-1
+
+
+          202/24.  Action Types
+
+          201/This section defines a number of 203/action types201/, which are used in the
+          descriptions of NMODE commands.
+
+
+
+
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Alter Display Format
+
+
+          201/This type of command alters how text is displayed without altering the
+          contents of existing buffers.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Alter Existing Text
+
+
+          201/This type of command alters some part of the existing text, generally
+          transforming and/or moving text rather than just inserting or deleting it.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Change Mode
+
+
+          201/This type of command turns some feature(s) of the editor on or off.  This
+          may include major modes, minor modes, timing, or scripting.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Escape
+
+
+          201/Escape from the current level.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Inform
+
+
+          201/This type of command informs the user of some property of the text being
+          worked with, or of the state of the editor (including where point is, what the
+          existing buffer(s) is(are), what is in the documentation, etc.).
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Insert Constant
+
+
+          201/This type of command inserts a character constant like tab or space or a
+          multiple thereof.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          201/Page 24-2                                      NMODE Manual (Action Types)
+
+
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Mark
+
+
+          201/This type of command sets mark.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Move Data
+
+
+          201/This command copies some data (which is not a constant wired into the
+          program) from one place to another.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Move Point
+
+
+          201/This type of command moves point.  It may move it within a buffer or from
+          buffer to buffer.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Preserve
+
+
+          201/Make a copy of something current and put it somewhere else (usually disc).
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Remove
+
+
+          201/This type of command allows a user to get rid of data, either killing or
+          deleting text or removing files or directory entries.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Select
+
+
+          201/This type of command finds particular strings in text, and may perform some
+          action upon them, such as counting, replacement, or deletion.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Set Global Variable
+
+
+          201/This type of command sets some global variable which tends to remain stable
+          for some time, such as prefix variables and key bindings.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          202/Action Type Explanation: Subsequent Command Modifier
+
+
+          201/This type of command modifies the meaning of the keys that immediately follow
+          it, as the prefix commands and the argument commands do.
+          204/$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

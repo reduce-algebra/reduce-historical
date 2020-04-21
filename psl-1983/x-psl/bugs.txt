@@ -1,0 +1,4392 @@
+Date:  1-Nov-82 14:56:40
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: APPEND
+Class: Request, deficiency
+
+  In PSL the function APPEND now takes exactly 2 arguments.
+  Could it be extended to take an arbitrary number.  Probably
+  0 and 1 should also be legitimate numbers of arguments.
+  What say?
+
+RESPONSE (Eric):
+
+  Someday...
+
+Date: 30-Oct-82 18:49:42
+From: douglas <LANAM at HP-HULK>
+Subject: difference in apply betwen compiled and interpreted code.
+Class: Bug
+
+  Dealing with apply to nexprs.:
+  18 lisp> (dn nexpr (a) (princ a) (terpri))
+  NEXPR
+  19 lisp> (de calling-function (arg) (apply (function nexpr) (list arg))
+  19 lisp> )
+  CALLING-FUNCTION
+  20 lisp> (calling-function 'a)
+  A
+  NIL
+  21 lisp> (calling-function '(a b))
+  (A B)
+  NIL
+  22 lisp> (compile '(calling-function))
+  *** Function `CALLING-FUNCTION' has been redefined
+  *** (CALLING-FUNCTION): base 257007, length 3 words
+  NIL
+  23 lisp> (calling-function '(a b))
+  ((A B))
+  NIL
+  24 lisp> (calling-function 'a)
+  (A)
+  NIL
+  25 lisp> ^C
+
+
+  --------
+  Note:  This bug does not exist on the vax. On the vax, this function
+  runs the same interpretively and compiled.  (The interpretive
+  version on the 20 is the same definition as that on the vax).  This
+  use to work on the 20 until about 3 weeks ago.
+	  douglas
+
+RESPONSE (Eric):
+
+  Fixed.
+
+Date: 27-Oct-82 17:16:07
+From: douglas <LANAM at HP-HULK>
+Subject: bug in psl - (tr get)
+Class: Bug
+
+
+  Do (tr get) in psl, and you get an endless message:
+  ***** Undefined function 'GET' called from compiled code
+
+  over and over and over and over ...
+	  douglas
+
+RESPONSE (Eric):
+
+  It should not let you (tr get).  This could be fixed by
+  changing DEBUG not to use REMD, and using some other method of
+  avoiding the "foo redefined" message.
+
+Date: 22-Oct-82 09:38:48
+From: douglas <LANAM at HP-HULK>
+Subject: function timings.
+Class: Request
+
+  Is it possible to make a version of psl that gives me a profile
+  of all the lisp functions called and how much cpu time was spent
+  in each. (I would assume since this involves some overhead, it
+  should not be put in the standard psl).  It would be preferable
+  to have this on the vax.
+
+RESPONSE (Lanam):
+
+  Doug has written a package to do this.
+
+Date: 18-Oct-82 12:29:47
+From: Alan Snyder <AS at HP-HULK>
+Subject: compiler bug
+Class: Compiler bug
+
+  The compiler incorectly compiles the first clause of the COND in
+  the function below.  It compiles to return M2, rather than M1.
+
+  (de foo (i1 i2)
+    (let ((m1 (> i1 3)) 
+	  (m2 (> i2 4))
+	  )
+      (cond ((not (eq m1 m2))
+	     m1)
+	    (t
+	     (+ i1 i2))
+	    )))
+
+RESPONSE (Eric):
+
+  Fixed.
+
+Date: 15 Oct 1982 1131-PDT
+From: PERDUE at HP-HULK
+Subject: Make-String
+Class: Documentation bug
+
+  The reference manual claims that the first argument to make-string
+  is the upper limit for indices into the string, but in fact it
+  is the number of characters in the string.
+
+RESPONSE ():
+
+  Still extant.
+
+Date:  9-Oct-82 12:14:25
+From: douglas <LANAM at HP-HULK>
+Subject: Terminal interrupt (^B) error
+Class: Bug
+
+  Similar to the one on the vax, on the 20 it also tries to
+  reexecute previously typed in expressions.
+
+  8 lisp> (show 'thing)
+
+  (thing (ako ($if-added (add-instance)) ($if-removed (remove-instance)))
+	 (instance ($value (request) (domain) (rule))
+		   ($if-added (add-ako))
+		   ($if-removed (remove-ako)))
+	 (self ($value (%(fname :frame)))))
+
+  nil
+  Time: 120 ms
+  9 lisp> *** Break in cleario at 43316
+  Break loop
+  ***** `show' is an unbound ID
+  ***** Continuation requires a value for `show'
+  Break loop
+  thing
+  Time: 1 ms
+  12 lisp break>>> ^C
+
+	  douglas
+
+RESPONSE ():
+
+  Extant bug.
+
+Date:  7-Oct-82 15:17:52
+From: Alan Snyder <AS at HP-HULK>
+Subject: Interaction with EXEC location printout
+Class: Bug
+
+  PSL is apparently using a reserved location in an improper way.
+  The location ".JBSYM" (whatever that is) is supposed to point
+  to a symbol table, but it apparently does not contain a proper
+  value, since if you ask EXEC to print out locations in symbolic
+  mode, the EXEC will blow up trying to do a symbol table lookup.
+  Please fix this bug.  (I have noticed NDDT get screwed up doing
+  symbol table lookup also; perhaps this is the cause of that
+  problem as well.)  (This analysis is based on information provided
+  by Tim Eldredge.)
+
+RESPONSE (Eric):
+
+  BARE-PSL is now created with no symbol table at all.  This
+  prevents the EXEC from being blown up, but prevents debugging
+  at times.  The LINKER was trying to make a symbol table that
+  wouldn't fit in memory with PSL.
+
+Date:  6-Oct-82 10:00:11
+From: FILMAN at HP-HULK
+Subject: Re: apply and list
+Class: Complaint, documentation deficiency
+
+  If only EXPRs can be correctly applied, then you need to fix the 
+  documentation, where it says:
+
+  "We permit macros and fexprs to be applied;"
+
+  though the rest of the sentence presents a confusing disclaimer.
+  In any case, why can FEXPRs and MACROS be correctly applied?
+					  Bob
+
+RESPONSE (Eric):
+
+  They can be applied, but the result of Apply(FexprOrMacro, X) is
+  the same as Apply(cdr getd FexprOrMacro, X).  That means that
+  the code is treated as though it were an EXPR.  FEXPRs take a
+  single argument, which is a list of unevaluated parameters.  In
+  the case of EXPRs, Apply(X, Y) is the same as Eval(cons(X, for
+  each U in Y collect list('QUOTE, U))).  This is not the case for
+  FEXPRs or macros.  In the case of macros, Apply can be used to
+  perform macro expansion, i.e.  (apply 'let '((let ((x y)) z)))
+  returns ((lambda (x) z) y).  In the case of FEXPRs, the list
+  given to APPLY should have one element, which is the formal
+  parameter to the function, e.g. if x=1, y=2 and z=3, then (apply
+  'list '((x y z))) returns (1 2 3).  This type of thing is only
+  dome in unusual situations, e.g. in Eval.  It is generally not
+  recommended that macros and fexprs be given to APPLY.  The
+  function which does what you want is EVAL.
+
+Date:  5-Oct-82 17:47:25
+From: FILMAN at HP-HULK
+Subject: Apply and list
+Class: Inquiry, deficiency
+
+  Apply doesn't seem to work with list.  I.e.:
+
+  (apply 'list '(3 4 5)) ==> nil
+
+  Is this a feature or a bug?
+					  Bob
+
+RESPONSE (Eric):
+
+  Only EXPRs can be APPLYed correctly.  LIST is a FEXPR.
+
+Date:  5 Oct 1982 1628-PDT
+From: Alan Snyder <AS at HP-HULK>
+Subject: Fast vector access
+Class: Compiler bug
+
+  The PSL compiler still has a bug related to fast vector access:
+
+  (de foo (v)
+    (cons
+     (+ (igetv v 0) (igetv v 1))
+     (+ (igetv v 2) (igetv v 3))
+     ))
+  FOO
+  (setf v [1 2 3 4])
+  [1 2 3 4]
+  (foo v)
+  (3 . 7)
+  (compile '(foo))
+  *** (FOO): base 460253, length 6 words
+  NIL
+  (foo v)
+  (0 . 7)
+
+  (*ENTRY FOO EXPR 1)
+  (*ALLOC 0)
+  (*MOVE (MEMORY (REG 1) (WCONST 4)) (REG 2))
+  (*WPLUS2 (REG 2) (MEMORY (REG 1) (WCONST 3)))
+  (*MOVE (MEMORY (REG 1) (WCONST 1)) (REG 1))
+  (*WPLUS2 (REG 1) (MEMORY (REG 1) (WCONST 2)))
+  (*LINKE 0 CONS EXPR 2)
+
+RESPONSE (Eric):
+
+  Fixed.
+
+Date:  5-Oct-82 15:11:06
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: Documentation for REPEAT
+Class: Documentation bug
+
+  Documentation for REPEAT is still incorrect in the latest
+  PSL reference manual.  The syntax is:
+  Repeat ([S:form], E:form): nil
+
+RESPONSE ():
+
+  Still extant.
+
+Date:  2-Oct-82 14:15:18
+From: douglas <LANAM at HP-HULK>
+Subject: Printing of error messages in compiler.
+Class: Suggestion
+
+  Could the error messages that are longer than one line, be
+  indented about 1 tab stop (5-8 spaces on the 2nd and succeeding
+  lines so that they stand out and are easier to distinguish and
+  read).  An example would be
+
+  *** Car in (car (foo 'foo1 (foo2 (foo3 'ffo4 (foo4 'xjks) 'sdjkl)
+	(append (foo2 'x) (apply 'foo3 '4))))), not used, therefore not
+	compiled.
+
+  Due to macros, a number of these come up in my program.
+
+	  thanks,
+		  douglas
+
+RESPONSE (Cris):
+
+  Low priority.
+
+Date:  2-Oct-82 12:48:03
+From: douglas <LANAM at HP-HULK>
+Subject: PRINC does too much.
+Class: Complaint
+
+  Princ should not check the position of the line to determine
+  whether or not the atom will fit.  There should be a higher
+  level function with that property.  I thought princ should
+  just print the atom.  (or is there a lower level princ with
+  out that check and possibly added carriage return not printed).
+	  douglas
+
+RESPONSE (Eric):
+
+  Improvement is needed.
+
+Date:  2-Oct-82 12:46:12
+From: douglas <LANAM at HP-HULK>
+Subject: Please do not have psl come up in the editor.
+Class: Complaint
+
+  This is not a desired start up position.
+  1) Reading logs of background jobs is very difficult, if you can get
+  them to work at all.
+  2) Nmode does not work on a lot of terminals.  (including the ever
+  popular chipmunk.
+  3) The first thing I want to do in a lisp is dskin or fasl in my
+  files, not edit a command to do this.
+  4) It is even difficult to run do's with this type of mode.
+	  (shell scripts).
+	  douglas
+
+RESPONSE (AS):
+
+  PSL no longer comes up in the editor.
+
+Date:  1-Oct-82 11:23:53
+From: Alan Snyder <AS at HP-HULK>
+Subject: Printing of the escape character (!)
+Class: Complaint, deficiency
+
+  The atom - prints as !- in Lisp mode.
+  The atom + prints as !+ in Lisp mode.
+  I believe this is a mistake.
+  The printer should not insert unnecessary !'s.
+
+RESPONSE (Cris):
+
+  Extant deficiency.  I assume it will be fixed when someone
+  shows he/she is being really hurt.  It's a real crock in my
+  personal opinion.
+
+Date: 30-Sep-82 11:09:01
+From: Alan Snyder <AS at HP-HULK>
+Subject: "<foo> already loaded" messages
+Class: Request, complaint
+
+  I would like to reiterate a request made previously, I believe, by
+  Doug to get rid of the "FOO already loaded" messages.  If you
+  feel strongly that some sort of warning is needed when people
+  type (LOAD FOO) by hand, then I would suggest having LOAD return
+  a string that would be printed by the Read-Eval-Print loop.
+  I don't think there is any need to print these messages when
+  the LOAD is contained in a file (either source or object) that
+  is being read.
+
+RESPONSE (Eric):
+
+  Fixed.
+
+Date: 29-Sep-82 11:34:48
+From: douglas <LANAM at HP-HULK>
+Subject: upon exit of psl (or interrupt with ^c).
+Class: Request
+
+  Can the terminal keys be restored upon exit of psl-nmode
+  (or interrupt with ^c)?
+	  dougla
+
+  Add to things psl should do when ^c is typed:
+  restore cntl-s.  (This should be possible since emacs does this).
+	  douglas
+
+RESPONSE (Cris):
+
+  Use C-X C-Z to exit NMODE; this problem does not occur when
+  using ^C to exit PSL in its ordinary top loop.
+
+Date: 29-Sep-82 10:01:01
+From: douglas <LANAM at HP-HULK>
+Subject: Bug in nmode
+Class: Bug, deficiency
+
+  If you type
+  (expression) 
+  cntrl-] E.
+
+  where the cntrl-] E is on the start of a new line, 
+  you get
+  Exiting NMODE Lisp
+  End of File read!,
+
+  shouldn't it execute the last expression?  Why should typing a carriage
+  return before the cntrl-] E make a difference?
+	  douglas
+
+RESPONSE (Alan):
+
+  If RETURN is typed before Lisp-E, NMODE is not supposed to read
+  the previous expression.  "End of File read!" is a reasonable
+  response.  "Exiting NMODE Lisp" is a confusing message, but not
+  generated by NMODE.
+
+Date: 28-Sep-82 20:59:41
+From: douglas <LANAM at HP-HULK>
+Subject: Close all parenthsis to a particular level.
+Class: Request
+
+  How about adding the ability of ] to close all parenthesis (as in franz,
+  maclisp, ucilisp).  It would be nice if it could stop at [ (as in franz,
+  maclisp, ucilisp).  But I realize you use [] for reading arrayes, thus
+  maybe you could use {} for this type of bracketing.  It would be nice
+  to type } to close an expression instead of )))))) (and have to count
+  them also, or wait for the editor to match them flipping the screen
+  at 1200 baud (That process is a pain to go through in the editor).
+	  douglas
+
+RESPONSE (Cris):
+
+  This is a relatively low priority now, I'd say.
+
+Date: 28-Sep-82 13:50:35
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: CompileTime and DskIn
+Class: Note
+
+  (CompileTime (dskin "blah.sl")) has the effect of treating the
+  contents of blah.sl as though they were textually embedded in
+  the file with the CompileTime form: those forms are compiled.
+
+  (CompileTime (load blah)) on the other hand causes the
+  definitions in blah.b to be made available at compile time.
+  Even if there is a text file blah.lap rather than binary
+  blah.b, "load" seems to only load the definitions.
+
+  If a file with (CompileTime (load foo)) in it is compiled, and
+  if foo.lap (another source file) exists rather than foo.b, then
+  the contents of foo.lap are effectively included in the source
+  file I am trying to compile.  This is a difference in behavior
+  between compiled and non-compiled files.
+
+RESPONSE (Eric):
+
+  Extant bug.  This is the actual behavior.  LOAD should always
+  make the definitions available rather than compiling them.  It
+  is intended that DSKIN result in compiling the contents of the
+  file referred to.
+
+Date: 28-Sep-82 11:19:30
+From: Alan Snyder <AS at HP-HULK>
+Subject: RETURN complaint
+Class: Compiler bug, complaint
+
+  The PSL compiler now produces an error message if it
+  encounters a RETURN with no arguments.  This is fine.
+  However, it still generates an invocation of "NIL".
+  It should be possible to avoid generating garbage code
+  when there are errors in the source.
+
+RESPONSE (Eric):
+
+  A warning is now issued, but code to return NIL is generated
+  and compilation continues.
+
+Date: 28-Sep-82 11:01:15
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: Documentation update for CopyStringToFrom
+Class: Note
+
+  Copy all characters from OLD into NEW.  This operation is destructive.
+  If the lengths of OLD and NEW differ, only the lesser number of
+  characters is copied.  If NEW is longer than OLD, the part not
+  copied into is left unchanged.
+
+RESPONSE ():
+
+  To be put into the manual.
+
+Date: 27-Sep-82 13:01:31
+From: Alan Snyder <AS at HP-HULK>
+Subject: Undefined functions
+Class: Complaint
+
+  The error "Undefined function FOO called from compiled code" should
+  (i.e., ought to be, for the user's sake) continuable.
+
+RESPONSE (Eric):
+
+  Yes, that would be one benefit of loading a register with the
+  number of arguments being passed to a function.  The problem
+  now is that continuation is performed by interpreting a LISP
+  form, and it is not known how many arguments should be put in
+  the list to be evaluated.
+
+Date: 27-Sep-82 11:27:15
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: EOF handling
+Class: Inquiry
+
+  There appears to be no documentation in the reference manual
+  concerning end of file handling, except for the case of READ.
+  It appears to be undocumented for ChannelReadChar in particular.
+
+RESPONSE (Cris):
+
+  See below, message from AS.
+
+Date: 27-Sep-82 04:33:32
+From: douglas <LANAM at HP-HULK>
+Subject: Speed of psl
+Class: Inquiry
+
+  I am finding psl on the vax to be much slower than psl on the 20.
+  Is this true?  Is there any reason for this?
+  (Things are noticiable a factor of 4 slower with equivalent
+  load averages - but I did not do any timings).
+	  douglas
+
+RESPONSE ():
+
+  ??
+
+Date: 27-Sep-82 09:02:49
+From: Alan Snyder <AS at HP-HULK>
+Subject: ChannelRead exception handling
+Class: Bug, documentation error
+
+  The manual says that ChannelRead will catch $READ$ and return
+  $EOF$.  This is false; only Read does the catch.
+
+RESPONSE (Eric):
+
+  None of the input functions use THROW any more.  Thus no
+  catches are performed, either.  READ and company return the
+  value of the variable $EOF$.  Character at a time functions
+  return (char EOF).
+
+Date: 24-Sep-82 14:20:40
+From: FILMAN at HP-HULK
+Subject: Page and section numbers
+Class: Suggestion, complaint
+
+  I find confusing the fact that (in the PSL manual) page and section numbers
+  are annotated the same way.  When the index refers to 8.5, I don't know
+  whether to rush off to section 8.5 (wrong) or page 8.5 .  How about 8.5 for
+  sections and 8-5 for pages, or something like that?
+					  Bob
+
+RESPONSE ():
+
+  No response yet.
+
+Date: 27 Sep 1982 03:57:05-PDT
+From: douglas at HP-Hewey
+Subject: VAX version and prettyprint
+Class: VAX deficiency
+
+  The module prettyprint does not exist on the vax 
+  (only the older module pretty).
+	douglas
+
+RESPONSE (Eric):
+
+  Fixed.
+
+Date: 23-Sep-82 15:26:13
+From: douglas <LANAM at HP-HULK>
+Subject: Backtrace.
+Class: Complain
+
+  I found if you have
+
+  (x (y (z a))) and you get an error evaluating (z a), you might find x and
+  y on the backtrace stack even though you haven't executed it yet.
+  Worse, if you trace y, y will never say it is entered but will be on 
+  the backtrace stack.  
+	  douglas
+
+RESPONSE (Cris):
+
+  Just what should appear on the backtrace stack and when is has
+  been a matter of some debate.  The phenomenon you are seeing
+  occurs just in interpreted code.
+
+Date: 22-Sep-82 15:34:38
+From: douglas <LANAM at HP-HULK>
+Subject: DO loops
+Class: Bug
+
+  do still returns t when there are no clauses after the test.
+  the manual says it returns nil.
+
+RESPONSE (Eric):
+
+  USEFUL has been rebuilt and presumably DO is correct.
+
+Date: 20-Sep-82 15:50:44
+From: douglas <LANAM at HP-HULK>
+Subject: Scanner
+Class: Bug
+
+  1.2xa is read as two tokens 1.2 and xa.
+  1.2ea gives a error message that the exponent is missing.
+
+  same with 1.2x-a and 1.2e-a
+
+  1xa is two atoms 1 and xa.
+  1ea says that the exponent in the float is missing.
+	  douglas
+
+RESPONSE (Cris):
+
+  Still extant.
+  I consider this a relatively low priority.  Common LISP has a
+  well-defined and general scanner that we should implement
+  eventually.
+
+Date: 20-Sep-82 11:07:38
+From: Alan Snyder <AS at HP-HULK>
+Subject: Excess right parens during compilation
+Class: Complaint
+
+  When compiling a file, extra right parens should produce
+  a warning message, as (in my case) they often are the result
+  of a paren mismatch in the middle of a function definition.
+
+RESPONSE (Eric):
+
+  The compiler now gives a warning message about this.
+
+Date: 20-Sep-82 10:43:11
+From: Alan Snyder <AS at HP-HULK>
+Subject: Functions to "replace" MAIN
+Class: Complaint
+
+  I have found when writing functions designed to "replace" MAIN,
+  that it is necessary for those functions to initialize the
+  variables CurrentReadMacroIndicator* and CurrentScanTable*,
+  otherwise after a SaveSystem when the program comes up, the
+  scan table will be in a very strange state.  I believe that
+  this initialization should be performed by a "pre-main"
+  procedure and that user-written "main" procedures should be
+  spared these details, which tend to be system-dependent.  Your
+  source code for Main claims "Redefine this function to call
+  whatever top loop is desired."  I agree, except that "this
+  function" should be one that does nothing except invoke the
+  "standard" top loop.
+
+RESPONSE (Eric):
+
+  Fixed.
+
+Date: 20-Sep-82 09:06:06
+From: PAULSON
+Subject: Read macros, the "BUG" function
+Class: Bug, deficiency
+
+  Two problems:
+    (1) Read macros are apparently not attached to read tables.  Therefore
+  a read macro for one read table may interfere with other read tables,
+  including the system read table.  
+    (2) the function BUG bombs on directory access privileges.
+
+RESPONSE (Cris):
+
+  Still extant.  At some point the Common LISP input mechanisms
+  should be implemented for PSL, solving the read macro problem.
+
+RESPONSE (Cris):
+
+  The BUG function is still incorrect, but in a different way.
+
+Date: 18-Sep-82 15:54:10
+From: douglas <LANAM at HP-HULK>
+Subject: What does #<Code:0> mean?
+Class: Inquiry
+
+  Why is this the return value of faslin?
+
+RESPONSE (Eric):
+
+  No comment on this question.  Faslin now returns NIL.
+
+Date: 17-Sep-82 11:40:31
+From: Alan Snyder <AS at HP-HULK>
+Subject: Use of fluid variables
+Class: Suggestion
+
+  As part of the current effort to "clean up" PSL, I would like
+  to suggest that an effort be made to reduce or eliminate the
+  use of fluid variables as "optional" or "implied" arguments,
+  by defining new functions with explicit arguments.  For
+  example, instead of having SpecialReadFunction*,
+  SpecialWriteFunction*, and SpecialCloseFunction*, there
+  should be an additional function OpenSpecial that takes four
+  arguments, the filename, and the three functions.  Another
+  example is DumpFileName*: currently there is no way to save a
+  PSL that does not have DumpFileName* bound to the name of the
+  file it was dumped to.  In the case of "system" programs, the
+  default dump file should probably be "PSL.EXE" (i.e.,
+  something that would write in the user's directory).  There
+  should be a variant of DumpLisp that takes the filename as an
+  argument (and does NOT bind DumpFileName*).  These are the
+  two examples that come to mind, there may be others.
+
+RESPONSE (Eric):
+
+  DumpLisp and SaveSystem now take arguments rather than using
+  fluid variables.  The problem with fluid variables and "open"
+  is still extant.
+
+Date: 17-Sep-82 11:14:26
+From: Alan Snyder <AS at HP-HULK>
+Subject: message "($FLUID FOO) not compiled"
+Class: Compiler complaint, inquiry
+
+  What does the message "($FLUID FOO) not compiled" mean?  It sounds
+  like the compiler has broken or something, although the program
+  seems to work.  Furthermore, why shouldn't it be compiled?
+  Did the compiler run out of registers or something?
+  Suggested fix: either fix the compiler to compile it, or change
+  the error message to be more informative to naive users.
+
+RESPONSE (Eric):
+
+  The message has been changed to "not used, therefore not compiled."
+
+Date: 17-Sep-82 09:54:27
+From: Alan Snyder <AS at HP-HULK>
+Subject: Endings of strings
+Class: Complaint
+
+  If I forget the ending " on a string in a file, then I get one message
+  "string continued over EOL" for every succeeding line in the file
+  when the file is read in.  There should be only one message given.
+  Furthermore, if you believe that multi-line strings are bad (which I
+  do), then you should probably generate an Error so that you don't
+  read the remainder of the file in "reverse polarity" (in terms of
+  what is inside vs. outside of string literals).
+  (Manual note: I couldn't find anything in my manual that addresses
+  the issue of multi-line string literals.)
+
+RESPONSE (Eric):
+
+  There is (and has been) a flag to turn off the message.  I
+  don't plan to change this; some major users in fact depend
+  heavily on multi-line string literals.
+
+Date: 17-Sep-82 02:46:17
+From: douglas <LANAM at HP-HULK>
+Subject: Proposal for inum/wnum arithmetic.
+Class: Suggestion
+
+  I have thought of a reason for having both i and w commands.
+  I think the w should be what both are now (just do the machine
+  operation and dont worry about tags).
+  But the i commands (iplus, ishift, ilor, etc.) could take their
+  arguments make sure they are working on a full word (either
+  go down the pointer to the integer object or move the immediate
+  number into a full word (or register), play with it there, then
+  if the number if to be passed to another procedure or used outside
+  the context of the i num arithmetic functions, to be send to
+  a function that would convert the word back to psl format.
+  If small, convert to immediate format, if big, return the pointer
+  to the object.  This way I could have access to a full word
+  on any machine, and be able to produce efficient open code,
+  and not have to worry about the psl tag bits.
+
+  The proposal would be if the system sees
+  (ilor (ishift x n) (iland a b)), that x, n, a, and b would be converted
+  first, then the operations done, and then the one result would be 
+  converted back.  No type checking would be done (if it is an immediate
+  number, the pointer would be followed and its location used, for 
+  efficiency.).
+
+  How does this idea sound?
+
+RESPONSE (Eric):
+
+  Not altogether right.  Some of this would be more applicable to
+  Franz LISP than it is to PSL.
+
+Date: 16 Sep 1982 1141-PDT
+From: Kendzierski at HP-HULK (Nancy)
+Subject: UNION clause of FOR
+Class: Documentation bug
+
+    The manual states that "(UNION EXP) is similar to (COLLECT EXP), but
+  only adds an element to the list if it is not equal to anything already
+  there."  However, I get the following results with COLLECT and UNION:
+
+  -----------------------------
+  (for (from i 1 4)
+    (collect (cond ((= i 1) 1)
+		   ((= i 2) 1)
+		   ((= i 3) 3)
+		   ((= i 4) 3))
+	     ))
+
+  Returned:  (1 1 3 3)
+  -----------------------------
+  (for (from i 1 4)
+    (union (cond ((= i 1) 1)
+		 ((= i 2) 1)
+		 ((= i 3) 3)
+		 ((= i 4) 3))
+	   ))
+
+  Returned:  3
+  -----------------------------
+
+RESPONSE (Cris):
+
+  Actually, UNION is similar to JOIN rather than COLLECT.  Thanks.
+  (The manual is incorrect.)
+
+Date: 13 Sep 1982 1249-PDT
+From: Alan Snyder <AS at HP-HULK>
+Subject: Make-String
+Class: Bug in COMMON.SL
+
+  Make-String in compiled form creates a string with 1 too many elements.
+
+RESPONSE (Eric):
+	Fixed.
+
+Date: 10 Sep 1982 1606-PDT
+From: Alan Snyder <AS at HP-HULK>
+Subject: (APPLY x (LIST a b c...))
+Class: Bug, complaint
+
+  The manual states that (APPLY x (LIST a b c...)) is compiled in
+  such a way that the list (LIST a b c ...) is not actually
+  constructed.  This is a very useful optimization that I rely
+  upon to make message passing efficient in my OBJECTS package.
+  However, I was recently surprised to discover that the
+  optimization is not performed if there are six or more elements
+  in the list.  I surmise that this is somehow related to the
+  number of real (as opposed to virtual) registers in the DEC-20
+  implementation, but don't see any reason why this should
+  prevent the optimization from being carried out.  What gives?
+
+RESPONSE (Eric)
+
+  It's a nasty interaction between optimized compilation of LIST and
+  optimized compilation of APPLY.  I can fix it.
+
+RESPONSE (Eric):
+
+  Fixed.
+
+Date: 10-Sep-82 10:49:18
+From: douglas <LANAM at HP-HULK>
+Subject: configuration of bps and heap on 20
+Class: Request
+
+  Can the configuration of the above in psl be changed by moving approx.
+  20K-30K of heap space from heap to bps in bare-psl and psl?
+	  thanks,
+		  douglas
+
+Date: 10-Sep-82 10:22:02
+From: douglas <LANAM at HP-HULK>
+Subject: Breakfunction property
+Class: Documentation deficiency, documentation bug
+
+  I found if you set the value of breakfunction on the propertylist of
+  an atom, and type the atom at the break level, it will execute
+  that function.  This needs to be documented somewhere.  Also the
+  help file printed at the level should be able to be updated to
+  reflect any changes the user may make.   I am not sure I like having
+  atoms automatically changed into functions at type in, but I do like
+  being able to change the break system to take control characters
+  instead of alphabetic characters.
+	  douglas
+
+Date: 10-Sep-82 09:07:36
+From: douglas <LANAM at HP-HULK>
+Subject: warnings by compiler.
+Class: Request
+
+  When the compiler says something is declared fluid, could you
+  include the function that caused this on the same line in the
+  message.  Due to the fast number of lisp systems, I have a hard
+  time remembering whether yours does it before it prints the
+  function name concerning it or after.
+	  douglas
+
+RESPONSE (Eric):
+
+  Fixed.
+
+Date:  9-Sep-82 15:08:09
+From: douglas <LANAM at HP-HULK>
+Subject: psl space allocations on the vax
+Class: Request
+
+  Could the psl on the vax be reconfigured so that there is 100K words of
+  bps free at its startup (currently it is approx 46K words)?
+	  thanks,
+		  douglas
+
+Date:  9-Sep-82 14:32:52
+From: douglas <LANAM at HP-HULK>
+Subject: " . . .  not compiled" message
+Class: Inquiry, complaint, request
+
+  Does the following mean the whole phrase was not compiled or
+  just the car was not compiled?
+
+  *** (car (merge-comment
+	    (*i-put-datum (frame ($local type))
+			  (get-field-location 'nil ($local key1))
+			  '3 '(insert-frame (fname :frame)))
+	    'finherit: 'continue))
+  not compiled.
+
+
+  If the first, it is very, very wrong since all of these functions are my
+  own and do side effects (set property lists).
+  If the second, the message should be changed to something like, return
+  value of car is not used and thus car is not being compiled.
+	  douglas
+
+RESPONSE (Eric)
+
+  It means just the CAR was not compiled.  I'll see what I can do about
+  the message.
+
+RESPONSE (Eric)
+
+  Fixed the message.
+
+Date:  9-Sep-82 14:29:09
+From: douglas <LANAM at HP-HULK>
+Subject: Fluid and macro of the same name
+Class: Bug, deficiency
+
+  One cannot use the same name for a fluid and a macro.
+  Please fix this soon.  It is a very annoying restriction that
+  shouldn't exist.
+	  douglas
+
+RESPONSE (Eric)
+
+  Fixed.
+
+Date:  3-Sep-82 13:06:38
+From: FILMAN at HP-HULK
+Subject: emode and []
+Class: EMODE deficiency, EMODE complaint
+
+  The s-expression functions in emode don't seem to know about []'s.
+  Since these are the default construction of defstruct, this is a serious
+  deficiency.
+					  Bob
+
+Date:  3-Sep-82 11:57:28
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: STEP bug
+Class: Bug
+
+  Try (step '(plus 3 4)).  Step using ^N.  The stepper breaks after
+  a couple of steps.
+
+RESPONSE(Benson):
+
+  Fixed.
+
+Date:  3-Sep-82 04:52:14
+From: douglas <LANAM at HP-HULK>
+Subject: can you change princ,
+Class: Request
+
+  Can you change the printing of the following by princ, so that the open 
+  parens are on the beginning of the line, not the end?   I think that
+  this would be more pleasant to look at.
+  Currently:
+  (THING (WCHEM-CLASS (WCH) (WCHO (C-O-STRETCH-ALCOHOL) (O-H-DEFORMATION (
+  (THING (WCHEM-CLASS (WCH) (WCHO (C-O-STRETCH-ALCOHOL) (O-H-DEFORMATION (
+  O-H-STRETCH-FREE-OH-ALCOHOL) (O-H-STRETCH-INTRAMOLECULAR-H-BONDED-ALCOHOL) (
+  C=O-STRETCH-OVERTONE) (C=O-STRETCH))))
+
+
+    (Actually I tried to copy this off my terminal and one line got mixed up,
+    but it still displays what is currently done.
+	    douglas
+
+RESPONSE(Benson):
+
+  That's what PRETTYPRINT is for.  It has been suggested that the top loop
+  use PRETTYPRINT instead of PRINT.  Any opinions?
+
+Date:  2-Sep-82 15:17:00
+From: Alan Snyder <AS at HP-HULK>
+Subject: Garbage collection trap request
+Class: Feature request
+
+  I would like to have the GC starting and ending messages
+  printed by specific functions that are invoked at the beginning
+  and ending of each garbage collection.  These functions should
+  take as arguments all information that they use to construct an
+  appropriate message.  This change would allow me to alter the
+  form of announcement without mucking with the GC itself.  In
+  particular, I don't want to have to make an altered copy of the
+  GC code or access its private variables.  I realize that the
+  GC-start function would have to be written to not allocate any
+  storage.  I need this feature to display a GC announcement in
+  NMODE.
+
+Date:  2-Sep-82 12:13:04
+From: douglas <LANAM at HP-HULK>
+Subject: flag *continuableerror
+Class: Documentation request
+
+  I found a flag *continuableerror which should be documented in the manual.
+  (It is very useful).
+
+Date:  2-Sep-82 11:45:35
+From: FILMAN at HP-HULK
+Subject: printing circular structures to depth
+Class: Feature request, notice, miscellaneous
+
+  Unfortunately, PSL doesn't have a printlevel function (that
+  prints a structure only to a certain depth).  Nor does the
+  circular printing function deal with circularity in vectors.
+
+  I've written a (not deeply thought-out) depth-limited printing
+  function of my own.  Since PSL doesn't come with the most
+  complete set of user utilities, how about a user-utility
+  function area for such contributions?
+
+					  Bob
+
+Date:  2-Sep-82 11:05:43
+From: Alan Snyder <AS at HP-HULK>
+Subject: Char-UpCase and Char-DownCase
+Class: Bug
+
+  Char-UpCase and Char-DownCase return NIL instead of their
+  argument when no conversion is done.
+
+RESPONSE (Eric):
+	Fixed.
+
+Date:  2-Sep-82 10:53:48
+From: FILMAN at HP-HULK
+Subject: atomic rules
+Class: Complaint
+
+  In PSL, (atom x) == (not (pairp x)).  Thus, vectors, code pointers
+  strings, etc are all atoms.
+
+  I know that this is documented.  However, it is counter-intuitive
+  (counter-intuitive == the other lisps I've played with don't do it this
+  way).  Not having read the fine print, I spent an afternoon discovering this
+  fact.
+					  Bob
+
+RESPONSE (Eric)
+
+  I agree it is confusing, but it conforms to all the other Lisps
+  I know of!  Perhaps you are confusing atoms with symbols (called
+  litatoms in Interlisp?)
+
+Date:  2-Sep-82 10:43:26
+From: douglas <LANAM at HP-HULK>
+Subject: continuable break.
+Class: Inquiry, feature request
+
+  Is there a function that would be (contbreak) ?
+  Which is something to (break) as (conterror) is to (error)?
+	  douglas
+
+RESPONSE (Eric)
+
+  That's really what ContinuableError is.  It just puts you in
+  a break loop where you can fix things.
+
+Date:  2-Sep-82 01:58:26
+From: douglas <LANAM at HP-HULK>
+Subject: break package and returning new values.
+Class: Inquiry
+
+  I have read through the break package, and tried a few things, and can
+  not find how I can do something that means
+  (return value) where value is a lisp-expression to be evaluated and become
+  the value of the call to break(or conterror), without calling 
+  the editor.  I would like to be able to return a value or evaluate an
+  expression that may not be similar to the expression that caused the 
+  error and return that value back from the break point (similar to
+  what one can do in maclisp/franz/lisp machine lisp).
+  How do I do this?
+	  douglas
+
+RESPONSE(Snyder):
+
+  Just type the expression at the break handler, then type 'C' for
+  "continue using last value".
+
+Date:  1-Sep-82 23:02:45
+From: douglas <LANAM at HP-HULK>
+Subject:
+
+  Did someone change faslout?  It use to echo input, but now it doesn't
+  seem to.
+
+  Can you change faslout back to echoing input that is just
+  passed to the fasl file.  I can not figure out easily when I
+  finish typing an expression to faslout any more.
+
+Date:  1-Sep-82 22:58:44
+From: douglas <LANAM at HP-HULK>
+Subject: defn* and *defn
+Class: Documentation request
+
+  what is defn* and *defn?  and what is dfprint*?  They are on page
+  19.3.  They seem important yet are pretty much undocumented.
+  What are they.
+
+RESPONSE (Eric)
+
+  *DEFN and DFPRINT* are used by the top loop to allow processing
+  other than evaluation.  if *DEFN is non-NIL, DFPRINT* is applied to
+  each form instead of being evaluated.  This is the means by
+  which FASLOUT and other functions work.
+
+Date:  1-Sep-82 22:55:56
+From: douglas <LANAM at HP-HULK>
+Subject: macros expanding to "bothtimes"
+Class: Complaint, bug, deficiency
+
+  HP-PSL 3.0, 27-Aug-82
+  1 lisp> (bothtimes (setq x 2))
+  2
+  2 lisp> x
+  2
+  3 lisp> (dm x (y) `(bothtimes (setq . ,(cdr y)))
+  3 lisp> )
+  X
+  4 lisp> (x z 4)
+  4
+  5 lisp> z
+  4
+  6 lisp> (faslout "junk")
+  FASLOUT: (DSKIN files) or type in expressions
+  When all done execute (FASLEND)
+  T
+  7 lisp> (bothtimes (setq a 3))
+  3
+  8 lisp> (x b 4)
+  9 lisp> (faslend)
+  *** Init code length is 2
+  *** A declared fluid
+  *** B declared fluid
+  **FASL**INITCODE**NIL
+  10 lisp> a
+  3
+  11 lisp> b
+  NIL
+  12 lisp> (quit)
+
+  I do not think this is correct, the call to x on line 8 should be expanded
+  by the compiler and then the system should notice that it is a bothtimes
+  clause and should be executed at compile time and compiled.  Instead it
+  appears to be just compiled.
+
+  The x is expanded (it is just not executed at compile time like it 
+  is suppose to be).
+
+  Can you fix this soon?  
+	  thanks,
+		  douglas
+
+Date:  1-Sep-82 17:00:41
+From: FILMAN at HP-HULK
+Subject: trace
+Class: Inquiry
+
+  The function "trace" is defined but doesn't trace; nor is it documented in
+  my version of the documentation.
+				  Bob
+
+Date:  1-Sep-82 12:08:02
+From: FILMAN at HP-HULK
+Subject: circular structure bugs
+Class: Bug, deficiency
+
+  1) Printx doesn't handle circular vector structures.  Since defstruct
+  makes vectors, this is a serious problem
+
+  2) Consider the following sequence:
+
+  (setq bbb '[a b c d])
+  (indx bbb 3)			--> d
+  (setindx bbb 3 bbb)		--> prints the appropriate circular structure
+  (indx bbb 3)			--> an infinite structure
+  (indx (indx bbb 3) 3)		--> produces a push down overflow error
+  (indx (indx (indx bbb 3) 3) 1)  --> also produces a push down overflow error
+
+  What gives?
+					  Bob
+
+Date:  1-Sep-82 12:01:03
+From: douglas <LANAM at HP-HULK>
+Subject: br does not work with macros.
+Class: Bug
+
+  If you have a function x which is a macro.  Say
+  (dm x (y) (rplaca y 'princ))
+
+  then do (br x) .
+
+  Before the call to br, 
+  (x 'a) typed into the interpretor will execute the princ and return a.
+
+  After the call to br,
+  typeing (x 'a) to the interpretor will cause the expression
+  (princ 'a) to be returned but not evaluated.
+
+	  douglas
+
+Date:  1-Sep-82 11:52:25
+From: douglas <LANAM at HP-HULK>
+Subject: compiletime
+Class: Bug
+
+  do 
+  @psl
+  (compiletime (setq a 1))
+  a
+
+  You will get that a has been set to 1.  I do not think this is right.
+
+RESPONSE (Eric)
+
+  (compiletime xxx) really means (eval-when (compile eval) xxx)
+  in the current setup.  I think (eval-when (compile) xxx) does
+  what you want.
+
+Date: 31-Aug-82 11:14:18
+From: douglas <LANAM at HP-HULK>
+Subject: declaration of functions and variables.
+Class: Deficiency, feature request
+
+  I think it is better to have a declaration statement to declare
+  something as a fexpr or as a nexpr, if you wish to use it before
+  defining it in compiled code.
+  Currently the manual says to write a dummy version.
+  But something like :
+  (declare (*fexpr x) (*nexpr x)) would be better.
+  It could also be used in compiling files that reference other
+  files but that you don't wish to load everything in to compile it.
+
+  Also,
+  (fluid x) should not set x to nil.
+
+  and there should be two property list names for function type and
+  variable type, not one, you should be able to use a name as a
+  global variable and a fexpr.
+	  douglas
+
+Date: 31-Aug-82 10:46:17
+From: douglas <LANAM at HP-HULK>
+Subject: feature in print.
+Class: Request
+
+  It would be nice if print could know about readmacrochars that
+  do as follows ^lisp-expression => (tag lisp-expression).
+  An example is quote.
+  Note: it should make sure the tagged list is of length 2 before
+  doing the special print(at least in the case of quote).
+	  douglas
+
+Date: 30-Aug-82 15:34:57
+From: FILMAN at HP-HULK
+Subject: break and emode
+Class: Deficiency
+
+  When trying to "q" from a break in emode, the cursor goes to the end of
+  the second following line, not the next line.  That is, if the screen is:
+  (cursor shown by *)
+
+  q*
+  first line
+  second line
+
+  and you execute a meta-e, you get:
+
+  q
+  first line
+  second line*
+
+  not what you should get, which is:
+
+  q
+  first line*
+  second line
+
+
+					  Bob
+
+Date: 30-Aug-82 13:38:40
+From: FILMAN at HP-HULK
+Subject: emode, breaks and "a"
+Class: Bug
+
+  Giving an "a" from emode inside a break seems to confuse the emode
+  page printing routines some.
+					  Bob
+
+Date: 30-Aug-82 10:34:10
+From: FILMAN at HP-HULK
+Subject: break window
+Class: Inquiry
+
+  What happened to the break window?
+					  Bob
+
+RESPONSE(Perdue):
+
+  It was removed because it behaved very poorly in various
+  slightly "unusual" situations.
+
+Date: 28-Aug-82 03:57:53
+From: douglas <LANAM at HP-HULK>
+Subject: interrupt and dumpsave.
+Class: Deficiency
+
+  If you do 
+  (load interrupt)
+  (savesystem "xxx.exe")
+  (quit)
+  @xxx.exe
+
+  The interrupts will not work in xxx.exe, but the system will think the
+  file was already loaded.
+
+	  douglas
+
+RESPONSE (Eric)
+
+  The function (INITIALIZEINTERRUPTS) is called when the module
+  is loaded.  It needs to be called in a fresh core image as well.
+  It's not clear to me what the best way to ensure that is.
+
+Date: 28-Aug-82 03:56:46
+From: douglas <LANAM at HP-HULK>
+Subject: vector print length limit.
+Class: Feature request
+
+  There should be a special variable (say *printlength) which is set to 
+  the maximum number of elements in a vector, list, (half-words vectors),
+  which are printed out.  The rest could be printed ... .
+  This variable could be reset by the user (nil for no limit).  But I
+  think there should be a limit in the system (say 25-30?), often I
+  get a strange error in compiled code which results in the endless
+  printing of a vector.
+	  douglas
+
+Date: 27-Aug-82 16:09:05
+From: douglas <LANAM at HP-HULK>
+Subject: Printing "quote" expressions
+Class: Bug
+
+  @psl
+
+  1 lisp> '(quote a b)
+  'A
+  2 lisp>
+
+	  douglas
+
+RESPONSE (Eric)
+
+  Fixed (see BUG-FIX.LOG).
+
+Date: 27-Aug-82 14:55:33
+From: douglas <LANAM at HP-HULK>
+Subject: file function needed.
+Class: Feature request
+
+  Is there a function which can tell me when a file was last written to 
+  the disk?  I could use such a function.
+  (I know this is machine/operating system dependent).
+	  douglas
+
+RESPONSE(Snyder):
+
+  The file <HP-PSL.EMODE>DIRECTORY.SL has functions that almost
+  do what you want.  Take the part of FILE-DELETED-STATUS that
+  does at GTJFN to get a JFN, then pass that to JFN-WRITE-DATE.
+
+RESPONSE(Perdue):
+
+  It appears that we will be adopting the Common LISP file
+  manipulation functions.
+
+Date:      26 Aug 1982 17:21-PDT (Thursday)
+From:	   Liu (?) at HP-PCD
+Subject:   Function cells, function bindings, property lists
+Class:	   Inquiry, documentation deficiency
+
+  We run psl on VAX/750 under UNIX.
+
+  The problems are
+
+  (1) I first defined a function "x".  Then I initialized the property
+      list of "x" by using "SetProp" which turned my function definition
+      into "NIL".
+
+  (2) I went on typing my function definition again.  Then I looked at
+      my property list.  It has my function definition with some other
+      goodies in it.
+
+  I'll imagine the function cell and the property cell are two seperate
+  entities.  So, these side effects are unexpected and undesired.
+
+  Following is a sample of the problems.
+
+  1 lisp> (de x (y) (car y))
+  X
+  2 lisp> (pp x)
+  (DE X (Y) (CAR Y))
+  T
+  3 lisp> (setprop 'x '((color . red)))
+  ((COLOR . RED))
+  4 lisp> (prop 'x)
+  ((COLOR . RED))
+  5 lisp> (pp x)
+  *** X has ill-formed definition.
+  (DE X NIL)
+  T
+  6 lisp> (de x (y) (car y))
+  Do you really want to redefine the system function `X'?(Y or N)y
+  *** Function `X' has been redefined
+  X
+  7 lisp> (pp x)
+  (DE X (Y) (CAR Y))
+  T
+  8 lisp> (prop 'x)
+  ((*LAMBDALINK LAMBDA (Y) (CAR Y)) USER (COLOR . RED))
+
+RESPONSE(Perdue):
+
+  Thanks for the good observation.  It turns out that the
+  function cell in PSL always contains a machine instruction,
+  so the lambda expression can't be stored there.  PSL stores
+  the lambda expression on the property list.  I don't believe
+  this fact is documented.
+
+RESPONSE (Eric)
+
+  Calling SETPROP is inadvisable under almost any situation.
+
+Date:      26 Aug 1982 16:35-PDT (Thursday)
+From:	   Someone at HP-PCD
+Subject:   "apply" function
+Class:	   Comment
+
+  When the function "(apply 'plus '(1 2 3))" is entered, psl returns a line
+  of the form
+
+  #<Unknown:15602127320>
+
+  rather than the result "6".
+
+RESPONSE(Perdue):
+
+  PLUS is a MACRO, so you don't get what you expect as an answer.
+  In general, applying a macro causes it to perform macro expansion
+  but not to evaluate the expanded form.  Probably applying a macro
+  ought to either be an error.  In some LISPs (apply fn arglist)
+  is equivalent to (eval (cons fn arglist)) when fn is a macro, but
+  these are not equivalent when fn is a normal function.
+
+Date: 26-Aug-82 15:27:19
+From: FILMAN at HP-HULK
+Subject: ***** Unexpected EOF while reading {99}
+Class: Inquiry
+
+  I get the above message in a break, and all the ^q's I give it don't pop.
+  Is there some sure way back to the top level?
+					  Bob
+
+RESPONSE(Perdue):
+
+  Say "a" rather than "q" to get out.  There is a menu that tends to come
+  up these days, even when you don't want it.  When you don't want it,
+  use ^XO to get out of it.  A couple of ^XOs and it will even disappear
+  from the screen.  We'll get rid of that menu altogether in a day or so.
+
+Date: 26-Aug-82 12:14:36
+From: FILMAN at HP-HULK
+Subject: closures
+Class: Comment, documentation deficiency
+
+  I was pleased to see the documentation on closures on page 10.9
+  of the psl manual.  Unfortunately, this stuff is not
+  implemented.  Perhaps a better warning than "[??? Not yet
+  connected to V3 ???]" could be associated with this material.
+					  Bob
+
+Date: 26-Aug-82 12:12:28
+From: FILMAN at HP-HULK
+Subject: defstruct
+Class: Documentation deficiency
+
+  The defstruct documentation in the psl manual does not correspond to the
+  implementation in psl.  For example, defstructp doesn't exist.  Chris
+  assures me that the defstruct in psl is lisp machine defstruct.  Perhaps
+  the manual could be adjusted for this reality.
+					  Bob
+
+Date: 26-Aug-82 11:54:50
+From: FILMAN at HP-HULK
+Subject: emode and mm
+Class: Bug
+
+  If you're in emode, and call mm, the exit from mm leaves emode confused.
+  The various controll characters to the screen get printed.  Doing an ^x^z
+  and a continue psl fixes the problem.
+					  Bob
+
+Date: 26-Aug-82 11:23:54
+From: douglas <LANAM at HP-HULK>
+Subject: bugs in emode.
+Class: Bug, inquiry
+
+  try the following:
+  @psl
+  1 lisp> (emode)
+  ^\e^L
+
+  (that is type meta-e, cntl-l as the first input to emode).
+
+  can ctrl-h work the same as ^b ?  It does in emacs.
+
+	  douglas
+
+Date: 26-Aug-82 10:58:53
+From: FILMAN at HP-HULK
+Subject: Handling of macro expansion in the interpreter
+Class: Comment
+
+  This is a subtle one, that most lisp's get wrong.
+
+  In PSL, macros eat stack.  For example, the sequence
+
+  (setq x 1000)
+  (dm awhile (l)(cond  ((eval (cadr l)) (eval (caddr l)) l)
+		       (t nil)))
+  (awhile (greaterp x 0) (setq x (sub1 x)))
+
+  gets a stack overflow; it needn't.  I believe that stanford 1.6 lisp
+  does this right, while uci-lisp does it wrong.
+
+					  Bob
+
+Date: 26 Aug 1982 0857-PDT
+From: douglas <LANAM>
+Subject: you can do a funcall or apply on a code pointer.
+Class: Comment
+
+Date: 26-Aug-82 09:47:51
+From: douglas <LANAM at HP-HULK>
+Subject: why are there global variables which can be bound statically?
+Class: Inquiry, complaint
+
+  what is really gained by this?
+
+RESPONSE(Perdue):
+
+  It is thought that it is not meaningful to rebind certain
+  global variables.  The declaration is useful to some LISP
+  implementations.
+
+message continues:
+
+  I find it unreasonable that I can not do
+  (let ((out* (open "junk" 'output))) (princ ....))))
+
+  And if I can't do it this way, I have to use a catch to make sure that
+  out* is bound correctly after the body of the let is executed.
+	  douglas
+
+RESPONSE(Perdue):
+
+  The official PSL I/O system will probably be redone along the
+  lines of Common LISP.
+
+Date: 26-Aug-82 09:22:25
+From: douglas <LANAM at HP-HULK>
+Subject: errors in manual.
+Class: Documentation bug
+
+  Page 14.1:
+
+  Under the function savesystem, is a spelling error.
+  lispbannner!* should be lispbanner!*.
+
+
+  On page 13.2 is the following :
+
+  BREAKOUT!* (initially: NIL)     global
+	  similar to BREAKOUT!*.
+
+Date: 25-Aug-82 13:50:26
+From: FILMAN at HP-HULK
+Subject: Page headings in the manual
+Class: Documentation
+
+  The psl manual "swaps" the page and section numbers on left and right pages,
+  but leaves the "PSL Manual" and section names unswapped.  This is a bit
+  confusing.
+
+RESPONSE(Kendzierski):
+
+  This has been remedied in newer editions of the manual.
+
+Date: 25-Aug-82 13:40:16
+From: FILMAN at HP-HULK
+Subject: "bug" function
+Class: Bug
+
+  The (bug) function gives an access failure (and dies in emode)
+
+  The function defstructp is undefined.
+Date: 22-Aug-82 13:45:20
+From: PAULSON at HP-HULK
+Subject: SUBSTRING
+Class: Complaint, documentation deficiency
+
+  In INTERLISP, (SUBSTRING STR N M) gives you the Nth through Mth
+  elements of the string.  Makes sense, right?  And in ZLisp,
+  (NSUBSTRING STR N M) gives you the (N+1)th through (M+1)th
+  elements.  Fine- ZLisp does zero-indexing.  But in PSL,
+  (SUBSTRING N M) gives you the (N+1)th through Mth elements.
+  This does not make sense at all (and it isn't documented
+  either.)
+
+RESPONSE (Eric)
+
+  SUBSTRING in PSL is exactly the same as SUBSTRING in Zetalisp,
+  except that the END argument is required, not optional, and the
+  AREA argument is not used.
+
+Date: 20 Aug 1982 17:34:58-PDT
+From: Martin.Griss <Griss at UTAH-20>
+Subject: [Norman.kentvax at UDel-Relay: psl stray queries]
+Class: Miscellaneous
+
+  this is a very initial bunch of psl queries/thoughts.
+  it is also a test to see if i can get mail out of this vax
+  & over to you lot.
+  (a)i
+
+  (a) on vax psl 'messages' and 'real output' get interleaved in what
+  seems to be an assynchronous manner. at least i seem to get error
+  messages all mixed in with the stuff i print, so the idiom
+      print <my own messages>;
+      error 'stop here;
+  is not as helpful as I would like.
+
+RESPONSE (Eric)
+
+  VAX Unix terminal output has been changed to be line buffered
+  to speed it up.  This should have the side benefit of removing
+  the interleaving of stdout and errout.
+
+  (b) I have tried to use
+      rlisp <<here | tee logfile
+      on echo;
+      ....
+
+      to get a copy of input & output of a set of standartd tests. the
+      'on echo;' seems not to be honoured? also the error recovery is
+      a mess in this case because i go into lisp syntax & need to type
+      special error-break-loop commands to escape it, and these are
+      abominated unless i am in the error loop.
+
+  (c) in ann error
+  I wanted to see the value of fluid variables called a,b,c,d,...
+  but of course some of these letters gave magic effects! i ended
+  up with going (eval 'c) & similar nasties. yuk. also could the 
+  backtrace print values that fluids have on the stack, or could i
+  have some similar easy way to see values of fluids that have been
+  covered up by subsequent bindings. furthermore the mess one gets on
+  going (backtrace) is a MESS and i find it hard to see the stuff that
+  i want for all the muck that i dont.
+
+RESPONSE (Eric)
+
+  Yes, backtrace and break are both weak.
+
+  (d) try printing (expt 2 31). for me it gives an infinite string of -
+  signs!!!!!!!
+
+RESPONSE (Eric)
+
+  The problem is due to the fact that the most negative number in
+  a 2's complement representation has no positive counterpart.
+  The solution (courtesy of Alan Snyder) is to do the computations
+  on numbers less than zero, so that positive numbers are negated
+  before processing rather than negative numbers being negated.
+  This will probably be fixed in PSL soon.
+
+  (e) lack of bignums is mildly bothersome - for work with reduce I guess
+  i will lash up a botched bignum package representing numbers as vectors
+  (so they pass the atom test), cos i presume your proper version is in
+  the pipeline but not ready yet.
+
+RESPONSE (Eric)
+
+  Bignums do exist, as a loadable module.  Do (LOAD BIG).
+
+  (f) i looked for the followng functions without apparent success:
+	 random()    generate random number
+	 timeofday() like date() but gives wallclock time
+	    (I wanted it to help generate a good seed for my own
+	     random number generator!)
+
+RESPONSE (Eric)
+
+  (RANDOM) is obtained by LOADing MATHLIB.  It uses (TIME) to
+  generate its seed.  If (TIME) is not documented it should be.
+
+  (g) in rlisp, various things I expected to be errors were not
+  trapped very hard, e.g. a missing ')' seemed to be continuable
+  when i didn't expect/want it to. also "help help" failed by
+  turning into (help 'help) internally, not (help help), and in a
+  break look following an error (help <anything?>) complained
+  about the help package not being loaded even though I had
+  called it from rlisp.
+
+RESPONSE (Eric)
+
+  There were bugs in the help system which I believe have been
+  fixed.  HELP HELP; is still parsed incorrectly in RLisp, and
+  that probably will not be fixed.
+
+  (h) i suspect that often while in an break loop i want further
+  errors ignored rather than letting them push me further into
+  deeper break loops. I might be happy to have a break level that
+  eats simple 1-char commands to continue, quit, backtrace with
+  one char that pushes me into a brand new read-eval-print loop.
+  for rlisp I guess that should be an rlisp r-e-p loop?
+
+RESPONSE (Eric)
+
+  It has been suggested that there be an absolute limit on depth
+  of break loops.  In any case it seems clear that the break loop
+  mechanism should be redesigned; this is far from the only complaint.
+
+  I will try to collect further notes to pass on as I think of things:
+  just put these somewhere in your big pile of gripes!
+
+  Was good to see you in Pittsburg. cheers. arthur
+
+Date: 19-Aug-82 10:07:31
+From: Alan Snyder <AS at HP-HULK>
+Subject: WNOT
+Class: CMACRO Bug
+
+  The *WNOT CMACRO produces bad code when its argument is
+  an integer constant.  For example, the expression
+  (WNot 7) produces (SETCM (REG 1) 7), which computes
+  the complement of the contents of register 7.
+
+RESPONSE (Eric)
+
+  This case should be caught and evaluated in the first pass of
+  the compiler.  The CMACRO should never be used.
+
+Date: 19-Aug-82 09:35:24
+From: LANAM at HP-HULK
+Subject: History list package
+Class: Deficiency
+
+  When you do (hist), it tell you things like:
+  5       Inp: (HIST)
+	  Ans: NIL
+  6       Inp: Q
+	  Ans: NIL
+
+
+  But it doesn't tell me that the Q on (inp 6) is a response to the break
+  package, not the evaluation of the atom q.  It also doesn't tell me that
+  (ans 4) is nil because it never existed.{History is an undefined function}.
+
+RESPONSE (Eric)
+
+  In general whenever a value is not returned by a function in the
+  top loop, such as if an error occurs, NIL is put in the value
+  position.  Would it be preferable to put something else there,
+  such as "Abnormal termination"?
+
+Date: 18-Aug-82 12:16:33
+From: Alan Snyder <AS at HP-HULK>
+Subject: Fast arithmetic and fast vector access
+Class: Compiler bug
+
+  There is a serious PSL compiler bug relating
+  to the interaction between fast arithmetic
+  and fast vector access.  In the following code,
+  note that register 1 is clobbered by the MOVE
+  instruction before it is used as an index
+  register in the ADD instruction.  (Possibly
+  useful info: if the vector fetch is replaced
+  by CAR, the compiler does the right thing,
+  i.e., moves V to a free register before
+  loading register 1.)  PLEASE FIX THIS BUG!!!!
+  ----------------------------------------------
+  (CompileTime (Load Fast-Vector))
+  (de test (v a)
+    (WPlus2 (IGetV v 0) a))
+  ----------------------------------------------
+  (*ENTRY TEST EXPR 2)
+  (*ALLOC 0)
+  (*MOVE (REG 2) (REG 1))
+  (*WPLUS2 (REG 1) (MEMORY (REG 1) (WCONST 1)))
+  (*EXIT 0)
+  ----------------------------------------------
+	  (MOVE (REG 1) (REG 2))
+	  (ADD (REG 1) (INDEXED (REG 1) 1))
+	  (POPJ (REG ST) 0)
+  ----------------------------------------------
+
+RESPONSE (Eric)
+
+  I believe this bug has been fixed in the latest release from Utah.
+
+Date: 18-Aug-82 09:52:47
+From: Alan Snyder <AS at HP-HULK>
+Subject: PRINTX
+Class: Deficiency
+
+  PRINTX apparently does not handle shared structures involving
+  Vectors.
+
+RESPONSE (Eric)
+
+  True.  Don Morrison wrote a quick and dirty circular structure
+  printer GRAPH-TO-TREE, obtained by LOADing GRAPH-TREE, which
+  correctly handles circular vectors.
+
+Date: 15-Aug-82 12:36:13
+From: LANAM at HP-HULK
+Subject: bug in macroexpand.
+
+  HP-PSL 3.0, 12-Aug-82
+  1 lisp> (macroexpand '(setq a b c d))
+  (SETQ A B)
+
+  The result should have been '(setq a b c d)).
+
+RESPONSE (Perdue):
+
+  Right on expanding SETQ.  There may be an associated compiler bug, too.
+
+RESPONSE (Eric)
+
+  I fixed the source for MACROEXPAND.  The compiler does its own
+  processing and is not affected.
+
+Date: 14-Aug-82 18:59:24
+From: LANAM at HP-HULK
+Subject: what does ($fluid :value) not compiled mean?
+Class: Inquiry
+
+  I got this between two functions I compiled, but there was no code between
+  the two function (and the declaration was pages earlier).
+	  thanks,
+		  douglas
+
+RESPONSE (Eric)
+
+  "*** FOO not compiled" from the compiler means that FOO has no side
+  effects and is used in a place where no value is required.  The
+  compiler does not issue code for such expressions.
+
+Date: 14-Aug-82 18:33:00
+From: LANAM at HP-HULK
+Subject: Compiling variables in the CAR position
+Class: Inquiry, complaint
+
+  HP-PSL 3.0, 12-Aug-82
+  1 lisp> (setq *comp t)
+  T
+  2 lisp> (defun a (b) (b b))
+  *** Functional form converted to APPLY (B B)
+  *** (A): base 412016, length 3 words
+  A
+
+
+  Why is it, if the function and argument have the same name, it
+  gives me this message, but if I change either the name of the
+  function or the argument, it doesn't give me this message?
+  I don't think this message should pop up.
+
+  Even if the function b was declared already.
+  (defun a (b) (B b)) causes the system to think that b is a variable bound
+  to a function.
+  I think this is wrong.  If I had wanted that I would have done
+  (apply b (list b)) instead of (b b).
+
+RESPONSE (Perdue):
+
+  (defun a (b) (b b)) is compiled heuristically.  The compiler guesses
+  whether the call on b is directly a function call or whether "b" is
+  used as a function-valued variable.  On the basis of local context it
+  guesses b is a variable in function position.  I'm sure it will be
+  a low priority for fixing, since it is easily worked around.
+
+RESPONSE (Eric)
+
+  This handling of variables in the function position goes against
+  the accepted practice in recent Lisp systems.  I made the decision
+  to do it that way, but have gotten only complaints about it.
+  (Of course those who like it that way probably wouldn't say
+  anything about it unless it went away!)  On reflection and further
+  use I believe it should not have been done this way.  It is also
+  inconsistent with the Common Lisp definition.  Should it be changed
+  now?
+
+Date: 14-Aug-82 14:57:28
+From: LANAM at HP-HULK
+Subject: (reset) should end a (faslout)
+
+  If i do (faslout), get an error, and do (reset),
+  I do not think the system should be in fasl mode any more.
+  I think if I wanted to continue the (faslout), or save it,
+  I would use the continue option of the break package, and
+  not do (reset).
+	  douglas
+
+RESPONSE (Eric)
+
+  FASLOUT sets a global variable and returns, rather than binding
+  a fluid and doing the processing within that binding.  One
+  solution is to write a COMPILE-FILE function which binds *DEFN
+  so that popping out will abandon processing.
+
+Date: 12-Aug-82 16:36:41
+From: LANAM at HP-HULK
+Subject: READ
+Class: Bug
+
+  do (let () (setq y (readch)) (unreadchar y) (read))word
+
+  the system will return
+  wORD
+
+  note: that read normally changes all the characters in its word to 
+  upper case.
+  But if the character was sent back to the input stream from unreadchar,
+  its initial case remains and the atom that read interns has its first
+  character in lower case if it was typed that way.
+  The above should have returned WORD.
+
+  The above is with *raise = t.
+	  douglas
+
+RESPONSE (Eric)
+
+  This wsa due to a bug in READCH and has been fixed.  By the way,
+  UNREADCHAR is not the correct dual to READCH (in fact it is not
+  currently defined).  UNREADCHAR is the dual of READCHAR, which
+  returns a character (integer) instead of an ID.
+
+Date: 12-Aug-82 16:27:30
+From: LANAM at HP-HULK
+Subject: search in emode
+Class: Proposal
+
+  I looked at the source to search.red in pe: and found that it does 
+  a very dumb search algorithm.
+  The search algorithm should be replaced with the kmp algorithm
+  which can be found in most data structures/algorithm books.
+  I have a version running in lisp (but not fully compatible with
+  emode functions) which I can send.  The whole algorithm is
+  about 20 lines of code.
+  I also have a version in pascal which runs on my 9836 ( i debugged
+  it on there when the hulk was down and moved it over.
+  ----
+  I am including the whole algorithm in lisp slightly commented.
+  This version to work with emode needs to convert some or the list
+  of characters and vectors of character to vectors of ints, and
+  needs to ignore case (this version does not ignore case).
+  This code has been checked and works.  I am using a variation of
+  it in my program for my search through the history table.
+  It runs much faster than the algorithm currently used in emode.
+  If you wish to install it, I can help in debugging this part of
+  the code and checking it works, if you can get someone else
+  to interface it to the reset of emode and set up the correct
+  accessing of emode data structures.
+	  douglas
+  -----
+  %%
+  %% Implemenation of Knuth_Morris_Pratt algorithm.
+  %%
+  %%
+  %% p: input-pattern format vector of characters:
+  %% 	'[a b c].
+  %%
+  %% output failure link vector to be used by emode_kmp_scan.
+  %%
+  (defun emode_kmp_flowchart_construction (p)
+    (let ((m (size p)))
+      (let ((*flink (mkvect (iplus2 1 m))))
+	(iputv *flink 0 -1)
+	(do ((i 1 (+ 1 i)))
+	    ((> i m) *flink)
+	  (do ((j (igetv *flink (- i 1)) (igetv *flink j)))
+	      ((or (eq j -1) (eq (igetv p j) (igetv p (- i 1))))
+	       (iputv *flink i (+ j 1))))))))
+
+  %%
+  %% p : input _string in vector format '[ a b c]
+  %% m : upper bound of vector p (answer for above is 2).
+  %% s : line of characters to be searched 
+  %%     format list of characters: '(A b c d e . ..)
+  %% *flink : failure link vector from emode_kmp_flowchart_construction.
+  %%  
+  %% returns t if succeed, nil if not found.
+  %%
+  (defun emode_kmp_scan (p m s *flink)
+    (and s
+	 (prog (j)
+	   (setq j 0)
+	   %%
+	   %% if next character does not match use failure links
+	   %% to back up and try again.
+	   %%
+	  loop (cond ((and (neq j -1) (neq (igetv p j) (car s)))
+		      (setq j (igetv *flink j)) (go loop)))
+	   %%
+	   %% if you have matched the entire pattern => succeed.
+	   %%
+	   (and (= j m) (return t))
+	   (or (setq j (+ 1 j) s (cdr s)) 
+	       %% 
+	       %% move pointer in line,
+	       %%
+	       %% if no more line, fail.
+	       (return nil))
+	   (go loop))))
+
+
+Date: 12-Aug-82 11:06:18
+From: LANAM at HP-HULK
+Subject: GO inside AND
+Class: Compiler deficiency
+
+  The Psl compiler
+	  does not allow a go inside an and clause inside a prog.
+  ex:
+  10 lisp> (defun xx () (prog () loop (and (go loop))))
+  ***** (GO LOOP) INVALID GO
+  XX
+
+  Thus causing me to have to say 
+  (cond (expression (go loop))) inside a prog
+  when i want to say (and should be allowed to say):
+  (and expression (go loop))
+	  douglas
+
+RESPONSE (Eric)
+
+  This use of GO within AND is in violation of Standard Lisp.
+  There isn't a good reason for this restriction and it should
+  probably be removed from the compiler.  In the meantime, if you
+  use (WHEN foo (GO xx)) instead of (AND foo (GO xx)), everything
+  should be fine.  Use of OR in this fashion should be replaced by
+  (UNLESS foo (GO xx)).
+
+Date: 11 Aug 1982 0932-PDT
+From: JOHNSON at HP-HULK
+Subject: Documentation Bug
+Class: Documentation Bug
+
+  Section 5.1, paragraph 2 of <HP-PSL>HP-PSL.R contains the meaningless
+  sentence: "Some of the <PSL> directories have no corresponding <PSL>
+  directory."
+
+Date: 10 Aug 1982 1620-PDT
+From: Kendzierski at HP-HULK (Nancy)
+Subject: REPEAT
+Class: Horrid documentation bug
+
+  The manual states that the REPEAT construct (section 9.3; page 9.7)
+  is repeated until the value of the expression is NIL.
+
+RESPONSE (Perdue):
+
+  Actually, Nancy had quite a bit more to say, but the real problem
+  is that the documentation for the LISP REPEAT is totally
+  scrambled, though the RLISP documentation looks OK.  Syntax for
+  repeat is really:
+
+  (REPEAT <stmt> . . .  <condition>)
+
+  The statements are executed until the condition becomes true.
+  The condition is really and end-test.
+
+Date: 10-Aug-82 13:28:27
+From: LANAM at HP-HULK
+Subject: word size
+Class: Inquiry
+
+  Is there a function which returns the word size (number of bits) that
+  logical operations operate on, built into psl?
+
+Date: 10-Aug-82 13:27:26
+From: LANAM at HP-HULK
+Subject: bug in print and lshift.
+Class: Bug
+
+  type the following to the top level of the psl interpreter on the 20.
+  (lshift 2 34)
+
+  You get an endless unstoppable output of hyphens.
+  ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------...
+	  douglas
+
+RESPONSE (Eric)
+
+  See response above to Norman.
+
+Date: 10-Aug-82 12:01:02
+From: LANAM at HP-HULK
+Subject: addresses
+Class: Inquiry
+
+  What function returns the address of a lisp object?
+  What function takes an address (from above function) or some other int,
+  and gives me the lisp object at that address?
+
+RESPONSE (Eric)
+
+  The first operation can be done but is probably not advisable.
+  There is no defined function to do it from the interpreter, but
+  the macro INF can be used in compiled code by LOADing SYSLISP.
+  The second probably cannot be done, since the tag defines the type
+  of an object and is not recoverable from the address.  (This may
+  not be completely true, you can sometimes tell from the contents
+  of the object).  Perhaps you could explain why you want to do this,
+  there may be some more appropriate operation.
+
+Date: 10-Aug-82 11:40:02
+From: LANAM at HP-HULK
+Subject: documentation of compiled in line functions.
+Class: Suggestion
+
+  They should be mentioned where their non compiled in line
+  counterpart is.
+
+RESPONSE (Perdue):
+
+  The fast arithmetic procedures that are compiled in line turn out
+  to be described in the section on SYSLISP, section 21.4 in
+  particular.
+
+Date: 10-Aug-82 11:37:05
+From: LANAM at HP-HULK
+Subject: (maxint) => ???
+Class:  Inquiry
+
+  Is there a function that return maxint and minint?
+  also maxfloat, and minfloat?
+
+RESPONSE (Eric)
+
+  Currently none.  The Common Lisp definition says these are
+  constant global variables (not exactly the same names, though).
+
+Date: 10-Aug-82 10:31:26
+From: LANAM at HP-HULK
+Subject: bug in time with garbage collection
+Class: Bug, deficiency
+
+  When *time = t,
+  the system should report cpu and garbage collection time seperately,
+  not as one total number.
+  Cpu time: 496 ms.  GC time: 2500 ms.
+  not
+  Time: 2996 ms.
+
+  The current timing given is misleading.
+	  douglas
+
+RESPONSE (Eric)
+
+  Currently GC time is not saved.  It would be pretty simple
+  to do, just a matter of choosing how.  
+
+Date:  9-Aug-82 11:03:03
+From: LANAM at HP-HULK
+Subject: Fast vector access
+Class: Bug
+
+  I got the message:
+  (memory ($local y) (wconst 19)) not compiled 
+  when I did:
+  (defun xx (y) (do ((i 100 (sub1 i))) (eq i 0)) (igetv y 18)))
+
+RESPONSE (Perdue):
+
+  Looks like a bug.  Please use WGETV rather than igetv until we
+  find out that igetv is for public consumption.  I think they will
+  do the same thing anyway.
+
+RESPONSE (Eric)
+
+  This is not a bug!  See the comment above on "*** FOO not
+  compiled".  If you want to have this compiled, you must do
+  something with a side effect inside the loop.
+
+Date:  9-Aug-82 09:08:11
+From: LANAM at HP-HULK
+Subject: fluid
+Class: Inquiry, documentation deficiency
+
+  (fluid '(abc)) will set the value of abc to nil.
+
+  Why?  The documentation does not say that such a thing is done.
+  It should leave abc as an unbound variable.
+	  douglas
+
+RESPONSE (Eric)
+
+  This is in conformance with the Standard Lisp report.  If it is
+  not described in the PSL manual it should be.
+
+Date: 29 Jul 1982 17:39:24-PDT
+From: Tony Hearn <HEARN at RAND-AI>
+Subject: Strange REDUCE bug
+Class: Bug
+
+  If you do in REDUCE on the VAX:
+
+  x := x+1;
+
+  x;
+
+  You SHOULD, I believe, get a "push down stack overflow" error. Instead,
+  you go off into mystery (system seems to hang) and finally get an "illegal
+  instruction" message and a core dump.
+
+RESPONSE (Eric)
+
+  Stack overflow on VAX Unix is not handled well by the operating
+  system.  Franz Lisp has the same problem.  Perhaps 4.2BSD will
+  do a better job.
+
+Date: 26 Jul 1982 17:35:58-PDT
+from: lseward at RAND-UNIX
+Subject: PSL distribution files
+Class: News
+
+  I am listing off sources and have been straightening out the vax-comp and
+  vax-interp files.  Suggestion: have subdirectories src, build, and bin
+  and put the appropriate things in them.  Otherwise the statement (in the
+  documentation) "This directories contains sources for ..." is very
+  misleading.
+
+  larry
+
+Date: 13 Jul 1982 12:23:31-PDT
+From: Galway@UTAH-20 at HP-Speech
+Subject: break loop "feature"
+Class: Comment, proposal
+
+  The current break handler inherits the reader, evaluator, and printer from
+  whatever the current TopLoop uses (if TopLoop is being used).  I suspect
+  that this is a mistake, since it makes it awkward to deal with special
+  "exotic" top loops.  It's already somewhat confusing that depending upon
+  the circumstances you will either get a LISP reader, or and Rlisp reader.
+
+  Think about how wonderful it would be if your reader only returned vectors
+  to be "evaluated" by adding them up (say, for a desk calculator or
+  something).
+
+  I suggest that instead we only have one, or maybe two, break loops.
+  Default would use LISP's READ/EVAL/PRINT.  And perhaps it should notice
+  when Rlisp is in effect, and use its READ/EVAL/PRINT in that case.
+
+  Comments?
+
+RESPONSE (Eric)
+
+  Definitely.  The break loop is all wrong.  Lets redo it.
+
+Date: 25 Jun 1982 2106-PDT
+From: LANAM
+Subject: package proprosal
+Class: Proposal
+
+  I would like the system to remember the package definition name of a
+  variable and functions in .b files so that I dont' get the system
+  binding files which were compiled in package a but loaded in package
+  b refering to package b functions when a package is not specified.
+  Just binding everything to global would not work since then it would
+  be a nuisance to have to always write out a local package name in a
+  file on every function and variable.
+  (This is a proposal to send along with any bug reports to martin).
+	  douglas
+
+RESPONSE (Eric)
+
+  Packages are not fully integrated into the system.  This will
+  probably have to wait for a redesign of PSL to include packages
+  in the kernel.
+
+Date: 6-Aug-82 14:09:27
+From: LANAM at HP-HULK
+Subject: bug with *time
+Class: Bug
+
+  If the first thing you say to psl is
+  (setq *time t)
+
+  you get back
+  Time: 211392 ms  (or some such large number).
+
+RESPONSE (Eric)
+
+  True.
+
+Date: 4 Aug 1982 01:36:20-PDT
+From: daemon at HP-Speech
+From: Tony Hearn <HEARN at RAND-AI>
+Subject: PSL cannot read bignums correctly
+
+  The source for the bigfloat package contains bignums. It does not seem
+  to read or maybe compile correctly.
+
+  Can PSL currently read bignums?
+
+RESPONSE (Griss):
+
+  PSL can read bignums with BIG loaded.  Without it, bignums will
+  not be read correctly.  It is probably true that bignum
+  constants cannot be compiled in either case.
+
+RESPONSE (Eric)
+
+  This has been fixed completely.
+
+  Date: 27 Jul 1982 16:18:52-PDT
+  From: Martin.Griss <Griss at UTAH-20>
+  Subject: ExitTopLoop
+  Class: Proposal
+
+  Id like to add  and ExitTopLoop comand,
+  eg !$exitTopLoop!$ as distinguided atom? Or some such,
+  perhaps have on property list of atom and action function,
+  ala Break, perhaps using toploop name as key?
+
+  GET(InputValue,ModuleName,...).
+
+Date: 27 Jul 1982 1058-PDT
+From: BATALI
+Subject: Easy file reading
+Class: Complaint
+
+  There ought to be an expr to read a file.
+  The only way to do this now is something like:
+  (eval `(dskin ,filename))
+  I see no reason why dskin should not be an nexpr: virtually
+  all present uses of it use string arguments so it wouldn't
+  matter.
+
+     L&C,
+     John
+
+RESPONSE (Eric)
+
+  Definitely.  Let's make DSKIN an EXPR with ONE argument, since
+  that's all it's used for 99.99...% of the time.  Incompatible
+  with some existing code?
+
+Date: 27 Jul 1982 16:19:23-PDT
+From: Martin.Griss <Griss at UTAH-20>
+Subject: VAX QUIT
+Class: Proposal, response
+
+  I think QUIT should have an associated function, FullStop or some such.
+   (Or have 2 low level functions, QuitAndKeep, QuitAndKill), and let
+  system admin choose which QUIT is which.
+
+Date: 25 Jun 1982 1948-PDT
+From: LANAM
+Subject: VAX cntrl-d
+Class: Bug
+
+  Type cntrl-d (eof) as the first character, and the system will go into
+  an endless loop.
+	  douglas
+
+Date: 26 Jul 1982 17:36:09-PDT
+From: Eric Benson <BENSON at UTAH-20>
+Subject: VAX QUIT
+Class: Response, comment
+
+  Perhaps it's a misfeature.  The alternative is to make (QUIT) irrevocable.
+  Reading EOF will cause the PSL process to terminate, which allows the use
+  of shell scripts and/or I/O redirection.  If you want to do that from the
+  terminal, type one or more ^Ds.
+
+Date: 26 Jul 1982 17:35:51-PDT
+Subject:VAX QUIT
+From: hearn at RAND-RELAY
+Class: Comment, complaint
+
+  When you do (quit) to psl, you get the message "stopped", and you have
+  a job sitting there. My UNIX guys say this is a bug, and should be fixed.
+  I know that you can restart the stopped job, but apart from that facility,
+  the stopped job does get in the way every so often. Furthermore, when I
+  try to do "time preduce", I can't get the timing info out.
+
+RESPONSE (Eric)
+
+  The function (EXITLISP) has been added to the VAX Unix version
+  and should be in the next edition of the manual.  It calls the
+  Unix subroutine exit(), which will kill off the process as you wish.
+
+Date: 29 Jul 1982 1412-PDT
+From: BATALI
+Subject: Use of variables w. same name as functions
+Class: Bug, comment, complaint
+
+  The function:
+
+  (defun or-list? (list predicate)
+    (cond ((null list) nil)
+	  ((funcall predicate (car list)) t)
+	  (t (or-list? (cdr list) predicate))))
+
+  Is T if any of the predicate applied to any of its elements is T.
+  It works fine interpreted, but the compiler goes into an infinite loop
+  printing:
+  Functional form converted to (APPLY PREDICATE (LIST (CAR LIST)))
+
+  Not a pretty sight.
+
+    Ghastly,
+     John
+
+RESPONSE (Perdue):
+
+  This bug is due to use of "list" as both a local variable and a
+  function, and it occurs even though "list" is not explicitly used
+  as a function here at all.  The problem is inherent in any LISP
+  that allows variables in the "function position" and has both a
+  variable and function binding cell for atoms.
+
+RESPONSE (Eric)
+
+  See previous comment.
+
+Date: 6-Aug-82 10:31:49
+From: LANAM at HP-HULK
+Subject: structure of variable historylist*
+Class: Inquiry, complaint
+
+  why is the car of history an endless structure:
+  (historylist* (historylist* (historylist* (historylist* ....
+
+  the (caddr historylist*) is also this strange structure.
+  isn't there a simplier structure that could be used?
+
+	  douglas
+
+RESPONSE (Eric)
+
+  This only happens when you try to get the value of historylist*
+  from the top loop!  Of course it becomes circular.  It's really
+  just an a-list of inputs and outputs.
+
+Date: 5-Aug-82 16:20:10
+From: LANAM at HP-HULK
+Subject: + and - as start of atom names.
+Class: Request
+
+  It would be nice if the scanner was changed such that if
+  + and - are followed directly by an alphabetic character,
+  (ex +a), then an atom is returned ( +a ), instead of
+  two atoms (+ and a).
+	  douglas
+
+RESPONSE (Eric)
+
+  Yes, it would be nice.  This will require a rewrite of the
+  token scanner.  Perhaps we can get Lisp code from CMU for
+  the Common Lisp token scanner.
+
+Date: 5-Aug-82 16:05:15
+From: LANAM at HP-HULK
+Subject: (eval and macros)
+Class: Inquiry, bug
+
+  is there any reason the following should produce different results:
+
+  (eval expression)
+  and
+  (eval (macroexpand expression))
+
+  I have an example (a bit hairy and long), where the second is correct
+  and the first gives a strange error message about trying to set the
+  number 2.
+  could someone spend some time to look at this to decide what may be
+  the problem.
+	  thanks,
+		  douglas
+
+Date: 5-Aug-82 15:37:32
+From: LANAM at HP-HULK
+Subject: can the sytem just break instead of halt when bps size is exceeded?
+Class:  Inquiry, request
+
+  Date: 5-Aug-82 15:23:44
+  From: LANAM at HP-HULK
+  Subject: what is bps?
+
+  I got error ?
+  fatal error : bps exhausted during faslout.  
+  and the system aborted.
+  what happened?
+
+RESPONSE (Perdue):
+
+  You ran out of space for compiled code.
+
+  PSL provides no information about the sizes of spaces, so far as
+  I know.  I'm very interested in this myself, and I don't even
+  know the initial sizes of most of the spaces.  Binary program
+  space is not reclaimed.  Maybe someday it will be.
+
+RESPONSE (Eric)
+
+  Yes, this will require a redesign of low-level storage allocation
+  in PSL.
+
+Date: 5-Aug-82 15:09:07
+From: LANAM at HP-HULK
+Subject: package system and faslout/faslin
+Class: Comment, advice
+
+  faslout/faslin known nothing about the package system, and will produce
+  a file that can not be read in successfully, if that file references
+  variables in packages.
+  (usually you will get an operating system error (illegal instruction)).
+
+  The manual's suggestion to rename functions in global is not a real
+  solution, and suggests further that the package system is not really
+  usuable in a real sense yet.
+
+  This section of the system is not finished and I do not feel is in a 
+  useful enough state to be advertised or included in the manual.
+	  douglas
+
+RESPONSE (Eric)
+
+  Totally true!
+
+Date: 5-Aug-82 13:05:17
+From: Cris Perdue <Perdue>
+Subject: Unwanted PSL messages
+Class: Response
+
+  To not get bothered about redefining system functions, set the
+  global flag *usermode to NIL.  The flag *redefmsg determines whether
+  you are told when functions are redefined.  There is currently
+  no way to get a quiet dskin, except modifying the code or writing
+  your own.
+
+  I don't know if you can turn off the "*** blah already loaded"
+  message.  There is no mechanism established for forcing the system
+  to reload a library module unless you specify "pl:" as the location
+  of the module.
+
+RESPONSE (Eric)
+
+  There is currently no way to turn off the *** ... already loaded
+  message.  It mostly generates more heat than light, perhaps it
+  should just be removed?
+
+Date:  5 Aug 1982 1259-PDT
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: Re: start up file.
+Class: Response
+
+  No, there is no "init file".  We have had several requests for that
+  feature, so perhaps it can be added soon.
+
+RESPONSE (Eric)
+
+  Yes, init files would be nice.  They do require some system
+  dependent primitives, especially the ability to find the home
+  directory of a user.  Not a hard job, but the primitives should
+  be specified before doing it.
+
+Date: 5-Aug-82 08:31:23
+From: LANAM at HP-HULK
+Subject: tr bug
+Class: Request
+
+  tr shouldn't ask me how many arguments a compiled function takes.
+  Why can't it just create a nexpr instead and not worry about the number
+  of arguments?
+  (sometimes I don't feel like looking up the answer to this question).
+
+RESPONSE (Eric)
+
+  Code blocks should include the number of arguments they expect
+  so that this query needn't happen.
+
+Date: 5-Aug-82 14:02:21
+From: LANAM at HP-HULK
+Subject: FASLOUT
+Class: Bug, deficiency
+
+  (faslout) during (faslout) should not be executed.
+  (it currently is).
+	  douglas
+
+RESPONSE (Eric)
+
+  Fixed.
+
+Date: 3-Aug-82 15:22:56
+From: LANAM at HP-HULK
+Subject: bug with faslout/faslend.
+
+  do
+  (faslout "foo")
+  then do something to cause an error, (any error or break will do).
+  such as: 
+  (eval-when (compile) (+ 'a 'b))
+  {actually macros can cause errors, as can any eval-when construct}.
+  If you do (faslend) in the break point, then (reset),
+  the system will only echo your input after that.
+  If you do (faslend) again,
+  an error (illegal instruction) occurs, and psl will halt.
+
+Date: 3-Aug-82 15:13:55
+From: LANAM at HP-HULK
+Subject: package/compiler/fasl bug
+Class: Fatal bug
+
+  With the following file (called a.lisp), do the following and you will get
+  illegal instruction.
+  (load package)
+  (faslout "A")
+  (dskin "a.lisp")
+  (faslend)
+  (faslin "a.b")
+
+  file a.lisp:
+  -----------
+
+  (\load \package)
+  (\setpackage '\global)
+
+  (eval-when (compile)
+    (createpackage  'franz 'global)
+    (setpackage 	'franz))
+
+  (createpackage  'franz 'global)
+  (setpackage 	'franz)
+
+  (eval-when (compile)
+	  (localintern 'franz\xx))
+
+  (de franz\xx (yy) yy)
+
+
+Date: 2-Aug-82 15:43:38
+From: BATALI at HP-HULK
+Subject: TYPE function
+Class: Request
+
+  It would be just dreamy if there were a function TYPE, which
+  returns an ID signifying the type of its argument:
+  (type 'foo)  => ID
+  (type 5)  => FIXNUM
+  (type '(a b)) => PAIR
+  Etc.
+
+RESPONSE (Perdue):
+
+  Yes, probably named TYPEP, as in Common LISP.  See similar
+  requests made very early.
+
+Date: Fri Jul 30 14:04:39 1982
+From: John Tupper (hp-pcd)
+Subject: TR
+Class: Bug
+
+  Vax psl bug:
+	  When the debug package is loaded, the normal trace functions
+  don't work correctly.
+	  After loading the debug stuff, (UNTR) does not restore the original
+  definition of the function. (TR) works fine, and (UNTR) will cause tracing
+  to halt; it just doesn't restore the original definition.
+
+			  maddog
+
+
+RESPONSE (Eric)
+
+  The "standard" PSL TR function is very poor.  The 20 and Vax
+  systems should be changed to autoload DEBUG instead of using
+  this brain-damaged version.
+
+Date: 30-Jul-82 15:41:22
+From: Alan Snyder <AS at HP-HULK>
+Subject: EMODE cursor movement
+Class: Bug
+
+  EMODE (on the HP2648 at least) fails to check for attempts to move the
+  cursor off the right edge of the screen.  For example, if you type in
+  a line that is longer than the screen width, the cursor will move to
+  the next line and occasionally random stuff will come out (parts of
+  escape sequences, it looks like).
+
+Date: Fri Jul 30 11:40:05 1982
+From: tw cook (hp-pcd)
+Subject: testing 'bug' function - ignore
+Class: News
+
+  I have implemented the 'bug' function in our PSL - it just fires up
+  'mail' to PSL, which forwards both to PSL at labs and to the notesgroup
+  LISPERS here.  Those of you at hplabs who are listening - does stuff
+  mailed to PSL@HULK get eventually sent on to Griss & crew?  Should I
+  mail to them as well?  If so, how do I get there (via mail)?
+
+  Thanks,
+  tw
+
+Date:    30 Jul 1982 11:28-PDT (Friday)
+From:    Ching-Chao.Liu <hp-pcd!ching>
+Subject: FUnboundP
+Class: Manual bug
+
+  On page 10.4 of psl manual, the description of FUnBoundP is incorrect.
+  It should be 
+
+     Tests whether there is a definition in the function cell of U;
+     returns NIL if there is a definition, T if not.
+
+Date: 27-Jul-82 16:38:49
+From: LANAM at HP-HULK
+Subject: break package
+Class: Comment
+
+  In a break package, if I have a variable i (or q, c, r, m, or e), and
+  want to print its value, i need to do 
+  (eval 'i)
+
+RESPONSE (Eric)
+
+  Yes, it's clumsy.  Break loop needs reworking (actually starting
+  over).  See other previous comments.
+
+  From: Alan Snyder <AS at HP-HULK>
+  Subject: PSL bug
+  Class: Deficiency
+
+  The ContError macro is not very robust.  For example, consider
+  the following expansion (admittedly, the argument is improper):
+
+  (MacroExpand '(ContError 0 "" file-name file-name))
+    ==>
+  (CONTINUABLEERROR 0 (BLDMSG "" FILE-NAME) (LIST '#<Unknown:261740000002>))
+
+  Naturally, this form will cause the garbage collector to barf.
+
+  When the compiler is given this sort of stuff, it produces the
+  following lovely code:
+
+  ------------------------------------------------------------
+  Compiling TEST
+  Source Code:
+  (LAMBDA (FILE-NAME) (TEST1 (CONTERROR 0 "s" FILE-NAME FILE-NAME)))
+  ------------------------------------------------------------
+  Expanded Source Code:
+  (LAMBDA (FILE-NAME)
+     (TEST1
+	(CONTINUABLEERROR
+	   0
+	   (BLDMSG "s" FILE-NAME)
+	   (LIST '#<Unknown:254000006725>))))
+  ------------------------------------------------------------
+  Object Code:
+  (*ENTRY TEST EXPR 1)
+  (*ALLOC 1)
+  (*MOVE (REG 1) (REG 2))
+  (*MOVE '"s" (REG 1))
+  (*LINK BLDMSG EXPR 2)
+  (*MOVE (REG 1) (FRAME 1))
+  (*MOVE '#<Unknown:254000006725> (REG 1))
+  (*LINK NCONS EXPR 1)
+  (*MOVE (REG 1) (REG 3))
+  (*MOVE (FRAME 1) (REG 2))
+  (*MOVE '0 (REG 1))
+  (*LINK CONTINUABLEERROR EXPR 3)
+  (*LINKE 1 TEST1 EXPR 1)
+
+  L0003L0004		(FULLWORD 0)
+		  (STRING "s")
+		  (*ENTRY TEST EXPR 1)
+		  (ADJSP (REG ST) 1)
+		  (MOVE (REG 2) (REG 1))
+		  (MOVE (REG 1) "L0001")
+		  (PUSHJ (REG ST) (ENTRY BLDMSG))
+		  (MOVEM (REG 1) (INDEXED (REG ST) 0))
+		  (MOVE (REG 1) "L0002")
+		  (PUSHJ (REG ST) (ENTRY NCONS))
+		  (MOVE (REG 3) (REG 1))
+		  (MOVE (REG 2) (INDEXED (REG ST) 0))
+		  (SETZM (REG 1))
+		  (PUSHJ (REG ST) (ENTRY CONTINUABLEERROR))
+		  (ADJSP (REG ST) -1)
+		  (JRST (ENTRY TEST1))
+  L0002		(FULLWORD (MKITEM 10 "L0003"))
+  L0001		(FULLWORD (MKITEM 4 "L0004"))
+  *** Function `TEST' has been redefined
+  *** (TEST): base 374744, length 17 words
+  ------------------------------------------------------------
+
+  There is no warning message of any kind.  However, when
+  the compiled code is loaded and executed, it will also
+  create bad data that the garbage collector will barf on.
+
+RESPONSE (Eric)
+
+  Fixed.  See BUG-FIX.LOG
+
+Date: 27 Jul 1982 1638-PDT
+From: LANAM at HP-HULK
+Subject: break package problem
+Class: Deficiency
+
+  In a break package, if I have a variable i (or q, c, r, m, or e), and
+  want to print its value, i need to do 
+  (eval 'i)
+
+RESPONSE (Eric):
+
+  Same as above.
+
+Date: 27 Jul 1982 1629-PDT
+From: LANAM at HP-HULK
+Subject: string "123" => 123  conversion function needed?
+Class: Inquiry
+
+  Is there a function that will convert "123" into the number 123,
+  or "12.4e2" into the number "12.4e2" ?
+
+RESPONSE (Eric):
+
+  A read-from-string function should be implemented.  It should
+  be quite easy.
+
+Date: 27 Jul 1982 1439-PDT
+From: LANAM at HP-HULK
+Subject: br
+Class: Inquiry
+
+  If i use br, How do I continue from a break level.
+  I tried every letter given by ?. 
+  'R' gave an error, something about nil undefined.
+  'c' did something similar.
+  'q' went to top level.
+	  douglas
+
+RESPONSE (Eric)
+
+  BR has never worked right.  It should be removed along with
+  TR in MINI-TRACE
+
+Date: 27 Jul 1982 1433-PDT
+From: LANAM at HP-HULK
+Subject: untr
+Class: Deficiency
+
+  untr does untrace a function, but unlike the manual says, it does
+  not restore the original definition.  It leaves a strange lisp function
+  around which is similar to the function when it is traced.  It would
+  be nice if the functions definition was restored to its original place.
+
+RESPONSE (Eric)
+
+  Yes, UNTR in DEBUG doesn't remove the tracing function, it just
+  suppresses the tracing.  The function to resore it to its
+  original state is RESTR, as described in the manual in section
+  16.10.
+
+Date: Mon Jul 26 15:10:41 1982
+In-real-life: Tw Cook
+Subject: psl bug?
+Class: Bug
+
+  In the Vax version:
+
+  If you run (help emode) [or any long help] then do a control-C to try and
+  interrupt it, you get thrown into a break loop which I have not been able
+  to exit from.  Is this an error in the help code, rather than
+  in psl itself?
+
+RESPONSE (Eric)
+
+  The interrupt handler on the VAX has some strange behavior I have
+  not been able to track down.
+
+Date: 26 Jul 1982 1520-PDT
+From: LANAM at HP-HULK
+Subject: bad feature : read macros on property list.
+Class: Deficiency
+
+  By having the function associated with read macros stored on the property list,
+  there is an inability to have different read macros in different read tables,
+  for the same character.
+	  douglas
+
+RESPONSE (Eric)
+
+  True.  The whole input/output subsystem is very poor, for which
+  there's no one to blame but me.  See previous comments about the
+  token scanner.
+
+Date: 26 Jul 1982 1155-PDT
+From: Alan Snyder <AS>
+Subject: EMODE bug
+Class: Bug
+
+  EMODE believes that ^Z marks the end of a text file.
+
+RESPONSE (Eric)
+
+  PSL uses a character as the EOF marker, which happens to be
+  ^Z on the Dec-20.  Any file with a ^Z in it will not be read
+  correctly.
+
+Date: 24 Jul 1982 1044-PDT
+From: LANAM at HP-HULK
+Subject: scanner read bug with numbers.
+Class: Bug
+
+  45 lisp> 1.000000000000000000000000000000000000000000000000000
+  0.0
+  46 lisp> 1.222222222222222222222222222222222222222222222222222222
+  1.7682604E33
+  47 lisp> 100000000000000000000000000000000000000000000000
+  0
+  48 lisp> 2222222222222222222222222222222
+  2386092942
+  49 lisp> 1000000000000000000000
+  25209864192
+  50 lisp> 1000000000000
+  3567587328
+
+	  douglas
+
+  FIXED (Benson):
+
+  Actually, just a crude patch that should improve things.
+
+Date: 24 Jul 1982 1043-PDT
+From: LANAM at HP-HULK
+Subject: can prettyprint do better than this with the following please?
+Class: Request
+
+  (DEF
+     FRANZ\FACT
+     (EXPR LAMBDA (N) (COND ((EQ N 0) 1) (T (* N (FRANZ\FACT (!- N 1)))) )))
+
+  I would like the cond split up into 2 lines (one per clause).
+
+
+Date: 23 Jul 1982 1738-PDT
+From: LANAM at HP-HULK
+Subject: apply on macros.
+Class: inquiry
+
+  Is there an apply that works on any function (whether the function is a
+  macro or not), and acts the same whether the function was written as 
+  a macro or an expr or a fexpr?  This would be very useful (especially
+  with the number of basic functions written as macros in psl).
+
+
+RESPONSE (Eric)
+
+  The function you want is EVAL, not APPLY.  APPLY is meant to
+  be a primitive operation which does no evaluation.
+
+Date: 23 Jul 1982 1718-PDT
+From: LANAM at HP-HULK
+Subject: how easy is it to redefine the psl reader?
+Class: inquiry
+
+  Is there a table describing the automaton?  Or is it hardwired in?
+  Is the table accessable in lisp and changable?  This would be very
+  useful.
+
+
+RESPONSE (Eric)
+
+  It is hardwired in.  See previous comments on the token scanner.
+
+Date: 23 Jul 1982 1715-PDT
+From: LANAM at HP-HULK
+Subject: identifiers starting with numbers
+Class: request
+
+  I would like the system to read an atom like 1+ as the atom |1+|, not
+  the number 1 and the atom +.   How can I teach the system to handle this?
+  1a would be an atom. 1 a would be the number 1 followed by the atom a.
+  I need this feature to handle a franz conversion since a basic franz function
+  is 1+ and 1-.
+	  douglas
+
+
+RESPONSE (Eric)
+
+  Likewise.
+
+Date: 23 Jul 1982 1657-PDT
+From: LANAM at HP-HULK
+Subject: identifier bug.
+Class: Deficiency
+
+  Characters and identifiers should be separate entities.
+  The character c and the identifier c are not the same
+  thing.  Currently in the system, it is possible to
+  intern a single character-name identifier into a package,
+  but it is impossible to type its name back in.
+  (setpackage 'franz)
+  (localintern 'a)
+  => franz\a
+  (Setq franz\a 3) will set global\a
+  (set (localintern 'a) 3) will set franz\a.
+  franz\a is interpreted as global\a.
+
+  I should be able to have my franz\a.
+	  douglas
+
+
+RESPONSE (Eric)
+
+  Single character identifiers are treated very specially in PSL.
+  Since packages are not integrated, they cannot be interned in
+  packages other than GLOBAL.
+
+Date: 21 Jul 1982 16:48:33-PDT
+From: hearn@RAND-RELAY at HP-Speech
+Subject: Readch()
+Class: Inquiry, Bug
+
+  Readch does not do case conversion, irrespective of the setting of *raise.
+  If *raise is on, shouldn't lower case be converted to upper case?
+
+RESPONSE:
+
+    Date: 21 Jul 1982 16:48:40-PDT
+    From: BENSON@UTAH-20 at HP-Speech
+    Subject: Re: Question on readch()
+
+    I've changed the source for ReadCh so that it does case
+    conversion on *Raise.  This bit of Standard Lisp compatibility
+    seems to have slipped through the cracks until now.  I guess
+    ReadCh just isn't used that much.
+
+Date: 21 Jul 1982 1549-PDT
+From: Alan Snyder <AS at HP-HULK>
+Subject: UnBoundP
+Class: Documentation deficiency
+
+  The function UnBoundP should be described (or mentioned)
+  in the chapter on Identifiers.
+
+Date: 21 Jul 1982 1422-PDT
+From: Alan Snyder <AS>
+Subject: DEFSTRUCT
+Class: Deficiency
+
+  Using DEFSTRUCT (from NSTRUCT) causes the PSL compiler
+  to produce "function redefined" messages.  As far as
+  the user is concerned, these messages are spurious
+  and should be suppressed.
+
+Date: 21 Jul 1982 1253-PDT
+From: Alan Snyder <AS>
+Subject: "Constant" list structure
+Class: Deficiency, comment
+
+  PSL allows a program to modify "constant" list structure that
+  has been created by the compiler in the code space.  Since
+  this "constant" list structure is not scanned by the garbage
+  collector, any pointers inserted into it will not be updated
+  when garbage collection occurs, and will henceforth point
+  to randomness.  PSL should use the address protection provided
+  by the hardware to prevent modification of "constant"
+  list structure.
+
+RESPONSE (Benson):
+
+  It is incorrect to modify list structure constants.  They are placed
+  in code space on the VAX when a dumplisp is done.
+
+Date: 21 Jul 1982 1127-PDT
+From: Alan Snyder <AS>
+Subject: Unhandled THROW
+Class: Deficiency, documentation bug
+
+  The manual (section 9.4) says that an unhandled THROW is treated
+  as an ERROR in the context of the THROW.  In fact, what happens
+  is that PSL is restarted at top-level.  I would prefer that it
+  behave as the manual describes.
+
+RESPONSE (Eric)
+
+  It's very hard to fix with the current implementation of CATCH.
+
+Date: 16 Jul 1982 0244-PDT
+From: BATALI
+Subject: Compiler bug
+Class: Bug
+
+  Here is an interesting function:
+
+  (de c3 () (cond ((= 3 3) 'yes) (t (= 3 3))))
+
+  Interpreted:
+  (c3)
+  YES
+
+  Compiled:
+  (c3)
+  T
+
+  Obviously the compiler is doing something grossly clever, obviously it
+  is doing it wrong.
+
+       --John
+
+Date: 16 Jul 1982 0237-PDT
+From: BATALI
+Subject: Compiler bug
+Class: Bug, deficiency
+
+  The compiler doesn't enforce the restrictions on the placement of
+  RETURN statements. (See pages 9.4 and 9.5 of the manual.)
+
+  This function gets an error if interpreted, but returns its argument
+  when compiled:
+
+  (de just-return (arg) (return arg))
+
+  Actually, the compiler ought to complain about this one.
+
+       --John
+
+Date: 16 Jul 1982 0149-PDT
+From: BATALI
+Subject: RPLACHAR (String package)
+Class: Bug, compiler bug
+
+  The function RPLACHAR stores a character into a string.  It works fine
+  in interpreted code, but when called from a compiled function, we get:
+
+  ***** Undefined function STRINF called from compiled code
+
+  Looking on the property list of RPLACHAR, we notice a CMACRO property
+  whose value is:
+
+  (LAMBDA (S I X) (PUTSTRBYT (STRINF S) I X))
+
+  Which seems to be where the call to STRINF comes from.
+
+  Giving RPLACHAR a CMACRO property of nil "fixes" the problem.
+
+       --John
+
+RESPONSE (Eric)
+
+  Fixed.
+
+Date: 15 Jul 1982 1258-PDT
+From: Alan Snyder <AS>
+Subject: EMODE C-M-B
+Class: Bug, comment
+
+  C-M-B (backwards s-expr) loses if the corresponding left paren
+  is the first character in the buffer: it leaves the cursor
+  to the right of the paren.  There is explicit code that
+  makes this adjustment, and this code is marked in the source
+  as being a "KLUDGE!".  I don't know why this kludge is there.
+
+Date: 14 Jul 1982 1404-PDT
+From: Alan Snyder <AS>
+Subject: STRING< (String package)
+Class: Bug
+
+  The function STRING< in STRINGS.LSP has the interesting property
+  that both of the following forms evaluate to NIL:
+
+    (string< "b" "aa")
+    (string< "aa" "b")
+
+  This anomoly results from the improper testing of string length
+  in the function.  The other string comparison functions seem
+  to have the same bug.
+
+     [This seems to have been fixed.]
+
+Date: 14 Jul 1982 0759-PDT
+From: Alan Snyder <AS>
+Subject: EMODE bug
+Class: Bug
+
+  I fixed a bug in REFRESH.RED: ClearWindow() previously
+  failed to clear the associated virtual screen, causing
+  the old contents to later reappear in place of empty
+  lines.
+
+Date: 13 Jul 1982 1739-PDT
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: FIND module
+Class: Documentation deficiency
+
+  The "find" module is not loaded in bare PSL, but the documentation
+  does not mention the fact.
+
+Date: 13 Jul 1982 1144-PDT
+From: Alan Snyder <AS>
+Subject: FindPrefix, FindSuffix -- request
+Class: Request
+
+  FindPrefix and FindSuffix should convert their string argument
+  to upper case.
+
+Date: 13 Jul 1982 1140-PDT
+From: Alan Snyder <AS>
+Subject: PrettyPrint
+Class: Request
+
+  For direct use by a human, it would be better if PRETTYPRINT returned
+  NIL, instead of its argument.  That way, the user doesn't have to
+  see the same object printed twice by the Read/Eval/Print loop.
+
+Date: 13 Jul 1982 1120-PDT
+From: LANAM
+Subject: Interning with the package system
+Class: Inquiry
+
+  How can I get the package-specifier prefix in a string and concat it
+  with other strings, and then intern it.
+  I tried, and the package-specifier prefix character got an escape
+  character inserted before it.
+
+RESPONSE (Benson):
+
+  Can't be done.
+
+Date: 13 Jul 1982 1114-PDT
+From: Alan Snyder <AS>
+Subject: COND
+Class: Deficiency
+
+  COND behaves differently in some cases depending upon whether
+  it is interpreted or compiled.  An example is provided by
+  the following function:
+
+    (de foo (a) (cond ((= a 3) 4) a))
+
+  If interpreted, FOO will return the parameter A unless A is 3.
+  If compiled, FOO will return NIL in those same cases.
+  The compiled code is shown below:
+
+  ------------------------------------------------------------
+  Compiling FOO
+  Source:
+  (LAMBDA (A) (COND ((= A 3) 4) A))
+  ------------------------------------------------------------
+  Object:
+  (*ENTRY FOO EXPR 1)
+  (*ALLOC 0)
+  (*JUMPNOTEQ (LABEL G0004) (REG 1) '3)
+  (*MOVE '4 (REG 1))
+  (*EXIT 0)
+  (*LBL (LABEL G0004))
+  (*MOVE 'NIL (REG 1))
+  (*MOVE 'NIL (REG 1))
+  (*EXIT 0)
+  *** Function `FOO' has been redefined
+  *** (FOO): base 334750, length 7 words
+  ------------------------------------------------------------
+
+Date: 13 Jul 1982 1056-PDT
+From: Alan Snyder <AS>
+Subject: ErrorSet
+Class: Deficiency
+
+  ErrorSet is currently implemented as an EXPR.  This fact has the subtle,
+  yet critical effect that the form enclosed in the error set can only
+  use fluid variables.  If you don't declare the variables fluid, the
+  code will work interpretively, but will execute incorrectly when compiled.
+  No warning is given by the compiler, nor is there any hint in the manual
+  that this problem exists.
+
+  Note: the file directory.sl that we sent to Utah fails when compiled for
+  this reason.  I suggest you send a message to Will about this.
+
+RESPONSE (Eric)
+
+  Yes, this is also true of CATCH.  I have implemented *CATCH which
+  is a special form and open-compiles.  It will be easy to define
+  ERRSET as a macro or special form now.
+
+Date: 13 Jul 1982 1045-PDT
+From: BATALI
+Subject: Readmacros
+Class: Deficiency, comment
+
+  I've been experimenting with read macros in PSL.  None of the
+  advertised functions for creating them exist, but the following
+  works: 
+
+  (defmacro define-read-macro (table id fname)
+    `(progn
+      (put ',id 'lispreadmacro ',fname)
+      (putv ,table (id2int ',id) 11)   ;; delimiter
+      ',id))
+
+  This does what PutReadMacro is supposed to do (but it doesn't evaluate
+  the id or the fname).
+
+  Note how this seems to work: If the reader (actually, the function
+  ChannelReadTokenWithHooks) sees a character with code 11 in the
+  scantable, it looks for the LISPREADMACRO property on the id
+  corresponding to the character.  If there is one there, it applys it
+  in place of ChannelReadTokenWithHooks to the input channel.
+
+  This would be fine and not very interesting and I certainly wouldn't
+  be sending you this long message if it weren't for the fact that this
+  scheme means you can't "bind" a scantable and expect different
+  behaviour from characters.  This is because, although the scantable
+  can be bound, the system still looks for the LISPREADMACRO property of
+  the id.  So it is not possible for a character to have different
+  properties on different scantables. Thus:
+
+  (define-read-macro somerandomscantable* !( ChannelTotallyTrashSystem)
+
+  Would lose no matter which scan table is currently in effect.
+
+  We need the ability to pair characters with functions in particular
+  scantables only.  It is very likely that the PSL people understand
+  this, and indeed, the relevant sections of the manual (pp 13.10 - 13.11
+  and 13.18) seem to claim that this is what ought to go on.
+
+       --John
+
+RESPONSE (Eric)
+
+  This was reported earlier (actually later because this is in
+  reverse chronological order).
+
+Date: 13 Jul 1982 1030-PDT
+From: BATALI
+Subject: Unwind-Protect
+Class: Suggestion
+
+  Here is the code for unwind-protect.
+  It has the same semantics as the lisp-machine version
+  (except in interpreted code that happens to use the 
+  variable unwind-protect-value).  The only problem is
+  the problem with catch being an EXPR.
+
+  (defmacro unwind-protect (protected-form . undo-forms)
+    `(let ((unwind-protect-value (catch nil ',protected-form)))
+       (progn . ,undo-forms)
+       (if throwsignal!*
+	   (throw throwtag!* unwind-protect-value)
+	   unwind-protect-value)))
+
+Date: 12 Jul 1982 1836-PDT
+From: BATALI
+Subject: Dipthongs
+Class: Inquiry, documentation deficiency
+
+  What are dipthongs?  Why are they neat?
+  How do I use them?
+  Why aren't they documented?
+
+Date: 12 Jul 1982 1145-PDT
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: EMODE terminal handling
+Class: Deficiency
+
+  EMODE does not use the terminal driver that corresponds to TOPS-20's
+  idea of what the terminal type is.  It just uses whatever terminal
+  driver is loaded (HP2648A in our case).
+
+Date: 12 Jul 1982 1102-PDT
+From: Johnson
+Subject: PSL String Package
+Class: Request, remark
+
+  A routine to convert from STRING to INTEGER would be nice.
+
+  The SUBSTRING function is peculiar:  its last argument is
+  one greater than the index of the last character to be
+  extracted, even given that indexes begin at zero!
+
+Date:  9 Jul 1982 1456-PDT
+From: Alan Snyder <AS>
+Subject: PSL internal bug
+Class: Bug
+
+  The following example demonstrates a bug in PSL.  It is the shortest example I
+  could find, derived from a real attempt at compiling a file.  The offending
+  object is a machine instruction, the exact identity of which changes with
+  different programs.  In this case, it is "CAMN 0(17)".  The example is highly
+  sensitive to change.  For instance, if the function name is changed to "FOO",
+  no error is reported.  Similarly, no error is reported if any of the loaded
+  modules are omitted.
+
+  -------------------------------------------------------------------------------
+  @psl:bare-psl
+  PSL 3.0, 9-Jun-82 
+  1 lisp> (load emode common jsys)
+  NIL
+  2 lisp> (faslout "nul:")
+  FASLOUT: (DSKIN files) or type in expressions
+  When all done execute (FASLEND)
+  T
+  3 lisp> (de fooo (name)
+  3 lisp>   (let ((n (string-length name)))
+  3 lisp>     (cond ((= (indx name (- n 1)) (char >))
+  3 lisp>            (concat name "*.*.*"))
+  3 lisp> 	  name)))
+  FOOO4 lisp> (faslend)
+
+  *** Init code length is 1
+  **FASL**INITCODE**NIL
+  5 lisp> (reclaim)
+  ***** Fatal error during garbage collection
+  Illegal item in heap at 502462
+  -------------------------------------------------------------------------------
+
+Date:    30 Jul 1982 11:27-PDT (Friday)
+From:    John.Tupper <hp-pcd!maddog>
+Subject: bug report
+
+  I have found a bug in the vax version of the psl zpedit.
+  When I add something to the end of an s-expression [with the n command]
+  the editor changes the old last expression to nil.
+
+  start:
+  (LIST (CAR X) (CDR Y))
+  execute:
+  (N (BOGUS BO GUS))
+  finish:
+  (LIST (CAR X) NIL (BOGUS BO GUS))
+
+  The same thing happens with the bo command.
+
+  start:
+  (LIST (CAR X) (CDR Y))
+  execute:
+  bo 3
+  finish:
+  (LIST (CAR X) NIL)
+
+				  icky-poo,
+				  maddog
+
+Date:  9 Jul 1982 0948-PDT
+From: SOREFF at HP-THOR
+Subject: Structure editor "A" command
+Class: Bug
+
+  I've constructed an example of how the "(a s-expression)" command in the
+  structure editor can fail. It seems to fail when one is adding an item after
+  the last expression in a list. I've edited the log slightly, removing blank
+  lines to make it more compact.
+  @take psl
+  PSL 3.0, 9-Jun-82 
+  1 lisp> (load zpedit)
+  NIL
+  2 lisp> (setq a '(b c d e f g))
+  (B C D E F G)
+  3 lisp> (editv a)
+  EDIT
+  -E- p
+  (B C D E F G)
+  -E- 3 p
+  D
+  -E- (a z) 0 p
+  (B C D (Z) E F G)
+  -E- 7 p (a y) 0 p
+  G
+  (B C D (Z) E F NIL (Y))
+  -E- pp
+  (B C D (Z) E F NIL (Y))
+  -E- 8 p
+  (Y)
+  -E- (a x)
+  -E- p
+  ... NIL (X))
+  -E- ^
+  -E- p
+  (B C D (Z) E F NIL NIL (X))
+  -E- ok
+  A
+  4 lisp> (quit)
+
+Date:  9 Jul 1982 0938-PDT
+From: Alan Snyder <AS>
+Subject: DOLIST
+Class: Bug
+
+  DOLIST (in PU:COMMON.SL) fails to bind the loop variable.
+
+Date:  8 Jul 1982 1447-PDT
+From: Alan Snyder <AS>
+Subject: EMODE C-M-B
+Class: Bug, deficiency
+
+  EMODE C-M-B (backward sexpr) gets excessively confused by comments.
+  For example, when at the end of the following text
+
+     (setq a b)
+     %%%%%%%%%%
+
+  C-M-B will stop at the "b".
+  (Probably other commands have similar problems.)
+  I think the reason for this is that '%' (the comment character)
+  is ignored by scan-word by not by skip-blanks.
+  Thus in the implementation of C-M-B, skip-blanks skips back
+  to the '%', and then skip-word skips back to the 'b'.
+  The probable fix would be to change the scan table.
+
+Date:  7 Jul 1982 1651-PDT
+From: SOREFF at HP-THOR
+Subject: Structure editor "N" command
+Class: Bug
+
+  I think I've run into a bug in the PSL structure editor. The "N" command,
+  which appears to be supposed to append an s-expression on the end of the
+  current list, does that, but also changes the expression just before the
+  added one to NIL. 
+  @login guest 
+   Job 5 on TTY152 7-Jul-82  4:41PM
+   Previous LOGIN: 7-Jul-82  4:40PM
+  @take <psl>logical-names
+  @r <psl>bare-psl
+  PSL 3.0, 9-Jun-82 
+  1 lisp> (load zpede^F^Fit)
+  ***** `ZPED^FIT' load module not found {99}
+  Break loop
+  2 lisp break>> q
+  3 lisp> (load zpedit)
+  NIL
+  4 lisp> (setq tst '(a b c d e f g))
+  (A B C D E F G)
+  5 lisp> (editv tst)
+
+  EDIT
+
+
+  -E- p
+
+  (A B C D E F G)
+
+  -E- (-3 z) p
+
+  (A B Z C D E F G)
+
+  -E- (n x) p
+
+  (A B Z C D E F NIL X)
+
+  -E- ok
+  TST
+  6 lisp> (quit)
+
+Date:  7 Jul 1982 0929-PDT
+From: Alan Snyder <AS>
+Subject: NTH and PNTH
+Class: Bug
+
+  The function NTH produces obscure error messages if the
+  index argument is out of range.  The error messages are
+  obscure because (1) they refer to the function PNTH,
+  which the user should have no need to know about, and
+  (2) they report an index which is different than the
+  value given in the call to NTH.
+
+    [8/4/82 - This has been fixed.]
+
+  A similar comment applies to PNTH: the error message
+  reports an incorrect index value.
+
+    [8/4/82 - This hasn't.]
+
+Date:  7 Jul 1982 0852-PDT
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: IN and EVIN
+Class: Documentation deficiency, bug
+
+  IN and EVIN, available from RLISP, are not defined as functions.
+  IN even has an entry in the manual, though there is no description
+  of what it does (page 31.12).  These should be available from LISP.
+
+Date:  6 Jul 1982 1212-PDT
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: RDS, WRS
+Class: Complaint
+
+  RDS and WRS are virtually guaranteed to cause lossage concerning
+  I/O channels, especially since there is no UNWIND-PROTECT in PSL.
+
+Date:  6 Jul 1982 1209-PDT
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: Debugging
+Class: Deficiency
+
+  There are various deficiencies concerned with debugging.
+
+  There is no genuine backtrace that uses the saved variable bindings,
+  even for interpreted code.
+
+  The error handling system is so portable that it evidently cannot
+  use the DEC-20 APR trap mechanism, etc..
+
+  It is difficult to set up an interpreted version of a subsystem that
+  is usually compiled.  (This is a separate issue from the capabilities
+  of the system internals.)  In particular, facilities for requiring
+  certain files to be present when a procedure is loaded for interpretive
+  execution don't exist.  Also functions for loading interpreted and
+  compiled code are distinct, not to mention the additional distinct
+  function for loading "system" files (files in pl:).
+
+Date:  6 Jul 1982 1041-PDT
+From: Johnson
+Subject: DSKIN
+Class: Inquiry
+
+  (DskIn "foo.lsp") prints the values of all the forms evaluated in
+  foo.lsp.  Is there a silent version of DskIn?
+
+RESPONSE (Benson):
+
+  Yes:  LAPIN.
+
+Date:  2 Jul 1982 2335-PDT
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: DEC-20 REENTER and CONTINUE
+To: psl at HP-HULK
+
+  On the DEC-20, ^C followed by REENTER or CONTINUE screws up
+  badly for some reason.  I would think they would just not
+  be available commands.
+
+Date:  2 Jul 1982 2334-PDT
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: Debugger user interface
+Class: Bug
+
+  The "break loop" does not establish echoing as it is entered.
+
+Date:  2 Jul 1982 2329-PDT
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: FINDPREFIX and FINDSUFFIX
+Class: Documentation deficiency, bug
+
+  These are not loaded with the USEFUL library and there whereabouts
+  is not documented in the manual, though they themselves are.
+  They appear in pu:find.red.
+
+Date:  1 Jul 1982 1406-PDT
+From: Kendzierski (Nancy)
+Subject: CRLF variable
+Class: Bug, documentation bug
+
+  The manual (page 20.2, section 20.3.1 "TOPS-20 User Level
+  Interface") states that "a global variable, CRLF, is provided
+  with the <CR><LF> string.  Attempts to use this global variable
+  result in a CRLF is an unbound id {99} message from psl.
+
+RESPONSE (Benson):
+
+  Loading the EXEC module defines CRLF.
+
+Date: 30 Jun 1982 1057-PDT
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: "FLAGS"
+Class: Inquiry, deficiency
+
+  In Chapter 12 of the manual the RLISP "On" and "Off" constructs are
+  discussed briefly.  It appears that LISP users should not just
+  set the corresponding global variables, because On and Off may
+  have additional side effects.  If this is true, there should be
+  some easy way of doing On and Off in LISP.
+
+Date: 28 Jun 1982 1746-PDT
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: C-M-rubout in EMODE
+Class: Bug
+
+  Sometimes (always?) goes into an infinite loop.
+
+Date: 28 Jun 1982 1714-PDT
+From: Kendzierski (Nancy)
+Subject: PSL logical names
+Class: Inquiry
+
+  How come p20d: as <psl.20-dist> isn't defined in the
+  <psl>logical-names.cmd file?  It is listed in the manual on page
+  22.2.
+
+Date: 6/23/82
+From: Kendzierski
+Subject: !*SAVENAMES
+Where: Page 16.18
+Class: Inquiry
+
+  Why is !*SAVENAMES initially NIL?
+
+Date: 6/23/82
+From: Kendzierski
+Subject: RCRef
+Where: Page 18.3
+Class: Inquiry
+
+  Is RCRef only available in RLisp?  Why? or How is it used in
+  Lisp?
+From: Kendzierski
+
+Date: 6/23/82
+Subject: !*LOSE
+Where: Page 16.18
+Class: Documentation deficiency
+
+  !*LOSE -- what is this?  It's constantly referred to, but never
+  defined/explained
+
+Date: 6/23/82
+From: Kendzierski
+Subject: #+
+Where: Page 18.3
+Class: Inquiry
+
+  Why doesn't #+ accept three arguments?  Because the third is
+  optional?
+
+Date: 6/23/82
+From: Kendzierski
+Subject: ANYREG
+Class: Inquiry
+
+  If the most common adjust function removes ANYREG to eliminate
+  looking for it in patterns, why have it?
+
+Date: 6/11/82
+From: AS
+Subject: I/O channels
+Class: improvement, section 13.1, page 13.1
+
+  Why is a channel an integer instead of something more abstact?
+  If you allow I/O to strings and lists, then why limit the maximum
+  number of channels?
+
+Date: 6/11/82
+From: AS
+Re: improvement, section 13.2, page 13.3
+
+  Using global variables to initialize channel functions when a
+  channel is OPENed is poor.  It would be better to define a
+  separate OPEN-SPECIAL that takes additional arguments, or use a
+  keyword init list a la Zetalisp.  Similar comments about misuse
+  of global variables apply elsewhere, e.g.  DUMPLISP.
+
+Date: 6/11/82
+From: AS
+Re: manual, section 13.6, page 13.13
+
+  PRINTF is an expr that takes a variable number of arguments.  If
+  this is possible then you should explain how users can do it.
+
+Date: 6/11/82
+From: AS
+Subject: LISP vs. RLISP syntax
+Class: Inquiry, bug
+Where: manual, section 16.5, page 16.13
+
+  Can EMBEDding be done using Lisp syntax?  If so, how?  Can STUBs
+  be defined using Lisp syntax?  If so, how?
+
+Date: 6/11/82
+From: AS
+Subject: EDITF
+Class:  Bug, inquiry
+Where: manual, section 17.5, page 17.11
+
+  I was not able to achieve any effect by giving extra command
+  arguments to EDITF.  In any case, COMS:forms is not a defined
+  type; it should be either [COMS:form] or COMS:form-list.
+
+Date: 6/11/82
+From: AS
+Subject:  FIELD, GETFIELD
+Class: Documentation deficiency
+Re: manual, section 21.2.8, page 21.7
+
+  Is the field accessing function FIELD or GETFIELD?  Both names
+  are used in the manual.  Neither name is defined in our PSL.
+
+Date: 6/25/82
+From: Filman
+Subject: READ, Interactive input
+Class: Feature request
+
+  It would be very nice to have some way of telling PSL to consider
+  all open parens to be closed, like right square bracket ("]") in
+  some LISPs.
+
+  It would also be nice not to get an error message whenever one
+  types excess right parentheses.
+
+Date: 6/25
+From: Perdue, Griss, AS
+Subject:  Common-LISP compatibility library
+Class: Documentation bug
+
+  The Common-LISP compatibility library has been split into 2
+  parts:  a compatible part which redefines no PSL functions, and
+  an incompatible part that does.  The incompatible part is
+  PL:CLCOMP.
+
+Date: 18 Jun 1982
+From: SOREFF at HP-THOR
+Subject: Module loaded test
+
+  Is there any predicate which checks to see if an atom is the name
+  of a load module which has been loaded?
+
+RESPONSE (Perdue):
+
+  No, but it is currently the practice to use the expression
+  "(memq <atom> options*)" to determine this.
+
+Date: 18 Jun 1982 1424-PDT
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: Char macro
+
+  The char macro is not well documented and the use of <Ctrl-G> is
+  almost certainly not correct.
+
+Date: 18 Jun 1982 1425-PDT
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: PLAP: logical name
+Class: Distribution of PSL
+
+  The name PLAP: is used in the full-restore.ctl file, but is not
+  a standard logical name.  It should be PL: instead.
+
+RESPONSE (Griss):
+
+  The file full-restore.ctl is not documented, wasn't intended for
+  distribution.  Something will be done to make things consistent.
+
+Date: 18 Jun 1982 1429-PDT
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: Batch control files
+Class: Distribution of PSL
+
+  The batch control files use the standard logical names.  For
+  this to work properly, users who rebuild PSL should have a
+  BATCH.CMD file that TAKEs the logical-names command file.  This
+  approach is cleaner than having mentions of the actual name of
+  the PSL directory, if not others, in each batch control file.
+
+Date: 18 Jun 1982 1431-PDT
+From: Cris Perdue <Perdue at HP-HULK>
+Subject: Building new directories
+Class: Documentation bug
+
+  The DEC-20 release notes suggest the use of the standard logical
+  names as arguments to the TOPS-20 BUILD command.  Our version of
+  BUILD does not accept a logical name for the building of a NEW
+  directory (it's OK for old ones, although that feature may be
+  a local addition to the code).
+
+Date: 6/16/82
+From: Alan Snyder <AS>
+Subject: PSL compiler bug; RETURN
+Class: Bug
+
+  I have discovered what appears to be a bug in the PSL compiler.
+  When you use (RETURN) with no argument, the compiler generates
+  a "call" to the function NIL, which is undefined.  The interpreter
+  has no problem.  For example:
+
+  16 June 1982                 Alan Snyder
+  ----------------------------------------
+  Compiling TEST
+  Source:
+  (LAMBDA NIL
+     (PROG NIL
+	(RETURN))
+     3)
+  ----------------------------------------
+  Object:
+  (*ENTRY TEST EXPR 0)
+  (*ALLOC 0)
+  (*LINK NIL EXPR 0)
+  (*MOVE '3 (REG 1))
+  (*EXIT 0)
+  *** Function `TEST' has been redefined
+  *** (TEST): base 326164, length 3 words
+  ----------------------------------------
+RESPONSE (csp):
+
+  Definitely a bug.  Not hard to fix, the solution awaits a
+  decision about just what error checking there should be on
+  RETURN.
+
+RESPONSE (Benson):
+
+  The compiler now gives a warning message.
+
+  From: Lanam
+  Subject: Packages
+  Class: Bugs, Information
+
+  Doug uncovered the following:
+
+  The current package is never changed as a module is loaded.
+  This means that if one changes the current package, it should be
+  reset as soon as possible.  Some functions are "autoloaded".  Be
+  aware of this when changing the current package.
+
+Date: 5/27
+From: Lanam
+Class: Bug
+
+  asin (n) where n > 1 or n < -1 gives the error
+  that REDERR is an undefined function.
+
+Date: 5/27
+From: Lanam
+Class: Deficiency
+
+  I can not find any method of general type checking or
+  type coersion.
+
+Date: 5/27
+From: Lanam
+Class: Bug
+
+  (close) with no arguments says nil is an undefined
+  function.
+
+Date: 5/27
+From: Lanam
+Class: Note
+
+  (car nil) and (cdr nil) is illegal.  I would prefer
+  (car nil) => nil and (cdr nil) => nil.
+
+Date: 5/27
+From: Lanam
+Subject: Reader
+Class: Bug
+
+  Typing an extra ")"  to the top level interpreter
+  gives you an error message.  It would be nicer if it was just
+  ignored.
+
+Date: 5/27
+From: Lanam
+Subject:  Getd, Putd
+Class: Comment
+
+  It would be nice if (putd new-function-name (getd old-function
+  name)) worked.  At present the best I can see is
+
+  (let ((x (getd ..)))
+    (putd new (car x) (cdr x)))
+
+Date: 5/27
+From: Lanam
+Subject: Lexprs
+Class: Feature request
+
+  Need a package that allows lexpr and (arg n) inside
+  lexprs.
+
+Date: 5/27
+From: Lanam
+Subject: Defun
+Class: Deficiency
+
+  Defun in common lisp compatibility only handles
+  exprs, not macros, or fexprs.
+
+Date: 5/27
+From: Lanam
+Subject: Function/special definition
+Class: Bug
+
+  Cannot have the names of fexprs or macros or nexprs,
+  be the name of a special variable also.
+
+Date: 5/27
+From: Lanam
+Subject: Char function
+Class: Documentation bug
+
+  There are two char functions described in the manual.  The one
+  mentioned as being loaded with the Common-LISP strings package is
+  not loaded in with the strings package.
+
+Date: 5/24
+From: Goldstein
+Subject: Argument checking
+Class: Clarification
+
+  Is it the case that PSL does not check for functions that receive
+  the wrong number of arguments?  Is it able to do so (for
+  interpretive & for compiled code)?  It would be nice if it had
+  such an error checking mode.
+
+Date: 5/24
+From: Goldstein
+Subject: Section 8.7
+Class: Documentation deficiency
+
+  The arguments to the string functions are not defined.
+
+Date: 5/24
+From: Goldstein
+Subject: Globals, fluids; Section 10.4
+Class: Bug, Documentation bug
+
+  The manual claims that global variables cannot be rebound.
+  However, no error occured for: ((lambda (throwtag*) 1) 1) which
+  rebinds this global??
+
+Date: 5/24
+From: Goldstein
+Subject: Closures, Section 10.3.1
+Class: Question
+
+  What is the timetable for implementing closures.  Altbind is
+  unavailable at our site.
+
+Date: 5/24
+From: Goldstein
+Subject: Global variables; Section 12.2
+
+  The description of the globals is frequently missing or too
+  cryptic.
+
+Date: 5/24
+From: Goldstein
+Subject: Lisp Rlisp compatibility
+Class: Deficiency
+
+  If RLISP is only a parser for Lisp, then there should be
+  functions: On, Off, In, Out. Why don't these functions exist.
+  Ditto for <=, >=, etc.
+
+RESPONSE (Griss, as told to Perdue):
+
+  This situation is basically historical.  The problems with On,
+  Off, In, Out, etc. are due to the RLISP preprocessor doing some
+  semantics as well as parsing.  It is gradually being cleaned up.
+
+Date: 5/23
+From: Goldstein
+Subject: Definition of Equal, sec 4.2
+Class: Documentation deficiency
+
+  Comment about open-compiling that begins "... Otherwise, ..." is
+  confusing.  The text says that "This is not true of EQ and Eqn".
+  What is not true.  EQ is supposed to be open-compiled as well.
+
+Date: 5/23
+From: Goldstein
+Subject: Definition of EqCar, sec 4.2
+Class: Deficiency, Inquiry
+
+  EqCar(U,V) does not complain if (Car U) is illegal, e.g. (EQCAR
+  "ab" V).  (1) Does the definition check, or is some random thing
+  happening; and (2) should it report an error if (CAR U) is
+  illegal.
+
+RESPONSE (Perdue):
+
+  1) The definition checks that U is pairp.
+  2) It evidently should not report an error if U is not pairp.
+
+Date: 5/23
+From: Goldstein
+Subject: Definition of Null, sec 4.2
+Class: Manual, Inquiry
+
+  Is it reasonable to place documentation of Null in 4.2.2, Is Null
+  a predicate for testing Type of an Object?
+
+Date: 5/23
+From: Goldstein
+Subject: Definition of Intern and NewId, sec 4.2
+Class: Manual deficiency
+
+  Interning a newId does not lose NewId's property list, if no previous
+  ID with this print name has been interned, e.g.
+	  (setq x (newId "ABC")) %No atom with this print name exists.
+	  (put x 'prop 'val)
+	  (intern x)
+	  (get 'ABC 'prop) --> val
+  Manual could be clearer in this regard.
+
+Date: 5/23
+From: Goldstein
+Subject: Arithmetic functions
+Class: Manual, Inconsistency
+
+  MACRO rather than NEXPR is used for the multi-argument functions
+  like PLUS.  What is the rationale for this.
+
+Date: 5/23
+From: Goldstein
+Subject:  Help function
+Class: Inconsistency
+
+  (help top-loop) and (help toploop) are not the same.  The former
+  just prints the file.  The latter executes a function that prints
+  the file, then prints the current bindings of the reader,
+  printer, etc.  This might be confusing to a novice user.
+  Perhaps, the file should be toploop.hlp (without the - sign).
+
+Date: 5/22
+From: Goldstein
+Subject: Backtrace
+Class: Improvement
+
+  It would be nice if BACKTRACE did not print the functions that it
+  itself put on the stack, since they are artifacts of its use and
+  not relevant to debugging.
+
+Date: 5/22
+From: Goldstein
+Subject: EMODE
+Class: Improvement
+
+  (1) bind backspace to the rubout handler.
+
+  (2) Commands like read and write file should use the default file
+  associated with the current buffer.
+
+  (3) Auto save and Auto fill are two important additions.
+
+  (4) Write should say that the file was written.
+
+Date: 5/22
+From: Goldstein
+Subject: HELP function
+Class: Improvement
+
+  It would be nice if the HELP function also informed the user of
+  some dynamic properties, e.g. HELP <module> should let the user
+  know if the module is loaded.
+
+Date: 5/22
+From: Goldstein
+Subject: HELP function
+Class: Documentation deficiency
+
+  (HELP) states that a certain set of help files are available.  In
+  fact, there is a larger set corresponding to thse described in
+  the manual.
+
+Date: 5/22
+From: Goldstein
+Subject: EMACS function
+Class: Bug
+
+  (EMACS) tries to run <EDITORS>EMACS.EXE.  The HP HULK has no
+  directory <EDITORS>.
+
+Date: 5/22
+From: Goldstein
+Subject: MMFORK variable
+Class: Consistency
+
+  The manual describes the convention that globals have the suffix
+  !*.  But, the MM command uses the variable MMFORK with no suffix.
+
+Date: 5/22
+From: Goldstein
+Subject: HELP function
+Class: Bug
+
+  In RLISP mode, HELP FOR; losses because the parser 
+  attempts to parse FOR unless FOR appears in quotes.
+
+Date: 5/22
+From: Goldstein
+Subject:  External, Internal, Exported; section 21.2
+Class: Documentation bug
+
+  In the example, EXPORTED ... appears, but it is not documented in
+  the preceding text.  Only external, internal are documented.
+
+Date: 5/22
+From: Goldstein
+Subject: SYSLISP; p21.3
+Class: Documentation deficiency
+
+  The manual does not explain how to reformulate a LISP function
+  into a SYSLISP function when in LISP mode, i.e. is there a some
+  kind of reformulator that converts calls to plus to calls to
+  wplus2.
+
+Date: 5/22
+From: Goldstein
+Subject: *TIME variable
+Class: Bug
+
+  Executing (setq !*Time T) causes an error which caused system to
+  begin prompting with line number 1.  This only happened the first
+  time, and did not repeat when !*Time was toggled.  Repeatable in
+  a fresh PSL.  Does not occur in RLISP mode, only in LISP mode.
+
+Date: 5/8
+From: Goldstein
+Subject: How to make a dribble file
+Class: Inquiry
+
+  It appears that PSL cannot write to two channels at the same
+  time, thus preventing a dribble file.
+
+RESPONSE (Griss):
+
+  Redefine PRINT functions to write to two channels or define your
+  own special channel with a writechannel function that writes to
+  two other channels.
+
+Date: 5/8
+From: Goldstein
+Subject: TOPS-20, DOCMDS, CMDS
+Class: Documentation deficiency, Bug
+
+  These functions do not seemed to be defined.
+
+RESPONSE (Griss):
+
+  Help file erroneously mentions exec0.  Exec, MM and EMACS are
+  autoloading.  The rest are obtained by LOAD EXEC;.
+
+Date: 5/8
+From: Goldstein
+Subject: Prettyprinting
+Class: Inquiry
+
+  Is there a prettyprinter?
+
+RESPONSE (Griss):
+
+  Yes, the function Prettyprint.
+
+Date: 5/8
+From: Goldstein
+Subject: PPF
+Class: Bugs
+
+  Debug module has the function PPF which apparently pretty
+  prints in RLISP format.  PPF tries to print according to
+  the currently loaded parser.  Unfortunately, it detects whats
+  loaded by looking for the function RPRINT, which is autoloading.
+
+  Also, ppf and plist lose when the fn or plist is not defined.
+
+RESPONSE (Griss):
+
+  True.
+
+Date: 5/8
+From: Goldstein
+Subject: Interrupt characters
+Class: Documentation deficiency
+
+  There don't seem to be any interrupt characters, e.g.  control-g
+  to return to toplevel.  (An interrupt package is mentioned, but
+  not cited as complete.).
+
+RESPONSE (Griss):
+
+  Interrupts exist (Load Interrupt), but not documented.
+
+Date: 5/8
+From: Goldstein
+Subject: LAPOUT, LAPEND
+Class: Obsolete, Inquiry
+
+  The functions LAPOUT, and LAPEND do not seem to exist.  Possibly
+  a renaming has taken place since the 18 January manual.
+
+RESPONSE (Griss):
+
+  FASLOUT and FASLEND are the correct functions.
+
+Date: 5/8
+From: Goldstein
+Subject: Saving a PSL
+Class: Inquiry, obsolete
+
+  I tried SAVESYSTEM, followed by the TOPS-20 SAVE command.
+  However, when I tried to run the resulting .exe file, I got the
+  complaint "No starting address".  How is a PSL saved and
+  restarted.  (Manual, p.14.1)
+
+RESPONSE (Griss):
+
+  The file on the tape is still incorrect.  Patch needed to handle
+  tops 20 release.
+
+  RESOLUTION:
+
+  Apparently fixed.
+
+Date: 5/8
+From: Goldstein
+Subject: HELP
+Class: Documentation bug, documentation deficiency
+
+  The manual claims that HELP of no arguments prints a message.  It
+  works in Lisp mode as (HELP) and in RLISP mode as HELP; but
+  HELP(); loses??
+
+RESPONSE (Griss):
+
+  help() still loses.  help mini-editor requires ! before -.
+
+Date: 5/8
+From: Goldstein
+Subject: Rubout handler
+Class: Inquiry
+
+  The Rubout handler is line-oriented, and apparently one cannot
+  rubout accross cr's.  Is this true?
+
+RESPONSE (Griss):
+
+  Yes.
+
+Date: 5/8
+From: Goldstein
+Subject: PSL memory usage
+Class: Inquiry
+
+  What is the size of various PSL spaces.
+
+Date: 5/8
+From: Goldstein
+Subject: PSL memory usage
+Class: Feature request
+
+  One would like an INQUIR function that prints out PSL memory
+  usage statistics.
+
+Date: 5/8
+From: Goldstein
+Subject: HELP facility
+Class: Documentation bug; Bug
+
+  Note that some help files are incorrect; eg HELP editor refers to
+  minieditor, not mini-editor

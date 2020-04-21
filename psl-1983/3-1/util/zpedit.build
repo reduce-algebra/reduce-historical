@@ -1,0 +1,2 @@
+CompileTime load(ZBoot, ZBasic, ZMacro);
+in "zpedit.lsp"$

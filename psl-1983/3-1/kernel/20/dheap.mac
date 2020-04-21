@@ -1,0 +1,15 @@
+	radix 10
+	extern SYMNAM
+	extern SYMVAL
+	extern SYMFNC
+	extern SYMPRP
+	extern L0001
+	extern L0002
+	extern L0003
+BPS:	block 170001
+	intern BPS
+L1110:	<BPS+0>+262144
+	intern L1110
+L1111:	<BPS+170000>+262144
+	intern L1111
+	end

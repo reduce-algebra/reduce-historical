@@ -1,0 +1,10 @@
+#! /bin/csh -f
+# build module-name ...
+foreach i ($argv)
+if (-e $pl/$i.b) mv $pl/$i.b .
+rlisp << EOF
+load build;
+build '$i;
+EOF
+if (-e $i.b) rm $i.b
+end

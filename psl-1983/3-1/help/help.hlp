@@ -1,0 +1,15 @@
+HELP([ARGS:id-list]):NIL                              mlg, 31 dec 1981
+------------------------
+Type: NOEVAL, NOSPREAD
+If no arguments are given, this  file is printed.  Otherwise, each  of
+the id  arguments  is  checked  to see  if  any  help  information  is
+available.  If  it  has a  value  under the  property  list  indicator
+HelpFunction, that function is  called.  If it has  a value under  the
+indicator HelpString, the value is printed.   If it has a value  under
+the indicator HelpFile, the file is displayed on the terminal.
+
+(SHOWSTATE U:id-list)	 Show information about Switches and Globals
+			 on list U, or ALL known switches and globals if
+		         U is NIL
+(SHOWGLOBALS U:id-list)	 Globals only
+(SHOWSWITCHES U:id-list) Switches only

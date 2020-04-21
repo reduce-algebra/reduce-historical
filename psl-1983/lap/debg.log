@@ -1,0 +1,70 @@
+
+			 7-Mar-83 15:32:02
+
+BATCON Version	104(4133)			GLXLIB Version	1(527)
+
+	    Job DEBG Req #258 for KESSLER in Stream 0
+
+	OUTPUT:	 Nolog				TIME-LIMIT: 0:20:00
+	UNIQUE:	 Yes				BATCH-LOG:  Supersede
+	RESTART: No				ASSISTANCE: Yes
+						SEQUENCE:   796
+
+	Input from => PS:<PSL.KERNEL.20>DEBG.CTL.2
+	Output to  => PS:<PSL.KERNEL.20>DEBG.LOG
+
+
+
+15:32:03 MONTR	 Univ of Utah Computer Science KL-20, TOPS-20AN Monitor 5.3(1500)
+15:32:03 MONTR	@SET TIME-LIMIT 1200
+15:32:03 MONTR	@LOGIN KESSLER SMALL
+15:32:07 MONTR	 Job 12 on TTY225 7-Mar-83 15:32:07
+15:32:07 MONTR	 Previous login at 7-Mar-83 15:29:04
+15:32:08 MONTR	 There is 1 other job logged in as user KESSLER
+15:32:31 MONTR	@
+15:32:31 MONTR	[PS Mounted]
+15:32:31 MONTR	
+15:32:31 MONTR	[CONNECTED TO PS:<PSL.KERNEL.20>]
+15:32:31 MONTR	define DSK: DSK:, P20:, PI:
+15:32:32 MONTR	@S:DEC20-CROSS.EXE
+15:32:35 USER	Dec 20 cross compiler
+15:32:36 USER	[8] ASMOut "debg";
+15:32:38 USER	ASMOUT: IN files; or type in expressions
+15:32:38 USER	When all done execute ASMEND;
+15:33:11 USER	[9] in "debg.build";
+15:33:11 USER	%
+15:33:11 USER	% DEBG.BUILD - Minor debugging tools in the interpreter
+15:33:11 USER	% 
+15:33:11 USER	% Author:      Eric Benson
+15:33:11 USER	%              Symbolic Computation Group
+15:33:11 USER	%              Computer Science Dept.
+15:33:11 USER	%              University of Utah
+15:33:11 USER	% Date:        19 May 1982
+15:33:11 USER	% Copyright (c) 1982 University of Utah
+15:33:12 USER	%
+15:33:12 USER	
+15:33:12 USER	PathIn "mini-trace.red"$
+15:33:13 USER	*** Function `TR' has been redefined
+15:33:14 USER	*** Function `TRST' has been redefined
+15:33:15 USER	                % simple function tracing
+15:33:15 USER	PathIn "mini-editor.red"$
+15:33:46 USER	*** Garbage collection starting
+15:34:08 USER	*** GC 4: time 3081 ms
+15:34:08 USER	*** 76422 recovered, 564 stable, 13013 active, 76423 free
+15:34:12 USER	
+15:34:12 USER	PathIn "backtrace.red"$                 % Stack backtrace
+15:34:21 USER	[10] ASMEnd;
+15:34:50 USER	NIL
+15:34:51 USER	[11] quit;
+15:34:52 MONTR	@compile debg.mac, ddebg.mac
+15:34:58 USER	MACRO:  .MAIN
+15:35:08 USER	MACRO:  .MAIN
+15:35:09 USER	
+15:35:09 USER	EXIT
+15:35:09 MONTR	@delete debg.mac, ddebg.mac
+15:35:09 MONTR	 DEBG.MAC.1 [OK]
+15:35:09 MONTR	 DDEBG.MAC.1 [OK]
+15:35:09 MONTR	@
+15:35:15 MONTR	Killed by OPERATOR, TTY 221
+15:35:15 MONTR	Killed Job 12, User KESSLER, Account SMALL, TTY 225,
+15:35:15 MONTR	  at  7-Mar-83 15:35:14,  Used 0:00:55 in 0:03:07
