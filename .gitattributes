@@ -1,2 +1,16 @@
 # Effectively disable Linguist
+reduce2/* linguist-vendored
+r38/* linguist-vendored
+r37/* linguist-vendored
+r36/* linguist-vendored
+r35/* linguist-vendored
+r34/* linguist-vendored
+r34.3/* linguist-vendored
+r34.1/* linguist-vendored 
+r33/* linguist-vendored
+r30/* linguist-vendored
+psl/* linguist-vendored
+psl-1983/* linguist-vendored
+perq-pascal-lisp-project/* linguist-vendored
+.github/* linguist-vendored
 ./* linguist-vendored
