@@ -1,0 +1,2 @@
+# Effectively disable Linguist
+./* linguist-vendored
