@@ -20,7 +20,7 @@ also provides a flexible and expressive user programming language.
 ## Historical Snapshots
 
 This repository contains informal (and not-guaranteed-complete)
-historical snapshots of some previous releases of Reduce.
+historical snapshots of some previous releases of **REDUCE**.
 
 ----
 
