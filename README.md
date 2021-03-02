@@ -63,6 +63,7 @@ directory without _careful_ thought.
   - [**Sourceforge SVN Repository**](https://svn.code.sf.net/p/reduce-algebra/code/historical/)
 - [GitHub Mirror](https://github.com/reduce-algebra/reduce-historical/)
 - [SourceHut Mirror](https://git.sr.ht/~trn/reduce-historical/)
+- [NotABug Mirror](https://notabug.org/reduce-algebra/reduce-historical/)
 - [Chisel Mirror](https://chiselapp.com/user/reduce-algebra/repository/reduce-historical/)
 
 ----
