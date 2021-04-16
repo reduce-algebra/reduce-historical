@@ -31,27 +31,27 @@
 <h3>examples:</h3>
 <p></p>
 <pre><TT>
-alist := {1,2,{a,b}}; 
+alist := {1,2,{a,b}};
 
-  ALIST := {1,2,{A,B}} 
-
-
-blist := {3,4,5,sin(y)}; 
-
-  BLIST := {3,4,5,SIN(Y)} 
+  ALIST := {1,2,{A,B}}
 
 
-append(alist,blist); 
+blist := {3,4,5,sin(y)};
 
-  {1,2,{A,B},3,4,5,SIN(Y)} 
-
-
-append(alist,{}); 
-
-  {1,2,{A,B}} 
+  BLIST := {3,4,5,SIN(Y)}
 
 
-append(list z,blist); 
+append(alist,blist);
+
+  {1,2,{A,B},3,4,5,SIN(Y)}
+
+
+append(alist,{});
+
+  {1,2,{A,B}}
+
+
+append(list z,blist);
 
   {Z,3,4,5,SIN(Y)}
 

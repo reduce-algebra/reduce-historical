@@ -22,32 +22,32 @@
 <h3>examples:</h3>
 <p></p>
 <pre><TT>
-    hugo := taylor(exp(x),x,0,2); 
+    hugo := taylor(exp(x),x,0,2);
 
                   1  2      3
   HUGO := 1 + X + -*X  + O(X )
                   2
 
 
-    taylorcombine log hugo; 
+    taylorcombine log hugo;
 
          3
   X + O(X )
 
 
-    taylorcombine(hugo + x); 
+    taylorcombine(hugo + x);
 
            1  2      3
   (1 + X + -*X  + O(X )) + X
            2
 
 
-    on taylorautoexpand; 
+    on taylorautoexpand;
 
-    taylorcombine(hugo + x); 
+    taylorcombine(hugo + x);
 
             1  2      3
-  1 + 2*X + -*X  + O(X )  
+  1 + 2*X + -*X  + O(X )
             2
 
 </TT></PRE>

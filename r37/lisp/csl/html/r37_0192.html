@@ -32,52 +32,52 @@
 <p></p>
 <pre><TT>
 
-depend y,x; 
+depend y,x;
 
 
-df(y**2,x); 
+df(y**2,x);
 
-  2*DF(Y,X)*Y 
-
-
-
-depend z,cos(x),y; 
-
-
-df(sin(z),cos(x)); 
-
-  COS(Z)*DF(Z,COS(X)) 
+  2*DF(Y,X)*Y
 
 
 
-df(z**2,x); 
-
-  2*DF(Z,X)*Z 
+depend z,cos(x),y;
 
 
+df(sin(z),cos(x));
 
-nodepend z,y; 
-
-
-df(z**2,x); 
-
-  2*DF(Z,X)*Z 
+  COS(Z)*DF(Z,COS(X))
 
 
 
-cc := df(y**2,x); 
+df(z**2,x);
 
-  CC := 2*DF(Y,X)*Y 
-
-
-
-y := tan x; 
-
-  Y := TAN(X); 
+  2*DF(Z,X)*Z
 
 
 
-cc; 
+nodepend z,y;
+
+
+df(z**2,x);
+
+  2*DF(Z,X)*Z
+
+
+
+cc := df(y**2,x);
+
+  CC := 2*DF(Y,X)*Y
+
+
+
+y := tan x;
+
+  Y := TAN(X);
+
+
+
+cc;
 
                   2
   2*TAN(X)*(TAN(X)   + 1)

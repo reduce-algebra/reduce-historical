@@ -19,19 +19,19 @@
 <p></p>
 <pre><TT>
 
-on defn; 
+on defn;
 
 
-17/3; 
+17/3;
 
-  (AEVAL (LIST 'QUOTIENT 17 3)) 
+  (AEVAL (LIST 'QUOTIENT 17 3))
 
 
 
-df(sin(x),x,2);          
- 
+df(sin(x),x,2);
 
-  (AEVAL (LIST 'DF (LIST 'SIN 'X) 'X 2)) 
+
+  (AEVAL (LIST 'DF (LIST 'SIN 'X) 'X 2))
 
 
 procedure coshval(a);
@@ -39,58 +39,58 @@ procedure coshval(a);
       g := (exp(a) + exp(-a))/2;
       return g
    end;
- 
-
-  (AEVAL 
-    (PROGN 
-      (FLAG '(COSHVAL) 'OPFN) 
-      (DE COSHVAL (A) 
-        (PROG (G) 
-          (SETQ G 
-            (AEVAL 
-               (LIST 
-                  'QUOTIENT 
-                  (LIST 
-                     'PLUS 
-                     (LIST 'EXP A) 
-                     (LIST 'EXP (LIST 'MINUS A))) 
-                  2))) 
-         (RETURN G)))) ) 
 
 
-
-coshval(1); 
-
-  (AEVAL (LIST 'COSHVAL 1)) 
+  (AEVAL
+    (PROGN
+      (FLAG '(COSHVAL) 'OPFN)
+      (DE COSHVAL (A)
+        (PROG (G)
+          (SETQ G
+            (AEVAL
+               (LIST
+                  'QUOTIENT
+                  (LIST
+                     'PLUS
+                     (LIST 'EXP A)
+                     (LIST 'EXP (LIST 'MINUS A)))
+                  2)))
+         (RETURN G)))) )
 
 
 
-off defn; 
+coshval(1);
 
-
-coshval(1); 
-
-  Declare COSHVAL operator? (Y or N) 
+  (AEVAL (LIST 'COSHVAL 1))
 
 
 
-n 
+off defn;
+
+
+coshval(1);
+
+  Declare COSHVAL operator? (Y or N)
+
+
+
+n
 
 procedure coshval(a);
    begin scalar g;
       g := (exp(a) + exp(-a))/2;
       return g
    end;
- 
-
-  COSHVAL 
 
 
+  COSHVAL
 
-on rounded; 
 
 
-coshval(1); 
+on rounded;
+
+
+coshval(1);
 
   1.54308063482
 

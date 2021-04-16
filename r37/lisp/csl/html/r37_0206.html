@@ -30,32 +30,32 @@
 <h3>examples:</h3>
 <p></p>
 <pre><TT>
-operator f,h; 
+operator f,h;
 
-noncom f; 
+noncom f;
 
-f(a)*f(b) - f(b)*f(a); 
+f(a)*f(b) - f(b)*f(a);
 
-  F(A)*F(B) - F(B)*F(A) 
-
-
-h(a)*h(b) - h(b)*h(a); 
-
-  0 
+  F(A)*F(B) - F(B)*F(A)
 
 
-operator comm; 
+h(a)*h(b) - h(b)*h(a);
+
+  0
+
+
+operator comm;
 
 for all x,y such that x neq y and ordp(x,y)
         let f(x)*f(y) = f(y)*f(x) + comm(x,y);
 
 
-f(1)*f(2); 
+f(1)*f(2);
 
-  F(1)*F(2) 
+  F(1)*F(2)
 
 
-f(2)*f(1); 
+f(2)*f(1);
 
   COMM(2,1) + F(1)*F(2)
 

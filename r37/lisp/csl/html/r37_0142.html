@@ -34,49 +34,49 @@
 <p></p>
 <pre><TT>
 
-ff := x**7 + sin(y)*x**5 + y**4 + x + 7; 
+ff := x**7 + sin(y)*x**5 + y**4 + x + 7;
 
 
                 5     7         4
-  FF := SIN(Y)*X   + X   + X + Y   + 7 
+  FF := SIN(Y)*X   + X   + X + Y   + 7
 
 
-coeffn(ff,x,5); 
+coeffn(ff,x,5);
 
-  SIN(Y) 
-
-
-coeffn(ff,z,3); 
-
-  0 
+  SIN(Y)
 
 
-coeffn(ff,y,0); 
+coeffn(ff,z,3);
+
+  0
+
+
+coeffn(ff,y,0);
 
           5     7
-  SIN(Y)*X   + X   + X + 7 
+  SIN(Y)*X   + X   + X + 7
 
 
 
-rr := 1/y**2+y**3+sin(y); 
+rr := 1/y**2+y**3+sin(y);
 
                 2     5
         SIN(Y)*Y   + Y   + 1
-  RR := -------------------- 
+  RR := --------------------
                   2
                  Y
 
 
-on ratarg; 
+on ratarg;
 
 
-coeffn(rr,y,-2); 
+coeffn(rr,y,-2);
 
-  ***** -2 invalid as COEFFN index 
+  ***** -2 invalid as COEFFN index
 
 
 
-coeffn(rr,y,5); 
+coeffn(rr,y,5);
 
   1
   ---

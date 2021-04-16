@@ -48,13 +48,13 @@ E"
            write q;
       lab: return a
         end;
- 
-
-  DUMB 
 
 
+  DUMB
 
-dumb(17); 
+
+
+dumb(17);
 
   17
 
@@ -117,27 +117,27 @@ E"
 <p></p>
 <pre><tt>
 
-a := 20; 
+a := 20;
 
-  A := 20 
+  A := 20
 
 
 if greaterp(a,25) then write &quot;big&quot; else write &quot;small&quot;;
-			 
 
 
-  small 
+
+  small
 
 
 if a greaterp 20 then write &quot;big&quot; else write &quot;small&quot;;
-			 
 
 
-  small 
+
+  small
 
 
 if (a greaterp 18) then write &quot;big&quot; else write &quot;small&quot;;
-			 
+
 
 
   big
@@ -210,53 +210,53 @@ E"
 <p></p>
 <pre><tt>
 if x = 5 then a := b+c else a := d+f;
-			 
 
 
-  D + F 
+
+  D + F
 
 
-x := 9; 
+x := 9;
 
-  X := 9 
+  X := 9
 
 
 if numberp x and x&lt;20 then y := sqrt(x) else write &quot;illegal&quot;;
-			 
 
 
-  3  
+
+  3
 
 
-clear x; 
+clear x;
 
 if numberp x and x&lt;20 then y := sqrt(x) else write &quot;illegal&quot;;
-			 
 
 
-  illegal 
+
+  illegal
 
 
-x := 12; 
+x := 12;
 
-  X := 12 
+  X := 12
 
 
 a := if x &lt; 5 then 100 else 150;
-			 
 
 
-  A := 150 
+
+  A := 150
 
 
 b := u**(if x &lt; 10 then 2);
-			 
 
-  B := 1 
+
+  B := 1
 
 
 bb := u**(if x &gt; 10 then 2);
-			 
+
 
          2
   BB := U
@@ -402,32 +402,32 @@ E"
 <p></p>
 <pre><tt>
 liss := list(c,b,c,{xx,yy},3x**2+7x+3,df(sin(2*x),x));
-	 
+
 
 
                             2
-  LISS := {C,B,C,{XX,YY},3*X  + 7*X + 3,2*COS(2*X)} 
+  LISS := {C,B,C,{XX,YY},3*X  + 7*X + 3,2*COS(2*X)}
 
 
-length liss; 
+length liss;
 
-  6 
+  6
 
 
 liss := {c,b,c,{xx,yy},3x**2+7x+3,df(sin(2*x),x)};
-	 
+
 
 
                             2
-  LISS := {C,B,C,{XX,YY},3*X  + 7*X + 3,2*COS(2*X)} 
+  LISS := {C,B,C,{XX,YY},3*X  + 7*X + 3,2*COS(2*X)}
 
 
-emptylis := list(); 
+emptylis := list();
 
-  EMPTYLIS := {} 
+  EMPTYLIS := {}
 
 
-a . emptylis; 
+a . emptylis;
 
   {A}
 
@@ -485,27 +485,27 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a := 10; 
+a := 10;
 
-  A := 10 
+  A := 10
 
 
 if a&lt;0 or a&gt;140 then write &quot;not a valid human age&quot; else
    write &quot;age = &quot;,a;
- 
 
 
 
-  age = 10 
+
+  age = 10
 
 
-a := 200; 
+a := 200;
 
-  A := 200 
+  A := 200
 
 
 if a &lt; 0 or a &gt; 140 then write &quot;not a valid human age&quot;;
-			 
+
 
 
   not a valid human age
@@ -596,22 +596,22 @@ procedure fac(n);
      then rederr &quot;Choose nonneg. integer only&quot;
     else for i := 0:n-1 product i+1;
 
-			 
-
-  FAC 
 
 
-fac(0); 
-
-  1 
+  FAC
 
 
-fac(5); 
+fac(0);
 
-  120 
+  1
 
 
-fac(-5); 
+fac(5);
+
+  120
+
+
+fac(-5);
 
   ***** choose nonneg. integer only
 
@@ -782,7 +782,7 @@ E"
 <pre><tt>
 &lt;&lt;m := 4; repeat &lt;&lt;write 100*x*m;m := m-1&gt;&gt; until m = 0&gt;
 &gt;;
-			 
+
 
 
   400*X
@@ -794,7 +794,7 @@ E"
 
 &lt;&lt;m := -1; repeat &lt;&lt;write m; m := m-1&gt;&gt; until m &lt;= 0&gt;
 &gt;;
-			 
+
 
 
   -1
@@ -857,32 +857,32 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-alist := {a,b,c,d}; 
+alist := {a,b,c,d};
 
-  ALIST := {A,B,C,D}; 
-
-
-rest alist; 
-
-  {B,C,D} 
+  ALIST := {A,B,C,D};
 
 
-blist := {x,y,{aa,bb,cc},z}; 
+rest alist;
 
-  BLIST := {X,Y,{AA,BB,CC},Z} 
-
-
-second rest blist; 
-
-  {AA,BB,CC} 
+  {B,C,D}
 
 
-clist := {c}; 
+blist := {x,y,{aa,bb,cc},z};
 
-  CLIST := C 
+  BLIST := {X,Y,{AA,BB,CC},Z}
 
 
-rest clist; 
+second rest blist;
+
+  {AA,BB,CC}
+
+
+clist := {c};
+
+  CLIST := C
+
+
+rest clist;
 
   {}
 
@@ -931,7 +931,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-begin write &quot;yes&quot;; return a end; 
+begin write &quot;yes&quot;; return a end;
 
   yes
   A
@@ -940,36 +940,36 @@ begin write &quot;yes&quot;; return a end;
 procedure dumb(a);
   begin if numberp(a) then return a else return 10 end;
 
-						 
-
-  DUMB 
 
 
-dumb(x); 
-
-  10 
+  DUMB
 
 
-dumb(-5); 
+dumb(x);
 
-  -5  
+  10
+
+
+dumb(-5);
+
+  -5
 
 
 procedure dumb2(a);
   begin c := a**2 + 2*a + 1; d := 17; c*d; return end;
-		 
-
-  DUMB2 
 
 
-dumb2(4); 
-
-c; 
-
-  25 
+  DUMB2
 
 
-d; 
+dumb2(4);
+
+c;
+
+  25
+
+
+d;
 
   17
 
@@ -1062,19 +1062,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-aa := {c,b,a,{x**2,z**3},y}; 
+aa := {c,b,a,{x**2,z**3},y};
 
                  2  3
-  AA := {C,B,A,{X ,Z },Y} 
+  AA := {C,B,A,{X ,Z },Y}
 
 
-reverse aa; 
+reverse aa;
 
        2  3
-  {Y,{X ,Z },A,B,C} 
+  {Y,{X ,Z },A,B,C}
 
 
-reverse(q . reverse aa); 
+reverse(q . reverse aa);
 
            2  3
   {C,B,A,{X ,Z },Y,Q}
@@ -1172,11 +1172,11 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-operator f,g,h; 
+operator f,g,h;
 
-let f(x) =&gt; x^2; 
+let f(x) =&gt; x^2;
 
-f(x); 
+f(x);
 
    2
   x
@@ -1188,7 +1188,7 @@ g(~n,~x)=&gt;h((1-n)/2,x) when not evenp n}$
 
 let g_rules;
 
-g(3,x); 
+g(3,x);
 
   h(-1,x)
 
@@ -1336,22 +1336,22 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-alist := {a,b,c,d}; 
+alist := {a,b,c,d};
 
-  ALIST := {A,B,C,D} 
-
-
-second alist; 
-
-  B 
+  ALIST := {A,B,C,D}
 
 
-blist := {x,{aa,bb,cc},z}; 
+second alist;
 
-  BLIST := {X,{AA,BB,CC},Z} 
+  B
 
 
-second second blist; 
+blist := {x,{aa,bb,cc},z};
+
+  BLIST := {X,{AA,BB,CC},Z}
+
+
+second second blist;
 
   BB
 
@@ -1402,40 +1402,40 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a := y; 
+a := y;
 
-  A := Y 
-
-
-set(a,sin(x^2)); 
-
-       2
-  SIN(X ) 
+  A := Y
 
 
-a; 
+set(a,sin(x^2));
 
        2
-  SIN(X ) 
+  SIN(X )
 
 
-y; 
+a;
 
        2
-  SIN(X ) 
+  SIN(X )
 
 
-a := b + c; 
+y;
 
-  A := B + C 
-
-
-set(a-c,z); 
-
-  Z 
+       2
+  SIN(X )
 
 
-b; 
+a := b + c;
+
+  A := B + C
+
+
+set(a-c,z);
+
+  Z
+
+
+b;
 
   Z
 
@@ -1503,32 +1503,32 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-setq(b,6); 
+setq(b,6);
 
-  B := 6 
-
-
-c setq sin(x); 
-
-  C := SIN(X) 
+  B := 6
 
 
-w + setq(c,x+3) + z; 
+c setq sin(x);
 
-  W + X + Z + 3 
-
-
-c; 
-
-  X + 3 
+  C := SIN(X)
 
 
-setq(a1 + a2,25); 
+w + setq(c,x+3) + z;
 
-  A1 + A2 := 25 
+  W + X + Z + 3
 
 
-a1; 
+c;
+
+  X + 3
+
+
+setq(a1 + a2,25);
+
+  A1 + A2 := 25
+
+
+a1;
 
   - (A2 - 25)
 
@@ -1619,27 +1619,27 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-alist := {a,b,c,d}; 
+alist := {a,b,c,d};
 
-  ALIST := {A,B,C,D} 
-
-
-third alist; 
-
-  C 
+  ALIST := {A,B,C,D}
 
 
-blist := {x,{aa,bb,cc},y,z}; 
+third alist;
 
-  BLIST := {X,{AA,BB,CC},Y,Z}; 
-
-
-third second blist; 
-
-  CC 
+  C
 
 
-third blist; 
+blist := {x,{aa,bb,cc},y,z};
+
+  BLIST := {X,{AA,BB,CC},Y,Z};
+
+
+third second blist;
+
+  CC
+
+
+third blist;
 
   Y
 
@@ -2160,27 +2160,27 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-abs(-a); 
+abs(-a);
 
-  ABS(A) 
-
-
-abs(-5); 
-
-  5 
+  ABS(A)
 
 
-a := -10; 
+abs(-5);
 
-  A := -10 
-
-
-abs(a); 
-
-  10 
+  5
 
 
-abs(-a); 
+a := -10;
+
+  A := -10
+
+
+abs(a);
+
+  10
+
+
+abs(-a);
 
   10
 
@@ -2233,18 +2233,18 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on rounded; 
+on rounded;
 
-1.23456789012345; 
+1.23456789012345;
 
-  1.23456789012 
+  1.23456789012
 
 
-on adjprec; 
+on adjprec;
 
-1.23456789012345; 
+1.23456789012345;
 
-*** precision increased to 15 
+*** precision increased to 15
 </tt></pre>
 <p>
   <a name="r38_0072"> <title>ARG</title></a>
@@ -2282,19 +2282,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-arg(3+4i) 
+arg(3+4i)
 
-  ARG(3 + 4*I) 
-
-
-on rounded, complex; 
-
-ws; 
-
-  0.927295218002 
+  ARG(3 + 4*I)
 
 
-arg a; 
+on rounded, complex;
+
+ws;
+
+  0.927295218002
+
+
+arg a;
 
   ARG(A)
 
@@ -2341,27 +2341,27 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-ceiling 3.4; 
+ceiling 3.4;
 
-  4 
-
-
-fix 3.4; 
-
-  3 
+  4
 
 
-ceiling(-5.2); 
+fix 3.4;
 
-  -5 
-
-
-fix(-5.2); 
-
-  -5 
+  3
 
 
-ceiling a; 
+ceiling(-5.2);
+
+  -5
+
+
+fix(-5.2);
+
+  -5
+
+
+ceiling a;
 
   CEILING(A)
 
@@ -2396,17 +2396,17 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-choose(2,3); 
+choose(2,3);
 
-  3 
-
-
-choose(3,2); 
-
-  CHOOSE(3,2) 
+  3
 
 
-choose(a,b); 
+choose(3,2);
+
+  CHOOSE(3,2)
+
+
+choose(a,b);
 
   CHOOSE(A,B)
 
@@ -2456,24 +2456,24 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-deg2dms 60; 
+deg2dms 60;
 
-  DEG2DMS(60) 
-
-
-on rounded; 
-
-ws; 
-
-  {60,0,0} 
+  DEG2DMS(60)
 
 
-deg2dms 42.4; 
+on rounded;
 
-  {42,23,60.0} 
+ws;
+
+  {60,0,0}
 
 
-deg2dms a; 
+deg2dms 42.4;
+
+  {42,23,60.0}
+
+
+deg2dms a;
 
   DEG2DMS(A)
 
@@ -2520,19 +2520,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-deg2rad 60; 
+deg2rad 60;
 
-  DEG2RAD(60) 
-
-
-on rounded; 
-
-ws; 
-
-  1.0471975512 
+  DEG2RAD(60)
 
 
-deg2rad a; 
+on rounded;
+
+ws;
+
+  1.0471975512
+
+
+deg2rad a;
 
   DEG2RAD(A)
 
@@ -2587,19 +2587,19 @@ E"
 <p></p>
 <pre><tt>
 
-difference(10,4); 
+difference(10,4);
 
-  6 
-
-
-
-15 difference 5 difference 2; 
-
-  8 
+  6
 
 
 
-a difference b; 
+15 difference 5 difference 2;
+
+  8
+
+
+
+a difference b;
 
   A - B
 
@@ -2649,7 +2649,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-df(dilog(x**2),x); 
+df(dilog(x**2),x);
 
            2
     2*LOG(X )*X
@@ -2659,13 +2659,13 @@ df(dilog(x**2),x);
 
 
 
-int(dilog(x),x); 
+int(dilog(x),x);
 
-  DILOG(X)*X - DILOG(X) + LOG(X)*X - X 
+  DILOG(X)*X - DILOG(X) + LOG(X)*X - X
 
 
 
-dilog(0); 
+dilog(0);
 
     2
   PI
@@ -2715,19 +2715,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-dms2deg {42,3,7}; 
+dms2deg {42,3,7};
 
-  DMS2DEG({42,3,7}) 
-
-
-on rounded; 
-
-ws; 
-
-  42.0519444444 
+  DMS2DEG({42,3,7})
 
 
-dms2deg a; 
+on rounded;
+
+ws;
+
+  42.0519444444
+
+
+dms2deg a;
 
   DMS2DEG(A)
 
@@ -2774,19 +2774,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-dms2rad {42,3,7}; 
+dms2rad {42,3,7};
 
-  DMS2RAD({42,3,7}) 
-
-
-on rounded; 
-
-ws; 
-
-  0.733944887421 
+  DMS2RAD({42,3,7})
 
 
-dms2rad a; 
+on rounded;
+
+ws;
+
+  0.733944887421
+
+
+dms2rad a;
 
   DMS2RAD(A)
 
@@ -2833,14 +2833,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-factorial 4; 
+factorial 4;
 
-  24 
+  24
 
 
-factorial 30 ; 
+factorial 30 ;
 
-  265252859812191058636308480000000 
+  265252859812191058636308480000000
 
 </tt></pre>
 <p>
@@ -2885,37 +2885,37 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-fix 3.4; 
+fix 3.4;
 
-  3 
-
-
-floor 3.4; 
-
-  3 
+  3
 
 
-ceiling 3.4; 
+floor 3.4;
 
-  4 
-
-
-fix(-5.2); 
-
-  -5 
+  3
 
 
-floor(-5.2); 
+ceiling 3.4;
 
-  -6 
-
-
-ceiling(-5.2); 
-
-  -5 
+  4
 
 
-fix(a); 
+fix(-5.2);
+
+  -5
+
+
+floor(-5.2);
+
+  -6
+
+
+ceiling(-5.2);
+
+  -5
+
+
+fix(a);
 
   FIX(A)
 
@@ -2967,26 +2967,26 @@ E"
 <p></p>
 <pre><tt>
 if fixp 1.5 then write &quot;ok&quot; else write &quot;not&quot;;
-			 
 
 
-  not 
 
-
-if fixp(a) then write &quot;ok&quot; else write &quot;not&quot;;
-			 
-
-
-  not 
-
-
-a := 15; 
-
-  A := 15 
+  not
 
 
 if fixp(a) then write &quot;ok&quot; else write &quot;not&quot;;
-			 
+
+
+
+  not
+
+
+a := 15;
+
+  A := 15
+
+
+if fixp(a) then write &quot;ok&quot; else write &quot;not&quot;;
+
 
 
   ok
@@ -3041,27 +3041,27 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-floor 3.4; 
+floor 3.4;
 
-  3 
-
-
-fix 3.4; 
-
-  3 
+  3
 
 
-floor(-5.2); 
+fix 3.4;
 
-  -6 
-
-
-fix(-5.2); 
-
-  -5 
+  3
 
 
-floor a; 
+floor(-5.2);
+
+  -6
+
+
+fix(-5.2);
+
+  -5
+
+
+floor a;
 
   FLOOR(A)
 
@@ -3105,19 +3105,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a expt b; 
+a expt b;
 
    B
-  A  
+  A
 
 
-expt(a,b); 
+expt(a,b);
 
    B
-  A  
+  A
 
 
-(x+y) expt 4; 
+(x+y) expt 4;
 
    4      3        2  2        3    4
   X  + 4*X *Y + 6*X *Y  + 4*X*Y  + Y
@@ -3183,17 +3183,17 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-gcd(2*x**2 - 2*y**2,4*x + 4*y); 
+gcd(2*x**2 - 2*y**2,4*x + 4*y);
 
-  2*(X + Y) 
-
-
-gcd(sin(x),x**2 + 1); 
-
-  1  
+  2*(X + Y)
 
 
-gcd(765,68); 
+gcd(sin(x),x**2 + 1);
+
+  1
+
+
+gcd(765,68);
 
   17
 
@@ -3253,34 +3253,34 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-ln(x); 
+ln(x);
 
-  LN(X) 
-
-
-ln 4; 
-
-  LN(4) 
+  LN(X)
 
 
-ln(e); 
+ln 4;
 
-  LN(E) 
-
-
-df(ln(x),x); 
-
-  DF(LN(X),X) 
+  LN(4)
 
 
-on rounded; 
+ln(e);
 
-ln 4; 
-
-  1.38629436112 
+  LN(E)
 
 
-ln e; 
+df(ln(x),x);
+
+  DF(LN(X),X)
+
+
+on rounded;
+
+ln 4;
+
+  1.38629436112
+
+
+ln e;
 
   1
 
@@ -3331,24 +3331,24 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-log(x); 
+log(x);
 
-  LOG(X) 
-
-
-log 4; 
-
-  LOG(4) 
+  LOG(X)
 
 
-log(e); 
+log 4;
 
-  1 
+  LOG(4)
 
 
-on rounded; 
+log(e);
 
-log 4; 
+  1
+
+
+on rounded;
+
+log 4;
 
   1.38629436112
 
@@ -3409,34 +3409,34 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-logb(x,2); 
+logb(x,2);
 
-  LOGB(X,2) 
-
-
-logb(4,3); 
-
-  LOGB(4,3) 
+  LOGB(X,2)
 
 
-logb(2,2); 
+logb(4,3);
 
-  LOGB(2,2) 
-
-
-df(logb(x,3),x); 
-
-  DF(LOGB(X,3),X) 
+  LOGB(4,3)
 
 
-on rounded; 
+logb(2,2);
 
-logb(4,3); 
-
-  1.26185950714 
+  LOGB(2,2)
 
 
-logb(2,2); 
+df(logb(x,3),x);
+
+  DF(LOGB(X,3),X)
+
+
+on rounded;
+
+logb(4,3);
+
+  1.26185950714
+
+
+logb(2,2);
 
   1
 
@@ -3487,19 +3487,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-max(4,6,10,-1); 
+max(4,6,10,-1);
 
-  10 
+  10
 
 
 &lt;&lt;a := 23;b := 2*a;c := 4**2;max(a,b,c)&gt;&gt;;
-			 
 
 
-  46 
+
+  46
 
 
-max(-5,-10,-a); 
+max(-5,-10,-a);
 
   -5
 
@@ -3547,19 +3547,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-min(-3,0,17,2); 
+min(-3,0,17,2);
 
-  -3 
+  -3
 
 
 &lt;&lt;a := 23;b := 2*a;c := 4**2;min(a,b,c)&gt;&gt;;
-			 
 
 
-  16 
+
+  16
 
 
-min(5,10,a); 
+min(5,10,a);
 
   5
 
@@ -3606,17 +3606,17 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-minus(a); 
+minus(a);
 
-  - A 
-
-
-minus(-1); 
-
-  1 
+  - A
 
 
-minus((x+1)**4); 
+minus(-1);
+
+  1
+
+
+minus((x+1)**4);
 
       4      3      2
   - (X  + 4*X  + 6*X  + 4*X + 1)
@@ -3661,17 +3661,17 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-nextprime 5001; 
+nextprime 5001;
 
-  5003  
-
-
-nextprime(10^30); 
-
-  1000000000000000000000000000057 
+  5003
 
 
-nextprime a; 
+nextprime(10^30);
+
+  1000000000000000000000000000057
+
+
+nextprime a;
 
   ***** A invalid as integer
 
@@ -3705,18 +3705,18 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on rounded; 
+on rounded;
 
-1.0000000000001; 
+1.0000000000001;
 
-  1 
+  1
 
 
-on noconvert; 
+on noconvert;
 
-1.0000000000001; 
+1.0000000000001;
 
-  1.0 
+  1.0
 
 </tt></pre>
 <p></p>
@@ -3763,26 +3763,26 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-norm (-2); 
+norm (-2);
 
-  NORM(-2) 
+  NORM(-2)
 
 
 on rounded;
 
-ws; 
+ws;
 
-  2.0 
+  2.0
 
 
-norm(3+4i); 
+norm(3+4i);
 
-  NORM(4*I+3) 
+  NORM(4*I+3)
 
 
 on complex;
 
-ws; 
+ws;
 
   5.0
 
@@ -3828,22 +3828,22 @@ perm(&lt;expression1&gt;,&lt;expression2&gt;)
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-perm(1,1); 
+perm(1,1);
 
-  1 
-
-
-perm(3,5); 
-
-  60 
+  1
 
 
-perm(-3,5); 
+perm(3,5);
 
-  PERM(-3,5) 
+  60
 
 
-perm(a,b); 
+perm(-3,5);
+
+  PERM(-3,5)
+
+
+perm(a,b);
 
   PERM(A,B)
 
@@ -3901,20 +3901,20 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a plus b plus c plus d; 
+a plus b plus c plus d;
 
-  A + B + C + D 
+  A + B + C + D
 
 
-4.5 plus 10; 
+4.5 plus 10;
 
   29
-  -- 
+  --
   2
 
 
 
-plus(x**2,y**2); 
+plus(x**2,y**2);
 
    2    2
   X  + Y
@@ -3969,35 +3969,35 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-quotient(a,x+1); 
+quotient(a,x+1);
 
     A
-  ----- 
+  -----
   X + 1
 
 
-7 quotient 17; 
+7 quotient 17;
 
   7
-  -- 
+  --
   17
 
 
-on rounded; 
+on rounded;
 
-4.5 quotient 2; 
+4.5 quotient 2;
 
-  2.25 
-
-
-quotient(x**2 + 3*x + 2,x+1); 
-
-  X + 2 
+  2.25
 
 
-matrix m,inverse; 
+quotient(x**2 + 3*x + 2,x+1);
 
-m := mat((a,b),(c,d)); 
+  X + 2
+
+
+matrix m,inverse;
+
+m := mat((a,b),(c,d));
 
   M(1,1) := A;
   M(1,2) := B;
@@ -4006,7 +4006,7 @@ m := mat((a,b),(c,d));
 
 
 
-inverse := quotient m; 
+inverse := quotient m;
 
                       D
   INVERSE(1,1) := ----------
@@ -4081,19 +4081,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-rad2deg 1; 
+rad2deg 1;
 
-  RAD2DEG(1) 
-
-
-on rounded; 
-
-ws; 
-
-  57.2957795131 
+  RAD2DEG(1)
 
 
-rad2deg a; 
+on rounded;
+
+ws;
+
+  57.2957795131
+
+
+rad2deg a;
 
   RAD2DEG(A)
 

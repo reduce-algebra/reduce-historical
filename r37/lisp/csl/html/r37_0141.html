@@ -34,36 +34,36 @@
 <h3>examples:</h3>
 <p></p>
 <pre><TT>
-coeff((x+y)**3,x); 
+coeff((x+y)**3,x);
 
     3     2
-  {Y  ,3*Y  ,3*Y,1} 
+  {Y  ,3*Y  ,3*Y,1}
 
 
-coeff((x+2)**4 + sin(x),x); 
+coeff((x+2)**4 + sin(x),x);
 
-  {SIN(X) + 16,32,24,8,1} 
-
-
-high_pow; 
-
-  4 
+  {SIN(X) + 16,32,24,8,1}
 
 
-low_pow; 
+high_pow;
 
-  0 
+  4
 
 
-ab := x**9 + sin(x)*x**7 + sqrt(y); 
- 
+low_pow;
+
+  0
+
+
+ab := x**9 + sin(x)*x**7 + sqrt(y);
+
 
 
                           7     9
   AB := SQRT(Y) + SIN(X)*X   + X
 
 
-coeff(ab,x); 
+coeff(ab,x);
 
   {SQRT(Y),0,0,0,0,0,0,SIN(X),0,1}
 
