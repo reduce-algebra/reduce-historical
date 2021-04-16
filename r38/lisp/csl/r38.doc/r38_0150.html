@@ -34,7 +34,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-expread(); a+b; 
+expread(); a+b;
 
   A + B
 
@@ -84,19 +84,19 @@ E"
 <p></p>
 <pre><tt>
 
-fff := factorize(x^3 - y^3); 
+fff := factorize(x^3 - y^3);
 
          2          2
-  		  {{X  + X*Y + Y ,1},{X - Y,1}} 
+  		  {{X  + X*Y + Y ,1},{X - Y,1}}
 
 
-fac1 := first fff; 
+fac1 := first fff;
 
              2          2
-  FAC1 := {{X  + X*Y + Y ,1} 
+  FAC1 := {{X  + X*Y + Y ,1}
 
 
-factorize(x^15 - 1); 
+factorize(x^15 - 1);
 
        8    7    6    5    4
    {{ X  - X  + X  - X  + X  - X + 1,1},
@@ -107,19 +107,19 @@ factorize(x^15 - 1);
    {X - 1,1}}
 
 
-lastone := part(ws,length ws); 
+lastone := part(ws,length ws);
 
-  	LASTONE := {X - 1,1} 
-
-
-setmod 2; 
-
-  1 
+  	LASTONE := {X - 1,1}
 
 
-on modular; 
+setmod 2;
 
-factorize(x^15 - 1); 
+  1
+
+
+on modular;
+
+factorize(x^15 - 1);
 
      4    3    2
   {{X  + X  + X  + X + 1,1},
@@ -221,19 +221,19 @@ hypot(&lt;expression&gt;,&lt;expression&gt;)
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-hypot(3,4); 
+hypot(3,4);
 
-  HYPOT(3,4) 
-
-
-on rounded; 
-
-ws; 
-
-  5.0 
+  HYPOT(3,4)
 
 
-hypot(a,b); 
+on rounded;
+
+ws;
+
+  5.0
+
+
+hypot(a,b);
 
   HYPOT(A,B)
 
@@ -278,12 +278,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-impart(1+i); 
+impart(1+i);
 
-  1 
+  1
 
 
-impart(a+i*b); 
+impart(a+i*b);
 
   REPART(B) + IMPART(A)
 
@@ -339,44 +339,44 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-int(x**3 + 3,x); 
+int(x**3 + 3,x);
 
       3
   X*(X  + 12)
-  ----------- 
+  -----------
        4
 
 
 
 int(sin(x)*exp(2*x),x);
- 
+
 
      2*X
     E   *(COS(X) - 2*SIN(X))
-  - ------------------------ 
+  - ------------------------
                5
 
 
 int(1/(x^2-2),x);
- 
+
 
   SQRT(2)*(LOG( - SQRT(2) + X) - LOG(SQRT(2) + X))
-  ------------------------------------------------ 
+  ------------------------------------------------
                          4
 
 
 int(sin(x)/(4 + cos(x)**2),x);
- 
+
 
          COS(X)
     ATAN(------)
            2
-  - ------------ 
+  - ------------
          2
 
 
 
-int(1/sqrt(x^2-x),x); 
+int(1/sqrt(x^2-x),x);
 
       SQRT(X)*SQRT(X - 1)
   INT(-------------------,X)
@@ -464,17 +464,17 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-f := for i:=1:4 collect(i**3-1); 
+f := for i:=1:4 collect(i**3-1);
 
-  F := 0,7,26,63 
-
-
-p := {1,2,3,4}; 
-
-  P := 1,2,3,4 
+  F := 0,7,26,63
 
 
-interpol(f,x,p); 
+p := {1,2,3,4};
+
+  P := 1,2,3,4
+
+
+interpol(f,x,p);
 
    3
   X  - 1
@@ -534,20 +534,20 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-lcof((x+2*y)**5,y); 
+lcof((x+2*y)**5,y);
 
-  32 
+  32
 
 
 lcof((x + y*sin(x))**2 + cos(x)*sin(x)**2,sin(x));
-			 
+
 
 
         2
-  COS(X)  + Y 
+  COS(X)  + Y
 
 
-lcof(x**2 + 3*x + 17,y); 
+lcof(x**2 + 3*x + 17,y);
 
    2
   X  + 3*X + 17
@@ -606,54 +606,54 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-alist := {a,b,{ww,xx,yy,zz}}; 
+alist := {a,b,{ww,xx,yy,zz}};
 
-  ALIST := {A,B,{WW,XX,YY,ZZ}} 
-
-
-length alist; 
-
-  3  
+  ALIST := {A,B,{WW,XX,YY,ZZ}}
 
 
-length third alist; 
+length alist;
 
-  4  
-
-
-dlist := {d}; 
-
-  DLIST := {D} 
+  3
 
 
-length rest dlist; 
+length third alist;
 
-  0  
-
-
-matrix mmm(4,5); 
-
-length mmm; 
-
-  {4,5} 
+  4
 
 
-array aaa(5,3,2); 
+dlist := {d};
 
-length aaa; 
-
-  {6,4,3} 
+  DLIST := {D}
 
 
-eex := (x+3)**2/(x-y); 
+length rest dlist;
+
+  0
+
+
+matrix mmm(4,5);
+
+length mmm;
+
+  {4,5}
+
+
+array aaa(5,3,2);
+
+length aaa;
+
+  {6,4,3}
+
+
+eex := (x+3)**2/(x-y);
 
           2
          X  + 6*X + 9
-  EEX := ------------ 
+  EEX := ------------
             X - Y
 
 
-length eex; 
+length eex;
 
   5
 
@@ -719,13 +719,13 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-polly := (x+3)*(x^4+2x+1); 
+polly := (x+3)*(x^4+2x+1);
 
             5      4      2
-  POLLY := X  + 3*X  + 2*X  + 7*X + 3 
+  POLLY := X  + 3*X  + 2*X  + 7*X + 3
 
 
-pollyroots := solve(polly,x); 
+pollyroots := solve(polly,x);
 
   POLLYROOTS := {X=ROOT F(X3 - X2 + X + 1,X ,
                        O                   )
@@ -733,7 +733,7 @@ pollyroots := solve(polly,x);
                  X=-3}
 
 
-variable := lhs first pollyroots; 
+variable := lhs first pollyroots;
 
   VARIABLE := X
 
@@ -858,21 +858,21 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-lpower((x+2*y)**6,y); 
+lpower((x+2*y)**6,y);
 
    6
-  Y  
+  Y
 
 
 lpower((x + cos(x))**8 + df(x**2,x),cos(x));
-			 
+
 
 
         8
-  COS(X)  
+  COS(X)
 
 
-lpower(x**3 + 3*x,y); 
+lpower(x**3 + 3*x,y);
 
   1
 
@@ -925,21 +925,21 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-lterm((x+2*y)**6,y); 
+lterm((x+2*y)**6,y);
 
       6
-  64*Y  
+  64*Y
 
 
 lterm((x + cos(x))**8 + df(x**2,x),cos(x));
-			 
+
 
 
         8
-  COS(X)  
+  COS(X)
 
 
-lterm(x**3 + 3*x,y); 
+lterm(x**3 + 3*x,y);
 
    3
   X  + 3X
@@ -994,30 +994,30 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-test := (a + b + c)**2; 
+test := (a + b + c)**2;
 
            2                    2            2
-  TEST := A  + 2*A*B + 2*A*C + B  + 2*B*C + C  
+  TEST := A  + 2*A*B + 2*A*C + B  + 2*B*C + C
 
 
-mainvar(test); 
+mainvar(test);
 
-  A 
-
-
-korder c,b,a; 
-
-mainvar(test); 
-
-  C 
+  A
 
 
-mainvar(2*cos(x)**2); 
+korder c,b,a;
 
-  COS(X) 
+mainvar(test);
+
+  C
 
 
-mainvar(17); 
+mainvar(2*cos(x)**2);
+
+  COS(X)
+
+
+mainvar(17);
 
   0
 
@@ -1120,12 +1120,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-map(abs,{1,-2,a,-a}); 
+map(abs,{1,-2,a,-a});
 
-  1,2,abs(a),abs(a) 
+  1,2,abs(a),abs(a)
 
 
-map(int(~w,x), mat((x^2,x^5),(x^4,x^5))); 
+map(int(~w,x), mat((x^2,x^5),(x^4,x^5)));
 
 
           [  3     6 ]
@@ -1139,7 +1139,7 @@ map(int(~w,x), mat((x^2,x^5),(x^4,x^5)));
   	[ 5     6  ]
 
 
-map(~w*6, x^2/3 = y^3/2 -1); 
+map(~w*6, x^2/3 = y^3/2 -1);
 
      2     3
   2*x =3*(y -2)
@@ -1200,12 +1200,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-mkid(x,3); 
+mkid(x,3);
 
-  X3 
+  X3
 
 
-factorize(x^15 - 1); 
+factorize(x^15 - 1);
 
   {X - 1,
     2
@@ -1218,7 +1218,7 @@ factorize(x^15 - 1);
 
 
 for i := 1:length ws do write set(mkid(f,i),part(ws,i));
-	 
+
 
 
    8    7    5    4    3
@@ -1279,13 +1279,13 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-nprimitive((2x+2y)^2); 
+nprimitive((2x+2y)^2);
 
    2            2
-  X  + 2*X*Y + Y  
+  X  + 2*X*Y + Y
 
 
-nprimitive(3*a*b*c); 
+nprimitive(3*a*b*c);
 
   3*A*B*C
 
@@ -1331,17 +1331,17 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-num(100/6); 
+num(100/6);
 
-  50 
-
-
-num(a/5 + b/6); 
-
-  6*A + 5*B 
+  50
 
 
-num(sin(x)); 
+num(a/5 + b/6);
+
+  6*A + 5*B
+
+
+num(sin(x));
 
   SIN(X)
 
@@ -1455,7 +1455,7 @@ depend y,x;
 
 ode:=df(y,x) + y * sin x/cos x - 1/cos x$
 
-odesolve(ode,y,x); 
+odesolve(ode,y,x);
 
   {y=arbconst(1)*cos(x) + sin(x)}
 
@@ -1555,53 +1555,53 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-part((x + y)**5,4); 
+part((x + y)**5,4);
 
       2  3
-  10*X *Y  
+  10*X *Y
 
 
-part((x + y)**5,4,2); 
+part((x + y)**5,4,2);
 
    2
-  X  
+  X
 
 
-part((x + y)**5,4,2,1); 
+part((x + y)**5,4,2,1);
 
-  X 
-
-
-part((x + y)**5,0); 
-
-  PLUS 
+  X
 
 
-part((x + y)**5,-5); 
+part((x + y)**5,0);
+
+  PLUS
+
+
+part((x + y)**5,-5);
 
         4
-  5*X *Y  
+  5*X *Y
 
 
-part((x + y)**5,4) := sin(x); 
+part((x + y)**5,4) := sin(x);
 
    5      4         3  2                 4    5
-  X  + 5*X *Y + 10*X *Y  + SIN(X) + 5*X*Y  + Y  
+  X  + 5*X *Y + 10*X *Y  + SIN(X) + 5*X*Y  + Y
 
 
-alist := {x,y,{aa,bb,cc},x**2*sqrt(y)}; 
+alist := {x,y,{aa,bb,cc},x**2*sqrt(y)};
 
 
                                         2
-  			 ALIST := {X,Y,{AA,BB,CC},SQRT(Y)*X } 
+  			 ALIST := {X,Y,{AA,BB,CC},SQRT(Y)*X }
 
 
-part(alist,3,2); 
+part(alist,3,2);
 
-  BB 
+  BB
 
 
-part(alist,4,0); 
+part(alist,4,0);
 
   TIMES
 
@@ -1684,26 +1684,26 @@ pf(&lt;expression&gt;,&lt;variable&gt;)
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-pf(2/((x+1)^2*(x+2)),x); 
+pf(2/((x+1)^2*(x+2)),x);
 
       2    -2        2
-  	{-----,-----,------------} 
+  	{-----,-----,------------}
     X + 2 X + 1  2
                 X  + 2*X + 1
 
 
-off exp; 
+off exp;
 
 pf(2/((x+1)^2*(x+2)),x);
- 
+
 
      2    - 2     2
-  {-----,-----,--------} 
+  {-----,-----,--------}
    X + 2 X + 1        2
                (X + 1)
 
 
-for each j in ws sum j; 
+for each j in ws sum j;
 
          2
   ----------------
@@ -1828,18 +1828,18 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-reduct((x+y)**3,x); 
+reduct((x+y)**3,x);
 
         2            2
-  Y*(3*X  + 3*X*Y + Y ) 
+  Y*(3*X  + 3*X*Y + Y )
 
 
-reduct(x + sin(x)**3,sin(x)); 
+reduct(x + sin(x)**3,sin(x));
 
-  X 
+  X
 
 
-reduct(x + sin(x)**3,y); 
+reduct(x + sin(x)**3,y);
 
   0
 
@@ -1889,12 +1889,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-repart(1+i); 
+repart(1+i);
 
-  1 
+  1
 
 
-repart(a+i*b); 
+repart(a+i*b);
 
   REPART(A) - IMPART(B)
 
@@ -1948,25 +1948,25 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-resultant(x**2 + 2*x + 1,x+1,x); 
+resultant(x**2 + 2*x + 1,x+1,x);
 
-  0 
+  0
 
 
-resultant(x**2 + 2*x + 1,x-3,x); 
+resultant(x**2 + 2*x + 1,x-3,x);
 
-  16 
+  16
 
 
 resultant(z**3 + z**2 + 5*z + 5,
           z**4 - 6*z**3 + 16*z**2 - 30*z + 55,
           z);
- 
-
-  0 
 
 
-resultant(x**3*y + 4*x*y + 10,y**2 + 6*y + 4,y); 
+  0
+
+
+resultant(x**3*y + 4*x*y + 10,y**2 + 6*y + 4,y);
 
 
    6       5        4        3        2
@@ -1985,7 +1985,7 @@ resultant(x**3*y + 4*x*y + 10,y**2 + 6*y + 4,y);
 <p></p>
 <p></p>
 <pre><tt>
-    n       n-1 
+    n       n-1
  a x  + a1 x     + ... + an
 
 </tt></pre>
@@ -1994,7 +1994,7 @@ resultant(x**3*y + 4*x*y + 10,y**2 + 6*y + 4,y);
 <p></p>
 <p></p>
 <pre><tt>
-    m       m-1 
+    m       m-1
  b x  + b1 x     + ... + bm
 
 </tt></pre>
@@ -2005,12 +2005,12 @@ resultant(x**3*y + 4*x*y + 10,y**2 + 6*y + 4,y);
 <pre><tt>
    0.......0 a  a1 .......... an
    0....0 a  a1 .......... an  0
-       .    .   .   .  
+       .    .   .   .
    a0 a1 .......... an 0.......0
    0.......0 b  b1 .......... bm
    0....0 b  b1 .......... bm  0
-       .    .   .   .  
-   b  b1 .......... bm 0.......0  
+       .    .   .   .
+   b  b1 .......... bm 0.......0
 
 </tt></pre>
 <p>
@@ -2096,7 +2096,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-roots := solve(x**2 + 6*x*y + 5x + 3y**2,x); 
+roots := solve(x**2 + 6*x*y + 5x + 3y**2,x);
 
 
                               2
@@ -2109,15 +2109,15 @@ roots := solve(x**2 + 6*x*y + 5x + 3y**2,x);
                                     2
 
 
-root1 := rhs first roots; 
+root1 := rhs first roots;
 
                       2
              SQRT(24*Y  + 60*Y + 25) + 6*Y + 5
-  ROOT1 := - --------------------------------- 
+  ROOT1 := - ---------------------------------
                              2
 
 
-root2 := rhs second roots; 
+root2 := rhs second roots;
 
                     2
            SQRT(24*Y  + 60*Y + 25) - 6*Y - 5
@@ -2291,9 +2291,9 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-  select( ~w&gt;0 , {1,-1,2,-3,3}) 
+  select( ~w&gt;0 , {1,-1,2,-3,3})
 
-  {1,2,3} 
+  {1,2,3}
 
 
   q:=(part((x+y)^5,0):=list)
@@ -2356,7 +2356,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-showrules log; 
+showrules log;
 
   {LOG(E) =&gt; 1,
    LOG(1) =&gt; 0,
@@ -2438,19 +2438,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-sss := solve(x^2 + 7); 
+sss := solve(x^2 + 7);
 
   Unknown: X
   SSS := {X= - SQRT(7)*I,
           X=SQRT(7)*I}
 
 
-rhs first sss; 
+rhs first sss;
 
-  - SQRT(7)*I 
+  - SQRT(7)*I
 
 
-solve(sin(x^2*y),y); 
+solve(sin(x^2*y),y);
 
      2*ARBINT(1)*PI
   {Y=---------------
@@ -2462,45 +2462,45 @@ solve(sin(x^2*y),y);
               X
 
 
-off allbranch; 
+off allbranch;
 
-solve(sin(x**2*y),y); 
+solve(sin(x**2*y),y);
 
-  {Y=0} 
+  {Y=0}
 
 
 solve({3x + 5y = -4,2*x + y = -10},{x,y});
- 
+
 
 
          22   46
-  {{X= - --,Y=--}} 
+  {{X= - --,Y=--}}
          7    7
 
 
 solve({x + a*y + z,2x + 5},{x,y});
- 
+
 
 
          5      2*Z - 5
-  {{X= - -,Y= - -------}} 
+  {{X= - -,Y= - -------}}
          2        2*A
 
 
 ab := (x+2)^2*(x^6 + 17x + 1);
- 
+
 
          8      7      6       3       2
-  AB := X  + 4*X  + 4*X  + 17*X  + 69*X  + 72*X + 4 
+  AB := X  + 4*X  + 4*X  + 17*X  + 69*X  + 72*X + 4
 
 
-www := solve(ab,x); 
+www := solve(ab,x);
 
-  {X=ROOT F(X6 + 17*X + 1),X=-2} 
-         O            
+  {X=ROOT F(X6 + 17*X + 1),X=-2}
+         O
 
 
-root_multiplicities; 
+root_multiplicities;
 
   {1,2}
 
@@ -2702,17 +2702,17 @@ E"
 
 for i:=1:10 collect random(50)$
 
-sort(ws,&gt;=); 
+sort(ws,&gt;=);
 
   {41,38,33,30,28,25,20,17,8,5}
 
 
-sort(ws,&lt;); 
+sort(ws,&lt;);
 
   {5,8,17,20,25,28,30,33,38,41}
 
 
-sort(ws,ce); 
+sort(ws,ce);
 
   {8,20,28,30,38,5,17,25,33,41}
 
@@ -2781,7 +2781,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-structr(sqrt(x**2 + 2*x) + sin(x**2*z)); 
+structr(sqrt(x**2 + 2*x) + sin(x**2*z));
 
 
   ANS1 + ANS2
@@ -2792,14 +2792,14 @@ structr(sqrt(x**2 + 2*x) + sin(x**2*z));
           ANS1 := ((X + 2)*X)
 
 
-ans3; 
+ans3;
 
-  ANS3 
+  ANS3
 
 
-on fort; 
+on fort;
 
-structr((x+1)**5 + tan(x*y*z),var,aa); 
+structr((x+1)**5 + tan(x*y*z),var,aa);
 
 
   VAR1=TAN(X*Y*Z)
@@ -2881,17 +2881,17 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-sub(x=3,y=4,(x+y)**3); 
+sub(x=3,y=4,(x+y)**3);
 
-  343 
-
-
-x; 
-
-  X 
+  343
 
 
-sub({cos=sin,sin=cos},cos a+sin b) 
+x;
+
+  X
+
+
+sub({cos=sin,sin=cos},cos a+sin b)
 
 
   COS(B) + SIN(A)
@@ -2954,7 +2954,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-sum(4n**3,n); 
+sum(4n**3,n);
 
    2    2
   n  *(n   + 2*n + 1)
@@ -3017,20 +3017,20 @@ E"
 </p>
 
 <p></p>
-<pre><tt> 
+<pre><tt>
 
-1: df(sin y,y); 
+1: df(sin y,y);
 
-  COS(Y) 
+  COS(Y)
 
 
-2: ws^2; 
+2: ws^2;
 
         2
-  COS(Y)  
+  COS(Y)
 
 
-3: df(ws 1,y); 
+3: df(ws 1,y);
 
   -SIN(Y)
 
@@ -3521,20 +3521,20 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-algebraic; 
+algebraic;
 
-symbolic; 
+symbolic;
 
-  NIL 
+  NIL
 
 
-algebraic(x**2); 
+algebraic(x**2);
 
    2
-  X  
+  X
 
 
-x**2; 
+x**2;
 
     ***** The symbol X has no value.
 
@@ -3590,25 +3590,25 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-operator m,n; 
+operator m,n;
 
-antisymmetric m,n; 
+antisymmetric m,n;
 
-m(x,n(1,2)); 
+m(x,n(1,2));
 
-  - M( - N(2,1),X) 
-
-
-operator p; 
-
-antisymmetric p; 
-
-p(a,b,c); 
-
-  P(A,B,C) 
+  - M( - N(2,1),X)
 
 
-p(b,a,c); 
+operator p;
+
+antisymmetric p;
+
+p(a,b,c);
+
+  P(A,B,C)
+
+
+p(b,a,c);
 
   - P(A,B,C)
 
@@ -3677,19 +3677,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-array a(2,5),b(3,3,3),c(200); 
+array a(2,5),b(3,3,3),c(200);
 
-array a(3,5); 
+array a(3,5);
 
-  *** ARRAY A REDEFINED 
-
-
-a(3,4); 
-
-  0 
+  *** ARRAY A REDEFINED
 
 
-length a; 
+a(3,4);
+
+  0
+
+
+length a;
 
   {4,6}
 
@@ -3787,46 +3787,46 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-array a(2,3); 
+array a(2,3);
 
-a(2,2) := 15; 
+a(2,2) := 15;
 
-  A(2,2) := 15 
-
-
-clear a; 
-
-a(2,2); 
-
-  Declare A operator? (Y or N) 
+  A(2,2) := 15
 
 
-let x = y + z; 
+clear a;
 
-sin(x); 
+a(2,2);
 
-  SIN(Y + Z) 
-
-
-clear x; 
-
-sin(x); 
-
-  SIN(X) 
+  Declare A operator? (Y or N)
 
 
-let x**5 = 7; 
+let x = y + z;
 
-clear x; 
+sin(x);
 
-x**5; 
-
-  7 
+  SIN(Y + Z)
 
 
-clear x**5; 
+clear x;
 
-x**5; 
+sin(x);
+
+  SIN(X)
+
+
+let x**5 = 7;
+
+clear x;
+
+x**5;
+
+  7
+
+
+clear x**5;
+
+x**5;
 
    5
   X
@@ -3921,18 +3921,18 @@ trig1 := {cos(~x)*cos(~y) =&gt; (cos(x+y)+cos(x-y))/2,
           cos(~x)*sin(~y) =&gt; (sin(x+y)-sin(x-y))/2,
           sin(~x)*sin(~y) =&gt; (cos(x-y)-cos(x+y))/2,
           cos(~x)^2       =&gt; (1+cos(2*x))/2,
-          sin(~x)^2       =&gt; (1-cos(2*x))/2}$ 
+          sin(~x)^2       =&gt; (1-cos(2*x))/2}$
 
 let trig1;
-cos(a)*cos(b); 
+cos(a)*cos(b);
 
   COS(A - B) + COS(A + B)
-  ----------------------- 
+  -----------------------
              2
 
 
 clearrules trig1;
-cos(a)*cos(b); 
+cos(a)*cos(b);
 
   COS(A)*COS(B)
 
@@ -3981,23 +3981,23 @@ E"
 <p></p>
 <pre><tt>
 
-define is= :=, xx=y+z; 
+define is= :=, xx=y+z;
 
 
-a is 10; 
+a is 10;
 
-  A := 10 
+  A := 10
 
 
 
-xx**2; 
+xx**2;
 
    2             2
-  Y   + 2*Y*Z + Z  
+  Y   + 2*Y*Z + Z
 
 
 
-xx := 10; 
+xx := 10;
 
   Y + Z := 10
 
@@ -4058,52 +4058,52 @@ E"
 <p></p>
 <pre><tt>
 
-depend y,x; 
+depend y,x;
 
 
-df(y**2,x); 
+df(y**2,x);
 
-  2*DF(Y,X)*Y 
-
-
-
-depend z,cos(x),y; 
-
-
-df(sin(z),cos(x)); 
-
-  COS(Z)*DF(Z,COS(X)) 
+  2*DF(Y,X)*Y
 
 
 
-df(z**2,x); 
-
-  2*DF(Z,X)*Z 
+depend z,cos(x),y;
 
 
+df(sin(z),cos(x));
 
-nodepend z,y; 
-
-
-df(z**2,x); 
-
-  2*DF(Z,X)*Z 
+  COS(Z)*DF(Z,COS(X))
 
 
 
-cc := df(y**2,x); 
+df(z**2,x);
 
-  CC := 2*DF(Y,X)*Y 
-
-
-
-y := tan x; 
-
-  Y := TAN(X); 
+  2*DF(Z,X)*Z
 
 
 
-cc; 
+nodepend z,y;
+
+
+df(z**2,x);
+
+  2*DF(Z,X)*Z
+
+
+
+cc := df(y**2,x);
+
+  CC := 2*DF(Y,X)*Y
+
+
+
+y := tan x;
+
+  Y := TAN(X);
+
+
+
+cc;
 
                   2
   2*TAN(X)*(TAN(X)   + 1)
@@ -4165,14 +4165,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-        even f; 
+        even f;
 
-        f(-a) 
+        f(-a)
 
-  F(A) 
+  F(A)
 
 
-        f(-a,-b) 
+        f(-a,-b)
 
   F(A,-B)
 
@@ -4226,31 +4226,31 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a := (x + y + z)**2; 
+a := (x + y + z)**2;
 
         2                    2            2
-  A := X  + 2*X*Y + 2*X*Z + Y  + 2*Y*Z + Z  
+  A := X  + 2*X*Y + 2*X*Z + Y  + 2*Y*Z + Z
 
 
-factor y; 
+factor y;
 
-a; 
+a;
 
    2                  2            2
-  Y  + 2*Y*(X + Z) + X  + 2*X*Z + Z  
+  Y  + 2*Y*(X + Z) + X  + 2*X*Z + Z
 
 
-factor sin(x); 
+factor sin(x);
 
-c := df(sin(x)**4*x**2*z,x); 
+c := df(sin(x)**4*x**2*z,x);
 
                4               3         2
-  C := 2*SIN(X) *X*Z + 4*SIN(X) *COS(X)*X *Z 
+  C := 2*SIN(X) *X*Z + 4*SIN(X) *COS(X)*X *Z
 
 
-remfac sin(x); 
+remfac sin(x);
 
-c; 
+c;
 
           3
   2*SIN(X) *X*Z*(2*COS(X)*X + SIN(X))
@@ -4350,62 +4350,62 @@ E"
 <p></p>
 <pre><tt>
 for all x let f(x) = sin(x**2);
- 
-
-  Declare F operator ? (Y or N) 
 
 
-y 
+  Declare F operator ? (Y or N)
 
-f(a); 
+
+y
+
+f(a);
 
        2
-  SIN(A ) 
+  SIN(A )
 
 
-operator pos; 
+operator pos;
 
-for all x such that x&gt;=0 let pos(x) = sqrt(x + 1); 
+for all x such that x&gt;=0 let pos(x) = sqrt(x + 1);
 
-pos(5); 
+pos(5);
 
-  SQRT(6) 
-
-
-pos(-5); 
-
-  POS(-5) 
+  SQRT(6)
 
 
-clear pos; 
+pos(-5);
 
-pos(5); 
-
-  Declare POS operator ? (Y or N) 
+  POS(-5)
 
 
-for all a such that numberp a let x**a = 1; 
+clear pos;
 
-x**4; 
+pos(5);
 
-  1 
-
-
-clear x**a; 
-
-  *** X**A not found 
+  Declare POS operator ? (Y or N)
 
 
-for all a  clear x**a; 
+for all a such that numberp a let x**a = 1;
 
-x**4; 
+x**4;
 
-  1 
+  1
 
 
-for all a such that numberp a clear x**a; 
+clear x**a;
 
-x**4; 
+  *** X**A not found
+
+
+for all a  clear x**a;
+
+x**4;
+
+  1
+
+
+for all a such that numberp a clear x**a;
+
+x**4;
 
    4
   X
@@ -4497,23 +4497,23 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-infix aa; 
+infix aa;
 
-for all x,y let aa(x,y) = cos(x)*cos(y) - sin(x)*sin(y); 
+for all x,y let aa(x,y) = cos(x)*cos(y) - sin(x)*sin(y);
 
-x aa y; 
+x aa y;
 
-  COS(X)*COS(Y) - SIN(X)*SIN(Y) 
+  COS(X)*COS(Y) - SIN(X)*SIN(Y)
 
 
-pi/3 aa pi/2; 
+pi/3 aa pi/2;
 
     SQRT(3)
-  - ------- 
+  - -------
        2
 
 
-aa(pi,pi); 
+aa(pi,pi);
 
   1
 
@@ -4730,72 +4730,72 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-let a = sin(x); 
+let a = sin(x);
 
-b := a; 
+b := a;
 
-  B := SIN X; 
+  B := SIN X;
 
 
-let c = a; 
+let c = a;
 
-exp(a); 
+exp(a);
 
    SIN(X)
-  E       
+  E
 
 
-a := x**2; 
+a := x**2;
 
         2
-  A := X  
+  A := X
 
 
-exp(a); 
+exp(a);
 
     2
    X
-  E   
+  E
 
 
-exp(b); 
+exp(b);
 
    SIN(X)
-  E       
+  E
 
 
-exp(c); 
+exp(c);
 
     2
    X
-  E   
+  E
 
 
-let m + n = p; 
+let m + n = p;
 
-(m + n)**5; 
+(m + n)**5;
 
    5
-  P  
+  P
 
 
-operator h; 
+operator h;
 
-let h(u,v) = u - v; 
+let h(u,v) = u - v;
 
-h(u,v); 
+h(u,v);
 
-  U - V 
-
-
-h(x,y); 
-
-  H(X,Y) 
+  U - V
 
 
-array q(10); 
+h(x,y);
 
-let q(1) = 15; 
+  H(X,Y)
+
+
+array q(10);
+
+let q(1) = 15;
 
   ***** Substitution for 0 not allowed
 
@@ -4825,10 +4825,10 @@ trig1 := {cos(~x)*cos(~y) =&gt; (cos(x+y)+cos(x-y))/2,
           cos(~x)*sin(~y) =&gt; (sin(x+y)-sin(x-y))/2,
           sin(~x)*sin(~y) =&gt; (cos(x-y)-cos(x+y))/2,
           cos(~x)^2       =&gt; (1+cos(2*x))/2,
-          sin(~x)^2       =&gt; (1-cos(2*x))/2}$ 
+          sin(~x)^2       =&gt; (1-cos(2*x))/2}$
 
 let trig1;
-cos(a)*cos(b); 
+cos(a)*cos(b);
 
   COS(A - B) + COS(A + B)
   ------------------------

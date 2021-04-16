@@ -32,31 +32,31 @@
 <h3>examples:</h3>
 <p></p>
 <pre><TT>
-a := (x + y + z)**2; 
+a := (x + y + z)**2;
 
         2                    2            2
-  A := X  + 2*X*Y + 2*X*Z + Y  + 2*Y*Z + Z  
+  A := X  + 2*X*Y + 2*X*Z + Y  + 2*Y*Z + Z
 
 
-factor y; 
+factor y;
 
-a; 
+a;
 
    2                  2            2
-  Y  + 2*Y*(X + Z) + X  + 2*X*Z + Z  
+  Y  + 2*Y*(X + Z) + X  + 2*X*Z + Z
 
 
-factor sin(x); 
+factor sin(x);
 
-c := df(sin(x)**4*x**2*z,x); 
+c := df(sin(x)**4*x**2*z,x);
 
                4               3         2
-  C := 2*SIN(X) *X*Z + 4*SIN(X) *COS(X)*X *Z 
+  C := 2*SIN(X) *X*Z + 4*SIN(X) *COS(X)*X *Z
 
 
-remfac sin(x); 
+remfac sin(x);
 
-c; 
+c;
 
           3
   2*SIN(X) *X*Z*(2*COS(X)*X + SIN(X))

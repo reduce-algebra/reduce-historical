@@ -31,14 +31,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-ChebyshevT(3,xx); 
+ChebyshevT(3,xx);
 
           2
-  xx*(4*xx   - 3) 
+  xx*(4*xx   - 3)
 
 
 
-ChebyshevT(3,4); 
+ChebyshevT(3,4);
 
   244
 
@@ -89,14 +89,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-ChebyshevU(3,xx); 
+ChebyshevU(3,xx);
 
           2
-  4*x*(2*x   - 1) 
+  4*x*(2*x   - 1)
 
 
 
-ChebyshevU(3,4); 
+ChebyshevU(3,4);
 
   496
 
@@ -145,13 +145,13 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-HermiteP(3,xx); 
+HermiteP(3,xx);
 
             2
-  4*xx*(2*xx   - 3) 
+  4*xx*(2*xx   - 3)
 
 
-HermiteP(3,4); 
+HermiteP(3,4);
 
   464
 
@@ -205,14 +205,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-LaguerreP(3,xx); 
+LaguerreP(3,xx);
 
        3        2
   (- xx   + 9*xx   - 18*xx + 6)/6
 
 
 
-LaguerreP(2,3,4); 
+LaguerreP(2,3,4);
 
   -2
 
@@ -274,7 +274,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-LegendreP(3,xx); 
+LegendreP(3,xx);
 
           2
   xx*(5*xx   - 3)
@@ -283,7 +283,7 @@ LegendreP(3,xx);
 
 
 
-LegendreP(3,2,xx); 
+LegendreP(3,2,xx);
 
               2
   15*xx*( - xx   + 1)
@@ -333,7 +333,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-JacobiP(3,4,5,xx); 
+JacobiP(3,4,5,xx);
 
           3         2
   7*(65*xx   - 13*xx   - 13*xx + 1)
@@ -342,7 +342,7 @@ JacobiP(3,4,5,xx);
 
 
 
-JacobiP(3,4,5,6); 
+JacobiP(3,4,5,6);
 
   94465/8
 
@@ -386,14 +386,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-GegenbauerP(3,2,xx); 
+GegenbauerP(3,2,xx);
 
             2
   4*xx*(8*xx   - 3)
 
 
 
-GegenbauerP(3,2,4); 
+GegenbauerP(3,2,4);
 
   2000
 
@@ -440,7 +440,7 @@ E"
 <p></p>
 <pre><tt>
 
-SolidHarmonicY(3,-2,x,y,z,r2); 
+SolidHarmonicY(3,-2,x,y,z,r2);
 
                            2    2
   sqrt(105)*z*(-2*i*x*y + x  - y )
@@ -490,7 +490,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-SphericalHarmonicY(3,2,theta,phi); 
+SphericalHarmonicY(3,2,theta,phi);
 
 
                                  2          2                               2
@@ -604,14 +604,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-limit(Si(x),x,infinity); 
+limit(Si(x),x,infinity);
 
-  pi / 2 
+  pi / 2
 
 
-on rounded; 
+on rounded;
 
-Si(0.35); 
+Si(0.35);
 
   0.347626790989
 
@@ -659,14 +659,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-df(shi(x),x); 
+df(shi(x),x);
 
-  sinh(x) / x 
+  sinh(x) / x
 
 
-on rounded; 
+on rounded;
 
-Shi(0.35); 
+Shi(0.35);
 
   0.352390716351
 
@@ -714,12 +714,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-s_i(xx); 
+s_i(xx);
 
-  (2*Si(xx) - pi) / 2 
+  (2*Si(xx) - pi) / 2
 
 
-df(s_i(x),x); 
+df(s_i(x),x);
 
   sin(x) / x
 
@@ -768,14 +768,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-defint(cos(t)/t,t,x,infinity); 
+defint(cos(t)/t,t,x,infinity);
 
-  - ci (x) 
+  - ci (x)
 
 
-on rounded; 
+on rounded;
 
-Ci(0.35); 
+Ci(0.35);
 
   - 0.50307556932
 
@@ -825,14 +825,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-defint((cosh(t)-1)/t,t,0,x); 
+defint((cosh(t)-1)/t,t,0,x);
 
   - log(x) + psi(1) + chi(x)
 
 
-on rounded; 
+on rounded;
 
-Chi(0.35); 
+Chi(0.35);
 
   - 0.44182471827
 
@@ -891,14 +891,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-erf(-x); 
+erf(-x);
 
   - erf(x)
 
 
-on rounded; 
+on rounded;
 
-erf(0.35); 
+erf(0.35);
 
   0.379382053562
 
@@ -952,7 +952,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-erfc(xx); 
+erfc(xx);
 
   - erf(xx) + 1
 
@@ -1000,7 +1000,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-df(ei(x),x); 
+df(ei(x),x);
 
    x
   e
@@ -1008,9 +1008,9 @@ df(ei(x),x);
   x
 
 
-on rounded; 
+on rounded;
 
-Ei(0.35); 
+Ei(0.35);
 
   - 0.0894340019184
 
@@ -1055,14 +1055,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-int(cos(t^2*pi/2),t,0,x); 
+int(cos(t^2*pi/2),t,0,x);
 
-  fresnel_c(x) 
+  fresnel_c(x)
 
 
-on rounded; 
+on rounded;
 
-fresnel_c(2.1); 
+fresnel_c(2.1);
 
   0.581564135061
 
@@ -1109,14 +1109,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-int(sin(t^2*pi/2),t,0,x); 
+int(sin(t^2*pi/2),t,0,x);
 
-  fresnel_s(x) 
+  fresnel_s(x)
 
 
-on rounded; 
+on rounded;
 
-fresnel_s(2.1); 
+fresnel_s(2.1);
 
   0.374273359378
 
@@ -1241,13 +1241,13 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-Binomial(49,6); 
+Binomial(49,6);
 
-  13983816 
+  13983816
 
 
 
-Binomial(n,3); 
+Binomial(n,3);
 
    gamma(n + 1)
   ---------------
@@ -1300,12 +1300,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-Stirling1 (17,4); 
+Stirling1 (17,4);
 
-  -87077748875904 
+  -87077748875904
 
 
-Stirling1 (n,n-1); 
+Stirling1 (n,n-1);
 
   -gamma(n+1)
   -------------
@@ -1360,12 +1360,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-Stirling2 (17,4); 
+Stirling2 (17,4);
 
-  694337290 
+  694337290
 
 
-Stirling2 (n,n-1); 
+Stirling2 (n,n-1);
 
    gamma(n+1)
   -------------
@@ -1448,7 +1448,7 @@ j3,m3&gt;)
 <p></p>
 <pre><tt>
 
-ThreejSymbol({j+1,m},{j+1,-m},{1,0}); 
+ThreejSymbol({j+1,m},{j+1,-m},{1,0});
 
 
         j
@@ -1497,7 +1497,7 @@ j3,m3&gt;)
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
- Clebsch_Gordan({2,0},{2,0},{2,0}); 
+ Clebsch_Gordan({2,0},{2,0},{2,0});
 
 
      -2
@@ -1540,7 +1540,7 @@ E"
 <p></p>
 <pre><tt>
 
-SixjSymbol({7,6,3},{2,4,6}); 
+SixjSymbol({7,6,3},{2,4,6});
 
        1
   -------------
@@ -1631,7 +1631,7 @@ E"
 <pre><tt>
 load specfn2;
 
-hypergeometric ({1/2,1},{3/2},-x^2); 
+hypergeometric ({1/2,1},{3/2},-x^2);
 
 
   atan(x)
@@ -1639,7 +1639,7 @@ hypergeometric ({1/2,1},{3/2},-x^2);
      x
 
 
-hypergeometric ({},{},z); 
+hypergeometric ({},{},z);
 
    z
   e
@@ -1704,13 +1704,13 @@ E"
 <pre><tt>
 load specfn2;
 
-MeijerG({{},1},{{0}},x); 
+MeijerG({{},1},{{0}},x);
 
   heaviside(-x+1)
 
 
 MeijerG({{}},{{1+1/4},1-1/4},(x^2)/4) * sqrt pi;
- 
+
 
 
                   2
@@ -2074,14 +2074,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-    taylor(e^(x^2+y^2),x,0,2,y,0,2); 
+    taylor(e^(x^2+y^2),x,0,2,y,0,2);
 
 
        2    2    2  2      2  2
-  1 + Y  + X  + Y *X  + O(X ,Y )   
+  1 + Y  + X  + Y *X  + O(X ,Y )
 
 
-    taylor(e^(x^2+y^2),{x,y},0,2); 
+    taylor(e^(x^2+y^2),{x,y},0,2);
 
 
        2    2       2  2
@@ -2092,10 +2092,10 @@ E"
 <p></p>
 <pre><tt>
 
-    taylor(x*y/(x+y),x,0,2,y,0,2); 
+    taylor(x*y/(x+y),x,0,2,y,0,2);
 
 
-  ***** Not a unit in argument to QUOTTAYLOR 
+  ***** Not a unit in argument to QUOTTAYLOR
 
 </tt></pre>
 <p></p>
@@ -2229,32 +2229,32 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-    hugo := taylor(exp(x),x,0,2); 
+    hugo := taylor(exp(x),x,0,2);
 
                   1  2      3
   HUGO := 1 + X + -*X  + O(X )
                   2
 
 
-    taylorcombine log hugo; 
+    taylorcombine log hugo;
 
          3
   X + O(X )
 
 
-    taylorcombine(hugo + x); 
+    taylorcombine(hugo + x);
 
            1  2      3
   (1 + X + -*X  + O(X )) + X
            2
 
 
-    on taylorautoexpand; 
+    on taylorautoexpand;
 
-    taylorcombine(hugo + x); 
+    taylorcombine(hugo + x);
 
             1  2      3
-  1 + 2*X + -*X  + O(X )  
+  1 + 2*X + -*X  + O(X )
             2
 
 </tt></pre>
@@ -2361,31 +2361,31 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-    hugo := taylor(exp(x),x,0,2); 
+    hugo := taylor(exp(x),x,0,2);
 
                   1  2      3
   HUGO := 1 + X + -*X  + O(X )
                   2
 
 
-    taylororiginal hugo; 
+    taylororiginal hugo;
 
   ***** Taylor kernel doesn't have an original part in TAYLORORIGINAL
 
 
-    on taylorkeeporiginal; 
+    on taylorkeeporiginal;
 
-    hugo := taylor(exp(x),x,0,2); 
+    hugo := taylor(exp(x),x,0,2);
 
                   1  2      3
   HUGO := 1 + X + -*X  + O(X )
                   2
 
 
-    taylororiginal hugo; 
+    taylororiginal hugo;
 
    X
-  E   
+  E
 
 </tt></pre>
 <p>
@@ -2459,7 +2459,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-    taylor(e^(x^2+y^2),x,0,4,y,0,4); 
+    taylor(e^(x^2+y^2),x,0,4,y,0,4);
 
 
        2   1  4    2    2  2                              5  5
@@ -2467,12 +2467,12 @@ E"
            2
 
 
-    taylorprintterms := all; 
+    taylorprintterms := all;
 
-  TAYLORPRINTTERMS := ALL 
+  TAYLORPRINTTERMS := ALL
 
 
-    taylor(e^(x^2+y^2),x,0,4,y,0,4); 
+    taylor(e^(x^2+y^2),x,0,4,y,0,4);
 
 
        2   1  4    2    2  2   1  4  2   1  4   1  2  4
@@ -2481,7 +2481,7 @@ E"
      1  4  4      5  5
    + -*Y *X  + O(X ,Y )
      4
-      
+
 
 </tt></pre>
 <p>
@@ -2528,16 +2528,16 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-    taylor(u - u**2,u,0,5); 
+    taylor(u - u**2,u,0,5);
 
        2      6
-  U - U  + O(U ) 
+  U - U  + O(U )
 
 
-    taylorrevert (ws,u,x); 
+    taylorrevert (ws,u,x);
 
        2      3      4       5      6
-  X + X  + 2*X  + 5*X  + 14*X  + O(X )  
+  X + X  + 2*X  + 5*X  + 14*X  + O(X )
 
 </tt></pre>
 <p>
@@ -2576,7 +2576,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-    hugo := taylor(exp(x),x,0,2); 
+    hugo := taylor(exp(x),x,0,2);
 
                   1  2      3
   HUGO := 1 + X + -*X  + O(X )
@@ -2585,13 +2585,13 @@ E"
 
     if taylorseriesp hugo then OK;
 
-  OK 
+  OK
 
 
-    if taylorseriesp(hugo + y) then OK else NO; 
+    if taylorseriesp(hugo + y) then OK else NO;
 
 
-  NO  
+  NO
 
 </tt></pre>
 <p>
@@ -2646,16 +2646,16 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-    hugo := taylor(exp(x),x,0,2); 
+    hugo := taylor(exp(x),x,0,2);
 
                   1  2      3
   HUGO := 1 + X + -*X  + O(X )
                   2
 
 
-    taylortemplate hugo; 
+    taylortemplate hugo;
 
-  {{X,0,2}}  
+  {{X,0,2}}
 
 </tt></pre>
 <p>
@@ -2695,18 +2695,18 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-    hugo := taylor(exp(x),x,0,2); 
+    hugo := taylor(exp(x),x,0,2);
 
                   1  2      3
   HUGO := 1 + X + -*X  + O(X )
                   2
 
 
-    taylortostandard hugo; 
+    taylortostandard hugo;
 
    2
   X  + 2*X + 2
-  ------------  
+  ------------
        2
 
 </tt></pre>

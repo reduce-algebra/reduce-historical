@@ -26,24 +26,24 @@
 <h3>examples:</h3>
 <p></p>
 <pre><TT>
-operator dis,fac; 
+operator dis,fac;
 
-let dis(~x,~y) = sqrt(x^2 + y^2); 
+let dis(~x,~y) = sqrt(x^2 + y^2);
 
-dis(1,2); 
+dis(1,2);
 
-  SQRT(5) 
+  SQRT(5)
 
 
-dis(a,10); 
+dis(a,10);
 
         2
-  SQRT(A  + 100) 
+  SQRT(A  + 100)
 
 
-on rounded; 
+on rounded;
 
-dis(1.5,7.2); 
+dis(1.5,7.2);
 
   7.35459040329
 
@@ -52,14 +52,14 @@ let fac(~n) = if n=0 then 1
                else if not(fixp n and n&gt;0)
                 then rederr &quot;choose non-negative integer&quot;
                else for i := 1:n product i;
- 
-
-fac(5); 
-
-  120 
 
 
-fac(-2); 
+fac(5);
+
+  120
+
+
+fac(-2);
 
   ***** choose non-negative integer
 

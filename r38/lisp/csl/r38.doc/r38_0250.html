@@ -43,25 +43,25 @@ E"
 <p></p>
 <pre><tt>
 
-cosh b; 
+cosh b;
 
-  COSH(B) 
-
-
-
-cosh(0); 
-
-  1 
+  COSH(B)
 
 
 
-df(cosh(x*y),x); 
+cosh(0);
 
-  SINH(X*Y)*Y 
+  1
 
 
 
-int(cosh(x),x); 
+df(cosh(x*y),x);
+
+  SINH(X*Y)*Y
+
+
+
+int(cosh(x),x);
 
   SINH(X)
 
@@ -122,17 +122,17 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-cot(a)*tan(a); 
+cot(a)*tan(a);
 
-  COT(A)*TAN(A)) 
-
-
-cot(1); 
-
-  COT(1) 
+  COT(A)*TAN(A))
 
 
-df(cot(2*x),x); 
+cot(1);
+
+  COT(1)
+
+
+df(cot(2*x),x);
 
                2
   - 2*(COT(2*X)   + 1)
@@ -192,14 +192,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-df(coth(x*y),x); 
+df(coth(x*y),x);
 
                 2
-  - Y*(COTH(X*Y)   - 1) 
+  - Y*(COTH(X*Y)   - 1)
 
 
 
-coth acoth z; 
+coth acoth z;
 
   Z
 
@@ -262,13 +262,13 @@ E"
 <p></p>
 <pre><tt>
 
-csc(q)*sin(q); 
+csc(q)*sin(q);
 
-  CSC(Q)*SIN(Q) 
+  CSC(Q)*SIN(Q)
 
 
 
-df(csc(x*y),x); 
+df(csc(x*y),x);
 
   -COT(X*Y)*CSC(X*Y)*Y
 
@@ -333,25 +333,25 @@ E"
 <p></p>
 <pre><tt>
 
-csch b; 
+csch b;
 
-  CSCH(B) 
-
-
-
-csch(0); 
-
-  0 
+  CSCH(B)
 
 
 
-df(csch(x*y),x); 
+csch(0);
 
-  - COTH(X*Y)*CSCH(X*Y)*Y 
+  0
 
 
 
-int(csch(x),x); 
+df(csch(x*y),x);
+
+  - COTH(X*Y)*CSCH(X*Y)*Y
+
+
+
+int(csch(x),x);
 
   INT(CSCH(X),X)
 
@@ -406,27 +406,27 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-erf(0); 
+erf(0);
 
-  0 
-
-
-erf(-a); 
-
-  - ERF(A) 
+  0
 
 
-df(erf(x**2),x); 
+erf(-a);
+
+  - ERF(A)
+
+
+df(erf(x**2),x);
 
   4*SQRT(PI)*X
-  ------------ 
+  ------------
        4
       X
      E  *PI
 
 
 
-int(erf(x),x); 
+int(erf(x),x);
 
     2
    X
@@ -485,21 +485,21 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-exp(sin(x)); 
+exp(sin(x));
 
    SIN X
-  E      
+  E
 
 
-exp(11); 
+exp(11);
 
    11
-  E   
+  E
 
 
-on rounded; 
+on rounded;
 
-exp sin(pi/3); 
+exp sin(pi/3);
 
   2.37744267524
 
@@ -554,34 +554,34 @@ E"
 <pre><tt>
 
 
-sec abc; 
+sec abc;
 
-  SEC(ABC) 
-
-
-
-sec(pi); 
-
-  -1 
+  SEC(ABC)
 
 
 
-sec 4; 
+sec(pi);
 
-  SEC(4) 
-
-
-
-on rounded; 
-
-
-sec(4); 
-
-  - 1.52988565647 
+  -1
 
 
 
-sec log 5; 
+sec 4;
+
+  SEC(4)
+
+
+
+on rounded;
+
+
+sec(4);
+
+  - 1.52988565647
+
+
+
+sec log 5;
 
   - 25.8852966005
 
@@ -637,34 +637,34 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-sech abc; 
+sech abc;
 
-  SECH(ABC) 
-
-
-
-sech(0); 
-
-  1 
+  SECH(ABC)
 
 
 
-sech 4; 
+sech(0);
 
-  SECH(4) 
-
-
-
-on rounded; 
-
-
-sech(4); 
-
-  0.0366189934737 
+  1
 
 
 
-sech log 5; 
+sech 4;
+
+  SECH(4)
+
+
+
+on rounded;
+
+
+sech(4);
+
+  0.0366189934737
+
+
+
+sech log 5;
 
   0.384615384615
 
@@ -722,24 +722,24 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-sin aa; 
+sin aa;
 
-  SIN(AA) 
-
-
-sin(pi/2); 
-
-  1 
+  SIN(AA)
 
 
-on rounded; 
+sin(pi/2);
 
-sin 3; 
-
-  0.14112000806 
+  1
 
 
-sin(pi/2); 
+on rounded;
+
+sin 3;
+
+  0.14112000806
+
+
+sin(pi/2);
 
   1.0
 
@@ -800,33 +800,33 @@ E"
 <p></p>
 <pre><tt>
 
-sinh b; 
+sinh b;
 
-  SINH(B) 
-
-
-
-sinh(0); 
-
-  0 
+  SINH(B)
 
 
-df(sinh(x**2),x); 
+
+sinh(0);
+
+  0
+
+
+df(sinh(x**2),x);
 
           2
-  2*COSH(X )*X 
+  2*COSH(X )*X
 
 
-int(sinh(4*x),x); 
+int(sinh(4*x),x);
 
   COSH(4*X)
-  --------- 
+  ---------
       4
 
 
-on rounded; 
+on rounded;
 
-sinh 4; 
+sinh 4;
 
   27.2899171971
 
@@ -886,20 +886,20 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-tan a; 
+tan a;
 
-  TAN(A) 
+  TAN(A)
 
 
-tan(pi/5); 
+tan(pi/5);
 
       PI
-  TAN(--) 
+  TAN(--)
       5
 
 
 on rounded;
-tan(pi/5); 
+tan(pi/5);
 
   0.726542528005
 
@@ -969,29 +969,29 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-tanh b; 
+tanh b;
 
-  TANH(B) 
-
-
-tanh(0); 
-
-  0 
+  TANH(B)
 
 
-df(tanh(x*y),x); 
+tanh(0);
+
+  0
+
+
+df(tanh(x*y),x);
 
                  2
-  Y*( - TANH(X*Y)  + 1) 
+  Y*( - TANH(X*Y)  + 1)
 
 
-int(tanh(x),x); 
+int(tanh(x),x);
 
        2*X
-  LOG(E    + 1) - X 
+  LOG(E    + 1) - X
 
 
-on rounded; tanh 2; 
+on rounded; tanh 2;
 
   0.964027580076
 
@@ -1329,15 +1329,15 @@ E"
 <p></p>
 <pre><tt>
 
-solve(log(sin(x+3)),x); 
+solve(log(sin(x+3)),x);
 
   {X=2*ARBINT(1)*PI - ASIN(1) - 3,
    X=2*ARBINT(1)*PI + ASIN(1) + PI - 3}
 
 
-off allbranch; 
+off allbranch;
 
-solve(log(sin(x+3)),x); 
+solve(log(sin(x+3)),x);
 
   X=ASIN(1) - 3
 
@@ -1384,15 +1384,15 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-x + x*y**3 + x**2*cos(z); 
+x + x*y**3 + x**2*cos(z);
 
                  3
-  X*(COS(Z)*X + Y   + 1) 
+  X*(COS(Z)*X + Y   + 1)
 
 
-off allfac; 
+off allfac;
 
-x + x*y**3 + x**2*cos(z); 
+x + x*y**3 + x**2*cos(z);
 
           2      3
   COS(Z)*X  + X*Y   + X
@@ -1441,34 +1441,34 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-solve({2x + y,4x + 2y},{x,y}); 
+solve({2x + y,4x + 2y},{x,y});
 
          arbcomplex(1)
-  {{x= - -------------,y=arbcomplex(1)}} 
+  {{x= - -------------,y=arbcomplex(1)}}
                2
 
 
-solve({sqrt(x)+ y**3-1},{x,y});				
+solve({sqrt(x)+ y**3-1},{x,y});
 
 
                             6       3
-  		   {{y=arbcomplex(2),x=y   - 2*y   + 1}} 
+  		   {{y=arbcomplex(2),x=y   - 2*y   + 1}}
 
 
-off arbvars; 
+off arbvars;
 
-solve({2x + y,4x + 2y},{x,y}); 
+solve({2x + y,4x + 2y},{x,y});
 
          y
-  {{x= - -}} 
+  {{x= - -}}
          2
 
 
-solve({sqrt(x)+ y**3-1},{x,y});				
+solve({sqrt(x)+ y**3-1},{x,y});
 
 
             6       3
-  		   {{x=y   - 2*y   + 1}} 
+  		   {{x=y   - 2*y   + 1}}
 
 </tt></pre>
 <p>
@@ -1515,21 +1515,21 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-setmod 7; 
+setmod 7;
 
-  1 
-
-
-on modular; 
-
-4; 
-
-  4 
+  1
 
 
-on balanced_mod; 
+on modular;
 
-4; 
+4;
+
+  4
+
+
+on balanced_mod;
+
+4;
 
   -3
 
@@ -1570,16 +1570,16 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on rounded; 
+on rounded;
 
-1.2345678; 
+1.2345678;
 
-  1.2345678 
+  1.2345678
 
 
-on bfspace; 
+on bfspace;
 
-1.2345678; 
+1.2345678;
 
   1.234 5678
 
@@ -1624,15 +1624,15 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-3^(1/2)*3^(1/3)*3^(1/6); 
+3^(1/2)*3^(1/3)*3^(1/6);
 
            1/3  1/6
-  SQRT(3)*3   *3    
+  SQRT(3)*3   *3
 
 
-on combineexpt; 
+on combineexpt;
 
-ws; 
+ws;
 
   1
 
@@ -1673,16 +1673,16 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on expandlogs; 
+on expandlogs;
 
-log(x*y); 
+log(x*y);
 
-  LOG(X) + LOG(Y) 
+  LOG(X) + LOG(Y)
 
 
-on combinelogs; 
+on combinelogs;
 
-ws; 
+ws;
 
   LOG(X*Y)
 
@@ -1737,7 +1737,7 @@ E"
 </p>
 
 <p></p>
-<pre><tt> 
+<pre><tt>
 
 procedure refib(n);
    if fixp n and n &gt;= 0 then
@@ -1752,79 +1752,79 @@ end;
 <p></p>
 <pre><tt>
 
-on time; 
+on time;
 
-  Time: 100 ms 
-
-
-
-in &quot;refib&quot;$ 
-
-  Time: 0 ms 
+  Time: 100 ms
 
 
 
- 
+in &quot;refib&quot;$
 
-  REFIB 
-
-
-
- 
-
-  Time: 260 ms 
+  Time: 0 ms
 
 
 
- 
-
-  Time: 20 ms 
 
 
-
-refib(80); 
-
-  37889062373143906 
+  REFIB
 
 
 
- 
-
-  Time: 14840 ms 
 
 
-
-on comp; 
-
-  Time: 80 ms 
+  Time: 260 ms
 
 
 
-in &quot;refib&quot;$ 
-
-  Time: 20 ms 
 
 
-
- 
-
-  REFIB 
+  Time: 20 ms
 
 
 
- 
+refib(80);
 
-  Time: 640 ms 
-
-
-
-refib(80); 
-
-  37889062373143906 
+  37889062373143906
 
 
 
- 
+
+
+  Time: 14840 ms
+
+
+
+on comp;
+
+  Time: 80 ms
+
+
+
+in &quot;refib&quot;$
+
+  Time: 20 ms
+
+
+
+
+
+  REFIB
+
+
+
+
+
+  Time: 640 ms
+
+
+
+refib(80);
+
+  37889062373143906
+
+
+
+
 
   Time: 10940 ms
 
@@ -1880,40 +1880,40 @@ E"
 <p></p>
 <pre><tt>
 
-factorize(a**2 + b**2); 
+factorize(a**2 + b**2);
 
      2     2
-  {{A   + B ,1}} 
+  {{A   + B ,1}}
 
 
-on complex; 
+on complex;
 
 
-factorize(a**2 + b**2); 
+factorize(a**2 + b**2);
 
-  {{A + I*B,1},{A - I*B,1}} 
-
-
-
-(x**2 + y**2)/(x + i*y); 
-
-  X - I*Y 
+  {{A + I*B,1},{A - I*B,1}}
 
 
 
-on rounded; 
+(x**2 + y**2)/(x + i*y);
 
-      *** Domain mode COMPLEX changed to COMPLEX_FLOAT 
-
-
-
-sqrt(-17); 
-
-  4.12310562562*I 
+  X - I*Y
 
 
 
-log(7*i); 
+on rounded;
+
+      *** Domain mode COMPLEX changed to COMPLEX_FLOAT
+
+
+
+sqrt(-17);
+
+  4.12310562562*I
+
+
+
+log(7*i);
 
   1.94591014906 + 1.57079632679*I
 
@@ -2017,34 +2017,34 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on time; 
+on time;
 
-  Time: 80 ms 
+  Time: 80 ms
 
 
-off output; 
+off output;
 
-  Time: 100 ms 
+  Time: 100 ms
 
 
 mm := mat((a,b,c,d,f),(a,a,c,f,b),(b,c,a,c,d), (c,c,a,b,f),
           (d,a,d,e,f));
- 
-
-  Time: 300 ms 
 
 
-inverse := 1/mm; 
-
-  Time: 18460 ms 
+  Time: 300 ms
 
 
-on cramer; 
+inverse := 1/mm;
 
-  Time: 80 ms 
+  Time: 18460 ms
 
 
-cramersinv := 1/mm; 
+on cramer;
+
+  Time: 80 ms
+
+
+cramersinv := 1/mm;
 
   Time: 9260 ms
 
@@ -2107,19 +2107,19 @@ E"
 <p></p>
 <pre><tt>
 
-on defn; 
+on defn;
 
 
-17/3; 
+17/3;
 
-  (AEVAL (LIST 'QUOTIENT 17 3)) 
+  (AEVAL (LIST 'QUOTIENT 17 3))
 
 
 
-df(sin(x),x,2);          
- 
+df(sin(x),x,2);
 
-  (AEVAL (LIST 'DF (LIST 'SIN 'X) 'X 2)) 
+
+  (AEVAL (LIST 'DF (LIST 'SIN 'X) 'X 2))
 
 
 procedure coshval(a);
@@ -2127,58 +2127,58 @@ procedure coshval(a);
       g := (exp(a) + exp(-a))/2;
       return g
    end;
- 
-
-  (AEVAL 
-    (PROGN 
-      (FLAG '(COSHVAL) 'OPFN) 
-      (DE COSHVAL (A) 
-        (PROG (G) 
-          (SETQ G 
-            (AEVAL 
-               (LIST 
-                  'QUOTIENT 
-                  (LIST 
-                     'PLUS 
-                     (LIST 'EXP A) 
-                     (LIST 'EXP (LIST 'MINUS A))) 
-                  2))) 
-         (RETURN G)))) ) 
 
 
-
-coshval(1); 
-
-  (AEVAL (LIST 'COSHVAL 1)) 
+  (AEVAL
+    (PROGN
+      (FLAG '(COSHVAL) 'OPFN)
+      (DE COSHVAL (A)
+        (PROG (G)
+          (SETQ G
+            (AEVAL
+               (LIST
+                  'QUOTIENT
+                  (LIST
+                     'PLUS
+                     (LIST 'EXP A)
+                     (LIST 'EXP (LIST 'MINUS A)))
+                  2)))
+         (RETURN G)))) )
 
 
 
-off defn; 
+coshval(1);
 
-
-coshval(1); 
-
-  Declare COSHVAL operator? (Y or N) 
+  (AEVAL (LIST 'COSHVAL 1))
 
 
 
-n 
+off defn;
+
+
+coshval(1);
+
+  Declare COSHVAL operator? (Y or N)
+
+
+
+n
 
 procedure coshval(a);
    begin scalar g;
       g := (exp(a) + exp(-a))/2;
       return g
    end;
- 
-
-  COSHVAL 
 
 
+  COSHVAL
 
-on rounded; 
 
 
-coshval(1); 
+on rounded;
+
+
+coshval(1);
 
   1.54308063482
 
@@ -2285,30 +2285,30 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-operator f; 
+operator f;
 
-df(f x,x); 
+df(f x,x);
 
-  DF(F(X),X); 
+  DF(F(X),X);
 
 
-on dfprint; 
+on dfprint;
 
-ws; 
+ws;
 
-  F  
+  F
    X
 
 
-df(f(x,y),x,y); 
+df(f(x,y),x,y);
 
-  F  
+  F
    Y
 
 
-off noarg; 
+off noarg;
 
-ws; 
+ws;
 
   F(X,Y)
         X
@@ -2348,28 +2348,28 @@ E"
 <p></p>
 <pre><tt>
 
-on div; 
+on div;
 
 
-a := x**2/y**2; 
+a := x**2/y**2;
 
         2   -2
-  A := X  *Y   
+  A := X  *Y
 
 
 
-b := a/(3*z); 
+b := a/(3*z);
 
        1  2   -2    -1
-  B := -*X  *Y    *Z   
+  B := -*X  *Y    *Z
        3
 
 
 
-off div; 
+off div;
 
 
-a; 
+a;
 
    2
   X
@@ -2379,11 +2379,11 @@ a;
 
 
 
-b; 
+b;
 
      2
     X
-  -------                                       
+  -------
      2
   3*Y  *Z
 
@@ -2575,31 +2575,31 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-(x+1)**3; 
+(x+1)**3;
 
    3      2
-  X  + 3*X  + 3*X + 1 
+  X  + 3*X  + 3*X + 1
 
 
-(a + b*i)*(c + d*i); 
+(a + b*i)*(c + d*i);
 
-  A*C + A*D*I + B*C*I - B*D 
+  A*C + A*D*I + B*C*I - B*D
 
 
-off exp; 
+off exp;
 
-(x+1)**3; 
+(x+1)**3;
 
          3
-  (X + 1)  
+  (X + 1)
 
 
-(a + b*i)*(c + d*i); 
+(a + b*i)*(c + d*i);
 
-  (A + B*I)*(C + D*I) 
+  (A + B*I)*(C + D*I)
 
 
-length((x+1)**2/(y+1)); 
+length((x+1)**2/(y+1));
 
   2
 
@@ -2652,16 +2652,16 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on expandlogs; 
+on expandlogs;
 
-log(x*y); 
+log(x*y);
 
-  LOG(X) + LOG(Y) 
+  LOG(X) + LOG(Y)
 
 
-on combinelogs; 
+on combinelogs;
 
-ws; 
+ws;
 
   LOG(X*Y)
 
@@ -2757,32 +2757,32 @@ E"
 <p></p>
 <pre><tt>
 
-on factor; 
+on factor;
 
 
 aa := 3*x**3*a + 6*x**2*y*a + 3*x**3*b + 6*x**2*y*b
 
 + x*y*a + 2*y**2*a + x*y*b + 2*y**2*b;
-			 
+
 
 
                     2
-  AA := (A + B)*(3*X  + Y)*(X + 2*Y) 
+  AA := (A + B)*(3*X  + Y)*(X + 2*Y)
 
 
-off factor; 
+off factor;
 
-aa; 
+aa;
 
        3        2                  2         3        2
   3*A*X  + 6*A*X *Y + A*X*Y + 2*A*Y   + 3*B*X  + 6*B*X *Y
 
 
-+ B*X*Y + 2*B*Y^{2} 
++ B*X*Y + 2*B*Y^{2}
 
-on factor; 
+on factor;
 
-ab := x**2 - 2; 
+ab := x**2 - 2;
 
          2
   AB := X  - 2
@@ -2901,16 +2901,16 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on fort; 
+on fort;
 
-df(sin(7*x + y),x); 
+df(sin(7*x + y),x);
 
-  ANS=7.*COS(7*X+Y) 
+  ANS=7.*COS(7*X+Y)
 
 
-on rounded; 
+on rounded;
 
-b := log(sin(pi/5 + n*pi)); 
+b := log(sin(pi/5 + n*pi));
 
   	       B=LOG(SIN(3.14159265359*N+0.628318530718))
 
@@ -2967,18 +2967,18 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on fort; 
+on fort;
 
-df(sin(7*x + y),x); 
+df(sin(7*x + y),x);
 
-  ans=7.*cos(7*x+y) 
+  ans=7.*cos(7*x+y)
 
 
-on fortupper; 
+on fortupper;
 
-df(sin(7*x + y),x); 
+df(sin(7*x + y),x);
 
-  ANS=7.*COS(7*X+Y) 
+  ANS=7.*COS(7*X+Y)
 
 </tt></pre>
 <p>
@@ -3016,16 +3016,16 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on rounded; 
+on rounded;
 
-1/2; 
+1/2;
 
-  0.5 
+  0.5
 
 
-on fullprec; 
+on fullprec;
 
-ws; 
+ws;
 
   0.500000000000
 
@@ -3145,33 +3145,33 @@ E"
 (2*(f*h)**2 - f**2*g*h - (f*g)**2 - f*h**3 + f*h*g**2
    - h**4 + g*h**3)/(f**2*h - f**2*g - f*h**2 + 2*f*g*h
    - f*g**2 - g*h**2 + g**2*h);
- 
+
 
    2  2    2          2  2      2        3      3    4
   F *G  + F *G*H - 2*F *H  - F*G *H + F*H  - G*H  + H
-  ---------------------------------------------------- 
+  ----------------------------------------------------
     2      2        2                2    2        2
    F *G - F *H + F*G  - 2*F*G*H + F*H  - G *H + G*H
 
 
-on gcd; 
+on gcd;
 
-ws; 
+ws;
 
                  2
   F*G + 2*F*H + H
-  ---------------- 
+  ----------------
        F + G
 
 
-e2 := a*c + a*d + b*c + b*d; 
+e2 := a*c + a*d + b*c + b*d;
 
-  E2 := A*C + A*D + B*C + B*D 
+  E2 := A*C + A*D + B*C + B*D
 
 
-off exp; 
+off exp;
 
-e2; 
+e2;
 
   (A + B)*(C + D)
 
@@ -3276,26 +3276,26 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-factorize(4*x**2 + 28*x + 48); 
+factorize(4*x**2 + 28*x + 48);
 
-  {{4,1},{X + 4,1},{X + 3,1}} 
-
-
-factorize(22587); 
-
-  {{3,1},{7529,1}} 
+  {{4,1},{X + 4,1},{X + 3,1}}
 
 
-on ifactor; 
+factorize(22587);
 
-factorize(4*x**2 + 28*x + 48); 
-
-  {{2,2},{X + 4,1},{X + 3,1}} 
+  {{3,1},{7529,1}}
 
 
-factorize(22587); 
+on ifactor;
 
-  {{3,1},{7529,1}} 
+factorize(4*x**2 + 28*x + 48);
+
+  {{2,2},{X + 4,1},{X + 3,1}}
+
+
+factorize(22587);
+
+  {{3,1},{7529,1}}
 
 </tt></pre>
 <p>
@@ -3388,16 +3388,16 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-operator f; 
+operator f;
 
-f(2x+2y); 
+f(2x+2y);
 
-  F(2*X + 2*Y) 
+  F(2*X + 2*Y)
 
 
-on intstr; 
+on intstr;
 
-ws; 
+ws;
 
   F(2*(X + Y))
 
@@ -3435,41 +3435,41 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-off lcm; 
+off lcm;
 
-z := 1/(x**2 - y**2) + 1/(x-y)**2;  
-			 
+z := 1/(x**2 - y**2) + 1/(x-y)**2;
+
 
 
               2*X*(X - Y)
-  Z := ------------------------- 
+  Z := -------------------------
         4      3          3    4
        X  - 2*X *Y + 2*X*Y  - Y
 
 
-on lcm; 
+on lcm;
 
-z; 
+z;
 
          2*X*(X - Y)
-  ------------------------- 
+  -------------------------
    4      3          3    4
   X  - 2*X *Y + 2*X*Y  - Y
 
 
 zz := 1/(x**2 - y**2) + 1/(x-y)**2;
-			 
+
 
 
                  2*X
-  ZZ := --------------------- 
+  ZZ := ---------------------
          3    2        2    3
         X  - X *Y - X*Y  + Y
 
 
-on gcd; 
+on gcd;
 
-z; 
+z;
 
            2*X
   ----------------------

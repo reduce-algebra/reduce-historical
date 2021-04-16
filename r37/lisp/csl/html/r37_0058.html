@@ -29,7 +29,7 @@
 <h3>examples:</h3>
 <p></p>
 <pre><TT>
-begin write &quot;yes&quot;; return a end; 
+begin write &quot;yes&quot;; return a end;
 
   yes
   A
@@ -38,36 +38,36 @@ begin write &quot;yes&quot;; return a end;
 procedure dumb(a);
   begin if numberp(a) then return a else return 10 end;
 
-						 
-
-  DUMB 
 
 
-dumb(x); 
-
-  10 
+  DUMB
 
 
-dumb(-5); 
+dumb(x);
 
-  -5  
+  10
+
+
+dumb(-5);
+
+  -5
 
 
 procedure dumb2(a);
   begin c := a**2 + 2*a + 1; d := 17; c*d; return end;
-		 
-
-  DUMB2 
 
 
-dumb2(4); 
-
-c; 
-
-  25 
+  DUMB2
 
 
-d; 
+dumb2(4);
+
+c;
+
+  25
+
+
+d;
 
   17
 

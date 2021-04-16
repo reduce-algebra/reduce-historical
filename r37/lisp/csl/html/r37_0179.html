@@ -39,19 +39,19 @@
 <h3>examples:</h3>
 <p></p>
 <pre><TT>
-sss := solve(x^2 + 7); 
+sss := solve(x^2 + 7);
 
   Unknown: X
   SSS := {X= - SQRT(7)*I,
           X=SQRT(7)*I}
 
 
-rhs first sss; 
+rhs first sss;
 
-  - SQRT(7)*I 
+  - SQRT(7)*I
 
 
-solve(sin(x^2*y),y); 
+solve(sin(x^2*y),y);
 
      2*ARBINT(1)*PI
   {Y=---------------
@@ -63,45 +63,45 @@ solve(sin(x^2*y),y);
               X
 
 
-off allbranch; 
+off allbranch;
 
-solve(sin(x**2*y),y); 
+solve(sin(x**2*y),y);
 
-  {Y=0} 
+  {Y=0}
 
 
 solve({3x + 5y = -4,2*x + y = -10},{x,y});
- 
+
 
 
          22   46
-  {{X= - --,Y=--}} 
+  {{X= - --,Y=--}}
          7    7
 
 
 solve({x + a*y + z,2x + 5},{x,y});
- 
+
 
 
          5      2*Z - 5
-  {{X= - -,Y= - -------}} 
+  {{X= - -,Y= - -------}}
          2        2*A
 
 
 ab := (x+2)^2*(x^6 + 17x + 1);
- 
+
 
          8      7      6       3       2
-  AB := X  + 4*X  + 4*X  + 17*X  + 69*X  + 72*X + 4 
+  AB := X  + 4*X  + 4*X  + 17*X  + 69*X  + 72*X + 4
 
 
-www := solve(ab,x); 
+www := solve(ab,x);
 
-  {X=ROOT F(X6 + 17*X + 1),X=-2} 
-         O            
+  {X=ROOT F(X6 + 17*X + 1),X=-2}
+         O
 
 
-root_multiplicities; 
+root_multiplicities;
 
   {1,2}
 

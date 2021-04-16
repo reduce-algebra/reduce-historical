@@ -190,8 +190,8 @@ E"
 <pre><tt>
 
   torder lex;
-  
-  gsort(x**2+2x*y+y**2,{y,x}); 
+
+  gsort(x**2+2x*y+y**2,{y,x});
 
   y**2+2y*x+x**2
 
@@ -242,8 +242,8 @@ E"
 <pre><tt>
 
   torder lex;
-  
-  gsplit(x**2+2x*y+y**2,{y,x}); 
+
+  gsplit(x**2+2x*y+y**2,{y,x});
 
   {y**2,2y*x+x**2}
 
@@ -463,26 +463,26 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-vector aa,bb,cc; 
+vector aa,bb,cc;
 
-let aa.bb = 0; 
+let aa.bb = 0;
 
-aa.bb; 
+aa.bb;
 
-  0 
-
-
-aa.cc; 
-
-  AA.CC 
+  0
 
 
-q := aa.cc; 
+aa.cc;
 
-  Q := AA.CC 
+  AA.CC
 
 
-q; 
+q := aa.cc;
+
+  Q := AA.CC
+
+
+q;
 
   AA.CC
 
@@ -556,19 +556,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-vector g0,g1,g2,g3; 
+vector g0,g1,g2,g3;
 
-eps(g1,g0,g2,g3); 
+eps(g1,g0,g2,g3);
 
-  - EPS(G0,G1,G2,G3); 
-
-
-eps(g1,g2,g0,g3); 
-
-  EPS(G0,G1,G2,G3); 
+  - EPS(G0,G1,G2,G3);
 
 
-eps(g1,g2,g3,g1); 
+eps(g1,g2,g0,g3);
+
+  EPS(G0,G1,G2,G3);
+
+
+eps(g1,g2,g3,g1);
 
   0
 
@@ -631,38 +631,38 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-vector aa,bb,cc; 
+vector aa,bb,cc;
 
-vector a; 
+vector a;
 
-g(line1,aa,bb); 
+g(line1,aa,bb);
 
-  AA.BB 
-
-
-g(line2,aa,a); 
-
-  0 
+  AA.BB
 
 
-g(id,aa,bb,cc); 
+g(line2,aa,a);
 
-  0 
-
-
-g(li1,aa,bb) + k; 
-
-  AA.BB + K 
+  0
 
 
-let aa.bb = m*k; 
+g(id,aa,bb,cc);
 
-g(ln1,aa)*g(ln1,bb); 
-
-  K*M 
+  0
 
 
-g(ln1,aa)*g(ln2,bb); 
+g(li1,aa,bb) + k;
+
+  AA.BB + K
+
+
+let aa.bb = m*k;
+
+g(ln1,aa)*g(ln1,bb);
+
+  K*M
+
+
+g(ln1,aa)*g(ln2,bb);
 
   0
 
@@ -761,18 +761,18 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-vector aa,bb,cc; 
+vector aa,bb,cc;
 
-index uu; 
+index uu;
 
-let aa.bb = 0; 
+let aa.bb = 0;
 
-(aa.uu)*(bb.uu); 
+(aa.uu)*(bb.uu);
 
-  0 
+  0
 
 
-(aa.uu)*(cc.uu); 
+(aa.uu)*(cc.uu);
 
   AA.CC
 
@@ -840,13 +840,13 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-vector bb,cc; 
+vector bb,cc;
 
-mass cc=m; 
+mass cc=m;
 
-mshell cc; 
+mshell cc;
 
-cc.cc; 
+cc.cc;
 
    2
   M
@@ -904,26 +904,26 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-vector v1,v2; 
+vector v1,v2;
 
-mass v1=m,v2=q; 
+mass v1=m,v2=q;
 
-mshell v1; 
+mshell v1;
 
-v1.v1; 
+v1.v1;
 
    2
-  M  
+  M
 
 
-v2.v2; 
+v2.v2;
 
-  V2.V2 
+  V2.V2
 
 
-mshell v2; 
+mshell v2;
 
-v1.v1*v2.v2; 
+v1.v1*v2.v2;
 
    2  2
   M *Q
@@ -978,16 +978,16 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-vector a1,b1,c1; 
+vector a1,b1,c1;
 
-g(line1,a1,b1)*g(line2,b1,c1); 
+g(line1,a1,b1)*g(line2,b1,c1);
 
-  A1.B1*B1.C1 
+  A1.B1*B1.C1
 
 
-nospur line2; 
+nospur line2;
 
-g(line1,a1,b1)*g(line2,b1,c1); 
+g(line1,a1,b1)*g(line2,b1,c1);
 
   A1.B1*G(LINE2,B1,C1)
 
@@ -2028,7 +2028,7 @@ w:=chebyshev_fit(sin x/x,x=(1 .. 3),5);
 
                  3            2
   w := {0.03824*x   - 0.2398*x   + 0.06514*x + 0.9778,
-        {0.8991,-0.4066,-0.005198,0.009464,-0.00009511}}                    
+        {0.8991,-0.4066,-0.005198,0.009464,-0.00009511}}
 
 
 chebyshev_eval(second w, x=(1 .. 3), x=2.1);
@@ -2094,7 +2094,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
- 
+
 pts:=for i:=1 step 1 until 5 collect i$
 
 vals:=for i:=1 step 1 until 5 collect
@@ -2536,7 +2536,7 @@ roots(x^5-2);
   {x=-0.929316 + 0.675188*i,
     x=-0.929316 - 0.675188*i,
     x=0.354967 + 1.09248*i,
-    x=0.354967 - 1.09248*i, 
+    x=0.354967 - 1.09248*i,
     x=1.1487}
 
 </tt></pre>
@@ -2884,22 +2884,22 @@ E"
 <p></p>
 <pre><tt>
 on rounded;
-Euler_Gamma; 
+Euler_Gamma;
 
-  0.577215664902 
-
-
-Khinchin; 
-
-  2.68545200107 
+  0.577215664902
 
 
-Catalan 
+Khinchin;
 
-  0.915965594177 
+  2.68545200107
 
 
-Golden_Ratio 
+Catalan
+
+  0.915965594177
+
+
+Golden_Ratio
 
   1.61803398875
 
@@ -2938,12 +2938,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-bernoulli 20; 
+bernoulli 20;
 
-  - 174611 / 330 
+  - 174611 / 330
 
 
-bernoulli 17; 
+bernoulli 17;
 
   0
 
@@ -2988,14 +2988,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-BernoulliP(3,z); 
+BernoulliP(3,z);
 
         2
   z*(2*z   - 3*z + 1)/2
 
 
 
-BernoulliP(10,3); 
+BernoulliP(10,3);
 
   338585 / 66
 
@@ -3039,12 +3039,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-Euler 20; 
+Euler 20;
 
-  370371188237525 
+  370371188237525
 
 
-Euler 0; 
+Euler 0;
 
   1
 
@@ -3095,12 +3095,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-EulerP(2,xx); 
+EulerP(2,xx);
 
-  xx*(xx - 1) 
+  xx*(xx - 1)
 
 
-EulerP(10,3); 
+EulerP(10,3);
 
   2046
 

@@ -32,26 +32,26 @@
 <h3>examples:</h3>
 <p></p>
 <pre><TT>
-depend y,x,z; 
+depend y,x,z;
 
-df(sin y,x); 
+df(sin y,x);
 
-  COS(Y)*DF(Y,X) 
-
-
-df(sin y,x,z); 
-
-  COS(Y)*DF(Y,X,Z) - DF(Y,X)*DF(Y,Z)*SIN(Y) 
+  COS(Y)*DF(Y,X)
 
 
-nodepend y,z; 
+df(sin y,x,z);
 
-df(sin y,x); 
-
-  COS(Y)*DF(Y,X) 
+  COS(Y)*DF(Y,X,Z) - DF(Y,X)*DF(Y,Z)*SIN(Y)
 
 
-df(sin y,x,z); 
+nodepend y,z;
+
+df(sin y,x);
+
+  COS(Y)*DF(Y,X)
+
+
+df(sin y,x,z);
 
   0
 

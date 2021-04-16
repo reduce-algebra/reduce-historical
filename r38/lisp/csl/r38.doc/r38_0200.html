@@ -43,63 +43,63 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-operator f; 
+operator f;
 
-linear f; 
+linear f;
 
-f(0,x); 
+f(0,x);
 
-  0 
-
-
-f(-y,x); 
-
-  - F(1,X)*Y 
+  0
 
 
-f(y+z,x); 
+f(-y,x);
 
-  F(1,X)*(Y + Z) 
-
-
-f(y*z,x); 
-
-  F(1,X)*Y*Z 
+  - F(1,X)*Y
 
 
-depend z,x; 
+f(y+z,x);
 
-f(y*z,x); 
-
-  F(Z,X)*Y 
+  F(1,X)*(Y + Z)
 
 
-f(y/z,x); 
+f(y*z,x);
+
+  F(1,X)*Y*Z
+
+
+depend z,x;
+
+f(y*z,x);
+
+  F(Z,X)*Y
+
+
+f(y/z,x);
 
     1
-  F(-,X)*Y 
+  F(-,X)*Y
     Z
 
 
-depend y,x; 
+depend y,x;
 
-f(y/z,x); 
+f(y/z,x);
 
     Y
-  F(-,X) 
+  F(-,X)
     Z
 
 
-nodepend z,x; 
+nodepend z,x;
 
-f(y/z,x); 
+f(y/z,x);
 
   F(Y,X)
-  ------ 
+  ------
     Z
 
 
-f(2*e**sin(x),x); 
+f(2*e**sin(x),x);
 
        SIN(X)
   2*F(E      ,X)
@@ -203,21 +203,21 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-lisp; 
+lisp;
 
-  NIL 
-
-
-car '(a b c d e); 
-
-  A  
+  NIL
 
 
-algebraic; 
+car '(a b c d e);
 
-c := (lisp car '(first second))**2; 
+  A
 
- 
+
+algebraic;
+
+c := (lisp car '(first second))**2;
+
+
 
             2
   C := FIRST
@@ -266,14 +266,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-log {a,b,c}; 
+log {a,b,c};
 
-  LOG(A),LOG(B),LOG(C) 
+  LOG(A),LOG(B),LOG(C)
 
 
-listargp log; 
+listargp log;
 
-log {a,b,c}; 
+log {a,b,c};
 
   LOG(A,B,C)
 
@@ -334,26 +334,26 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-depend y,x,z; 
+depend y,x,z;
 
-df(sin y,x); 
+df(sin y,x);
 
-  COS(Y)*DF(Y,X) 
-
-
-df(sin y,x,z); 
-
-  COS(Y)*DF(Y,X,Z) - DF(Y,X)*DF(Y,Z)*SIN(Y) 
+  COS(Y)*DF(Y,X)
 
 
-nodepend y,z; 
+df(sin y,x,z);
 
-df(sin y,x); 
-
-  COS(Y)*DF(Y,X) 
+  COS(Y)*DF(Y,X,Z) - DF(Y,X)*DF(Y,Z)*SIN(Y)
 
 
-df(sin y,x,z); 
+nodepend y,z;
+
+df(sin y,x);
+
+  COS(Y)*DF(Y,X)
+
+
+df(sin y,x,z);
 
   0
 
@@ -417,44 +417,44 @@ E"
 <p></p>
 <pre><tt>
 match c**2*a**2 = d;
-(a+c)**4; 
+(a+c)**4;
 
    4       3          3    4
-  A   + 4*A *C + 4*A*C  + C  + 6*D 
+  A   + 4*A *C + 4*A*C  + C  + 6*D
 
 
-match a+b = c; 
+match a+b = c;
 
-a + 2*b; 
+a + 2*b;
 
-  B + C 
+  B + C
 
 
-(a + b + c)**2; 
+(a + b + c)**2;
 
    2     2               2
-  A   - B   + 2*B*C + 3*C  
+  A   - B   + 2*B*C + 3*C
 
 
-clear a+b; 
+clear a+b;
 
-(a + b + c)**2; 
+(a + b + c)**2;
 
     2                    2            2
-  A   + 2*A*B + 2*A*C + B  + 2*B*C + C  
+  A   + 2*A*B + 2*A*C + B  + 2*B*C + C
 
 
-let p*r = s; 
+let p*r = s;
 
-match p*q = ss; 
+match p*q = ss;
 
-(a + p*r)**2; 
+(a + p*r)**2;
 
    2            2
-  A  + 2*A*S + S  
+  A  + 2*A*S + S
 
 
-(a + p*q)**2; 
+(a + p*q)**2;
 
    2              2  2
   A   + 2*A*SS + P *Q
@@ -530,32 +530,32 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-operator f,h; 
+operator f,h;
 
-noncom f; 
+noncom f;
 
-f(a)*f(b) - f(b)*f(a); 
+f(a)*f(b) - f(b)*f(a);
 
-  F(A)*F(B) - F(B)*F(A) 
-
-
-h(a)*h(b) - h(b)*h(a); 
-
-  0 
+  F(A)*F(B) - F(B)*F(A)
 
 
-operator comm; 
+h(a)*h(b) - h(b)*h(a);
+
+  0
+
+
+operator comm;
 
 for all x,y such that x neq y and ordp(x,y)
         let f(x)*f(y) = f(y)*f(x) + comm(x,y);
 
 
-f(1)*f(2); 
+f(1)*f(2);
 
-  F(1)*F(2) 
+  F(1)*F(2)
 
 
-f(2)*f(1); 
+f(2)*f(1);
 
   COMM(2,1) + F(1)*F(2)
 
@@ -609,16 +609,16 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-        odd f; 
+        odd f;
 
-        f(0) 
+        f(0)
 
-  0 
+  0
 
 
-        nonzero f; 
+        nonzero f;
 
-        f(0) 
+        f(0)
 
   F(0)
 
@@ -664,19 +664,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-        odd f; 
+        odd f;
 
-        f(-a) 
+        f(-a)
 
-  -F(A) 
-
-
-        f(-a,-b) 
-
-  -F(A,-B) 
+  -F(A)
 
 
-        f(a,-b) 
+        f(-a,-b)
+
+  -F(A,-B)
+
+
+        f(a,-b)
 
   F(A,-B)
 
@@ -810,24 +810,24 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-operator dis,fac; 
+operator dis,fac;
 
-let dis(~x,~y) = sqrt(x^2 + y^2); 
+let dis(~x,~y) = sqrt(x^2 + y^2);
 
-dis(1,2); 
+dis(1,2);
 
-  SQRT(5) 
+  SQRT(5)
 
 
-dis(a,10); 
+dis(a,10);
 
         2
-  SQRT(A  + 100) 
+  SQRT(A  + 100)
 
 
-on rounded; 
+on rounded;
 
-dis(1.5,7.2); 
+dis(1.5,7.2);
 
   7.35459040329
 
@@ -836,14 +836,14 @@ let fac(~n) = if n=0 then 1
                else if not(fixp n and n&gt;0)
                 then rederr &quot;choose non-negative integer&quot;
                else for i := 1:n product i;
- 
-
-fac(5); 
-
-  120 
 
 
-fac(-2); 
+fac(5);
+
+  120
+
+
+fac(-2);
 
   ***** choose non-negative integer
 
@@ -938,27 +938,27 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-x + y + z + cos(a); 
+x + y + z + cos(a);
 
-  COS(A) + X + Y + Z 
-
-
-order z,y,x,cos(a); 
-
-x + y + z + cos(a); 
-
-  Z + Y + X + COS(A) 
+  COS(A) + X + Y + Z
 
 
-(x + y)**2; 
+order z,y,x,cos(a);
+
+x + y + z + cos(a);
+
+  Z + Y + X + COS(A)
+
+
+(x + y)**2;
 
    2            2
-  Y  + 2*Y*X + X  
+  Y  + 2*Y*X + X
 
 
-order nil; 
+order nil;
 
-(z + cos(z))**2; 
+(z + cos(z))**2;
 
         2                 2
   COS(Z)  + 2*COS(Z)*Z + Z
@@ -1036,28 +1036,28 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-operator f,h; 
+operator f,h;
 
-precedence f,+; 
+precedence f,+;
 
-precedence h,*; 
+precedence h,*;
 
-a + f(1,2)*c; 
+a + f(1,2)*c;
 
-  (1 F 2)*C + A 
-
-
-a + h(1,2)*c; 
-
-  1 H 2*C + A 
+  (1 F 2)*C + A
 
 
-a*1 f 2*c; 
+a + h(1,2)*c;
 
-  A F 2*C 
+  1 H 2*C + A
 
 
-a*1 h 2*c; 
+a*1 f 2*c;
+
+  A F 2*C
+
+
+a*1 h 2*c;
 
   1 H 2*A*C
 
@@ -1139,24 +1139,24 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on rounded; 
+on rounded;
 
-7/9; 
+7/9;
 
-  0.777777777778 
-
-
-precision 20; 
-
-  20 
+  0.777777777778
 
 
-7/9; 
+precision 20;
 
-  0.77777777777777777778 
+  20
 
 
-sin(pi/4); 
+7/9;
+
+  0.77777777777777777778
+
+
+sin(pi/4);
 
   0.7071067811865475244
 
@@ -1215,16 +1215,16 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on rounded; 
+on rounded;
 
-1/3; 
+1/3;
 
-  0.333333333333 
+  0.333333333333
 
 
-print_precision 5; 
+print_precision 5;
 
-1/3 
+1/3
 
   0.33333
 
@@ -1598,19 +1598,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-symbolic; 
+symbolic;
 
-  NIL 
-
-
-cdr '(a b c); 
-
-  (B C) 
+  NIL
 
 
-algebraic; 
+cdr '(a b c);
 
-x + symbolic car '(y z); 
+  (B C)
+
+
+algebraic;
+
+x + symbolic car '(y z);
 
   X + Y
 
@@ -1657,16 +1657,16 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-operator m,n; 
+operator m,n;
 
-symmetric m,n; 
+symmetric m,n;
 
-m(y,a,sin(x)); 
+m(y,a,sin(x));
 
-  M(SIN(X),A,Y) 
+  M(SIN(X),A,Y)
 
 
-n(z,m(b,a,q)); 
+n(z,m(b,a,q));
 
   N(M(A,B,Q),Z)
 
@@ -1735,14 +1735,14 @@ E"
 </p>
 
 <p></p>
-<pre><tt> 
+<pre><tt>
 
-tr prepsq; 
+tr prepsq;
 
-  (PREPSQ) 
+  (PREPSQ)
 
 
-x**2 + y; 
+x**2 + y;
 
   PREPSQ entry:
     Arg 1: (((((X . 2) . 1) ((Y . 1) . 1)) . 1)
@@ -1754,7 +1754,7 @@ x**2 + y;
   X  + Y
 
 
-untr prepsq; 
+untr prepsq;
 
   (PREPSQ)
 
@@ -1866,21 +1866,21 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-varname ident; 
+varname ident;
 
-  IDENT 
-
-
-on fort; 
-
-x**2 + 1; 
-
-  IDENT=X**2+1. 
+  IDENT
 
 
-off fort,exp; 
+on fort;
 
-structr(((x+y)**2 + z)**3); 
+x**2 + 1;
+
+  IDENT=X**2+1.
+
+
+off fort,exp;
+
+structr(((x+y)**2 + z)**3);
 
         3
   IDENT2
@@ -1942,31 +1942,31 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a := (x+y)**4; 
+a := (x+y)**4;
 
         4      3        2  2        3    4
-  A := X  + 4*X *Y + 6*X *Y  + 4*X*Y  + Y  
+  A := X  + 4*X *Y + 6*X *Y  + 4*X*Y  + Y
 
 
-weight x=2,y=3; 
+weight x=2,y=3;
 
-wtlevel 8; 
+wtlevel 8;
 
-a; 
+a;
 
    4
-  X  
+  X
 
 
-wtlevel 10; 
+wtlevel 10;
 
-a; 
+a;
 
    2     2             2
-  X *(6*Y  + 4*X*Y  + X ) 
+  X *(6*Y  + 4*X*Y  + X )
 
 
-int(x**2,x); 
+int(x**2,x);
 
   ***** X invalid as KERNEL
 
@@ -2052,21 +2052,21 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-x**2 + 17*x*y + 4*y**2 where x=1,y=2; 
+x**2 + 17*x*y + 4*y**2 where x=1,y=2;
 
 
-  51 
+  51
 
 
 for i := 1:5 collect x**i*q where q= for j := 1:i product j;
- 
+
 
 
         2    3     4      5
-  {X,2*X ,6*X ,24*X ,120*X } 
+  {X,2*X ,6*X ,24*X ,120*X }
 
 
-x**2 + y + z where z=y**3,y=3; 
+x**2 + y + z where z=y**3,y=3;
 
    2    3
   X  + Y  + 3
@@ -2158,24 +2158,24 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a := 10; 
+a := 10;
 
-  A := 10 
+  A := 10
 
 
 while a &lt;= 12 do &lt;&lt;write a; a := a + 1&gt;&gt;;
- 
 
 
-  10 
+
+  10
 
 
-                                          11 
+                                          11
 
-                                          12 
+                                          12
 
 while a &lt; 5 do &lt;&lt;write a; a := a + 1&gt;&gt;;
- 
+
 
 
       nothing is printed
@@ -2227,32 +2227,32 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-(x+y)**4;          
- 
+(x+y)**4;
+
 
    4      3        2  2        3    4
-  X  + 4*X *Y + 6*X *Y  + 4*X*Y  + Y  
+  X  + 4*X *Y + 6*X *Y  + 4*X*Y  + Y
 
 
-weight x=2,y=3; 
+weight x=2,y=3;
 
-wtlevel 8; 
+wtlevel 8;
 
-(x+y)**4; 
+(x+y)**4;
 
    4
-  X  
+  X
 
 
-wtlevel 10; 
+wtlevel 10;
 
-(x+y)**4; 
+(x+y)**4;
 
    2     2            2
-  X *(6*Y  + 4*X*Y + X ) 
+  X *(6*Y  + 4*X*Y + X )
 
 
-int(x**2,x); 
+int(x**2,x);
 
   ***** X invalid as KERNEL
 
@@ -3007,33 +3007,33 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-acos(ab); 
+acos(ab);
 
-  ACOS(AB) 
-
-
-acos 15; 
-
-  ACOS(15) 
+  ACOS(AB)
 
 
-df(acos(x*y),x); 
+acos 15;
+
+  ACOS(15)
+
+
+df(acos(x*y),x);
 
            2  2
   SQRT( - X *Y  + 1)*Y
-  -------------------- 
+  --------------------
         2  2
        X *Y  - 1
 
 
-on rounded; 
+on rounded;
 
-res := acos(sqrt(2)/2); 
+res := acos(sqrt(2)/2);
 
-  RES := 0.785398163397 
+  RES := 0.785398163397
 
 
-res-pi/4; 
+res-pi/4;
 
   0
 
@@ -3095,26 +3095,26 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-acosh a; 
+acosh a;
 
-  ACOSH(A) 
-
-
-acosh(0); 
-
-  ACOSH(0) 
+  ACOSH(A)
 
 
-df(acosh(a**2),a); 
+acosh(0);
+
+  ACOSH(0)
+
+
+df(acosh(a**2),a);
 
           4
   2*SQRT(A  - 1)*A
-  ---------------- 
+  ----------------
         4
        A  - 1
 
 
-int(acosh(x),x); 
+int(acosh(x),x);
 
   INT(ACOSH(X),X)
 
@@ -3271,33 +3271,33 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-acsc(ab); 
+acsc(ab);
 
-  ACSC(AB) 
-
-
-acsc 15; 
-
-  ACSC(15) 
+  ACSC(AB)
 
 
-df(acsc(x*y),x); 
+acsc 15;
+
+  ACSC(15)
+
+
+df(acsc(x*y),x);
 
          2  2
   -SQRT(X *Y  - 1)
-  ---------------- 
+  ----------------
        2  2
    X*(X *Y  - 1)
 
 
-on rounded; 
+on rounded;
 
-res := acsc(2/sqrt(3)); 
+res := acsc(2/sqrt(3));
 
-  RES := 1.0471975512 
+  RES := 1.0471975512
 
 
-res-pi/3; 
+res-pi/3;
 
   0
 
@@ -3356,28 +3356,28 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-acsch(ab); 
+acsch(ab);
 
-  ACSCH(AB) 
-
-
-acsch 15; 
-
-  ACSCH(15) 
+  ACSCH(AB)
 
 
-df(acsch(x*y),x); 
+acsch 15;
+
+  ACSCH(15)
+
+
+df(acsch(x*y),x);
 
          2  2
   -SQRT(X *Y  + 1)
-  ---------------- 
+  ----------------
        2  2
    X*(X *Y  + 1)
 
 
-on rounded; 
+on rounded;
 
-res := acsch(3); 
+res := acsch(3);
 
   RES := 0.327450150237
 
@@ -3432,33 +3432,33 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-asec(ab); 
+asec(ab);
 
-  ASEC(AB) 
-
-
-asec 15; 
-
-  ASEC(15) 
+  ASEC(AB)
 
 
-df(asec(x*y),x); 
+asec 15;
+
+  ASEC(15)
+
+
+df(asec(x*y),x);
 
         2  2
   SQRT(X *Y  - 1)
-  --------------- 
+  ---------------
        2  2
    X*(X *Y  - 1)
 
 
-on rounded; 
+on rounded;
 
-res := asec sqrt(2); 
+res := asec sqrt(2);
 
-  RES := 0.785398163397 
+  RES := 0.785398163397
 
 
-res-pi/4; 
+res-pi/4;
 
   0
 
@@ -3519,26 +3519,26 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-asech a; 
+asech a;
 
-  ASECH(A) 
-
-
-asech(1); 
-
-  0 
+  ASECH(A)
 
 
-df(acosh(a**2),a); 
+asech(1);
+
+  0
+
+
+df(acosh(a**2),a);
 
             4
   2*SQRT(- A  + 1)
-  ---------------- 
+  ----------------
          4
      A*(A  - 1)
 
 
-int(asech(x),x); 
+int(asech(x),x);
 
   INT(ASECH(X),X)
 
@@ -3606,40 +3606,40 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-asin(givenangle); 
+asin(givenangle);
 
-  ASIN(GIVENANGLE) 
-
-
-asin(5); 
-
-  ASIN(5) 
+  ASIN(GIVENANGLE)
 
 
-df(asin(2*x),x); 
+asin(5);
+
+  ASIN(5)
+
+
+df(asin(2*x),x);
 
                  2
     2*SQRT( - 4*X  + 1))
-  - -------------------- 
+  - --------------------
              2
           4*X  - 1
 
 
-on rounded; 
+on rounded;
 
-asin .5; 
+asin .5;
 
-  0.523598775598 
-
-
-asin(sqrt(3)); 
-
-  ASIN(1.73205080757) 
+  0.523598775598
 
 
-asin(sqrt(3)/2); 
+asin(sqrt(3));
 
-  1.04719755120 
+  ASIN(1.73205080757)
+
+
+asin(sqrt(3)/2);
+
+  1.04719755120
 
 </tt></pre>
 <p>
@@ -3699,21 +3699,21 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-asinh d; 
+asinh d;
 
-  ASINH(D) 
-
-
-asinh(1); 
-
-  ASINH(1) 
+  ASINH(D)
 
 
-df(asinh(2*x),x); 
+asinh(1);
+
+  ASINH(1)
+
+
+df(asinh(2*x),x);
 
             2
   2*SQRT(4*X  + 1))
-  ----------------- 
+  -----------------
          2
       4*X  + 1
 
@@ -3780,29 +3780,29 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-atan(middle); 
+atan(middle);
 
-  ATAN(MIDDLE) 
-
-
-on rounded; 
-
-atan 45; 
-
-  1.54857776147 
+  ATAN(MIDDLE)
 
 
-off rounded; 
+on rounded;
 
-int(atan(x),x); 
+atan 45;
+
+  1.54857776147
+
+
+off rounded;
+
+int(atan(x),x);
 
                      2
   2*ATAN(X)*X - LOG(X  + 1)
-  ------------------------- 
+  -------------------------
               2
 
 
-df(atan(y**2),y); 
+df(atan(y**2),y);
 
    2*Y
   -------
@@ -3867,17 +3867,17 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-atanh aa; 
+atanh aa;
 
-  ATANH(AA) 
-
-
-atanh(1); 
-
-  ATANH(1) 
+  ATANH(AA)
 
 
-df(atanh(x*y),y); 
+atanh(1);
+
+  ATANH(1)
+
+
+df(atanh(x*y),y);
 
      - X
   ----------
@@ -3945,24 +3945,24 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-atan2(3,2); 
+atan2(3,2);
 
-  ATAN2(3,2); 
-
-
-on rounded; 
-
-atan2(3,2); 
-
-  0.982793723247 
+  ATAN2(3,2);
 
 
-atan2(a,b); 
+on rounded;
 
-  ATAN2(A,B); 
+atan2(3,2);
+
+  0.982793723247
 
 
-atan2(1,0); 
+atan2(a,b);
+
+  ATAN2(A,B);
+
+
+atan2(1,0);
 
   1.57079632679
 
@@ -4018,34 +4018,34 @@ E"
 <pre><tt>
 
 
-cos abc; 
+cos abc;
 
-  COS(ABC) 
-
-
-
-cos(pi); 
-
-  -1 
+  COS(ABC)
 
 
 
-cos 4; 
+cos(pi);
 
-  COS(4) 
-
-
-
-on rounded; 
-
-
-cos(4); 
-
-  - 0.653643620864 
+  -1
 
 
 
-cos log 5; 
+cos 4;
+
+  COS(4)
+
+
+
+on rounded;
+
+
+cos(4);
+
+  - 0.653643620864
+
+
+
+cos log 5;
 
   - 0.0386319699339
 
