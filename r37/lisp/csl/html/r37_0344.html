@@ -1,35 +1,35 @@
+<a name="MATEIGEN"> <title>MATEIGEN</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>MATEIGEN</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=MATEIGEN>
+<p></p>
+<p></p>
 
-<TITLE>MATEIGEN</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  The <em>mateigen</em> operator calculates the eigenvalue equation and the
+  corresponding eigenvectors of a <a href="r37_0345.html">matrix</a>.
+</p>
 
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>mateigen</em>(&lt;matrix-id&gt;,&lt;tag-id&gt;)</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;matrix-id&gt; must be a declared matrix of values, and &lt;tag-id&gt; must
+  b e a legal REDUCE identifier.
+</p>
 
-<B>MATEIGEN</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
- <P>
-<P>
-The <em>mateigen</em> operator calculates the eigenvalue equation and the 
-corresponding eigenvectors of a 
-<A HREF=r37_0345.html>matrix</A>. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>mateigen</em>(&lt;matrix-id&gt;,&lt;tag-id&gt;) 
-<P>
-<P>
-<P>
-&lt;matrix-id&gt; must be a declared matrix of values, and &lt;tag-id&gt; must b
-e 
-a legal REDUCE identifier. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 aa := mat((2,5),(1,0))$ 
 
 mateigen(aa,alpha); 
@@ -60,21 +60,27 @@ mateigen(bb,lamb);
     [      0      ]
     }}
 
-</TT></PRE><P>The <em>mateigen</em> operator returns a list of lists of three 
-elements. The first element is a square free factor of the characteristic 
-polynomial; the second element is its multiplicity; and the third element 
-is the corresponding eigenvector. If the characteristic polynomial can be 
-completely factored, the product of the first elements of all the sublists 
-will produce the minimal polynomial. You can access the various parts of 
-the answer with the usual list access operators. 
-<P>
-<P>
-If the matrix is degenerate, more than one eigenvector can be produced for 
-the same eigenvalue, as shown by more than one arbitrary variable in the 
-eigenvector. The identification numbers of the arbitrary complex variables 
-shown in the examples above may not be the same as yours. Note that since 
-<em>lambda</em> is a reserved word in REDUCE, you cannot use it as a 
-tag-id for this operator. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  The <em>mateigen</em> operator returns a list of lists of three elements. The
+  first element is a square free factor of the characteristic polynomial; the
+  second element is its multiplicity; and the third element is the corresponding
+  eigenvector. If the characteristic polynomial can be completely factored, the
+  product of the first elements of all the sublists will produce the minimal
+  polynomial. You can access the various parts of the answer with the usual list
+  access operators.
+</p>
+
+<p></p>
+<p>
+  If the matrix is degenerate, more than one eigenvector can be produced for the
+  same eigenvalue, as shown by more than one arbitrary variable in the
+  eigenvector. The identification numbers of the arbitrary complex variables
+  shown in the examples above may not be the same as yours. Note that since
+  <em>lambda</em> is a reserved word in REDUCE, you cannot use it as a tag-id
+  for this operator.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

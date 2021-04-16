@@ -1,31 +1,29 @@
+<a name="SQRT"> <title>SQRT</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>SQRT</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=SQRT>
+<p></p>
+<p></p>
 
-<TITLE>SQRT</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>The <em>sqrt</em> operator returns the square root of its argument.</p>
 
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>sqrt</em>(&lt;expression&gt;)</p>
 
+<p></p>
+<p></p>
+<p>&lt;expression&gt; can be any REDUCE scalar expression.</p>
 
-<B>SQRT</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
- <P>
-<P>
-The <em>sqrt</em> operator returns the square root of its argument. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>sqrt</em>(&lt;expression&gt;) 
-<P>
-<P>
-<P>
-&lt;expression&gt; can be any REDUCE scalar expression. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 sqrt(16*a^3); 
 
   4*SQRT(A)*A 
@@ -50,22 +48,26 @@ sqrt(a*b*c^5*d^3*27);
                                              2
   3*SQRT(D)*SQRT(C)*SQRT(B)*SQRT(A)*SQRT(3)*C *D
 
-</TT></PRE><P><em>sqrt</em>checks its argument for squared factors and removes t
-hem. 
-<P>
-<P>
-Numeric values for square roots that are not exact integers are given only 
-when 
-<A HREF=r37_0330.html>rounded</A> is on. 
-<P>
-<P>
-Please note that <em>sqrt(a**2)</em> is given as <em>a</em>, which may be 
-incorrect if <em>a</em> eventually has a negative value. If you are 
-programming a calculation in which this is a concern, you can turn on the 
+</TT></PRE>
+<p><em>sqrt</em>checks its argument for squared factors and removes t hem.</p>
 
-<A HREF=r37_0317.html>precise</A> switch, which causes the absolute value of the
- square root 
-to be returned. 
-<P>
-<P>
-<P>
+<p></p>
+<p>
+  Numeric values for square roots that are not exact integers are given only
+  when
+  <a href="r37_0330.html">rounded</a> is on.
+</p>
+
+<p></p>
+<p>
+  Please note that <em>sqrt(a**2)</em> is given as <em>a</em>, which may be
+  incorrect if <em>a</em> eventually has a negative value. If you are
+  programming a calculation in which this is a concern, you can turn on the
+
+  <a href="r37_0317.html">precise</a> switch, which causes the absolute value of
+  the square root to be returned.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

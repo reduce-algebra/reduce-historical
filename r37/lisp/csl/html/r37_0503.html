@@ -1,37 +1,35 @@
+<a name="LegendreP"> <title>LegendreP</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>LEGENDREP</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=LegendreP>
+<p></p>
+<p>
+  The binary <em>LegendreP</em> operator computes the nth Legendre Polynomial
+  which is a special case of the nth Jacobi Polynomial with
+</p>
 
-<TITLE>LegendreP</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>LegendreP(n,x) := JacobiP(n,0,0,x)</p>
 
+<p></p>
+<p>The ternary form returns the associated Legendre Polynomial (see below).</p>
 
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>LegendreP</em>(&lt;integer&gt;,&lt;expression&gt;) or
+<p></p>
+<p><em>LegendreP</em>(&lt;integer&gt;,&lt;expression&gt;,&lt;expression&gt;)</p>
 
-<B>LEGENDREP</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-The binary <em>LegendreP</em> operator computes the nth Legendre 
-Polynomial which is 
-a special case of the nth Jacobi Polynomial with 
-<P>
-<P>
-LegendreP(n,x) := JacobiP(n,0,0,x) 
-<P>
-<P>
-The ternary form returns the associated Legendre Polynomial (see below). 
-<P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>LegendreP</em>(&lt;integer&gt;,&lt;expression&gt;) or 
-<P>
-<P>
-<em>LegendreP</em>(&lt;integer&gt;,&lt;expression&gt;,&lt;expression&gt;) 
-<P>
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 LegendreP(3,xx); 
 
           2
@@ -46,12 +44,15 @@ LegendreP(3,2,xx);
               2
   15*xx*( - xx   + 1)
 
-</TT></PRE><P>The ternary form of the operator <em>LegendreP</em> is the associa
-ted 
-Legendre Polynomial defined as 
- <P>
-<P>
-P(n,m,x) = (-1)**m * (1-x**2)**(m/2) * df(LegendreP(n,x),x,m) 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  The ternary form of the operator <em>LegendreP</em> is the associa ted
+  Legendre Polynomial defined as
+</p>
+
+<p></p>
+<p>P(n,m,x) = (-1)**m * (1-x**2)**(m/2) * df(LegendreP(n,x),x,m)</p>
+
+<p></p>
+<p></p>
+<p></p>

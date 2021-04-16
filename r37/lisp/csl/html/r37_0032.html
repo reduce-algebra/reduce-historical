@@ -1,32 +1,30 @@
+<a name="caret"> <title>caret</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>^</b> _ _ _ <b>CARET</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=caret>
+<p></p>
+<p>
+  The <em>^</em> operator is a prefix or infix binary exponentiation operator.
+  It is equivalent to <a href="r37_0031.html">power</a> or **.
+</p>
 
-<TITLE>caret</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+&lt;expression&gt; <em>^</em>&lt;expression&gt; or
+<em>^</em>(&lt;expression&gt;,&lt;expression&gt;)
+<p></p>
+<p></p>
+<p>&lt;expression&gt; may be any valid REDUCE expression.</p>
 
-
-
-<B>^</B> _ _ _ <B>CARET</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-The <em>^</em> operator is a prefix or infix binary exponentiation operator. 
-It is equivalent to 
-<A HREF=r37_0031.html>power</A> or **. 
-<P>
-<P>
- <P> <H3> 
-syntax: </H3>
-&lt;expression&gt; <em>^</em>&lt;expression&gt; 
- or <em>^</em>(&lt;expression&gt;,&lt;expression&gt;) 
-<P>
-<P>
-<P>
-&lt;expression&gt; may be any valid REDUCE expression. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 x^15; 
 
    15
@@ -58,25 +56,29 @@ on rounded;
 
   8.82497782708
 
-</TT></PRE><P>The exponentiation operator is left associative, so that <em>a^b^c
-</em> is 
-equivalent to <em>(a^b)^c</em>, as shown in the second example. Note 
-that this is &lt;not&gt; <em>a^(b^c)</em>, which would be right associative. 
-<P>
-<P>
-When 
-<A HREF=r37_0308.html>nat</A> is on (the default), REDUCE output produces raised
- 
-exponents, as shown. 
-<P>
-<P>
-A square 
-<A HREF=r37_0345.html>matrix</A> may also be raised to positive 
-and negative powers with 
-the exponentiation operator (negative powers require the matrix to be 
-invertible). Scalar expressions and 
-<A HREF=r37_0045.html>equation</A>s 
-may be raised to fractional and floating-point powers. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  The exponentiation operator is left associative, so that <em>a^b^c </em> is
+  equivalent to <em>(a^b)^c</em>, as shown in the second example. Note that this
+  is &lt;not&gt; <em>a^(b^c)</em>, which would be right associative.
+</p>
+
+<p></p>
+<p>
+  When
+  <a href="r37_0308.html">nat</a> is on (the default), REDUCE output produces
+  raised exponents, as shown.
+</p>
+
+<p></p>
+<p>
+  A square
+  <a href="r37_0345.html">matrix</a> may also be raised to positive and negative
+  powers with the exponentiation operator (negative powers require the matrix to
+  be invertible). Scalar expressions and <a href="r37_0045.html">equation</a>s
+  may be raised to fractional and floating-point powers.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

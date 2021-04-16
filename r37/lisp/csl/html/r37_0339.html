@@ -1,32 +1,33 @@
+<a name="VAROPT"> <title>VAROPT</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>VAROPT</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>switch</b></p>
 
-<A NAME=VAROPT>
+<p></p>
+<p></p>
 
-<TITLE>VAROPT</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  When <em>varopt</em> is on, the sequence of variables is optimized by
 
+  <a href="r37_0179.html">solve</a> with respect to execution speed. Otherwise,
+  the sequence given in the call to <a href="r37_0179.html">solve</a> is
+  preserved. Default is <em>on</em>.
+</p>
 
+<p></p>
+<p>
+  In combination with the switch
+  <a href="r37_0268.html">arbvars</a>, <em>varopt</em> can be used to control
+  variable elimination.
+</p>
 
-<B>VAROPT</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>switch</B><P>
-<P>
- 
- <P>
-<P>
-When <em>varopt</em> is on, the sequence of variables is optimized by 
-
-<A HREF=r37_0179.html>solve</A> with respect to execution speed. Otherwise, the 
-sequence 
-given in the call to 
-<A HREF=r37_0179.html>solve</A> is preserved. Default is <em>on</em>. 
-<P>
-<P>
-In combination with the switch 
-<A HREF=r37_0268.html>arbvars</A>, <em>varopt</em> can be used 
-to control variable elimination. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 off arbvars; 
 
 solve({x+2z,x-3y},{x,y,z});				
@@ -58,4 +59,5 @@ solve({x*y=1,z=x},{x,y,z});
   		   {{y=-,x=z}} 
            z
 
-</TT></PRE><P>
+</TT></PRE>
+<p></p>

@@ -1,36 +1,38 @@
+<a name="LEQ"> <title>LEQ</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>LEQ</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=LEQ>
+<p></p>
+<p>
+  The <em>leq</em> operator is a binary infix or prefix logical operator. It
+  returns <a href="r37_0122.html">true</a> if its first argument is less than or
+  equal to it s second argument. As an infix operator it is identical with
+  <em>&lt;=</em>.
+</p>
 
-<TITLE>LEQ</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p>
+  <em>leq</em>(&lt;expression&gt;,&lt;expression&gt;) or &lt;expression&gt;
+  <em>leq</em> &lt;expression&gt;
+</p>
 
+<p></p>
+<p></p>
+<p></p>
+<p>
+  &lt;expression&gt; can be any valid REDUCE expression that evaluates to a
+  number.
+</p>
 
-
-<B>LEQ</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-The <em>leq</em> operator is a binary infix or prefix logical operator. It 
-returns 
-<A HREF=r37_0122.html>true</A> if its first argument is less than or equal to it
-s second 
-argument. As an infix operator it is identical with <em>&lt;=</em>. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>leq</em>(&lt;expression&gt;,&lt;expression&gt;) or &lt;expression&gt; 
-<em>leq</em> &lt;expression&gt; 
-<P>
-<P>
-<P>
-<P>
-&lt;expression&gt; can be any valid REDUCE expression that evaluates to a 
-number. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 a := 15; 
 
   A := 15 
@@ -56,11 +58,14 @@ if leq(a,5) then write &quot;yes&quot; else write &quot;no&quot;;
 
   no
 
-</TT></PRE><P>Logical operators can only be used in conditional statements such 
-as 
-<P>
-<P>
-<em>if</em>...<em>then</em>...<em>else</em> or <em>while</em>...<em>do</em>. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>Logical operators can only be used in conditional statements such as</p>
+
+<p></p>
+<p>
+  <em>if</em>...<em>then</em>...<em>else</em> or <em>while</em>...<em>do</em>.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

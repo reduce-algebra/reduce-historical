@@ -1,33 +1,31 @@
+<a name="OPERATOR"> <title>OPERATOR</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>OPERATOR</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>declaration</b></p>
 
-<A NAME=OPERATOR>
+<p></p>
+<p>Use the <em>operator</em> declaration to declare your own operators.</p>
 
-<TITLE>OPERATOR</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>operator</em>&lt;identifier&gt;{,&lt;identifier&gt;}*</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;identifier&gt; can be any valid REDUCE identifier, which is not the name
+  of a
+  <a href="r37_0345.html">matrix</a>, <a href="r37_0188.html">array</a>, scalar
+  variable or previously-defined operator.
+</p>
 
-
-<B>OPERATOR</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>declaration</B><P>
-<P>
- 
-Use the <em>operator</em> declaration to declare your own operators. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>operator</em>&lt;identifier&gt;{,&lt;identifier&gt;}* 
-<P>
-<P>
-<P>
-&lt;identifier&gt; can be any valid REDUCE identifier, which is not the name 
-of a 
-<A HREF=r37_0345.html>matrix</A>, 
-<A HREF=r37_0188.html>array</A>, scalar variable or previously-defined 
-operator. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 operator dis,fac; 
 
 let dis(~x,~y) = sqrt(x^2 + y^2); 
@@ -65,42 +63,47 @@ fac(-2);
 
   ***** choose non-negative integer
 
-</TT></PRE><P>The first operator is the Euclidean distance metric, the distance 
-of point 
-(x,y) from the origin. The second operator is the factorial. 
-<P>
-<P>
-Operators can have various properties assigned to them; they can be 
-declared 
-<A HREF=r37_0196.html>infix</A>, 
-<A HREF=r37_0200.html>linear</A>, 
-<A HREF=r37_0222.html>symmetric</A>, 
+</TT></PRE>
+<p>
+  The first operator is the Euclidean distance metric, the distance of point
+  (x,y) from the origin. The second operator is the factorial.
+</p>
 
-<A HREF=r37_0187.html>antisymmetric</A>, or 
-<A HREF=r37_0206.html>noncom</A><em>mutative</em>. 
-The default operator is prefix, nonlinear, and commutative. 
-Precedence can also be assigned to operators using the declaration 
+<p></p>
+<p>
+  Operators can have various properties assigned to them; they can be declared
+  <a href="r37_0196.html">infix</a>, <a href="r37_0200.html">linear</a>,
+  <a href="r37_0222.html">symmetric</a>,
 
-<A HREF=r37_0213.html>precedence</A>. 
-<P>
-<P>
-Functionality is assigned to an operator by a 
-<A HREF=r37_0199.html>let</A> statement or 
-a 
-<A HREF=r37_0195.html>forall</A>...<em>let</em> statement, 
-(or possibly by a procedure with the name 
-of the operator). Be careful not to redefine a system operator by 
-accident. REDUCE permits you to redefine system operators, giving you a 
-warning message that the operator was already defined. This flexibility 
-allows you to add mathematical rules that do what you want them to do, but 
-can produce odd or erroneous behavior if you are not careful. 
-<P>
-<P>
-You can declare operators from inside 
-<A HREF=r37_0055.html>procedure</A>s, as long as they 
-are not local variables. Operators defined inside procedures are global. 
-A formal parameter may be declared as an operator, and has the effect of 
-declaring the calling variable as the operator. 
-<P>
-<P>
-<P>
+  <a href="r37_0187.html">antisymmetric</a>, or
+  <a href="r37_0206.html">noncom</a><em>mutative</em>. The default operator is
+  prefix, nonlinear, and commutative. Precedence can also be assigned to
+  operators using the declaration
+
+  <a href="r37_0213.html">precedence</a>.
+</p>
+
+<p></p>
+<p>
+  Functionality is assigned to an operator by a
+  <a href="r37_0199.html">let</a> statement or a
+  <a href="r37_0195.html">forall</a>...<em>let</em> statement, (or possibly by a
+  procedure with the name of the operator). Be careful not to redefine a system
+  operator by accident. REDUCE permits you to redefine system operators, giving
+  you a warning message that the operator was already defined. This flexibility
+  allows you to add mathematical rules that do what you want them to do, but can
+  produce odd or erroneous behavior if you are not careful.
+</p>
+
+<p></p>
+<p>
+  You can declare operators from inside
+  <a href="r37_0055.html">procedure</a>s, as long as they are not local
+  variables. Operators defined inside procedures are global. A formal parameter
+  may be declared as an operator, and has the effect of declaring the calling
+  variable as the operator.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

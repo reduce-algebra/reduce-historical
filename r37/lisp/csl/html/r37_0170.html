@@ -1,32 +1,31 @@
+<a name="PF"> <title>PF</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>PF</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=PF>
+<p></p>
+<p></p>
 
-<TITLE>PF</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+pf(&lt;expression&gt;,&lt;variable&gt;)
+<p></p>
+<p></p>
+<p>
+  <em>pf</em>transforms &lt;expression&gt; into a
+  <a href="r37_0053.html">list</a> of partial fraction s with respect to the
+  main variable, &lt;variable&gt;. <em>pf</em> does a complete partial fraction
+  decomposition, and as the algorithms used are fairly unsophisticated
+  (factorization and the extended Euclidean algorithm), the code may be
+  unacceptably slow in complicated cases.
+</p>
 
-
-
-<B>PF</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
- <P>
-<P>
- <P> <H3> 
-syntax: </H3>
-pf(&lt;expression&gt;,&lt;variable&gt;) 
-<P>
-<P>
-<P>
-<em>pf</em>transforms &lt;expression&gt; into a 
-<A HREF=r37_0053.html>list</A> of partial fraction 
-s 
-with respect to the main variable, &lt;variable&gt;. <em>pf</em> does a 
-complete partial fraction decomposition, and as the algorithms used are 
-fairly unsophisticated (factorization and the extended Euclidean 
-algorithm), the code may be unacceptably slow in complicated cases. 
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 pf(2/((x+1)^2*(x+2)),x); 
 
       2    -2        2
@@ -53,16 +52,19 @@ for each j in ws sum j;
                 2
   ( + 2)*(X + 1)
 
-</TT></PRE><P><P>
-<P>
-If you want the denominators in factored form, turn 
-<A HREF=r37_0284.html>exp</A> off, as 
-shown in the second example above. As shown in the final example, the 
+</TT></PRE>
+<p></p>
+<p></p>
+<p>
+  If you want the denominators in factored form, turn
+  <a href="r37_0284.html">exp</a> off, as shown in the second example above. As
+  shown in the final example, the
 
-<A HREF=r37_0047.html>for</A> <em>each</em> construct can be used to recombine t
-he terms. 
-Alternatively, one can use the operations on lists to extract any desired 
-term. 
-<P>
-<P>
-<P>
+  <a href="r37_0047.html">for</a> <em>each</em> construct can be used to
+  recombine t he terms. Alternatively, one can use the operations on lists to
+  extract any desired term.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

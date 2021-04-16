@@ -1,28 +1,29 @@
+<a name="EXPT"> <title>EXPT</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>EXPT</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=EXPT>
+<p></p>
+<p>
+  The <em>expt</em> operator is both an infix and prefix binary exponentiation
+  operator. It is identical to <em>^</em> or <em>**</em>.
+</p>
 
-<TITLE>EXPT</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p>
+  <em>expt</em>(&lt;expression&gt;,&lt;expression&gt;) or &lt;expression&gt;
+  <em>expt</em> &lt;expression&gt;
+</p>
 
-
-
-<B>EXPT</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-The <em>expt</em> operator is both an infix and prefix binary exponentiation 
-operator. It is identical to <em>^</em> or <em>**</em>. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>expt</em>(&lt;expression&gt;,&lt;expression&gt;) 
- or &lt;expression&gt; <em>expt</em> &lt;expression&gt; 
-<P>
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 a expt b; 
 
    B
@@ -40,15 +41,20 @@ expt(a,b);
    4      3        2  2        3    4
   X  + 4*X *Y + 6*X *Y  + 4*X*Y  + Y
 
-</TT></PRE><P>Scalar expressions may be raised to fractional and floating-point 
-powers. 
-Square matrix expressions may be raised to positive powers, and also to 
-negative powers if non-singular. 
-<P>
-<P>
-<em>expt</em>is left associative. In other words, <em>a expt b expt c</em> is 
-equivalent to <em>a expt (b*c)</em>, not <em>a expt (b expt c)</em>, which 
-would be right associative. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  Scalar expressions may be raised to fractional and floating-point powers.
+  Square matrix expressions may be raised to positive powers, and also to
+  negative powers if non-singular.
+</p>
+
+<p></p>
+<p>
+  <em>expt</em>is left associative. In other words, <em>a expt b expt c</em> is
+  equivalent to <em>a expt (b*c)</em>, not <em>a expt (b expt c)</em>, which
+  would be right associative.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

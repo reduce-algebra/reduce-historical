@@ -1,38 +1,42 @@
+<a name="IF"> <title>IF</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>IF</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>command</b></p>
 
-<A NAME=IF>
+<p></p>
+<p>
+  The <em>if</em> command is a conditional statement that executes a statement
+  if a condition is true, and optionally another statement if it is not.
+</p>
 
-<TITLE>IF</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p>
+  <em>if</em>&lt;condition&gt; <em>then</em> &lt;statement&gt; _ _ _ option(<em
+    >else</em
+  >
+  &lt;statement&gt;)
+</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;condition&gt; must be a logical or comparison operator that evaluates to a
+  <a href="r37_0109.html">boolean value</a>. &lt;statement&gt; must be a single
+  REDUCE statement or a
 
+  <a href="r37_0038.html">group</a> (<em>&lt;&lt;</em>...<em>&gt;&gt;</em>) or
 
-<B>IF</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>command</B><P>
-<P>
- 
-The <em>if</em> command is a conditional statement that executes a statement 
-if a condition is true, and optionally another statement if it is not. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>if</em>&lt;condition&gt; <em>then</em> &lt;statement&gt; 
-  _ _ _ option(<em>else</em> &lt;statement&gt;) 
-<P>
-<P>
-<P>
-&lt;condition&gt; must be a logical or comparison operator that evaluates to 
-a 
-<A HREF=r37_0109.html>boolean value</A>. 
-&lt;statement&gt; must be a single REDUCE statement or a 
+  <a href="r37_0041.html">block</a> (<em>begin</em>...<em>end</em>) statement.
+</p>
 
-<A HREF=r37_0038.html>group</A> (<em>&lt;&lt;</em>...<em>&gt;&gt;</em>) or 
-
-<A HREF=r37_0041.html>block</A> (<em>begin</em>...<em>end</em>) statement. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 if x = 5 then a := b+c else a := d+f;
 			 
 
@@ -85,80 +89,98 @@ bb := u**(if x &gt; 10 then 2);
          2
   BB := U
 
-</TT></PRE><P>An <em>if</em> statement may be used inside an assignment statemen
-t and sets 
-its value depending on the conditions, or used anywhere else an 
-expression would be valid, as shown in the last example. If there is no 
- <em>else</em> clause, the value is 0 if a number is expected, and nothing 
-otherwise. 
-<P>
-<P>
-The <em>else</em> clause may be left out if no action is to be taken if the 
-condition is false. 
-<P>
-<P>
-The condition may be a compound conditional statement using 
-<A HREF=r37_0039.html>and</A> or 
+</TT></PRE>
+<p>
+  An <em>if</em> statement may be used inside an assignment statemen t and sets
+  its value depending on the conditions, or used anywhere else an expression
+  would be valid, as shown in the last example. If there is no
+  <em>else</em> clause, the value is 0 if a number is expected, and nothing
+  otherwise.
+</p>
 
-<A HREF=r37_0054.html>or</A>. If a non-conditional statement, such as a constant
-, is used by 
-accident, it is assumed to have value true. 
- <P>
-<P>
-Be sure to use 
-<A HREF=r37_0038.html>group</A> or 
-<A HREF=r37_0041.html>block</A> statements after 
- <em>then</em> or <em>else</em>. 
-<P>
-<P>
-The <em>if</em> operator is right associative. The following constructions are 
-examples: 
-<P>
-<P>
- _ _ _ (1) 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>if</em>&lt;condition&gt; <em>then</em> <em>if</em> &lt;condition&gt; <em>the
-n</em> 
- &lt;action&gt; <em>else</em> &lt;action&gt; 
-<P>
-<P>
-<P>
-which is equivalent to 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>if</em>&lt;condition&gt; <em>then</em> (<em>if</em> &lt;condition&gt; 
- <em>then</em> &lt;action&gt; <em>else</em> &lt;action&gt;); 
-<P>
-<P>
-<P>
- _ _ _ (2) 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>if</em>&lt;condition&gt; <em>then</em> &lt;action&gt; <em>else if</em> 
- &lt;condition&gt; <em>then</em> &lt;action&gt; <em>else</em> &lt;action&gt; 
-<P>
-<P>
-<P>
-which is equivalent to 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>if</em>&lt;condition&gt; <em>then</em> &lt;action&gt; <em>else</em> 
-<P>
-<P>
-(<em>if</em> &lt;condition&gt; <em>then</em> &lt;action&gt; 
- <em>else</em> &lt;action&gt;). 
-<P>
-<P>
-<P>
-<P>
-<P>
-<P>
+<p></p>
+<p>
+  The <em>else</em> clause may be left out if no action is to be taken if the
+  condition is false.
+</p>
+
+<p></p>
+<p>
+  The condition may be a compound conditional statement using
+  <a href="r37_0039.html">and</a> or
+
+  <a href="r37_0054.html">or</a>. If a non-conditional statement, such as a
+  constant , is used by accident, it is assumed to have value true.
+</p>
+
+<p></p>
+<p>
+  Be sure to use
+  <a href="r37_0038.html">group</a> or
+  <a href="r37_0041.html">block</a> statements after <em>then</em> or
+  <em>else</em>.
+</p>
+
+<p></p>
+<p>
+  The <em>if</em> operator is right associative. The following constructions are
+  examples:
+</p>
+
+<p></p>
+<p>_ _ _ (1)</p>
+
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p>
+  <em>if</em>&lt;condition&gt; <em>then</em> <em>if</em> &lt;condition&gt;
+  <em>the n</em> &lt;action&gt; <em>else</em> &lt;action&gt;
+</p>
+
+<p></p>
+<p></p>
+<p>which is equivalent to</p>
+
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p>
+  <em>if</em>&lt;condition&gt; <em>then</em> (<em>if</em> &lt;condition&gt;
+  <em>then</em> &lt;action&gt; <em>else</em> &lt;action&gt;);
+</p>
+
+<p></p>
+<p></p>
+<p>_ _ _ (2)</p>
+
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p>
+  <em>if</em>&lt;condition&gt; <em>then</em> &lt;action&gt;
+  <em>else if</em> &lt;condition&gt; <em>then</em> &lt;action&gt;
+  <em>else</em> &lt;action&gt;
+</p>
+
+<p></p>
+<p></p>
+<p>which is equivalent to</p>
+
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>if</em>&lt;condition&gt; <em>then</em> &lt;action&gt; <em>else</em></p>
+
+<p></p>
+<p>
+  (<em>if</em> &lt;condition&gt; <em>then</em> &lt;action&gt;
+  <em>else</em> &lt;action&gt;).
+</p>
+
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>

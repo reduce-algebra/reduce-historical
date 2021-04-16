@@ -1,21 +1,21 @@
+<a name="FOR"> <title>FOR</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>FOR</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>command</b></p>
 
-<A NAME=FOR>
+<p></p>
+<p></p>
 
-<TITLE>FOR</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  The <em>for</em> command is used for iterative loops. There are many possible
+  forms it can take.
+</p>
 
-
-
-<B>FOR</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>command</B><P>
-<P>
- 
- <P>
-<P>
-The <em>for</em> command is used for iterative loops. There are many 
-possible forms it can take. 
-<P>
-<P>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<pre><TT>
                    /                   
    /               |STEP &lt;number&gt; UNTIL|        
    |&lt;var&gt;:=&lt;number&gt;|                   |&lt;number&gt;|
@@ -25,26 +25,27 @@ FOR|               |         :         |        |&lt;action&gt; &lt;exprn&gt;
                                                /
 
  where &lt;action&gt; ::= DO|PRODUCT|SUM|COLLECT|JOIN.
-</TT></PRE><P>&lt;var&gt; can be any valid REDUCE identifier except <em>t</em> o
-r 
-<em>nil</em>, &lt;inc&gt;, &lt;start&gt; and &lt;stop&gt; can be any expression 
+</TT></PRE>
+<p>
+  &lt;var&gt; can be any valid REDUCE identifier except <em>t</em> o r
+  <em>nil</em>, &lt;inc&gt;, &lt;start&gt; and &lt;stop&gt; can be any
+  expression that evaluates to a positive or negative integer. &lt;list&gt; must
+  be a valid <a href="r37_0302.html">list</a> structure. The action taken must
+  be one of the actions shown above, each of which is followed by a single
+  REDUCE expression, statement or a
+  <a href="r37_0038.html">group</a> (<em>&lt;&lt;</em>...<em>&gt;&gt;</em>) or
+  <a href="r37_0041.html">block</a>
+  (
+  <a href="r37_0040.html">begin</a>... <a href="r37_0044.html">end</a>)
+  statement.
+</p>
 
-that evaluates to a positive or negative integer. &lt;list&gt; must be a 
-valid 
-<A HREF=r37_0302.html>list</A> structure. 
-The action taken must be one of the actions shown 
-above, each of which is followed by a single REDUCE expression, statement 
-or a 
-<A HREF=r37_0038.html>group</A> (<em>&lt;&lt;</em>...<em>&gt;&gt;</em>) or 
-<A HREF=r37_0041.html>block</A> 
-(
-<A HREF=r37_0040.html>begin</A>...
-<A HREF=r37_0044.html>end</A>) statement. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 for i := 1:10 sum i;                                    
  
 
@@ -108,10 +109,12 @@ for i := 1:3 join list solve(x**2 + i*x + 1,x);
    {X= - -----------,X=-----------}}
               2             2
 
-</TT></PRE><P>The behavior of each of the five action words follows: 
-<P>
-<P>
-<P><PRE><TT>
+</TT></PRE>
+<p>The behavior of each of the five action words follows:</p>
+<p></p>
+<p></p>
+<p></p>
+<pre><TT>
                            Action Word Behavior
 Keyword   Argument Type                    Action
    do    statement, command, group   Evaluates its argument once
@@ -135,18 +138,23 @@ product expression, statement,       Evaluates its argument once for
         command, group or block      each iteration of the loop,
                                      adding the results together and
                                      returning the overall sum
-</TT></PRE><P>For number-driven <em>for</em> statements, if the ending limit is 
-smaller 
-than the beginning limit (larger in the case of negative steps) the action 
-statement is not executed at all. The iterative variable is local to the 
-<em>for</em> statement, and does not affect the value of an identifier with 
-the same name. For list-driven <em>for</em> statements, if the list is 
-empty, the action statement is not executed, but no error occurs. 
-<P>
-<P>
-You can use nested <em>for</em> statements, with the inner <em>for</em> 
-statement after the action keyword. You must make sure that your inner 
-statement returns an expression that the outer statement can handle. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  For number-driven <em>for</em> statements, if the ending limit is smaller than
+  the beginning limit (larger in the case of negative steps) the action
+  statement is not executed at all. The iterative variable is local to the
+  <em>for</em> statement, and does not affect the value of an identifier with
+  the same name. For list-driven <em>for</em> statements, if the list is empty,
+  the action statement is not executed, but no error occurs.
+</p>
+
+<p></p>
+<p>
+  You can use nested <em>for</em> statements, with the inner
+  <em>for</em> statement after the action keyword. You must make sure that your
+  inner statement returns an expression that the outer statement can handle.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

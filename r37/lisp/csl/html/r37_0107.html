@@ -1,37 +1,42 @@
+<a name="TIMES"> <title>TIMES</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>TIMES</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=TIMES>
+<p></p>
+<p>
+  The <em>times</em> operator is an infix or prefix n-ary multiplication
+  operator. It is identical to <em>*</em>.
+</p>
 
-<TITLE>TIMES</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p>
+  &lt;expression&gt; <em>times</em> &lt;expression&gt; {<em>times</em>
+  &lt;express ion&gt;}*
+</p>
 
+<p></p>
+<p>
+  or <em>times</em>(&lt;expression&gt;,&lt;expression&gt;
+  {,&lt;expression&gt;}*)
+</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;expression&gt; can be any valid REDUCE scalar or matrix expression. Matrix
+  expressions must be of the correct dimensions. Compatible scalar and matrix
+  expressions can be mixed.
+</p>
 
-<B>TIMES</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-The <em>times</em> operator is an infix or prefix n-ary multiplication 
-operator. It is identical to <em>*</em>. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-&lt;expression&gt; <em>times</em> &lt;expression&gt; {<em>times</em> &lt;express
-ion&gt;}* 
-<P>
-<P>
-or <em>times</em>(&lt;expression&gt;,&lt;expression&gt; {,&lt;expression&gt;}*) 
-
-<P>
-<P>
-<P>
-&lt;expression&gt; can be any valid REDUCE scalar or matrix expression. 
-Matrix expressions must be of the correct dimensions. Compatible scalar 
-and matrix expressions can be mixed. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 var1 times var2; 
 
   VAR1*VAR2 
@@ -56,4 +61,5 @@ aa times bb times 5;
   [            ]
   [0  15*X  5*X]
 
-</TT></PRE><P>
+</TT></PRE>
+<p></p>

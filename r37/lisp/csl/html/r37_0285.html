@@ -1,27 +1,27 @@
+<a name="EXPANDLOGS"> <title>EXPANDLOGS</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>EXPANDLOGS</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>switch</b></p>
 
-<A NAME=EXPANDLOGS>
+<p></p>
+<p></p>
 
-<TITLE>EXPANDLOGS</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  In many cases it is desirable to expand product arguments of logarithms, or
+  collect a sum of logarithms into a single logarithm. Since these are inverse
+  operations, it is not possible to provide rules for doing both at the same
+  time and preserve the REDUCE concept of idempotent evaluation. As an
+  alternative, REDUCE provides two switches <em>expandlogs</em> and
 
+  <a href="r37_0272.html">combinelogs</a> to carry out these operations. Both
+  are of f by default.
+</p>
 
-
-<B>EXPANDLOGS</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>switch</B><P>
-<P>
- 
- <P>
-<P>
-In many cases it is desirable to expand product arguments of logarithms, 
-or collect a sum of logarithms into a single logarithm. Since these are 
-inverse operations, it is not possible to provide rules for doing both at 
-the same time and preserve the REDUCE concept of idempotent evaluation. 
-As an alternative, REDUCE provides two switches <em>expandlogs</em> and 
-
-<A HREF=r37_0272.html>combinelogs</A> to carry out these operations. Both are of
-f by default. 
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 on expandlogs; 
 
 log(x*y); 
@@ -35,12 +35,16 @@ ws;
 
   LOG(X*Y)
 
-</TT></PRE><P><P>
-<P>
-At the present time, it is possible to have both switches on at once, 
-which could lead to infinite recursion. However, an expression is 
-switched from one form to the other in this case. Users should not rely 
-on this behavior, since it may change in the next release. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p></p>
+<p></p>
+<p>
+  At the present time, it is possible to have both switches on at once, which
+  could lead to infinite recursion. However, an expression is switched from one
+  form to the other in this case. Users should not rely on this behavior, since
+  it may change in the next release.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

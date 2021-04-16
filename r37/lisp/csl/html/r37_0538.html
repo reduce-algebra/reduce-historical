@@ -1,28 +1,27 @@
+<a name="taylorcombine"> <title>taylorcombine</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>TAYLORCOMBINE</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=taylorcombine>
+<p></p>
+<p>
+  This operator tries to combine all Taylor kernels found in its argument into
+  one. Operations currently possible are:
+</p>
 
-<TITLE>taylorcombine</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>_ _ _ Addition, subtraction, multiplication, and division.</p>
 
+<p>_ _ _ Roots, exponentials, and logarithms.</p>
 
+<p>_ _ _ Trigonometric and hyperbolic functions and their inverses.</p>
 
-<B>TAYLORCOMBINE</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
- This operator tries to combine all Taylor kernels found in its 
- argument into one. Operations currently possible are: 
- <P>
-<P>
- _ _ _ Addition, subtraction, multiplication, and division. 
- <P>
- _ _ _ Roots, exponentials, and logarithms. 
- <P>
- _ _ _ Trigonometric and hyperbolic functions and their inverses. 
- <P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
     hugo := taylor(exp(x),x,0,2); 
 
                   1  2      3
@@ -51,34 +50,40 @@ examples: </H3>
   1 + 2*X + -*X  + O(X )  
             2
 
-</TT></PRE><P>Application of unary operators like <em>log</em> and <em>atan</em>
- 
- will nearly always succeed. For binary operations their arguments 
- have to be Taylor kernels with the same template. This means that 
- the expansion variable and the expansion point must match. 
- Expansion order is not so important, different order usually means 
- that one of them is truncated before doing the operation. 
-<P>
-<P>
-If 
-<A HREF=r37_0539.html>taylorkeeporiginal</A> is set to <em>on</em> and if all 
- Taylor kernels in its argument have their original expressions 
- kept <em>taylorcombine</em> will also combine these and store the 
- result as the original expression of the resulting Taylor kernel. 
- There is also the switch 
-<A HREF=r37_0537.html>taylorautoexpand</A>. 
-<P>
-<P>
-There are a few restrictions to avoid mathematically undefined 
- expressions: it is not possible to take the logarithm of a Taylor 
- kernel which has no terms (i.e. is zero), or to divide by such a 
- beast. There are some provisions made to detect singularities 
- during expansion: poles that arise because the denominator has 
- zeros at the expansion point are detected and properly treated, 
- i.e. the Taylor kernel will start with a negative power. (This 
- is accomplished by expanding numerator and denominator separately 
- and combining the results.) Essential singularities of the known 
- functions (see above) are handled correctly. 
- <P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  Application of unary operators like <em>log</em> and <em>atan</em>
+
+  will nearly always succeed. For binary operations their arguments have to be
+  Taylor kernels with the same template. This means that the expansion variable
+  and the expansion point must match. Expansion order is not so important,
+  different order usually means that one of them is truncated before doing the
+  operation.
+</p>
+
+<p></p>
+<p>
+  If
+  <a href="r37_0539.html">taylorkeeporiginal</a> is set to <em>on</em> and if
+  all Taylor kernels in its argument have their original expressions kept
+  <em>taylorcombine</em> will also combine these and store the result as the
+  original expression of the resulting Taylor kernel. There is also the switch
+  <a href="r37_0537.html">taylorautoexpand</a>.
+</p>
+
+<p></p>
+<p>
+  There are a few restrictions to avoid mathematically undefined expressions: it
+  is not possible to take the logarithm of a Taylor kernel which has no terms
+  (i.e. is zero), or to divide by such a beast. There are some provisions made
+  to detect singularities during expansion: poles that arise because the
+  denominator has zeros at the expansion point are detected and properly
+  treated, i.e. the Taylor kernel will start with a negative power. (This is
+  accomplished by expanding numerator and denominator separately and combining
+  the results.) Essential singularities of the known functions (see above) are
+  handled correctly.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

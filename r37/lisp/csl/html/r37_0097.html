@@ -1,40 +1,43 @@
+<a name="PLUS"> <title>PLUS</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>PLUS</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=PLUS>
+<p></p>
+<p>
+  The <em>plus</em> operator is both an infix and prefix n-ary addition
+  operator. It exists because of the way in which REDUCE handles such operators
+  internally, and is not recommended for use in algebraic mode programming.
+  <a href="r37_0027.html">plussign</a>, which has the identical effect, should
+  be used instead.
+</p>
 
-<TITLE>PLUS</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p>
+  <em>plus</em>(&lt;expression&gt;,&lt;expression&gt;{,&lt;expression&gt;} *) or
+</p>
 
+<p></p>
+<p>
+  &lt;expression&gt; <em>plus</em> &lt;expression&gt; {<em>plus</em>
+  &lt;expressio n&gt;}*
+</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;expression&gt; can be any valid REDUCE expression, including matrix
+  expressions of the same dimensions.
+</p>
 
-<B>PLUS</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-The <em>plus</em> operator is both an infix and prefix n-ary addition 
-operator. It exists because of the way in which REDUCE handles such 
-operators internally, and is not recommended for use in algebraic mode 
-programming. 
-<A HREF=r37_0027.html>plussign</A>, which has the identical effect, should be 
-used instead. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>plus</em>(&lt;expression&gt;,&lt;expression&gt;{,&lt;expression&gt;} 
-*) or 
-<P>
-<P>
-&lt;expression&gt; <em>plus</em> &lt;expression&gt; {<em>plus</em> &lt;expressio
-n&gt;}* 
-<P>
-<P>
-<P>
-&lt;expression&gt; can be any valid REDUCE expression, including matrix 
-expressions of the same dimensions. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 a plus b plus c plus d; 
 
   A + B + C + D 
@@ -53,4 +56,5 @@ plus(x**2,y**2);
    2    2
   X  + Y
 
-</TT></PRE><P>
+</TT></PRE>
+<p></p>

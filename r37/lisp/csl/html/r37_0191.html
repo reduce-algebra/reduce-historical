@@ -1,33 +1,33 @@
+<a name="DEFINE"> <title>DEFINE</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>DEFINE</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>command</b></p>
 
-<A NAME=DEFINE>
+<p></p>
+<p>
+  The command <em>define</em> allows you to supply a new name for an identifier
+  or replace it by any valid REDUCE expression.
+</p>
 
-<TITLE>DEFINE</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>define</em>&lt;identifier&gt;<em>=</em>&lt;substitution&gt;
+{<em>,</em>&lt;identifier&gt;<em>=</em>&lt;substitution&gt;}*
+<p></p>
+<p></p>
+<p>
+  &lt;identifier&gt; is any valid REDUCE identifier, &lt;substitution&gt; can be
+  a number, an identifier, an operator, a reserved word, or an expression.
+</p>
 
-
-
-<B>DEFINE</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>command</B><P>
-<P>
- 
-The command <em>define</em> allows you to supply a new name for an identifier 
-or replace it by any valid REDUCE expression. 
-<P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>define</em>&lt;identifier&gt;<em>=</em>&lt;substitution&gt; 
- {<em>,</em>&lt;identifier&gt;<em>=</em>&lt;substitution&gt;}* 
-<P>
-<P>
-<P>
-&lt;identifier&gt; is any valid REDUCE identifier, &lt;substitution&gt; can be a
- 
-number, an identifier, an operator, a reserved word, or an expression. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 
 define is= :=, xx=y+z; 
 
@@ -49,11 +49,14 @@ xx := 10;
 
   Y + Z := 10
 
-</TT></PRE><P>The renaming is done at the input level, and therefore takes prece
-dence 
-over any other replacement or substitution declared for the same identifier. 
-It remains in effect until the end of the REDUCE session. Be careful with 
-it, since you cannot easily undo it without ending the session. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  The renaming is done at the input level, and therefore takes prece dence over
+  any other replacement or substitution declared for the same identifier. It
+  remains in effect until the end of the REDUCE session. Be careful with it,
+  since you cannot easily undo it without ending the session.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

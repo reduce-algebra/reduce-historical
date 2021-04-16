@@ -1,39 +1,37 @@
+<a name="SHUT"> <title>SHUT</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>SHUT</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>command</b></p>
 
-<A NAME=SHUT>
+<p></p>
+<p></p>
 
-<TITLE>SHUT</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>The <em>shut</em> command closes output files.</p>
 
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>shut</em>&lt;filename&gt;{,&lt;filename&gt;}*</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;filename&gt; must have been a file opened by
+  <a href="r37_0233.html">out</a>.
+</p>
 
-<B>SHUT</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>command</B><P>
-<P>
- 
- <P>
-<P>
-The <em>shut</em> command closes output files. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>shut</em>&lt;filename&gt;{,&lt;filename&gt;}* 
-<P>
-<P>
-<P>
-&lt;filename&gt; must have been a file opened by 
-<A HREF=r37_0233.html>out</A>. 
-<P>
-<P>
-A file that has been opened by 
-<A HREF=r37_0233.html>out</A> must be <em>shut</em> before it is 
-brought in by 
-<A HREF=r37_0231.html>in</A>. Files that have been opened by <em>out</em> should
- 
-always be <em>shut</em> before the end of the REDUCE session, to avoid either 
-loss of information or the printing of extraneous information into the file. 
-In most systems, terminating a session by 
-<A HREF=r37_0124.html>bye</A> closes all open 
-output files. 
-<P>
-<P>
-<P>
+<p></p>
+<p>
+  A file that has been opened by
+  <a href="r37_0233.html">out</a> must be <em>shut</em> before it is brought in
+  by <a href="r37_0231.html">in</a>. Files that have been opened by
+  <em>out</em> should always be <em>shut</em> before the end of the REDUCE
+  session, to avoid either loss of information or the printing of extraneous
+  information into the file. In most systems, terminating a session by
+  <a href="r37_0124.html">bye</a> closes all open output files.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

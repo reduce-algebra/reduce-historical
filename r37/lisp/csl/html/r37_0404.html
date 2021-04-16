@@ -1,34 +1,32 @@
+<a name="gsplit"> <title>gsplit</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>GSPLIT</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=gsplit>
+<p></p>
+<p></p>
 
-<TITLE>gsplit</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>gsplit</em>(&lt;p&gt;[,&lt;vars&gt;]);
+<p></p>
+<p></p>
+<p>where &lt;p&gt; is a polynomial or a list of polynomials.</p>
 
+<p></p>
+<p>
+  The polynomial is reordered corresponding to the the current
+  <a href="r37_0353.html">term order</a> and then separated into leading term
+  and reductum. Result is a list with the leading term as first and the reductum
+  as second element.
+</p>
 
-
-<B>GSPLIT</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
- <P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>gsplit</em>(&lt;p&gt;[,&lt;vars&gt;]); 
-<P>
-<P>
-<P>
-where &lt;p&gt; is a polynomial or a list of polynomials. 
-<P>
-<P>
-The polynomial is reordered corresponding to the 
-the current 
-<A HREF=r37_0353.html>term order</A> and then 
-separated into leading term and reductum. Result is 
-a list with the leading term as first and the reductum 
-as second element. 
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 
   torder lex;
   
@@ -36,5 +34,7 @@ examples: </H3>
 
   {y**2,2y*x+x**2}
 
-</TT></PRE><P><P>
-<P>
+</TT></PRE>
+<p></p>
+<p></p>
+<p></p>

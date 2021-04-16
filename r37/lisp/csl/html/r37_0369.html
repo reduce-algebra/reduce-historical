@@ -1,47 +1,55 @@
+<a name="groebner_walk"> <title>groebner_walk</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>GROEBNER\_WALK</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=groebner_walk>
+<p></p>
+<p>
+  The operator <em>groebner_walk</em> computes a <em>lex</em> basis from a given
+  <em>graded</em> (or <em>weighted</em>) one.
+</p>
 
-<TITLE>groebner_walk</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>groebner_walk</em>(&lt;g&gt;)</p>
 
+<p></p>
+<p></p>
+<p>
+  where &lt;g&gt; is a <em>graded</em> basis (or <em>weighted</em> basis with a
+  weight vector with one repeated element) of the polynomial ideal.
+  <em>Groebner_walk</em> computes a sequence of monomial bases, each time
+  lifting the full system to a complete basis. <em>Groebner_walk</em> should be
+  called only in cases, where a normal <em>kex</em> computation would take too
+  much computer time.
+</p>
 
+<p></p>
+<p>
+  The operator
+  <a href="r37_0354.html">torder</a> has to be called before in order to define
+  the variable sequence and the term order mode of &lt;g&gt;.
+</p>
 
-<B>GROEBNER\_WALK</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-The operator <em>groebner_walk</em> computes a <em>lex</em> basis 
-from a given <em>graded</em> (or <em>weighted</em>) one. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>groebner_walk</em>(&lt;g&gt;) 
-<P>
-<P>
-<P>
-where &lt;g&gt; is a <em>graded</em> basis (or <em>weighted</em> basis 
-with a weight vector with one repeated element) of the polynomial ideal. 
-<em>Groebner_walk</em> computes a sequence of monomial bases, each 
-time lifting the full system to a complete basis. <em>Groebner_walk</em> 
-should be called only in cases, where a normal <em>kex</em> computation 
-would take too much computer time. 
-<P>
-<P>
-The operator 
-<A HREF=r37_0354.html>torder</A> has to be called before in order to 
-define the variable sequence and the term order mode of &lt;g&gt;. 
-<P>
-<P>
-The variable 
-<A HREF=r37_0371.html>gvarslast</A> is not set. 
-<P>
-<P>
-Do not call <em>groebner_walk</em> with <em>on</em> 
-<A HREF=r37_0370.html>groebopt</A>. 
-<P>
-<P>
-<em>Groebner_walk</em>includes some overhead (such as e. g. 
-computation with division). On the other hand, sometimes 
-<em>groebner_walk</em> is faster than a direct <em>lex</em> computation. 
-<P>
-<P>
+<p></p>
+<p>
+  The variable
+  <a href="r37_0371.html">gvarslast</a> is not set.
+</p>
+
+<p></p>
+<p>
+  Do not call <em>groebner_walk</em> with <em>on</em>
+  <a href="r37_0370.html">groebopt</a>.
+</p>
+
+<p></p>
+<p>
+  <em>Groebner_walk</em>includes some overhead (such as e. g. computation with
+  division). On the other hand, sometimes <em>groebner_walk</em> is faster than
+  a direct <em>lex</em> computation.
+</p>
+
+<p></p>
+<p></p>

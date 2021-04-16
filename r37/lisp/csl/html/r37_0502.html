@@ -1,31 +1,29 @@
+<a name="LaguerreP"> <title>LaguerreP</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>LAGUERREP</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=LaguerreP>
+<p></p>
+<p>
+  The <em>LaguerreP</em> operator computes the nth Laguerre Polynomial. The two
+  argument call of LaguerreP is a (common) abbreviation of LaguerreP(n,0,x).
+</p>
 
-<TITLE>LaguerreP</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>LaguerreP</em>(&lt;integer&gt;,&lt;expression&gt;) or
+<p></p>
+<p><em>LaguerreP</em>(&lt;integer&gt;,&lt;expression&gt;,&lt;expression&gt;)</p>
 
-
-
-<B>LAGUERREP</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-The <em>LaguerreP</em> operator computes the nth Laguerre Polynomial. 
-The two argument call of LaguerreP is a (common) abbreviation of 
-LaguerreP(n,0,x). 
-<P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>LaguerreP</em>(&lt;integer&gt;,&lt;expression&gt;) or 
-<P>
-<P>
-<em>LaguerreP</em>(&lt;integer&gt;,&lt;expression&gt;,&lt;expression&gt;) 
-<P>
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 LaguerreP(3,xx); 
 
        3        2
@@ -37,14 +35,17 @@ LaguerreP(2,3,4);
 
   -2
 
-</TT></PRE><P>Laguerre polynomials are computed using the recurrence relation: 
-<P>
-<P>
-LaguerreP(n,a,x) := (2n+a-1-x)/n*LaguerreP(n-1,a,x) - 
- (n+a-1) * LaguerreP(n-2,a,x) with 
-<P>
-<P>
-LaguerreP(0,a,x) := 1 and LaguerreP(2,a,x) := -x+1+a 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>Laguerre polynomials are computed using the recurrence relation:</p>
+<p></p>
+<p>
+  LaguerreP(n,a,x) := (2n+a-1-x)/n*LaguerreP(n-1,a,x) - (n+a-1) *
+  LaguerreP(n-2,a,x) with
+</p>
+
+<p></p>
+<p>LaguerreP(0,a,x) := 1 and LaguerreP(2,a,x) := -x+1+a</p>
+
+<p></p>
+<p></p>
+<p></p>

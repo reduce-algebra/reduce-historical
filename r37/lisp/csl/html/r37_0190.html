@@ -1,32 +1,31 @@
+<a name="CLEARRULES"> <title>CLEARRULES</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>CLEARRULES</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>command</b></p>
 
-<A NAME=CLEARRULES>
+<p></p>
+<p></p>
 
-<TITLE>CLEARRULES</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>clearrules</em>&lt;list&gt;{,&lt;list&gt;}+
+<p></p>
+<p></p>
+<p>
+  The operator <em>clearrules</em> is used to remove previously defined
 
+  <a href="r37_0060.html">rule</a> lists from the system. &lt;list&gt; can be an
+  exp licit rule list, or evaluate to a rule list.
+</p>
 
-
-<B>CLEARRULES</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>command</B><P>
-<P>
- 
- <P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>clearrules</em>&lt;list&gt;{,&lt;list&gt;}+ 
-<P>
-<P>
-<P>
-The operator <em>clearrules</em> is used to remove previously defined 
-
-<A HREF=r37_0060.html>rule</A> lists from the system. &lt;list&gt; can be an exp
-licit rule 
-list, or evaluate to a rule list. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 trig1 := {cos(~x)*cos(~y) =&gt; (cos(x+y)+cos(x-y))/2,
           cos(~x)*sin(~y) =&gt; (sin(x+y)-sin(x-y))/2,
           sin(~x)*sin(~y) =&gt; (cos(x-y)-cos(x+y))/2,
@@ -46,4 +45,5 @@ cos(a)*cos(b);
 
   COS(A)*COS(B)
 
-</TT></PRE><P>
+</TT></PRE>
+<p></p>

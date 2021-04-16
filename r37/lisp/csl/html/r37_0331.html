@@ -1,26 +1,25 @@
+<a name="SAVESTRUCTR"> <title>SAVESTRUCTR</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>SAVESTRUCTR</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>switch</b></p>
 
-<A NAME=SAVESTRUCTR>
+<p></p>
+<p></p>
 
-<TITLE>SAVESTRUCTR</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  When <em>savestructr</em> is on, results of the
+  <a href="r37_0181.html">structr</a> command are returned as a list whose first
+  element is the representation for the expression and the remaining elements
+  are equations showing the relationships of the generated variables.
+</p>
 
-
-
-<B>SAVESTRUCTR</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>switch</B><P>
-<P>
- 
- <P>
-<P>
-When <em>savestructr</em> is on, results of the 
-<A HREF=r37_0181.html>structr</A> command are 
-returned as a list whose first element is the representation for the 
-expression and the remaining elements are equations showing the 
-relationships of the generated variables. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 off exp; 
 
 structr((x+y)^3 + sin(x)^2); 
@@ -51,17 +50,20 @@ ans3 where rest ws;
          3         2
   (X + Y)  + SIN(X)
 
-</TT></PRE><P>In normal operation, 
-<A HREF=r37_0181.html>structr</A> is only a display command. With 
-<em>savestructr</em> on, you can access the various parts of the expression 
-produced by <em>structr</em>. 
-<P>
-<P>
-The generic system names use the stem <em>ANS</em>. You can change this to your 
+</TT></PRE>
+<p>
+  In normal operation, <a href="r37_0181.html">structr</a> is only a display
+  command. With <em>savestructr</em> on, you can access the various parts of the
+  expression produced by <em>structr</em>.
+</p>
 
-own stem by the command 
-<A HREF=r37_0225.html>varname</A>. REDUCE adds integers to this stem 
-to make unique identifiers. 
-<P>
-<P>
-<P>
+<p></p>
+<p>
+  The generic system names use the stem <em>ANS</em>. You can change this to
+  your own stem by the command <a href="r37_0225.html">varname</a>. REDUCE adds
+  integers to this stem to make unique identifiers.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

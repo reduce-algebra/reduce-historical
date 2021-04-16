@@ -1,32 +1,30 @@
+<a name="group"> <title>group</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b><<</b> _ _ _ <b>GROUP</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>command</b></p>
 
-<A NAME=group>
+<p></p>
+<p>
+  The <em>&lt;&lt;</em>...<em>&gt;&gt;</em> command is a group statement, used
+  to group statements together where REDUCE expects a single statement.
+</p>
 
-<TITLE>group</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>&lt;&lt;</em>&lt;statement&gt;{; &lt;statement&gt;
+<em>or</em> &lt;statement&gt;}* <em>&gt;&gt;</em>
+<p></p>
+<p></p>
+<p>&lt;statement&gt; may be any valid REDUCE statement or expression.</p>
 
-
-
-<B><<</B> _ _ _ <B>GROUP</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>command</B><P>
-<P>
- 
-The <em>&lt;&lt;</em>...<em>&gt;&gt;</em> command is a group statement, 
-used to group statements 
-together where REDUCE expects a single statement. 
-<P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>&lt;&lt;</em>&lt;statement&gt;{; &lt;statement&gt; <em>or</em> 
- &lt;statement&gt;}* <em>&gt;&gt;</em> 
-<P>
-<P>
-<P>
-&lt;statement&gt; may be any valid REDUCE statement or expression. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 a := 2; 
 
   A := 2 
@@ -46,21 +44,22 @@ if a &lt; 5 then &lt;&lt;b := a + 10; write b&gt;&gt;;
   ----------------
         225
 
-</TT></PRE><P>The value returned from a group statement is the value of the last
- 
-individual statement executed inside it. Note that when a semicolon is 
-placed between the last statement and the closing brackets, 0 or 
- nil is returned. Group statements are often used in the 
-consequence portions of 
-<A HREF=r37_0052.html>if</A>...<em>then</em>, 
+</TT></PRE>
+<p>
+  The value returned from a group statement is the value of the last individual
+  statement executed inside it. Note that when a semicolon is placed between the
+  last statement and the closing brackets, 0 or nil is returned. Group
+  statements are often used in the consequence portions of
+  <a href="r37_0052.html">if</a>...<em>then</em>,
 
-<A HREF=r37_0056.html>repeat</A>...<em>until</em>, and 
+  <a href="r37_0056.html">repeat</a>...<em>until</em>, and
 
-<A HREF=r37_0228.html>while</A>...<em>do</em> 
-clauses. They may also be used in interactive 
-operation to execute several statements at one time. Statements inside 
-the group statement are separated by semicolons or dollar signs. 
-<P>
-<P>
-<P>
-<P>
+  <a href="r37_0228.html">while</a>...<em>do</em> clauses. They may also be used
+  in interactive operation to execute several statements at one time. Statements
+  inside the group statement are separated by semicolons or dollar signs.
+</p>
+
+<p></p>
+<p></p>
+<p></p>
+<p></p>
