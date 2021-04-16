@@ -35,33 +35,33 @@
 <p></p>
 <pre><TT>
 
-liss := a . {}; 
+liss := a . {};
 
-  LISS := {A} 
-
-
-liss := b . liss; 
-
-  LISS := {B,A} 
+  LISS := {A}
 
 
-newliss := liss . liss; 
+liss := b . liss;
 
-  NEWLISS := {{B,A},B,A} 
-
-
-firstlis := a . b . {c}; 
-
-  FIRSTLIS := {A,B,C} 
+  LISS := {B,A}
 
 
-secondlis := x . y . {z}; 
+newliss := liss . liss;
 
-  SECONDLIS := {X,Y,Z} 
+  NEWLISS := {{B,A},B,A}
+
+
+firstlis := a . b . {c};
+
+  FIRSTLIS := {A,B,C}
+
+
+secondlis := x . y . {z};
+
+  SECONDLIS := {X,Y,Z}
 
 
 for i := 1:3 sum part(firstlis,i)*part(secondlis,i);
- 
+
 
 
   A*X + B*Y + C*Z

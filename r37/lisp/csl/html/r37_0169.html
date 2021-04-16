@@ -34,53 +34,53 @@
 <h3>examples:</h3>
 <p></p>
 <pre><TT>
-part((x + y)**5,4); 
+part((x + y)**5,4);
 
       2  3
-  10*X *Y  
+  10*X *Y
 
 
-part((x + y)**5,4,2); 
+part((x + y)**5,4,2);
 
    2
-  X  
+  X
 
 
-part((x + y)**5,4,2,1); 
+part((x + y)**5,4,2,1);
 
-  X 
-
-
-part((x + y)**5,0); 
-
-  PLUS 
+  X
 
 
-part((x + y)**5,-5); 
+part((x + y)**5,0);
+
+  PLUS
+
+
+part((x + y)**5,-5);
 
         4
-  5*X *Y  
+  5*X *Y
 
 
-part((x + y)**5,4) := sin(x); 
+part((x + y)**5,4) := sin(x);
 
    5      4         3  2                 4    5
-  X  + 5*X *Y + 10*X *Y  + SIN(X) + 5*X*Y  + Y  
+  X  + 5*X *Y + 10*X *Y  + SIN(X) + 5*X*Y  + Y
 
 
-alist := {x,y,{aa,bb,cc},x**2*sqrt(y)}; 
+alist := {x,y,{aa,bb,cc},x**2*sqrt(y)};
 
 
                                         2
-  			 ALIST := {X,Y,{AA,BB,CC},SQRT(Y)*X } 
+  			 ALIST := {X,Y,{AA,BB,CC},SQRT(Y)*X }
 
 
-part(alist,3,2); 
+part(alist,3,2);
 
-  BB 
+  BB
 
 
-part(alist,4,0); 
+part(alist,4,0);
 
   TIMES
 

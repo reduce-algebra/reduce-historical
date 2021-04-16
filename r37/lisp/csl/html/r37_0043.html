@@ -31,28 +31,28 @@
 <p></p>
 <pre><TT>
 
-liss := cons(a,{b}); 
+liss := cons(a,{b});
 
-  {A,B} 
+  {A,B}
 
 
 
-liss := c cons liss; 
+liss := c cons liss;
 
-  {C,A,B} 
+  {C,A,B}
 
 
 
 newliss := for each y in liss collect cons(y,list x);
- 
 
 
-  NEWLISS := {{C,X},{A,X},{B,X}} 
+
+  NEWLISS := {{C,X},{A,X},{B,X}}
 
 
 
 for each y in newliss sum (first y)*(second y);
- 
+
 
 
   X*(A + B + C)

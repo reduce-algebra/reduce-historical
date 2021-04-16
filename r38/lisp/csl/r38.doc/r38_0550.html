@@ -247,7 +247,7 @@ on rounded;
 
 w:=for j:=1:200 collect {1/j*sin j,1/j*cos j,j/200}$
 
-plot w; 
+plot w;
 </tt></pre>
 <p>
   Additional control of the <em>plot</em> operation:
@@ -1460,7 +1460,7 @@ E"
 <p></p>
 <pre><tt>
 
-add_columns(A,1,2,x); 
+add_columns(A,1,2,x);
 
   [1   x + 2   3]
   [             ]
@@ -1470,7 +1470,7 @@ add_columns(A,1,2,x);
 
 
 
-add_rows(A,2,3,5); 
+add_rows(A,2,3,5);
 
   [1   2   3 ]
   [          ]
@@ -1571,7 +1571,7 @@ E"
 <p></p>
 <pre><tt>
 
-add_to_columns(A,{1,2},10); 
+add_to_columns(A,{1,2},10);
 
   [11  12  3]
   [         ]
@@ -1581,9 +1581,9 @@ add_to_columns(A,{1,2},10);
 
 
 
-add_to_rows(A,2,-x) 
+add_to_rows(A,2,-x)
 
-   
+
   [   1         2         3    ]
   [                            ]
   [ - x + 4   - x + 5   - x + 6]
@@ -1679,9 +1679,9 @@ E"
 <p></p>
 <pre><tt>
 
-augment_columns(A,{1,2}) 
+augment_columns(A,{1,2})
 
-   
+
   [1  2]
   [    ]
   [4  5]
@@ -1690,7 +1690,7 @@ augment_columns(A,{1,2})
 
 
 
-stack_rows(A,{1,3}) 
+stack_rows(A,{1,3})
 
   [1  2  3]
   [       ]
@@ -1757,7 +1757,7 @@ E"
 <p></p>
 <pre><tt>
 
-band_matrix({x,y,z},6) 
+band_matrix({x,y,z},6)
 
   [y  z  0  0  0  0]
   [                ]
@@ -1820,7 +1820,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-B := make_identity(2); 
+B := make_identity(2);
 
        [1  0]
   b := [    ]
@@ -1828,7 +1828,7 @@ B := make_identity(2);
 
 
 
-C := mat((5),(5)); 
+C := mat((5),(5));
 
        [5]
   c := [ ]
@@ -1836,7 +1836,7 @@ C := mat((5),(5));
 
 
 
-D := mat((22,33),(44,55)); 
+D := mat((22,33),(44,55));
 
        [22  33]
   d := [      ]
@@ -1844,7 +1844,7 @@ D := mat((22,33),(44,55));
 
 
 
-block_matrix(2,3,{B,C,D,D,C,B}); 
+block_matrix(2,3,{B,C,D,D,C,B});
 
 
   [1   0   5  22  33]
@@ -1904,7 +1904,7 @@ E"
 <p></p>
 <pre><tt>
 
-char_matrix(A,x); 
+char_matrix(A,x);
 
   [x - 1   -2     -3  ]
   [                   ]
@@ -1961,7 +1961,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-char_poly(A,x); 
+char_poly(A,x);
 
    3     2
   x -15*x -18*x
@@ -2015,7 +2015,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-F := mat((1,1,0),(1,3,1),(0,1,1)); 
+F := mat((1,1,0),(1,3,1),(0,1,1));
 
 
        [1  1  0]
@@ -2026,9 +2026,9 @@ F := mat((1,1,0),(1,3,1),(0,1,1));
 
 
 
-on rounded; 
+on rounded;
 
-cholesky(F); 
+cholesky(F);
 
   {
    [1        0               0       ]
@@ -2099,7 +2099,7 @@ E"
 <p></p>
 <pre><tt>
 
-coeff_matrix({x+y+4*z=10,y+x-z=20,x+y+4}); 
+coeff_matrix({x+y+4*z=10,y+x-z=20,x+y+4});
 
 
   {
@@ -2166,14 +2166,14 @@ E"
 <p></p>
 <pre><tt>
 
-column_dim(A); 
+column_dim(A);
 
-  3 
+  3
 
 
-row_dim(A); 
+row_dim(A);
 
-  3 
+  3
 
 </tt></pre>
 <p>
@@ -2234,7 +2234,7 @@ E"
 <p></p>
 <pre><tt>
 
-companion(x^4+17*x^3-9*x^2+11,x); 
+companion(x^4+17*x^3-9*x^2+11,x);
 
 
   [0  0  0  -11]
@@ -2297,9 +2297,9 @@ E"
 <p></p>
 <h3>examples:</h3>
 <p></p>
-<pre><tt> 
+<pre><tt>
 
-G := mat((0,0,0,0,0),(0,0,0,0,0),(0,0,0,0,0),(0,0,0,0,0),(0,0,0,0,0)); 
+G := mat((0,0,0,0,0),(0,0,0,0,0),(0,0,0,0,0),(0,0,0,0,0),(0,0,0,0,0));
 
 
        [0  0  0  0  0]
@@ -2314,7 +2314,7 @@ G := mat((0,0,0,0,0),(0,0,0,0,0),(0,0,0,0,0),(0,0,0,0,0),(0,0,0,0,0));
 
 
 
-copy_into(A,G,1,2); 
+copy_into(A,G,1,2);
 
   [0  1  2  3  0]
   [             ]
@@ -2388,7 +2388,7 @@ E"
 <p></p>
 <pre><tt>
 
-H := mat((66,77),(88,99)); 
+H := mat((66,77),(88,99));
 
        [66  77]
   h := [      ]
@@ -2396,7 +2396,7 @@ H := mat((66,77),(88,99));
 
 
 
-diagonal({A,x,H}); 
+diagonal({A,x,H});
 
   [1  2  3  0  0   0 ]
   [                  ]
@@ -2471,7 +2471,7 @@ E"
 <p></p>
 <pre><tt>
 
-extend(A,1,2,x); 
+extend(A,1,2,x);
 
   [1  2  3  x  x]
   [             ]
@@ -2543,7 +2543,7 @@ E"
 <p></p>
 <pre><tt>
 
-C := companion(x^4+17*x^3-9*x^2+11,x); 
+C := companion(x^4+17*x^3-9*x^2+11,x);
 
 
        [0  0  0  -11]
@@ -2556,7 +2556,7 @@ C := companion(x^4+17*x^3-9*x^2+11,x);
 
 
 
-find_companion(C,x); 
+find_companion(C,x);
 
    4     3    2
   x +17*x -9*x +11
@@ -2621,7 +2621,7 @@ E"
 <p></p>
 <pre><tt>
 
-get_columns(A,{1,3}); 
+get_columns(A,{1,3});
 
   {
    [1]
@@ -2639,7 +2639,7 @@ get_columns(A,{1,3});
 
 
 
-get_rows(A,2); 
+get_rows(A,2);
 
   {
    [4  5  6]
@@ -2732,14 +2732,14 @@ E"
 <p></p>
 <pre><tt>
 
-gram_schmidt({{1,0,0},{1,1,0},{1,1,1}}); 
+gram_schmidt({{1,0,0},{1,1,0},{1,1,1}});
 
 
-  {{1,0,0},{0,1,0},{0,0,1}} 
+  {{1,0,0},{0,1,0},{0,0,1}}
 
 
 
-gram_schmidt({{1,2},{3,4}}); 
+gram_schmidt({{1,2},{3,4}});
 
 
         1         2        2*sqrt(5)   -sqrt(5)
@@ -2797,7 +2797,7 @@ E"
 <p></p>
 <pre><tt>
 
-J := mat((i+1,i+2,i+3),(4,5,2),(1,i,0)); 
+J := mat((i+1,i+2,i+3),(4,5,2),(1,i,0));
 
 
        [i + 1  i + 2  i + 3]
@@ -2808,7 +2808,7 @@ J := mat((i+1,i+2,i+3),(4,5,2),(1,i,0));
 
 
 
-hermitian_tp(j); 
+hermitian_tp(j);
 
   [ - i + 1  4   1  ]
   [                 ]
@@ -2880,7 +2880,7 @@ E"
 <p></p>
 <pre><tt>
 
-hessian(x*y*z+x^2,{w,x,y,z}); 
+hessian(x*y*z+x^2,{w,x,y,z});
 
   [0  0  0  0]
   [          ]
@@ -2946,7 +2946,7 @@ E"
 <p></p>
 <pre><tt>
 
-hilbert(3,y+x); 
+hilbert(3,y+x);
 
   [    - 1          - 1          - 1    ]
   [-----------  -----------  -----------]
@@ -3024,8 +3024,8 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
- 
-jacobian({x^4,x*y^2,x*y*z^3},{w,x,y,z}); 
+
+jacobian({x^4,x*y^2,x*y*z^3},{w,x,y,z});
 
 
   [      3                 ]
@@ -3101,7 +3101,7 @@ E"
 <p></p>
 <pre><tt>
 
-jordan_block(x,5); 
+jordan_block(x,5);
 
   [x  1  0  0  0]
   [             ]
@@ -3180,7 +3180,7 @@ E"
 <p></p>
 <pre><tt>
 
-K := mat((1,3,5),(-4,3,7),(8,6,4)); 
+K := mat((1,3,5),(-4,3,7),(8,6,4));
 
 
        [1   3  5]
@@ -3193,7 +3193,7 @@ K := mat((1,3,5),(-4,3,7),(8,6,4));
 
 on rounded;
 
-lu :=  lu_decom(K); 
+lu :=  lu_decom(K);
 
   lu := {
          [8    0      0  ]
@@ -3212,7 +3212,7 @@ lu :=  lu_decom(K);
 
 
 
-first lu * second lu; 
+first lu * second lu;
 
   [8   6.0  4.0]
   [            ]
@@ -3222,9 +3222,9 @@ first lu * second lu;
 
 
 
-convert(K,third lu); 
+convert(K,third lu);
 
-  P := mat((i+1,i+2,i+3),(4,5,2),(1,i,0));  _ _ _ 
+  P := mat((i+1,i+2,i+3),(4,5,2),(1,i,0));  _ _ _
        [i + 1  i + 2  i + 3]
        [                   ]
   p := [  4      5      2  ]
@@ -3232,7 +3232,7 @@ convert(K,third lu);
        [  1      i      0  ]
 
 
-lu :=  lu_decom(P); 
+lu :=  lu_decom(P);
 
   lu := {
          [  1        0                      0                ]
@@ -3251,7 +3251,7 @@ lu :=  lu_decom(P);
 
 
 
-first lu * second lu; 
+first lu * second lu;
 
   [  1      i       0   ]
   [                     ]
@@ -3261,7 +3261,7 @@ first lu * second lu;
 
 
 
-convert(P,third lu); 
+convert(P,third lu);
 
   [  1      i      0  ]
   [                   ]
@@ -3321,7 +3321,7 @@ E"
 <p></p>
 <pre><tt>
 
-make_identity(4); 
+make_identity(4);
 
   [1  0  0  0]
   [          ]

@@ -38,19 +38,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-rad2dms 1; 
+rad2dms 1;
 
-  RAD2DMS(1) 
-
-
-on rounded; 
-
-ws; 
-
-  {57,17,44.8062470964} 
+  RAD2DMS(1)
 
 
-rad2dms a; 
+on rounded;
+
+ws;
+
+  {57,17,44.8062470964}
+
+
+rad2dms a;
 
   RAD2DMS(A)
 
@@ -87,14 +87,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-recip a; 
+recip a;
 
   1
-  - 
+  -
   A
 
 
-recip 2; 
+recip 2;
 
   1
   --
@@ -146,23 +146,23 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-remainder(13,6); 
+remainder(13,6);
 
-  1 
-
-
-remainder(x**2 + 3*x + 2,x+1); 
-
-  0  
+  1
 
 
-remainder(x**3 + 12*x + 4,x**2 + 1); 
+remainder(x**2 + 3*x + 2,x+1);
+
+  0
 
 
-  11*X + 4 
+remainder(x**3 + 12*x + 4,x**2 + 1);
 
 
-remainder(sin(2*x),x*y); 
+  11*X + 4
+
+
+remainder(sin(2*x),x*y);
 
   SIN(2*X)
 
@@ -220,17 +220,17 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-round 3.4; 
+round 3.4;
 
-  3 
-
-
-round 3.5; 
-
-  4 
+  3
 
 
-round a; 
+round 3.5;
+
+  4
+
+
+round a;
 
   ROUND(A)
 
@@ -281,43 +281,43 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-setmod 6; 
+setmod 6;
 
-  1 
-
-
-on modular; 
-
-16; 
-
-  4 
+  1
 
 
-x^2 + 5x + 7; 
+on modular;
+
+16;
+
+  4
+
+
+x^2 + 5x + 7;
 
    2
-  X  + 5*X + 1 
+  X  + 5*X + 1
 
 
-x/3; 
+x/3;
 
   X
-  - 
+  -
   3
 
 
-setmod 2; 
+setmod 2;
 
-  6 
+  6
 
 
-(x+1)^4; 
+(x+1)^4;
 
    4
-  X  + 1 
+  X  + 1
 
 
-x/3; 
+x/3;
 
   X
 
@@ -379,12 +379,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-        sign(-5) 
+        sign(-5)
 
   -1
 
 
-        sign(-a^2*b) 
+        sign(-a^2*b)
 
   -SIGN(B)
 
@@ -435,26 +435,26 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-sqrt(16*a^3); 
+sqrt(16*a^3);
 
-  4*SQRT(A)*A 
-
-
-sqrt(17); 
-
-  SQRT(17) 
+  4*SQRT(A)*A
 
 
-on rounded; 
+sqrt(17);
 
-sqrt(17); 
-
-  4.12310562562 
+  SQRT(17)
 
 
-off rounded; 
+on rounded;
 
-sqrt(a*b*c^5*d^3*27); 
+sqrt(17);
+
+  4.12310562562
+
+
+off rounded;
+
+sqrt(a*b*c^5*d^3*27);
 
                                              2
   3*SQRT(D)*SQRT(C)*SQRT(B)*SQRT(A)*SQRT(3)*C *D
@@ -533,23 +533,23 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-var1 times var2; 
+var1 times var2;
 
-  VAR1*VAR2 
-
-
-times(6,5); 
-
-  30 
+  VAR1*VAR2
 
 
-matrix aa,bb; 
+times(6,5);
 
-aa := mat((1),(2),(x))$ 
+  30
 
-bb := mat((0,3,1))$ 
 
-aa times bb times 5; 
+matrix aa,bb;
+
+aa := mat((1),(2),(x))$
+
+bb := mat((0,3,1))$
+
+aa times bb times 5;
 
   [0   15    5 ]
   [            ]
@@ -966,34 +966,34 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on rounded; 
+on rounded;
 
-a := 4; 
+a := 4;
 
-  A := 4 
+  A := 4
 
 
-b := 4.0; 
+b := 4.0;
 
-  B := 4.0 
+  B := 4.0
 
 
 if a equal b then write &quot;true&quot; else write &quot;false&quot;;
-			 
 
 
-  true 
+
+  true
 
 
 if a equal 5 then write &quot;true&quot; else write &quot;false&quot;;
-			 
 
 
-  false 
+
+  false
 
 
 if a equal sqrt(16) then write &quot;true&quot; else write &quot;false&quot;;
-			 
+
 
 
   true
@@ -1049,19 +1049,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-aa := 1782; 
+aa := 1782;
 
-  AA := 1782 
-
-
-if evenp aa then yes else no; 
-
-  YES 
+  AA := 1782
 
 
-if evenp(-3) then yes else no; 
+if evenp aa then yes else no;
 
-  NO 
+  YES
+
+
+if evenp(-3) then yes else no;
+
+  NO
 
 </tt></pre>
 <p>
@@ -1155,29 +1155,29 @@ E"
 <p></p>
 <pre><tt>
 a := x + sin(y)**2 + log sin z;
-			 
+
 
 
                            2
-  A := LOG(SIN(Z)) + SIN(Y)   + X 
+  A := LOG(SIN(Z)) + SIN(Y)   + X
 
 
 if freeof(a,sin(y)) then write &quot;free&quot; else write &quot;not free&quot;;
-			 
 
 
-  not free 
+
+  not free
 
 
 if freeof(a,sin(x)) then write &quot;free&quot; else write &quot;not free&quot;;
-			 
 
 
-  free 
+
+  free
 
 
 if a freeof sin z then write &quot;free&quot; else write &quot;not free&quot;;
-			 
+
 
 
   not free
@@ -1238,27 +1238,27 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a := 15; 
+a := 15;
 
-  A := 15 
+  A := 15
 
 
 if leq(a,25) then write &quot;yes&quot; else write &quot;no&quot;;
-			 
 
 
-  yes 
+
+  yes
 
 
 if leq(a,15) then write &quot;yes&quot; else write &quot;no&quot;;
-			 
 
 
-  yes 
+
+  yes
 
 
 if leq(a,5) then write &quot;yes&quot; else write &quot;no&quot;;
-			 
+
 
 
   no
@@ -1321,27 +1321,27 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a := 15; 
+a := 15;
 
-  A := 15 
+  A := 15
 
 
 if lessp(a,25) then write &quot;yes&quot; else write &quot;no&quot;;
-			 
 
 
-  yes 
+
+  yes
 
 
 if lessp(a,15) then write &quot;yes&quot; else write &quot;no&quot;;
-			 
 
 
-  no 
+
+  no
 
 
 if lessp(a,5) then write &quot;yes&quot; else write &quot;no&quot;;
-			 
+
 
 
   no
@@ -1398,17 +1398,17 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-if a member {a,b} then 1 else 0; 
+if a member {a,b} then 1 else 0;
 
-  1 
-
-
-if 1 member(1,2,3) then a else b; 
-
-  a 
+  1
 
 
-if 1 member(1.0,2) then a else b; 
+if 1 member(1,2,3) then a else b;
+
+  a
+
+
+if 1 member(1.0,2) then a else b;
 
   b
 
@@ -1469,27 +1469,27 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on rounded; 
+on rounded;
 
-a := 4; 
+a := 4;
 
-  A := 4 
+  A := 4
 
 
-b := 4.0; 
+b := 4.0;
 
-  B := 4.0 
+  B := 4.0
 
 
 if a neq b then write &quot;true&quot; else write &quot;false&quot;;
-			 
 
 
-  false 
+
+  false
 
 
 if a neq 5 then write &quot;true&quot; else write &quot;false&quot;;
-			 
+
 
 
   true
@@ -1544,26 +1544,26 @@ E"
 <p></p>
 <pre><tt>
 if not numberp(a) then write &quot;indeterminate&quot; else write a;
-			 
 
 
-  indeterminate; 
+
+  indeterminate;
 
 
-a := 10; 
+a := 10;
 
-  A := 10 
+  A := 10
 
 
 if not numberp(a) then write &quot;indeterminate&quot; else write a;
-			 
 
 
-  10 
+
+  10
 
 
 if not(numberp(a) and a &lt; 0) then write &quot;positive number&quot;;
-			 
+
 
 
   positive number
@@ -1620,18 +1620,18 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-cc := 15.3; 
+cc := 15.3;
 
-  CC := 15.3 
-
-
-if numberp(cc) then write &quot;number&quot; else write &quot;nonnumber&quot;; 
+  CC := 15.3
 
 
-  number 
+if numberp(cc) then write &quot;number&quot; else write &quot;nonnumber&quot;;
 
 
-if numberp(cb) then write &quot;number&quot; else write &quot;nonnumber&quot;; 
+  number
+
+
+if numberp(cb) then write &quot;number&quot; else write &quot;nonnumber&quot;;
 
 
   nonnumber
@@ -1695,21 +1695,21 @@ E"
 <p></p>
 <pre><tt>
 if ordp(x**2 + 1,x**3 + 3) then write &quot;yes&quot; else write &quot;no&quot;;
-			 
 
 
-  no 
+
+  no
 
 
 if ordp(101,100) then write &quot;yes&quot; else write &quot;no&quot;;
-			 
 
 
-  yes 
+
+  yes
 
 
 if ordp(x,x) then write &quot;yes&quot; else write &quot;no&quot;;
-			 
+
 
 
   yes
@@ -1773,13 +1773,13 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-if primep 3 then write &quot;yes&quot; else write &quot;no&quot;; 
+if primep 3 then write &quot;yes&quot; else write &quot;no&quot;;
 
 
-  YES 
+  YES
 
 
-if primep a then 1; 
+if primep a then 1;
 
   ***** A invalid as integer
 
@@ -1830,12 +1830,12 @@ if member(3,{1,2,3}) then 1 else -1;
   1
 
 
-if floor(1.7) then 1 else -1; 
+if floor(1.7) then 1 else -1;
 
-  1 
+  1
 
 
-if floor(0.7) then 1 else -1; 
+if floor(0.7) then 1 else -1;
 
   -1
 
@@ -2008,35 +2008,35 @@ E"
 <pre><tt></tt></pre>
 <p>Suppose you are in the middle of an interactive file.</p>
 <p></p>
-<pre><tt> 
-
- 
-
-  factorize(x**2 + 17*x + 60); 
+<pre><tt>
 
 
- 
 
-  {{X + 12,1},{X + 5,1}} 
-
-
-   pause; 
-
-  Cont? (Y or N) 
+  factorize(x**2 + 17*x + 60);
 
 
-n 
-
-saveas results; 
-
-factor1 := first results; 
-
-  FACTOR1 := {X + 12,1} 
 
 
-factor2 := second results; 
+  {{X + 12,1},{X + 5,1}}
 
-  FACTOR2 := {X + 5,1} 
+
+   pause;
+
+  Cont? (Y or N)
+
+
+n
+
+saveas results;
+
+factor1 := first results;
+
+  FACTOR1 := {X + 12,1}
+
+
+factor2 := second results;
+
+  FACTOR2 := {X + 5,1}
 
 
 cont; </tt></pre>
@@ -2186,26 +2186,26 @@ E"
 <p>An interactive file is running, and at some point you see the question</p>
 
 <p></p>
-<pre><tt> 
+<pre><tt>
 
-				   Cont? (Y or N) 
+				   Cont? (Y or N)
 </tt></pre>
 <p>If you type</p>
 <p></p>
-<pre><tt> 
+<pre><tt>
 
 ykey{Return}
 </tt></pre>
 <p>the file continues to run until the next pause or the end.</p>
 <p></p>
 <pre>
-<tt> 
+<tt>
 </tt></pre>
 <p>If you type</p>
 <p></p>
-<pre><tt> 
+<pre><tt>
 
-nkey{Return} 
+nkey{Return}
 </tt></pre>
 <p>
   you will get a numbered REDUCE prompt, and be allowed to enter and execute any
@@ -2213,9 +2213,9 @@ nkey{Return}
 </p>
 
 <p></p>
-<pre><tt> 
+<pre><tt>
 
-cont; 
+cont;
 </tt></pre>
 <p>and the file resumes.</p>
 <p></p>
@@ -2365,17 +2365,17 @@ procedure fac(n);
    if not (fixp(n) and n&gt;=0)
      then  rederr &quot;Choose nonneg. integer only&quot;
     else for i := 0:n-1 product i+1;
- 
-
-  fac 
 
 
-fac a; 
-
-  	   ***** Choose nonneg. integer only 
+  fac
 
 
-fac 5; 
+fac a;
+
+  	   ***** Choose nonneg. integer only
+
+
+fac 5;
 
   120
 
@@ -2430,14 +2430,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-matrix a; 
+matrix a;
 
-det a; 
+det a;
 
-  ***** Matrix A not set 
+  ***** Matrix A not set
 
 
-a := mat((1,2),(3,4)); 
+a := mat((1,2),(3,4));
 
   A(1,1) := 1
   A(1,2) := 2
@@ -2445,7 +2445,7 @@ a := mat((1,2),(3,4));
   A(2,2) := 4
 
 
-retry; 
+retry;
 
   -2
 
@@ -2558,20 +2558,20 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-showtime; 
+showtime;
 
-  Time: 1020 ms 
+  Time: 1020 ms
 
 
 factorize(x^4 - 8x^4 + 8x^2 - 136x - 153);
-			 
+
 
 
           2
-  {X - 9,X  + 17,X + 1} 
+  {X - 9,X  + 17,X + 1}
 
 
-showtime; 
+showtime;
 
   Time: 920 ms
 
@@ -2631,28 +2631,28 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-write a, sin x, &quot;this is a string&quot;; 
+write a, sin x, &quot;this is a string&quot;;
 
 
-  ASIN(X)this is a string 
+  ASIN(X)this is a string
 
 
-write a,&quot; &quot;,sin x,&quot; this is a string&quot;; 
+write a,&quot; &quot;,sin x,&quot; this is a string&quot;;
 
 
-  A SIN(X) this is a string 
+  A SIN(X) this is a string
 
 
 if not numberp(a) then write &quot;the symbol &quot;,a;
-							
 
 
-  the symbol A 
+
+  the symbol A
 
 
-array m(10); 
+array m(10);
 
-for i := 1:5 do write m(i) := 2*i; 
+for i := 1:5 do write m(i) := 2*i;
 
 
   M(1) := 2
@@ -2662,7 +2662,7 @@ for i := 1:5 do write m(i) := 2*i;
   M(5) := 10
 
 
-m(4); 
+m(4);
 
   8
 
@@ -2820,27 +2820,27 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-alist := {1,2,{a,b}}; 
+alist := {1,2,{a,b}};
 
-  ALIST := {1,2,{A,B}} 
-
-
-blist := {3,4,5,sin(y)}; 
-
-  BLIST := {3,4,5,SIN(Y)} 
+  ALIST := {1,2,{A,B}}
 
 
-append(alist,blist); 
+blist := {3,4,5,sin(y)};
 
-  {1,2,{A,B},3,4,5,SIN(Y)} 
-
-
-append(alist,{}); 
-
-  {1,2,{A,B}} 
+  BLIST := {3,4,5,SIN(Y)}
 
 
-append(list z,blist); 
+append(alist,blist);
+
+  {1,2,{A,B},3,4,5,SIN(Y)}
+
+
+append(alist,{});
+
+  {1,2,{A,B}}
+
+
+append(list z,blist);
 
   {Z,3,4,5,SIN(Y)}
 
@@ -2890,7 +2890,7 @@ E"
 <p></p>
 <pre><tt>
 
-solve(log(sin(x+3)),x); 
+solve(log(sin(x+3)),x);
 
   {X=2*ARBINT(1)*PI - ASIN(1) - 3,
    X=2*ARBINT(1)*PI + ASIN(1) + PI - 3}
@@ -2932,7 +2932,7 @@ E"
 <p></p>
 <pre><tt>
 
-solve({x+3=y-2z,y-3x=0},{x,y,z}); 
+solve({x+3=y-2z,y-3x=0},{x,y,z});
 
 
      2*ARBCOMPLEX(1) + 3
@@ -2988,17 +2988,17 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-arglength(a + b + c + d); 
+arglength(a + b + c + d);
 
-  4 
-
-
-arglength(a/b/c); 
-
-  2 
+  4
 
 
-arglength(log(sin(df(r**3*x,x)))); 
+arglength(a/b/c);
+
+  2
+
+
+arglength(log(sin(df(r**3*x,x))));
 
 
   1
@@ -3063,36 +3063,36 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-coeff((x+y)**3,x); 
+coeff((x+y)**3,x);
 
     3     2
-  {Y  ,3*Y  ,3*Y,1} 
+  {Y  ,3*Y  ,3*Y,1}
 
 
-coeff((x+2)**4 + sin(x),x); 
+coeff((x+2)**4 + sin(x),x);
 
-  {SIN(X) + 16,32,24,8,1} 
-
-
-high_pow; 
-
-  4 
+  {SIN(X) + 16,32,24,8,1}
 
 
-low_pow; 
+high_pow;
 
-  0 
+  4
 
 
-ab := x**9 + sin(x)*x**7 + sqrt(y); 
- 
+low_pow;
+
+  0
+
+
+ab := x**9 + sin(x)*x**7 + sqrt(y);
+
 
 
                           7     9
   AB := SQRT(Y) + SIN(X)*X   + X
 
 
-coeff(ab,x); 
+coeff(ab,x);
 
   {SQRT(Y),0,0,0,0,0,0,SIN(X),0,1}
 
@@ -3185,49 +3185,49 @@ E"
 <p></p>
 <pre><tt>
 
-ff := x**7 + sin(y)*x**5 + y**4 + x + 7; 
+ff := x**7 + sin(y)*x**5 + y**4 + x + 7;
 
 
                 5     7         4
-  FF := SIN(Y)*X   + X   + X + Y   + 7 
+  FF := SIN(Y)*X   + X   + X + Y   + 7
 
 
-coeffn(ff,x,5); 
+coeffn(ff,x,5);
 
-  SIN(Y) 
-
-
-coeffn(ff,z,3); 
-
-  0 
+  SIN(Y)
 
 
-coeffn(ff,y,0); 
+coeffn(ff,z,3);
+
+  0
+
+
+coeffn(ff,y,0);
 
           5     7
-  SIN(Y)*X   + X   + X + 7 
+  SIN(Y)*X   + X   + X + 7
 
 
 
-rr := 1/y**2+y**3+sin(y); 
+rr := 1/y**2+y**3+sin(y);
 
                 2     5
         SIN(Y)*Y   + Y   + 1
-  RR := -------------------- 
+  RR := --------------------
                   2
                  Y
 
 
-on ratarg; 
+on ratarg;
 
 
-coeffn(rr,y,-2); 
+coeffn(rr,y,-2);
 
-  ***** -2 invalid as COEFFN index 
+  ***** -2 invalid as COEFFN index
 
 
 
-coeffn(rr,y,5); 
+coeffn(rr,y,5);
 
   1
   ---
@@ -3287,12 +3287,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-conj(1+i); 
+conj(1+i);
 
-  1-I 
+  1-I
 
 
-conj(a+i*b); 
+conj(a+i*b);
 
   REPART(A) - REPART(B)*I - IMPART(A)*I - IMPART(B)
 
@@ -3346,18 +3346,18 @@ E"
 <p></p>
 <pre><tt>
 continued_fraction pi;
- 
+
 
    1146408
-  {-------,{3,7,15,1,292,1,1,1,2,1}} 
+  {-------,{3,7,15,1,292,1,1,1,2,1}}
    364913
 
 
 continued_fraction(pi,100);
- 
+
 
    22
-  {--,{3,7}} 
+  {--,{3,7}}
    7
 
 </tt></pre>
@@ -3407,13 +3407,13 @@ E"
 decompose(x^8-88*x^7+2924*x^6-43912*x^5+263431*x^4-
           218900*x^3+65690*x^2-7700*x+234)
 
- 
+
 
    2                  2            2
-  U  + 35*U + 234, U=V  + 10*V, V=X  - 22*X 
+  U  + 35*U + 234, U=V  + 10*V, V=X  - 22*X
 
 
-     decompose(u^2+v^2+2u*v+1) 
+     decompose(u^2+v^2+2u*v+1)
 
    2
   W   + 1, W=U + V
@@ -3479,22 +3479,22 @@ E"
 <p></p>
 <pre><tt>
 
-deg((x+y)**5,x); 
+deg((x+y)**5,x);
 
-  5 
-
-
-
-deg((a+b)*(c+2*d)**2,d); 
-
-  2 
+  5
 
 
 
-deg(x**2 + cos(y),sin(x)); 
+deg((a+b)*(c+2*d)**2,d);
+
+  2
 
 
-deg((x**2 + sin(x))**5,sin(x)); 
+
+deg(x**2 + cos(y),sin(x));
+
+
+deg((x**2 + sin(x))**5,sin(x));
 
   5
 
@@ -3542,38 +3542,38 @@ E"
 <p></p>
 <pre><tt>
 
-a := x**3 + 3*x**2 + 12*x; 
+a := x**3 + 3*x**2 + 12*x;
 
            2
-  A := X*(X   + 3*X + 12) 
+  A := X*(X   + 3*X + 12)
 
 
 
-b := 4*x*y + x*sin(x); 
+b := 4*x*y + x*sin(x);
 
-  B := X*(SIN(X) + 4*Y) 
-
-
-
-den(a/b); 
-
-  SIN(X) + 4*Y 
+  B := X*(SIN(X) + 4*Y)
 
 
 
-den(aa/4 + bb/5); 
+den(a/b);
 
-  20 
-
-
-
-den(100/6); 
-
-  3 
+  SIN(X) + 4*Y
 
 
 
-den(sin(x)); 
+den(aa/4 + bb/5);
+
+  20
+
+
+
+den(100/6);
+
+  3
+
+
+
+den(sin(x));
 
   1
 
@@ -3645,27 +3645,27 @@ E"
 <p></p>
 <pre><tt>
 
-df(x**2,x); 
+df(x**2,x);
 
-  2*X 
+  2*X
 
 
 
-df(x**2*y + sin(y),y); 
+df(x**2*y + sin(y),y);
 
             2
-  COS(Y) + X  
+  COS(Y) + X
 
 
 
-df((x+y)**10,z); 
+df((x+y)**10,z);
 
-  0 
-
-
+  0
 
 
-df(1/x**2,x,2); 
+
+
+df(1/x**2,x,2);
 
   6
   ---
@@ -3674,16 +3674,16 @@ df(1/x**2,x,2);
 
 
 
-df(x**4*y + sin(y),y,x,3); 
+df(x**4*y + sin(y),y,x,3);
 
-  24*X 
-
-
-
-for all x let df(tan(x),x) = sec(x)**2; 
+  24*X
 
 
-df(tan(3*x),x); 
+
+for all x let df(tan(x),x) = sec(x)**2;
+
+
+df(tan(3*x),x);
 
             2
   3*SEC(3*X)

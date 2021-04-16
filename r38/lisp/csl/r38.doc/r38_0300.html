@@ -59,9 +59,9 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a := (y-x)^2*(y^3+2x*y+5)*(y^2-3x*y+7)$ 
+a := (y-x)^2*(y^3+2x*y+5)*(y^2-3x*y+7)$
 
-factorize a; 
+factorize a;
 
               2
   {- 3*X*Y + Y  + 7,1}
@@ -70,9 +70,9 @@ factorize a;
   {X - Y,2}}
 
 
-on limitedfactors; 
+on limitedfactors;
 
-factorize a; 
+factorize a;
 
         2  2        4        3          5      3      2
   {- 6*X *Y  - 3*X*Y  + 2*X*Y  - X*Y + Y  + 7*Y  + 5*Y  + 35,1},
@@ -110,18 +110,18 @@ E"
 <p></p>
 <pre><tt>
 x**2*(y**2 + 2*y) + x*(y**2 + z)/(2*a);
-			 
+
 
 
             2              2
   X*(2*A*X*Y  + 4*A*X*Y + Y  +Z)
-  ------------------------------ 
+  ------------------------------
                2*A
 
 
-on list; 
+on list;
 
-ws; 
+ws;
 
              2
   (X*(2*A*X*Y
@@ -167,14 +167,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-log {a,b,c}; 
+log {a,b,c};
 
-  LOG(A),LOG(B),LOG(C) 
+  LOG(A),LOG(B),LOG(C)
 
 
-on listargs; 
+on listargs;
 
-log {a,b,c}; 
+log {a,b,c};
 
   LOG(A,B,C)
 
@@ -221,22 +221,22 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a/(x+1) + b/5; 
+a/(x+1) + b/5;
 
   5*A + B*X + B
-  ------------- 
+  -------------
     5*(X + 1)
 
 
-off mcd; 
+off mcd;
 
-a/(x+1) + b/5; 
+a/(x+1) + b/5;
 
          -1
-  (X + 1)  *A + 1/5*B 
+  (X + 1)  *A + 1/5*B
 
 
-1/6 + 1/7; 
+1/6 + 1/7;
 
   13/42
 
@@ -294,21 +294,21 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-setmod 2; 
+setmod 2;
 
-  1 
+  1
 
 
-on modular; 
+on modular;
 
-(x+y)**2; 
+(x+y)**2;
 
    2    2
-  X  + Y  
+  X  + Y
 
 
 145*x**2 + 20*x**3 + 17 + 15*x*y;
-			 
+
 
 
    2
@@ -406,24 +406,24 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-solve(x^2=2x-1,x); 
+solve(x^2=2x-1,x);
 
-  X=1 
-
-
-root_multiplicities; 
-
-  2 
+  X=1
 
 
-on multiplicities; 
+root_multiplicities;
 
-solve(x^2=2x-1,x); 
-
-  X=1,X=1 
+  2
 
 
-root_multiplicities; 
+on multiplicities;
+
+solve(x^2=2x-1,x);
+
+  X=1,X=1
+
+
+root_multiplicities;
 
 </tt></pre>
 <p>
@@ -460,22 +460,22 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-(x + y)**3; 
+(x + y)**3;
 
    3      2          2    3
-  X  + 3*X *Y + 3*X*Y  + Y  
+  X  + 3*X *Y + 3*X*Y  + Y
 
 
-off nat; 
+off nat;
 
-(x + y)**3; 
+(x + y)**3;
 
-  X**3 + 3*X**2*Y + 3*X*Y**2 + Y**3$ 
+  X**3 + 3*X**2*Y + 3*X*Y**2 + Y**3$
 
 
-on fort; 
+on fort;
 
-(x + y)**3; 
+(x + y)**3;
 
   ANS=X**3+3.*X**2*Y+3.*X*Y**2+Y**3
 
@@ -522,7 +522,7 @@ E"
 <p></p>
 <pre><tt>
 matrix a;
-a := mat((1,0),(0,1)); 
+a := mat((1,0),(0,1));
 
   A(1,1) := 1
   A(1,2) := 0
@@ -530,9 +530,9 @@ a := mat((1,0),(0,1));
   A(2,2) := 1
 
 
-on nero; 
+on nero;
 
-a; 
+a;
 
   MAT(1,1) := 1
   MAT(2,2) := 1
@@ -550,9 +550,9 @@ b := 0; </tt></pre>
 <pre><tt>
 
 
-off nero; 
+off nero;
 
-b := 0; 
+b := 0;
 
   B := 0
 
@@ -605,24 +605,24 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-operator f; 
+operator f;
 
-df(f x,x); 
+df(f x,x);
 
-  DF(F(X),X); 
+  DF(F(X),X);
 
 
-on dfprint; 
+on dfprint;
 
-ws; 
+ws;
 
-  F  
+  F
    X
 
 
-off noarg; 
+off noarg;
 
-ws; 
+ws;
 
   F(X)
       X
@@ -735,16 +735,16 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on rounded; 
+on rounded;
 
-cos 3.4; 
+cos 3.4;
 
-  - 0.966798192579 
+  - 0.966798192579
 
 
-off numval; 
+off numval;
 
-cos 3.4; 
+cos 3.4;
 
   COS(3.4)
 
@@ -879,24 +879,24 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-sqrt(x**2); 
+sqrt(x**2);
 
-  X 
-
-
-(x**2)**(1/4); 
-
-  SQRT(X) 
+  X
 
 
-on precise; 
+(x**2)**(1/4);
 
-sqrt(x**2); 
-
-  ABS(X) 
+  SQRT(X)
 
 
-(x**2)**(1/4); 
+on precise;
+
+sqrt(x**2);
+
+  ABS(X)
+
+
+(x**2)**(1/4);
 
   SQRT(ABS(X))
 
@@ -945,9 +945,9 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on pret; 
+on pret;
 
- (x+1)^3; 
+ (x+1)^3;
 
    (x + 1)**3;
    3      2
@@ -959,7 +959,7 @@ procedure fac(n);
    if not (fixp(n) and n&gt;=0)
      then rederr &quot;Choose nonneg. integer only&quot;
     else for i := 0:n-1 product i+1;
- 
+
 
   procedure fac n;
      if not (fixp n and n&gt;=0)
@@ -969,7 +969,7 @@ procedure fac(n);
 
 
 
-fac 5; 
+fac 5;
 
   fac 5;
   120
@@ -1102,26 +1102,26 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-(x+1)/x + x**2/sin y;        
- 
+(x+1)/x + x**2/sin y;
+
 
                        3
   SIN(Y)*X + SIN(Y) + X
-  ---------------------- factor x; 
+  ---------------------- factor x;
          SIN(Y)*X
 
 
-(x+1)/x + x**2/sin y;        
- 
+(x+1)/x + x**2/sin y;
+
 
    3
   X  + X*SIN(Y) + SIN(Y)
-  ---------------------- on rat;  
+  ---------------------- on rat;
          X*SIN(Y)
 
 
-(x+1)/x + x**2/sin y;       
- 
+(x+1)/x + x**2/sin y;
+
 
      2
     X           -1
@@ -1175,17 +1175,17 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-aa := x/y**2 + 1/x + y/x**2; 
- 
+aa := x/y**2 + 1/x + y/x**2;
+
 
          3      2    3
         X  + X*Y  + Y
-  AA := -------------- 
+  AA := --------------
              2  2
             X *Y
 
 
-coeff(aa,x); 
+coeff(aa,x);
 
          3      2    3
         X  + X*Y  + Y
@@ -1194,10 +1194,10 @@ coeff(aa,x);
             X *Y
 
 
-on ratarg; 
+on ratarg;
 
-coeff(aa,x);                
- 
+coeff(aa,x);
+
 
    Y  1      1
   {--,--,0,-----}
@@ -1238,31 +1238,31 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-x/2 + 3*y/4; 
+x/2 + 3*y/4;
 
   2*X + 3*Y
-  --------- 
+  ---------
       4
 
 
-(x**2 + 5*x + 17)/2; 
+(x**2 + 5*x + 17)/2;
 
    2
   X  + 5*X + 17
-  ------------- 
+  -------------
         2
 
 
-on rational; 
+on rational;
 
-x/2 + 3y/4; 
+x/2 + 3y/4;
 
   1      3
-  -*(X + -*Y) 
+  -*(X + -*Y)
   2      2
 
 
-(x**2 + 5*x + 17)/2; 
+(x**2 + 5*x + 17)/2;
 
   1   2
   -*(X  + 5*X + 17)
@@ -1315,40 +1315,40 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-qq := (1+sqrt(3))/(sqrt(3)-7); 
+qq := (1+sqrt(3))/(sqrt(3)-7);
 
         SQRT(3) + 1
-  QQ := ----------- 
+  QQ := -----------
         SQRT(3) - 7
 
 
-on rationalize; 
+on rationalize;
 
-qq; 
+qq;
 
   - 4*SQRT(3) - 5
-  --------------- 
+  ---------------
         23
 
 
-2/(4 + 6**(1/3)); 
+2/(4 + 6**(1/3));
 
    2/3      1/3
   6    - 4*6    + 16
-  ------------------ 
+  ------------------
           35
 
 
-(i-1)/(i+3); 
+(i-1)/(i+3);
 
   2*I - 1
-  ------- 
+  -------
      5
 
 
-off rationalize; 
+off rationalize;
 
-(i-1)/(i+3); 
+(i-1)/(i+3);
 
   I - 1
   ------
@@ -1389,28 +1389,28 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-3/17; 
+3/17;
 
   3
-  -- 
+  --
   17
 
 
-2/b + 3/y; 
+2/b + 3/y;
 
   3*B + 2*Y
-  --------- 
+  ---------
      B*Y
 
 
-off ratpri; 
+off ratpri;
 
-3/17; 
+3/17;
 
-  3/17 
+  3/17
 
 
-2/b + 3/y; 
+2/b + 3/y;
 
   (3*B + 2*Y)/(B*Y)
 
@@ -1448,26 +1448,26 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-x**5 + x**2 + 18 + sqrt(y); 
+x**5 + x**2 + 18 + sqrt(y);
 
              5    2
-  SQRT(Y) + X  + X  + 18 
+  SQRT(Y) + X  + X  + 18
 
 
-a + b + c + w; 
+a + b + c + w;
 
-  A + B + C + W 
+  A + B + C + W
 
 
-on revpri; 
+on revpri;
 
-x**5 + x**2 + 18 + sqrt(y); 
+x**5 + x**2 + 18 + sqrt(y);
 
         2    5
-  17 + X  + X  + SQRT(Y) 
+  17 + X  + X  + SQRT(Y)
 
 
-a + b + c + w; 
+a + b + c + w;
 
   W + C + B + A
 
@@ -1552,14 +1552,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on rounded; 
+on rounded;
 
-1/2; 
+1/2;
 
-  0.5 
+  0.5
 
 
-off roundall; 
+off roundall;
 </tt></pre>
 <p>
   <a name="r38_0329"> <title>ROUNDBF</title></a>
@@ -1593,16 +1593,16 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on rounded; 
+on rounded;
 
-exp(-100000.1^2); 
+exp(-100000.1^2);
 
-  0 
+  0
 
 
-on roundbf; 
+on roundbf;
 
-exp(-100000.1^2); 
+exp(-100000.1^2);
 
   1.18441281937E-4342953505
 
@@ -1654,31 +1654,31 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-pi; 
+pi;
 
-  PI 
+  PI
 
 
-35/217; 
+35/217;
 
   5
-  -- 
+  --
   31
 
 
-on rounded; 
+on rounded;
 
-pi; 
+pi;
 
-  3.14159265359 
-
-
-35/217; 
-
-  0.161 
+  3.14159265359
 
 
-sqrt(3); 
+35/217;
+
+  0.161
+
+
+sqrt(3);
 
   1.73205080756
 
@@ -1729,9 +1729,9 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-off exp; 
+off exp;
 
-structr((x+y)^3 + sin(x)^2); 
+structr((x+y)^3 + sin(x)^2);
 
   ANS3
      where
@@ -1741,20 +1741,20 @@ structr((x+y)^3 + sin(x)^2);
         ANS1 := X + Y
 
 
-ans3; 
+ans3;
 
-  ANS3 
+  ANS3
 
 
-on savestructr; 
+on savestructr;
 
-structr((x+y)^{3} + sin(x)^{2}); 
+structr((x+y)^{3} + sin(x)^{2});
 
                 3       2
-  ANS3,ANS3=ANS1  + ANS2 ,ANS2=SIN(X),ANS1=X + Y 
+  ANS3,ANS3=ANS1  + ANS2 ,ANS2=SIN(X),ANS1=X + Y
 
 
-ans3 where rest ws; 
+ans3 where rest ws;
 
          3         2
   (X + Y)  + SIN(X)
@@ -1809,14 +1809,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-solve({2x + y,4x + 2y},{x,y}); 
+solve({2x + y,4x + 2y},{x,y});
 
          ARBCOMPLEX(1)
-  {{X= - -------------,Y=ARBCOMPLEX(1)}} 
+  {{X= - -------------,Y=ARBCOMPLEX(1)}}
                2
 
 
-solve({7x + 15y - z,x - y - z},{x,y,z}); 
+solve({7x + 15y - z,x - y - z},{x,y,z});
 
 
       8*ARBCOMPLEX(3)
@@ -1828,14 +1828,14 @@ solve({7x + 15y - z,x - y - z},{x,y,z});
     Z=ARBCOMPLEX(3)}}
 
 
-off solvesingular; 
+off solvesingular;
 
-solve({2x + y,4x + 2y},{x,y}); 
+solve({2x + y,4x + 2y},{x,y});
 
-  ***** SOLVE given singular equations 
+  ***** SOLVE given singular equations
 
 
-solve({7x + 15y - z,x - y - z},{x,y,z}); 
+solve({7x + 15y - z,x - y - z},{x,y,z});
 
 
   ***** SOLVE given singular equations
@@ -1883,19 +1883,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on time; 
+on time;
 
-  Time: 4940 ms 
+  Time: 4940 ms
 
 
-df(sin(x**2 + y),y); 
+df(sin(x**2 + y),y);
 
             2
   COS(X  + Y )
   Time: 180 ms
 
 
-solve(x**2 - 6*y,x); 
+solve(x**2 - 6*y,x);
 
   {X= - SQRT(Y)*SQRT(6),
    X=SQRT(Y)*SQRT(6)}
@@ -2154,35 +2154,35 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-off arbvars; 
+off arbvars;
 
-solve({x+2z,x-3y},{x,y,z});				
+solve({x+2z,x-3y},{x,y,z});
 
            x      x
-  		   {{y=-,z= - -}} 
+  		   {{y=-,z= - -}}
            3      2
 
 
-solve({x*y=1,z=x},{x,y,z});				
+solve({x*y=1,z=x},{x,y,z});
 
                1
-  		   {{z=x,y=-}} 
+  		   {{z=x,y=-}}
                x
 
 
-off varopt; 
+off varopt;
 
-solve({x+2z,x-3y},{x,y,z});				
+solve({x+2z,x-3y},{x,y,z});
 
                        2*z
-  		   {{x= - 2*z,y= - ---}} 
+  		   {{x= - 2*z,y= - ---}}
                         3
 
 
-solve({x*y=1,z=x},{x,y,z});				
+solve({x*y=1,z=x},{x,y,z});
 
            1
-  		   {{y=-,x=z}} 
+  		   {{y=-,x=z}}
            z
 
 </tt></pre>
@@ -2894,13 +2894,13 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-cofactor(mat((a,b,c),(d,e,f),(p,q,r)),2,2); 
+cofactor(mat((a,b,c),(d,e,f),(p,q,r)),2,2);
 
 
-  A*R - C*P 
+  A*R - C*P
 
 
-cofactor(mat((a,b,c),(d,e,f)),1,1); 
+cofactor(mat((a,b,c),(d,e,f)),1,1);
 
 
   ***** non-square matrix
@@ -2949,40 +2949,40 @@ E"
 <p></p>
 <pre><tt>
 
-matrix m,n; 
+matrix m,n;
 
 
-m := mat((a,b),(c,d)); 
+m := mat((a,b),(c,d));
 
   M(1,1) := A
   M(1,2) := B
   M(2,1) := C
   M(2,2) := D
-                                 
 
 
-det m; 
 
-  A*D - B*C 
+det m;
+
+  A*D - B*C
 
 
-n := mat((1,2),(1,2)); 
+n := mat((1,2),(1,2));
 
   N(1,1) := 1
   N(1,2) := 2
   N(2,1) := 1
   N(2,2) := 2
-                                 
 
 
 
-det(n); 
 
-  0 
+det(n);
+
+  0
 
 
 
-det(5); 
+det(5);
 
   5
 
@@ -3041,7 +3041,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-mat((1,2),(3,4)); 
+mat((1,2),(3,4));
 
   MAT(1,1) := 1
   MAT(2,3) := 2
@@ -3049,32 +3049,32 @@ mat((1,2),(3,4));
   MAT(2,2) := 4
 
 
-mat(2,1); 
+mat(2,1);
 
   ***** Matrix mismatch
-  Cont? (Y or N) 
+  Cont? (Y or N)
 
 
-matrix qt; 
+matrix qt;
 
-qt := ws; 
+qt := ws;
 
   QT(1,1) := 1
   QT(1,2) := 2
   QT(2,1) := 3
-  QT(2,2) := 4 
+  QT(2,2) := 4
 
 
-matrix a,b; 
+matrix a,b;
 
-a := mat((x),(y),(z)); 
+a := mat((x),(y),(z));
 
   A(1,1) := X
   A(2,1) := Y
-  A(3,1) := Z 
+  A(3,1) := Z
 
 
-b := mat((sin x,cos x,1)); 
+b := mat((sin x,cos x,1));
 
   B(1,1) := SIN(X)
   B(1,2) := COS(X)
@@ -3137,9 +3137,9 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-aa := mat((2,5),(1,0))$ 
+aa := mat((2,5),(1,0))$
 
-mateigen(aa,alpha); 
+mateigen(aa,alpha);
 
          2
   {{ALPHA  - 2*ALPHA - 5,
@@ -3151,15 +3151,15 @@ mateigen(aa,alpha);
     }}
 
 
-charpoly := first first ws; 
+charpoly := first first ws;
 
                    2
-  CHARPOLY := ALPHA  - 2*ALPHA - 5 
+  CHARPOLY := ALPHA  - 2*ALPHA - 5
 
 
-bb := mat((1,0,1),(1,1,0),(0,0,1))$ 
+bb := mat((1,0,1),(1,1,0),(0,0,1))$
 
-mateigen(bb,lamb); 
+mateigen(bb,lamb);
 
   {{LAMB - 1,3,
     [      0      ]
@@ -3235,19 +3235,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-matrix a,b(1,4),c(4,4); 
+matrix a,b(1,4),c(4,4);
 
-b(1,1); 
+b(1,1);
 
-  0 
-
-
-a(1,1); 
-
-  ***** Matrix A not set 
+  0
 
 
-a := mat((x0,y0),(x1,y1)); 
+a(1,1);
+
+  ***** Matrix A not set
+
+
+a := mat((x0,y0),(x1,y1));
 
   A(1,1) := X0
   A(1,2) := Y0
@@ -3255,12 +3255,12 @@ a := mat((x0,y0),(x1,y1));
   A(2,2) := X1
 
 
-length a; 
+length a;
 
-  {2,2} 
+  {2,2}
 
 
-b := a**2; 
+b := a**2;
 
               2
   B(1,1) := X0  + X1*Y0
@@ -3355,7 +3355,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-nullspace mat((1,2,3,4),(5,6,7,8)); 
+nullspace mat((1,2,3,4),(5,6,7,8));
 
 
          {
@@ -3433,7 +3433,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-rank mat((a,b,c),(d,e,f)); 
+rank mat((a,b,c),(d,e,f));
 
   2
 
@@ -3495,11 +3495,11 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-matrix m,n; 
+matrix m,n;
 
-m := mat((1,2,3),(4,5,6))$ 
+m := mat((1,2,3),(4,5,6))$
 
-n := tp m; 
+n := tp m;
 
   N(1,1) := 1
   N(1,2) := 4
@@ -3564,11 +3564,11 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-matrix a; 
+matrix a;
 
-a := mat((x1,y1),(x2,y2))$ 
+a := mat((x1,y1),(x2,y2))$
 
-trace a; 
+trace a;
 
   X1 + Y2
 

@@ -146,12 +146,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-write &quot;this is a string&quot;; 
+write &quot;this is a string&quot;;
 
-  this is a string 
+  this is a string
 
 
-write a, &quot; &quot;, b, &quot; &quot;,c,&quot;!&quot;; 
+write a, &quot; &quot;, b, &quot; &quot;,c,&quot;!&quot;;
 
   A B C!
 
@@ -227,11 +227,11 @@ E"
 solve({a*x-b*y+x,y-c},{x,y});
 
        b*c
-  {{x=-----,y=c}} 
+  {{x=-----,y=c}}
       a + 1
 
 
-assumptions; 
+assumptions;
 
   {a + 1}
 
@@ -271,18 +271,18 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on fort; 
+on fort;
 
-card_no := 4; 
+card_no := 4;
 
-  CARD_NO=4. 
+  CARD_NO=4.
 
 
-z := (x + y)**15; 
+z := (x + y)**15;
 
         ANS1=5005.*X**6*Y**9+3003.*X**5*Y**10+1365.*X**4*Y**
        . 11+455.*X**3*Y**12+105.*X**2*Y**13+15.*X*Y**14+Y**15
-        Z=X**15+15.*X**14*Y+105.*X**13*Y**2+455.*X**12*Y**3+ 
+        Z=X**15+15.*X**14*Y+105.*X**13*Y**2+455.*X**12*Y**3+
        . 1365.*X**11*Y**4+3003.*X**10*Y**5+5005.*X**9*Y**6+
        . 6435.*X**8*Y**7+6435.*X**7*Y**8+ANS1
 
@@ -368,7 +368,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-EVAL_MODE; 
+EVAL_MODE;
 
   ALGEBRAIC
 
@@ -411,14 +411,14 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-fort_width := 30; 
+fort_width := 30;
 
-  FORT_WIDTH := 30  
+  FORT_WIDTH := 30
 
 
-on fort; 
+on fort;
 
-df(sin(x**3*y),x); 
+df(sin(x**3*y),x);
 
         ANS=3.*COS(X
        . **3*Y)*X**2*
@@ -468,7 +468,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-coeff((x+1)^5*(x*(y+3)^2)^2,x); 
+coeff((x+1)^5*(x*(y+3)^2)^2,x);
 
   {0,
    0,
@@ -486,7 +486,7 @@ coeff((x+1)^5*(x*(y+3)^2)^2,x);
    Y  + 12*Y  + 54*Y  + 108*Y + 81}
 
 
-high_pow; 
+high_pow;
 
   7
 
@@ -521,12 +521,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-(a + b*i)*(c + d*i); 
+(a + b*i)*(c + d*i);
 
-  A*C + A*D*I + B*C*I - B*D 
+  A*C + A*D*I + B*C*I - B*D
 
 
-i**2; 
+i**2;
 
   -1
 
@@ -610,7 +610,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-coeff((x+2*y)**6,y); 
+coeff((x+2*y)**6,y);
 
     6
   {X ,
@@ -626,19 +626,19 @@ coeff((x+2*y)**6,y);
    64}
 
 
-low_pow; 
+low_pow;
 
-  0 
-
-
-coeff(x**2*(x*sin(y) + 1),x); 
-			 
+  0
 
 
-  {0,0,1,SIN(Y)} 
+coeff(x**2*(x*sin(y) + 1),x);
 
 
-low_pow; 
+
+  {0,0,1,SIN(Y)}
+
+
+low_pow;
 
   2
 
@@ -741,7 +741,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-solve({x-a,x-y,y-1},{x,y}); 
+solve({x-a,x-y,y-1},{x,y});
 
   {}
 
@@ -957,13 +957,13 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-(x+1)**2; 
+(x+1)**2;
 
    2
-  X  + 2*X + 1 
+  X  + 2*X + 1
 
 
-df(x**2 + 1,x); 
+df(x**2 + 1,x);
 
   2*X
 
@@ -1027,7 +1027,7 @@ E"
 <pre><tt>
 
 
-ws; 
+ws;
 
    2
   X   + 2*X + 1
@@ -1104,14 +1104,14 @@ E"
 <p></p>
 <pre><tt>
 
-df(x**3 + y,x);% This is a comment key{Return} 
+df(x**3 + y,x);% This is a comment key{Return}
 
 
      2
-  3*X  
+  3*X
 
 
-int(3*x**2,x) %This is a comment; key{Return} 
+int(3*x**2,x) %This is a comment; key{Return}
 </tt></pre>
 <p>
   A prompt is given, waiting for the semicolon that was not detected in the
@@ -1179,33 +1179,33 @@ E"
 <p></p>
 <pre><tt>
 
-liss := a . {}; 
+liss := a . {};
 
-  LISS := {A} 
-
-
-liss := b . liss; 
-
-  LISS := {B,A} 
+  LISS := {A}
 
 
-newliss := liss . liss; 
+liss := b . liss;
 
-  NEWLISS := {{B,A},B,A} 
-
-
-firstlis := a . b . {c}; 
-
-  FIRSTLIS := {A,B,C} 
+  LISS := {B,A}
 
 
-secondlis := x . y . {z}; 
+newliss := liss . liss;
 
-  SECONDLIS := {X,Y,Z} 
+  NEWLISS := {{B,A},B,A}
+
+
+firstlis := a . b . {c};
+
+  FIRSTLIS := {A,B,C}
+
+
+secondlis := x . y . {z};
+
+  SECONDLIS := {X,Y,Z}
 
 
 for i := 1:3 sum part(firstlis,i)*part(secondlis,i);
- 
+
 
 
   A*X + B*Y + C*Z
@@ -1262,59 +1262,59 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a := x**2 + 1; 
+a := x**2 + 1;
 
         2
-  A := X   + 1 
+  A := X   + 1
 
 
-a; 
+a;
 
    2
-  X  + 1 
+  X  + 1
 
 
-first := second := third; 
+first := second := third;
 
-  FIRST := SECOND := THIRD 
-
-
-first; 
-
-  THIRD 
+  FIRST := SECOND := THIRD
 
 
-second; 
+first;
 
-  THIRD 
-
-
-b := for i := 1:5 product i; 
-
-  B := 120 
+  THIRD
 
 
-b; 
+second;
 
-  120 
-
-
-w + (c := x + 3) + z; 
-
-  W + X + Z + 3 
+  THIRD
 
 
-c; 
+b := for i := 1:5 product i;
 
-  X + 3 
-
-
-y + b := c; 
-
-  Y + B := C 
+  B := 120
 
 
-y; 
+b;
+
+  120
+
+
+w + (c := x + 3) + z;
+
+  W + X + Z + 3
+
+
+c;
+
+  X + 3
+
+
+y + b := c;
+
+  Y + B := C
+
+
+y;
 
   - (B - C)
 
@@ -1412,34 +1412,34 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a := 4; 
+a := 4;
 
-  A := 4 
+  A := 4
 
 
 if =(a,10) then write &quot;yes&quot; else write &quot;no&quot;;
- 
 
 
-  no 
+
+  no
 
 
-b := c; 
+b := c;
 
-  B := C 
+  B := C
 
 
 if b = c then write &quot;yes&quot; else write &quot;no&quot;;
- 
 
 
-  yes 
+
+  yes
 
 
-on rounded; 
+on rounded;
 
 if 4.0 = 4 then write &quot;yes&quot; else write &quot;no&quot;;
- 
+
 
 
   yes
@@ -1491,11 +1491,11 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-operator f; 
+operator f;
 
-let f(x) =&gt; x^2; 
+let f(x) =&gt; x^2;
 
-f(x); 
+f(x);
 
    2
   x
@@ -1540,18 +1540,18 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-x**4 + 4*x**2 + 17*x + 1; 
+x**4 + 4*x**2 + 17*x + 1;
 
    4      2
-  X  + 4*X  + 17*X + 1 
+  X  + 4*X  + 17*X + 1
 
 
-14 + 15 + x; 
+14 + 15 + x;
 
-  X + 29 
+  X + 29
 
 
-+(1,2,3,4,5); 
++(1,2,3,4,5);
 
   15
 
@@ -1604,22 +1604,22 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-15 - 4; 
+15 - 4;
 
-  11 
-
-
-x*(-5); 
-
-  - 5*X 
+  11
 
 
-a - b - 15; 
+x*(-5);
 
-  A - B - 15 
+  - 5*X
 
 
--(a,4); 
+a - b - 15;
+
+  A - B - 15
+
+
+-(a,4);
 
   A - 4
 
@@ -1674,32 +1674,32 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-15*3; 
+15*3;
 
-  45 
-
-
-24*x*yvalue*2; 
-
-  48*X*YVALUE 
+  45
 
 
-*(6,x); 
+24*x*yvalue*2;
 
-  6*X 
+  48*X*YVALUE
 
 
-on rounded; 
+*(6,x);
 
-3*1.5*x*x*x; 
+  6*X
+
+
+on rounded;
+
+3*1.5*x*x*x;
 
        3
-  4.5*X  
+  4.5*X
 
 
-off rounded; 
+off rounded;
 
-2x**2; 
+2x**2;
 
      2
   2*X
@@ -1767,47 +1767,47 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-20/5; 
+20/5;
 
-  4  
+  4
 
 
-100/6; 
+100/6;
 
   50
-  -- 
+  --
   3
 
 
-16/2/x; 
+16/2/x;
 
   8
-  - 
+  -
   X
 
 
-/b; 
+/b;
 
   1
-  - 
+  -
   B
 
 
-/(y,5); 
+/(y,5);
 
   Y
-  - 
+  -
   5
 
 
-on rounded; 
+on rounded;
 
-35/4; 
+35/4;
 
-  8.75 
+  8.75
 
 
-/20; 
+/20;
 
   0.05
 
@@ -1868,34 +1868,34 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-x**15; 
+x**15;
 
    15
-  X   
+  X
 
 
-x**y**z; 
+x**y**z;
 
    Y*Z
-  X    
+  X
 
 
-x**(y**z); 
+x**(y**z);
 
     Z
    Y
-  X   
+  X
 
 
- **(y,4); 
+ **(y,4);
 
    4
-  Y  
+  Y
 
 
-on rounded; 
+on rounded;
 
-2**pi; 
+2**pi;
 
   8.82497782708
 
@@ -1966,34 +1966,34 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-x^15; 
+x^15;
 
    15
-  X   
+  X
 
 
-x^y^z; 
+x^y^z;
 
    Y*Z
-  X    
+  X
 
 
-x^(y^z); 
+x^(y^z);
 
     Z
    Y
-  X   
+  X
 
 
-^(y,4); 
+^(y,4);
 
    4
-  Y  
+  Y
 
 
-on rounded; 
+on rounded;
 
-2^pi; 
+2^pi;
 
   8.82497782708
 
@@ -2062,20 +2062,20 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-if (3 &gt;= 2) then yes; 
+if (3 &gt;= 2) then yes;
 
-  yes 
+  yes
 
 
-a := 15; 
+a := 15;
 
-  A := 15 
+  A := 15
 
 
 if a &gt;= 20 then big else small;
- 
 
-  small 
+
+  small
 
 </tt></pre>
 <p>
@@ -2132,25 +2132,25 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-on rounded; 
+on rounded;
 
-if 3.0 &gt; 3 then write &quot;different&quot; else write &quot;same&quot;; 
-
-
-  same 
+if 3.0 &gt; 3 then write &quot;different&quot; else write &quot;same&quot;;
 
 
-off rounded; 
-
-a := 20; 
-
-  A := 20 
+  same
 
 
-if a &gt; 20 then write &quot;bigger&quot; else write &quot;not bigger&quot;; 
+off rounded;
+
+a := 20;
+
+  A := 20
 
 
-  not bigger 
+if a &gt; 20 then write &quot;bigger&quot; else write &quot;not bigger&quot;;
+
+
+  not bigger
 
 </tt></pre>
 <p>
@@ -2207,12 +2207,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a := 10; 
+a := 10;
 
-  A := 10 
+  A := 10
 
 
-if a &lt;= 10 then true; 
+if a &lt;= 10 then true;
 
   true
 
@@ -2271,12 +2271,12 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-f := -3; 
+f := -3;
 
-  F := -3 
+  F := -3
 
 
-if f &lt; -3 then write &quot;yes&quot; else write &quot;no&quot;; 
+if f &lt; -3 then write &quot;yes&quot; else write &quot;no&quot;;
 
 
   no
@@ -2362,19 +2362,19 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a := 2; 
+a := 2;
 
-  A := 2 
-
-
-if a &lt; 5 then &lt;&lt;b := a + 10; write b&gt;&gt;; 
+  A := 2
 
 
-  12 
+if a &lt; 5 then &lt;&lt;b := a + 10; write b&gt;&gt;;
+
+
+  12
 
 
 &lt;&lt;d := c/15; f := d + 3; f**2&gt;&gt;;
- 
+
 
    2
   C  + 90*C + 202
@@ -2439,22 +2439,22 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a := 12; 
+a := 12;
 
-  A := 12 
+  A := 12
 
 
 if numberp a and a &lt; 15 then write a**2 else write &quot;no&quot;;
- 
 
 
-  144 
+
+  144
 
 
-clear a; 
+clear a;
 
 if numberp a and a &lt; 15 then write a**2 else write &quot;no&quot;;
- 
+
 
 
   no
@@ -2519,22 +2519,22 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-begin for i := 1:3 do write i end; 
+begin for i := 1:3 do write i end;
 
 
   1
   2
-  3     
+  3
 
 
 begin scalar n;n:=1;b:=for i:=1:4 product(x-i);return n end;
- 
 
 
-  1 
+
+  1
 
 
-b; 
+b;
 
    4        3        2
   X   - 10*X   + 35*X   - 50*X  + 24
@@ -2636,7 +2636,7 @@ E"
 <pre><tt>
 
 x := a**2 comment--a is the velocity of the particle;;
- 
+
 
 
         2
@@ -2704,28 +2704,28 @@ E"
 <p></p>
 <pre><tt>
 
-liss := cons(a,{b}); 
+liss := cons(a,{b});
 
-  {A,B} 
+  {A,B}
 
 
 
-liss := c cons liss; 
+liss := c cons liss;
 
-  {C,A,B} 
+  {C,A,B}
 
 
 
 newliss := for each y in liss collect cons(y,list x);
- 
 
 
-  NEWLISS := {{C,X},{A,X},{B,X}} 
+
+  NEWLISS := {{C,X},{A,X},{B,X}}
 
 
 
 for each y in newliss sum (first y)*(second y);
- 
+
 
 
   X*(A + B + C)
@@ -2865,12 +2865,12 @@ u:=x+y=1$
 
 v:=2x-y=0$
 
-2*u-v; 
+2*u-v;
 
   - 3*y=-2
 
 
-ws/3; 
+ws/3;
 
     2
   y=--
@@ -2929,22 +2929,22 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-alist := {a,b,c,d}; 
+alist := {a,b,c,d};
 
-  ALIST := {A,B,C,D} 
-
-
-first alist; 
-
-  A 
+  ALIST := {A,B,C,D}
 
 
-blist := {x,y,{ww,aa,qq},z}; 
+first alist;
 
-  BLIST := {X,Y,{WW,AA,QQ},Z} 
+  A
 
 
-first third blist; 
+blist := {x,y,{ww,aa,qq},z};
+
+  BLIST := {X,Y,{WW,AA,QQ},Z}
+
+
+first third blist;
 
   WW
 
@@ -2980,8 +2980,8 @@ E"
 <p></p>
 <p></p>
 <pre><tt>
-                   /                   
-   /               |STEP &lt;number&gt; UNTIL|        
+                   /
+   /               |STEP &lt;number&gt; UNTIL|
    |&lt;var&gt;:=&lt;number&gt;|                   |&lt;number&gt;|
 FOR|               |         :         |        |&lt;action&gt; &lt;exprn&gt;
    |                                  /        |
@@ -3011,56 +3011,56 @@ FOR|               |         :         |        |&lt;action&gt; &lt;exprn&gt;
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-for i := 1:10 sum i;                                    
- 
+for i := 1:10 sum i;
 
 
-  55 
+
+  55
 
 
 for a := -2 step 3 until 6 product a;
-							
 
 
-  -8 
+
+  -8
 
 
-a := 3; 
+a := 3;
 
-  A := 3 
-
-
-for iter := 4:a do write iter; 
-
-m := 0; 
-
-  M := 0 
+  A := 3
 
 
-for s := 10 step -1 until 3 do &lt;&lt;d := 10*s;m := m + d&gt;&gt;; 
+for iter := 4:a do write iter;
 
-m; 
+m := 0;
 
-  520 
+  M := 0
 
 
-for each x in {q,r,s} sum x**2; 
+for s := 10 step -1 until 3 do &lt;&lt;d := 10*s;m := m + d&gt;&gt;;
+
+m;
+
+  520
+
+
+for each x in {q,r,s} sum x**2;
 
    2    2    2
-  Q  + R  + S  
+  Q  + R  + S
 
 
-for i := 1:4 collect 1/i;                              
- 
+for i := 1:4 collect 1/i;
+
 
 
      1 1 1
-  {1,-,-,-} 
+  {1,-,-,-}
      2 3 4
 
 
-for i := 1:3 join list solve(x**2 + i*x + 1,x);         
- 
+for i := 1:3 join list solve(x**2 + i*x + 1,x);
+
 
 
         SQRT(3)*I + 1
@@ -3168,7 +3168,7 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-foreach x in {q,r,s} sum x**2; 
+foreach x in {q,r,s} sum x**2;
 
    2    2    2
   Q  + R  + S
@@ -3220,27 +3220,27 @@ E"
 <h3>examples:</h3>
 <p></p>
 <pre><tt>
-a := 20; 
+a := 20;
 
-  A := 20 
+  A := 20
 
 
 if geq(a,25) then write &quot;big&quot; else write &quot;small&quot;;
-			 
 
 
-  small 
+
+  small
 
 
 if a geq 20 then write &quot;big&quot; else write &quot;small&quot;;
-			 
 
 
-  big  
+
+  big
 
 
 if (a geq 18) then write &quot;big&quot; else write &quot;small&quot;;
-			 
+
 
 
   big
