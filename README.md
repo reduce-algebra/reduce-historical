@@ -4,58 +4,56 @@
 
 ### Historical Snapshot Archive
 
-----
+---
 
 ## Introduction
 
-**REDUCE** is a freely available open-source interactive
-system for general algebraic computations, of interest to
-mathematicians, scientists, and engineers.
+**REDUCE** is a freely available open-source interactive system for general
+algebraic computations, of interest to mathematicians, scientists, and
+engineers.
 
-It can be used interactively for simple calculations, but
-also provides a flexible and expressive user programming language.
+It can be used interactively for simple calculations, but also provides a
+flexible and expressive user programming language.
 
-----
+---
 
 ## Historical Snapshots
 
-This repository contains informal (and not-guaranteed-complete)
-historical snapshots of some previous releases of **REDUCE**.
+This repository contains informal (and not-guaranteed-complete) historical
+snapshots of some previous releases of **REDUCE**.
 
-----
+---
 
 ## More Information
 
-*There should not be any binaries or serious build scripts here,
-and these are all to be viewed as* **OUT OF DATE** *and*
-**NOT SUPPORTED AT ALL.**
+_There should not be any binaries or serious build scripts here, and these are
+all to be viewed as_ **OUT OF DATE** _and_ **NOT SUPPORTED AT ALL.**
 
-However, some people may enjoy seeing how the code-base has grown,
-and getting a bit of insight into the world of the past. Developers
-tracking newly uncovered bugs may also find it useful to look back
-into these archives in case that provides insight.
+However, some people may enjoy seeing how the code-base has grown, and getting a
+bit of insight into the world of the past. Developers tracking newly uncovered
+bugs may also find it useful to look back into these archives in case that
+provides insight.
 
-----
+---
 
 ## Support
 
-Please do not ask the **REDUCE** developers about building or
-installing from these old files. All current support is focused
-only on the main version.
+Please do not ask the **REDUCE** developers about building or installing from
+these old files. All current support is focused only on the main version.
 
-----
+---
 
 ## Licensing
 
-The files here typically have old restrictive copyright notices, and
-sometimes restrictive license terms. They are included here by virtue
-of the permission that their originators granted to Anthony C. Hearn
-and his distributors to use them.
+The files here typically have old restrictive copyright notices, and sometimes
+restrictive license terms. They are included here by virtue of the permission
+that their originators granted to Anthony C. Hearn and his distributors to use
+them.
 
-**You should not modify and redistribute** ***anything*** from this
-directory without _careful_ thought.
+**You should not modify and redistribute** **_anything_** from this directory
+without _careful_ thought.
 
-----
+---
 
 ## Availability
 
@@ -67,5 +65,4 @@ directory without _careful_ thought.
 - [NotABug Mirror](https://notabug.org/reduce-algebra/reduce-historical/)
 - [Chisel Mirror](https://chiselapp.com/user/reduce-algebra/repository/reduce-historical/)
 
-----
-
+---
