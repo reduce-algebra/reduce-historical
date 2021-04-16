@@ -1,10 +1,17 @@
 # Effectively disable Linguist
+.in linguist-vendored
+*.in linguist-vendored
+.am linguist-vendored
+*.am linguist-vendored
+Makefile linguist-vendored
 *.r linguist-vendored
 .r linguist-vendored
 *.y linguist-vendored
 .y linguist-vendored
 *.sh linguist-vendored
 .sh linguist-vendored
+*.tex linguist-vendored
+.tex linguist-vendored
 r38/lisp/csl/cslbase/configure linguist-vendored
 configure linguist-vendored
 config.guess linguist-vendored
