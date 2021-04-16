@@ -1,4 +1,22 @@
 # Effectively disable Linguist
+*.lsp linguist-vendored
+.lsp linguist-vendored
+*.tst linguist-vendored
+.tst linguist-vendored
+*.sl linguist-vendored
+.sl linguist-vendored
+*.c linguist-vendored
+*.h linguist-vendored
+.c linguist-vendored
+.h linguist-vendored
+*.red linguist-vendored
+.red linguist-vendored
+*.reduce linguist-vendored
+.reduce linguist-vendored
+*.tex linguist-vendored
+.tex linguist-vendored
+*.latex linguist-vendored
+.latex linguist-vendored
 reduce2/* linguist-vendored
 r38/* linguist-vendored
 r37/* linguist-vendored
