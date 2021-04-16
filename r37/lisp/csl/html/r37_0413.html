@@ -1,34 +1,37 @@
+<a name="MASS"> <title>MASS</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>MASS</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>command</b></p>
 
-<A NAME=MASS>
+<p></p>
+<p>
+  The <em>mass</em> command associates a scalar variable as a mass with the
+  corresponding vector variable, in high-energy physics calculations.
+</p>
 
-<TITLE>MASS</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p>
+  <em>mass</em>&lt;vector-var&gt;<em>=</em>&lt;scalar-var&gt;
+  {,&lt;vector-var&gt;<em>=</em>&lt;scalar-var&gt;}*
+</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;vector-var&gt; can be a declared vector variable; <em>mass</em> will
+  declare it to be of type <em>vector</em> if it is not. This may override an
+  existing matrix variable by that name. &lt;scalar-var&gt; must be a scalar
+  variable.
+</p>
 
-
-<B>MASS</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>command</B><P>
-<P>
- 
-The <em>mass</em> command associates a scalar variable as a mass with 
-the corresponding vector variable, in high-energy physics calculations. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>mass</em>&lt;vector-var&gt;<em>=</em>&lt;scalar-var&gt; 
-{,&lt;vector-var&gt;<em>=</em>&lt;scalar-var&gt;}* 
-<P>
-<P>
-<P>
-&lt;vector-var&gt; can be a declared vector variable; <em>mass</em> will declare
- 
-it to be of type <em>vector</em> if it is not. This may override an existing 
-matrix variable by that name. &lt;scalar-var&gt; must be a scalar variable. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 vector bb,cc; 
 
 mass cc=m; 
@@ -40,13 +43,14 @@ cc.cc;
    2
   M
 
-</TT></PRE><P>Once a mass has been attached to a vector with a <em>mass</em> dec
-laration, 
-the 
-<A HREF=r37_0414.html>mshell</A> declaration puts the associated particle ``on t
-he mass 
-shell.'' Subsequent scalar (.) products of the vector with itself will be 
-replaced by the square of the mass expression. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  Once a mass has been attached to a vector with a <em>mass</em> dec laration,
+  the <a href="r37_0414.html">mshell</a> declaration puts the associated
+  particle ``on t he mass shell.'' Subsequent scalar (.) products of the vector
+  with itself will be replaced by the square of the mass expression.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

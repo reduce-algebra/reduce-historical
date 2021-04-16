@@ -1,33 +1,32 @@
+<a name="ARGLENGTH"> <title>ARGLENGTH</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>ARGLENGTH</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=ARGLENGTH>
+<p></p>
+<p></p>
 
-<TITLE>ARGLENGTH</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  The operator <em>arglength</em> returns the number of arguments of the
+  top-level operator in its argument.
+</p>
 
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>arglength</em>(&lt;expression&gt;)
+<p></p>
+<p></p>
+<p>&lt;expression&gt; can be any valid REDUCE algebraic expression.</p>
 
-
-<B>ARGLENGTH</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
- <P>
-<P>
-The operator <em>arglength</em> returns the number of arguments of the top-level
- 
-operator in its argument. 
-<P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>arglength</em>(&lt;expression&gt;) 
-<P>
-<P>
-<P>
-&lt;expression&gt; can be any valid REDUCE algebraic expression. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 arglength(a + b + c + d); 
 
   4 
@@ -43,12 +42,15 @@ arglength(log(sin(df(r**3*x,x))));
 
   1
 
-</TT></PRE><P>In the first example, <em>+</em> is an n-ary operator, so the numb
-er of terms 
-is returned. In the second example, since <em>/</em> is a binary operator, the 
-argument is actually (a/b)/c, so there are two terms at the top level. In 
-the last example, no matter how deeply the operators are nested, there is 
-still only one argument at the top level. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  In the first example, <em>+</em> is an n-ary operator, so the numb er of terms
+  is returned. In the second example, since <em>/</em> is a binary operator, the
+  argument is actually (a/b)/c, so there are two terms at the top level. In the
+  last example, no matter how deeply the operators are nested, there is still
+  only one argument at the top level.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

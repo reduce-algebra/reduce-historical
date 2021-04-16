@@ -1,42 +1,42 @@
+<a name="toeplitz"> <title>toeplitz</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>TOEPLITZ</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=toeplitz>
+<p></p>
+<p></p>
 
-<TITLE>toeplitz</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>toeplitz</em>(&lt;expr\_list&gt;)
+<p></p>
+<p></p>
+<p>(If you are feeling lazy then the braces can be omitted.)</p>
 
+<p></p>
+<p>&lt;expr\_list&gt; :- list of algebraic expressions.</p>
 
+<p></p>
+<p><em>toeplitz</em>creates the toeplitz matrix from the &lt;expr\_list&gt;.</p>
 
-<B>TOEPLITZ</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-<P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>toeplitz</em>(&lt;expr\_list&gt;) 
-<P>
-<P>
-<P>
-(If you are feeling lazy then the braces can be omitted.) 
-<P>
-<P>
-&lt;expr\_list&gt; :- list of algebraic expressions. 
-<P>
-<P>
-<em>toeplitz</em>creates the toeplitz matrix from the &lt;expr\_list&gt;. 
-<P>
-<P>
-This is a square symmetric matrix in which the first expression is 
-placed on the diagonal and the i'th expression is placed on the (i-1)'th 
-sub and super diagonals. 
-<P>
-<P>
-It has dimension n where n is the number of expressions. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p>
+  This is a square symmetric matrix in which the first expression is placed on
+  the diagonal and the i'th expression is placed on the (i-1)'th sub and super
+  diagonals.
+</p>
+
+<p></p>
+<p>It has dimension n where n is the number of expressions.</p>
+
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 
 toeplitz({w,x,y,z}); 
 
@@ -48,4 +48,5 @@ toeplitz({w,x,y,z});
   [          ]
   [z  y  x  w]
 
-</TT></PRE><P>
+</TT></PRE>
+<p></p>

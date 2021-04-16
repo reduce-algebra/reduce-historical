@@ -1,27 +1,25 @@
+<a name="ARBVARS"> <title>ARBVARS</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>ARBVARS</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>switch</b></p>
 
-<A NAME=ARBVARS>
+<p></p>
+<p></p>
 
-<TITLE>ARBVARS</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  When <em>arbvars</em> is on, the solutions of singular or underdetermined
+  systems of equations are presented in terms of arbitrary complex variables
+  (see <a href="r37_0139.html">arbcomplex</a>). Otherwise, the solution is
+  parametrized i n terms of some of the input variables. Default is <em>on</em>.
+</p>
 
-
-
-<B>ARBVARS</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>switch</B><P>
-<P>
- 
- <P>
-<P>
-When <em>arbvars</em> is on, the solutions of singular or underdetermined 
-systems of equations are presented in terms of arbitrary complex variables 
-(see 
-<A HREF=r37_0139.html>arbcomplex</A>). Otherwise, the solution is parametrized i
-n 
-terms of some of the input variables. Default is <em>on</em>. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 solve({2x + y,4x + 2y},{x,y}); 
 
          arbcomplex(1)
@@ -51,11 +49,13 @@ solve({sqrt(x)+ y**3-1},{x,y});
             6       3
   		   {{x=y   - 2*y   + 1}} 
 
-</TT></PRE><P>With <em>arbvars</em> off, the return value <em>{{}}</em> means th
-at the 
-equations given to 
-<A HREF=r37_0179.html>solve</A> imply no relation among the input 
-variables. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  With <em>arbvars</em> off, the return value <em>{{}}</em> means th at the
+  equations given to <a href="r37_0179.html">solve</a> imply no relation among
+  the input variables.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

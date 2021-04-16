@@ -1,27 +1,26 @@
+<a name="LIMITEDFACTORS"> <title>LIMITEDFACTORS</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>LIMITEDFACTORS</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>switch</b></p>
 
-<A NAME=LIMITEDFACTORS>
+<p></p>
+<p></p>
 
-<TITLE>LIMITEDFACTORS</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  To get limited factorization in cases where it is too expensive to use full
+  multivariate polynomial factorization, the switch
+  <em>limitedfactors</em> can be turned on. In that case, only ``inexpensive''
+  factoring operations, such as square-free factorization, will be used when
+  <a href="r37_0151.html">factorize</a> is called.
+</p>
 
-
-
-<B>LIMITEDFACTORS</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>switch</B><P>
-<P>
- 
- <P>
-<P>
-To get limited factorization in cases where it is too expensive to use 
-full multivariate polynomial factorization, the switch 
-<em>limitedfactors</em> can be turned on. In that case, only ``inexpensive'' 
-factoring operations, such as square-free factorization, will be used 
-when 
-<A HREF=r37_0151.html>factorize</A> is called. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 a := (y-x)^2*(y^3+2x*y+5)*(y^2-3x*y+7)$ 
 
 factorize a; 
@@ -41,4 +40,5 @@ factorize a;
   {- 6*X *Y  - 3*X*Y  + 2*X*Y  - X*Y + Y  + 7*Y  + 5*Y  + 35,1},
   {X - Y,2}}
 
-</TT></PRE><P>
+</TT></PRE>
+<p></p>

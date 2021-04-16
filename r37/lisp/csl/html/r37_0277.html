@@ -1,24 +1,23 @@
+<a name="DEFN"> <title>DEFN</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>DEFN</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>switch</b></p>
 
-<A NAME=DEFN>
+<p></p>
+<p></p>
 
-<TITLE>DEFN</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  When the switch <em>defn</em> is on, the Standard Lisp equivalent of the input
+  statement or procedure is printed, but not evaluated. Default is <em>off</em>.
+</p>
 
-
-
-<B>DEFN</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>switch</B><P>
-<P>
- 
- <P>
-<P>
-When the switch <em>defn</em> is on, the Standard Lisp equivalent of the 
-input statement or procedure is printed, but not evaluated. Default is 
-<em>off</em>. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 
 on defn; 
 
@@ -95,18 +94,23 @@ coshval(1);
 
   1.54308063482
 
-</TT></PRE><P>The above function <em>coshval</em> finds the hyperbolic cosine (c
-osh) of its 
-argument. When <em>defn</em> is on, you can see the Standard Lisp equivalent 
-of the function, but it is not entered into the system as shown by the 
-message <em>Declare COSHVAL operator?</em>. It must be reentered with 
-<em>defn</em> off to be recognized. This procedure is used as an example; a 
-more efficient procedure would eliminate the unnecessary local variable 
-with 
-<P><PRE><TT>
+</TT></PRE>
+<p>
+  The above function <em>coshval</em> finds the hyperbolic cosine (c osh) of its
+  argument. When <em>defn</em> is on, you can see the Standard Lisp equivalent
+  of the function, but it is not entered into the system as shown by the message
+  <em>Declare COSHVAL operator?</em>. It must be reentered with
+  <em>defn</em> off to be recognized. This procedure is used as an example; a
+  more efficient procedure would eliminate the unnecessary local variable with
+</p>
+
+<p></p>
+<pre><TT>
       procedure coshval(a);
          (exp(a) + exp(-a))/2;
-</TT></PRE><P><P>
-<P>
-<P>
-<P>
+</TT></PRE>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>

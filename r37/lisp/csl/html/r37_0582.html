@@ -1,39 +1,40 @@
+<a name="coeff_matrix"> <title>coeff_matrix</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>COEFF_MATRIX</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=coeff_matrix>
+<p></p>
+<p></p>
 
-<TITLE>coeff_matrix</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>coeff_matrix</em>({&lt;lineq\_list&gt;})
+<p></p>
+<p></p>
+<p>(If you are feeling lazy then the braces can be omitted.)</p>
 
+<p></p>
+<p>
+  &lt;lineq\_list&gt; :- linear equations. Can be of the form equation = number
+  or just equation.
+</p>
 
+<p></p>
+<p>
+  <em>coeff_matrix</em>creates the coefficient matrix C of the linear equations.
+</p>
 
-<B>COEFF_MATRIX</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-<P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>coeff_matrix</em>({&lt;lineq\_list&gt;}) 
-<P>
-<P>
-<P>
-(If you are feeling lazy then the braces can be omitted.) 
-<P>
-<P>
-&lt;lineq\_list&gt; :- linear equations. Can be of the form equation = number 
-or just equation. 
-<P>
-<P>
-<em>coeff_matrix</em>creates the coefficient matrix C of the linear 
-equations. 
-<P>
-<P>
-It returns {C,X,B} such that CX = B. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p>It returns {C,X,B} such that CX = B.</p>
+
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 
 coeff_matrix({x+y+4*z=10,y+x-z=20,x+y+4}); 
 
@@ -58,4 +59,5 @@ coeff_matrix({x+y+4*z=10,y+x-z=20,x+y+4});
    [-4]
   }
 
-</TT></PRE><P>
+</TT></PRE>
+<p></p>

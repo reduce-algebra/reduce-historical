@@ -1,32 +1,32 @@
+<a name="SYMMETRIC"> <title>SYMMETRIC</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>SYMMETRIC</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>declaration</b></p>
 
-<A NAME=SYMMETRIC>
+<p></p>
+<p></p>
 
-<TITLE>SYMMETRIC</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  When an operator is declared <em>symmetric</em>, its arguments are reordered
+  to conform to the internal ordering of the system.
+</p>
 
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>symmetric</em>&lt;identifier&gt;{,&lt;identifier&gt;}*</p>
 
+<p></p>
+<p></p>
+<p>&lt;identifier&gt; is an identifier that has been declared an operator.</p>
 
-<B>SYMMETRIC</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>declaration</B><P>
-<P>
- 
- <P>
-<P>
-When an operator is declared <em>symmetric</em>, its arguments are reordered 
-to conform to the internal ordering of the system. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>symmetric</em>&lt;identifier&gt;{,&lt;identifier&gt;}* 
-<P>
-<P>
-<P>
-&lt;identifier&gt; is an identifier that has been declared an operator. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 operator m,n; 
 
 symmetric m,n; 
@@ -40,13 +40,17 @@ n(z,m(b,a,q));
 
   N(M(A,B,Q),Z)
 
-</TT></PRE><P>If &lt;identifier&gt; has not been declared to be an operator, the
- flag 
-<em>symmetric</em> is still attached to it. When &lt;identifier&gt; is 
-subsequently used as an operator, the message <em>Declare</em>&lt;identifier&gt;
- 
- <em>operator ? (Y or N)</em> is printed. If the user replies <em>y</em>, the 
-symmetric property of the operator is used. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  If &lt;identifier&gt; has not been declared to be an operator, the flag
+  <em>symmetric</em> is still attached to it. When &lt;identifier&gt; is
+  subsequently used as an operator, the message
+  <em>Declare</em>&lt;identifier&gt;
+
+  <em>operator ? (Y or N)</em> is printed. If the user replies <em>y</em>, the
+  symmetric property of the operator is used.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

@@ -1,35 +1,37 @@
+<a name="PRECEDENCE"> <title>PRECEDENCE</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>PRECEDENCE</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>declaration</b></p>
 
-<A NAME=PRECEDENCE>
+<p></p>
+<p></p>
 
-<TITLE>PRECEDENCE</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  The <em>precedence</em> declaration attaches a precedence to an infix
+  operator.
+</p>
 
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>precedence</em>&lt;operator&gt;,&lt;known\_operator&gt;</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;operator&gt; should have been declared an operator but may be a REDUCE
+  identifier that is not already an operator, array, or matrix.
+  &lt;known\_operator&gt; must be a system infix operator or have had its
+  precedence already declared.
+</p>
 
-<B>PRECEDENCE</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>declaration</B><P>
-<P>
- 
- <P>
-<P>
-The <em>precedence</em> declaration attaches a precedence to an infix operator. 
-
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>precedence</em>&lt;operator&gt;,&lt;known\_operator&gt; 
-<P>
-<P>
-<P>
-&lt;operator&gt; should have been declared an operator but may be a REDUCE 
-identifier that is not already an operator, array, or matrix. 
-&lt;known\_operator&gt; must be a system infix operator or have had its 
-precedence already declared. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 operator f,h; 
 
 precedence f,+; 
@@ -55,26 +57,33 @@ a*1 h 2*c;
 
   1 H 2*A*C
 
-</TT></PRE><P>The operator whose precedence is being declared is inserted into t
-he infix 
-operator precedence list at the next higher place than &lt;known\_operator&gt;. 
+</TT></PRE>
+<p>
+  The operator whose precedence is being declared is inserted into t he infix
+  operator precedence list at the next higher place than
+  &lt;known\_operator&gt;.
+</p>
 
-<P>
-<P>
-Attaching a precedence to an operator has the side effect of declaring the 
-operator to be infix. If the identifier argument for <em>precedence</em> has 
-not been declared to be an operator, an attempt to use it causes an error 
-message. After declaring it to be an operator, it becomes an infix operator 
-with the precedence previously given. Infix operators may be used in prefix 
-form; if they are used in infix form, a space must be left on each side of 
-the operator to avoid ambiguity. Declared infix operators are always binary. 
-<P>
-<P>
-To see the infix operator precedence list, enter symbolic mode and type 
-<em>preclis!*;</em>. The lowest precedence operator is listed first. 
-<P>
-<P>
-All prefix operators have precedence higher than infix operators. 
-<P>
-<P>
-<P>
+<p></p>
+<p>
+  Attaching a precedence to an operator has the side effect of declaring the
+  operator to be infix. If the identifier argument for <em>precedence</em> has
+  not been declared to be an operator, an attempt to use it causes an error
+  message. After declaring it to be an operator, it becomes an infix operator
+  with the precedence previously given. Infix operators may be used in prefix
+  form; if they are used in infix form, a space must be left on each side of the
+  operator to avoid ambiguity. Declared infix operators are always binary.
+</p>
+
+<p></p>
+<p>
+  To see the infix operator precedence list, enter symbolic mode and type
+  <em>preclis!*;</em>. The lowest precedence operator is listed first.
+</p>
+
+<p></p>
+<p>All prefix operators have precedence higher than infix operators.</p>
+
+<p></p>
+<p></p>
+<p></p>

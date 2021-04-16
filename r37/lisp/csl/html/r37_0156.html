@@ -1,37 +1,37 @@
+<a name="LCOF"> <title>LCOF</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>LCOF</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=LCOF>
+<p></p>
+<p></p>
 
-<TITLE>LCOF</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  The <em>lcof</em> operator returns the leading coefficient of a given
+  expression with respect to a given variable.
+</p>
 
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>lcof</em>(&lt;expression&gt;,&lt;kernel&gt;)</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;expression&gt; is ordinarily a polynomial. If
+  <a href="r37_0322.html">ratarg</a> is on, a rational expression may also be
+  used, otherwise an error results. &lt;kernel&gt; must be a
+  <a href="r37_0002.html">kernel</a>.
+</p>
 
-<B>LCOF</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
- <P>
-<P>
-The <em>lcof</em> operator returns the leading coefficient of a given expression
- 
-with respect to a given variable. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>lcof</em>(&lt;expression&gt;,&lt;kernel&gt;) 
-<P>
-<P>
-<P>
-&lt;expression&gt; is ordinarily a polynomial. If 
-<A HREF=r37_0322.html>ratarg</A> is on, 
-a rational expression may also be used, otherwise an error results. 
-&lt;kernel&gt; must be a 
-<A HREF=r37_0002.html>kernel</A>. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 lcof((x+2*y)**5,y); 
 
   32 
@@ -50,9 +50,12 @@ lcof(x**2 + 3*x + 17,y);
    2
   X  + 3*X + 17
 
-</TT></PRE><P>If the kernel does not appear in the expression, <em>lcof</em> ret
-urns the 
-expression. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  If the kernel does not appear in the expression, <em>lcof</em> ret urns the
+  expression.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

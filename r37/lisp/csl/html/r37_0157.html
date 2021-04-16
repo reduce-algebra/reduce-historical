@@ -1,35 +1,36 @@
+<a name="LENGTH"> <title>LENGTH</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>LENGTH</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=LENGTH>
+<p></p>
+<p></p>
 
-<TITLE>LENGTH</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  The <em>length</em> operator returns the number of items in a
+  <a href="r37_0053.html">list</a>, the number of terms in an expression, or the
+  dimensions of an array or matrix.
+</p>
 
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>length</em>(&lt;expr&gt;) or <em>length</em> &lt;expr&gt;</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;expr&gt; can be a list structure, an array, a matrix, or a scalar
+  expression .
+</p>
 
-<B>LENGTH</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
- <P>
-<P>
-The <em>length</em> operator returns the number of items in a 
-<A HREF=r37_0053.html>list</A>, the 
-number of 
-terms in an expression, or the dimensions of an array or matrix. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>length</em>(&lt;expr&gt;) or <em>length</em> &lt;expr&gt; 
-<P>
-<P>
-<P>
-&lt;expr&gt; can be a list structure, an array, a matrix, or a scalar expression
-. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 alist := {a,b,{ww,xx,yy,zz}}; 
 
   ALIST := {A,B,{WW,XX,YY,ZZ}} 
@@ -81,17 +82,19 @@ length eex;
 
   5
 
-</TT></PRE><P>An item in a list that is itself a list only counts as one item. A
-n error 
-message will be printed if <em>length</em> is called on a matrix which has 
-not had its dimensions set. The <em>length</em> of an array includes the 
-zeroth element of each dimension, showing the full number of elements 
-allocated. (Declaring an array A with n elements 
-allocates A(0),A(1),...,A(n).) The 
-<em>length</em> of an expression is the total number of additive terms 
-appearing in the numerator and denominator of the expression. Note that 
-subtraction of a term is represented internally as addition of a negative 
-term. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  An item in a list that is itself a list only counts as one item. A n error
+  message will be printed if <em>length</em> is called on a matrix which has not
+  had its dimensions set. The <em>length</em> of an array includes the zeroth
+  element of each dimension, showing the full number of elements allocated.
+  (Declaring an array A with n elements allocates A(0),A(1),...,A(n).) The
+  <em>length</em> of an expression is the total number of additive terms
+  appearing in the numerator and denominator of the expression. Note that
+  subtraction of a term is represented internally as addition of a negative
+  term.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

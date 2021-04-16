@@ -1,39 +1,41 @@
+<a name="gram_schmidt"> <title>gram_schmidt</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>GRAM_SCHMIDT</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=gram_schmidt>
+<p></p>
+<p></p>
 
-<TITLE>gram_schmidt</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>gram_schmidt</em>({&lt;vec\_list&gt;})
+<p></p>
+<p></p>
+<p>(If you are feeling lazy then the braces can be omitted.)</p>
 
+<p></p>
+<p>
+  &lt;vec\_list&gt; :- linearly independent vectors. Each vector must be written
+  as a list, eg:{1,0,0}.
+</p>
 
+<p></p>
+<p>
+  <em>gram_schmidt</em>performs the gram_schmidt orthonormalization on the input
+  vectors.
+</p>
 
-<B>GRAM_SCHMIDT</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-<P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>gram_schmidt</em>({&lt;vec\_list&gt;}) 
-<P>
-<P>
-<P>
-(If you are feeling lazy then the braces can be omitted.) 
-<P>
-<P>
-&lt;vec\_list&gt; :- linearly independent vectors. Each vector must be 
-written as a list, eg:{1,0,0}. 
-<P>
-<P>
-<em>gram_schmidt</em>performs the gram_schmidt orthonormalization on 
-the input vectors. 
-<P>
-<P>
-It returns a list of orthogonal normalized vectors. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p>It returns a list of orthogonal normalized vectors.</p>
+
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 
 gram_schmidt({{1,0,0},{1,1,0},{1,1,1}}); 
 
@@ -49,4 +51,5 @@ gram_schmidt({{1,2},{3,4}});
   {{ ------- , ------- },{ --------- , -------- }}
      sqrt(5)   sqrt(5)         5          5
 
-</TT></PRE><P>
+</TT></PRE>
+<p></p>

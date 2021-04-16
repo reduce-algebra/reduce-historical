@@ -1,42 +1,45 @@
+<a name="hessian"> <title>hessian</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>HESSIAN</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=hessian>
+<p></p>
+<p></p>
 
-<TITLE>hessian</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>hessian</em>(&lt;expr&gt;,&lt;variable\_list&gt;)
+<p></p>
+<p></p>
+<p>&lt;expr&gt; :- a scalar expression.</p>
 
+<p></p>
+<p>
+  &lt;variable\_list&gt; :- either a single variable or a list of variables.
+</p>
 
+<p></p>
+<p>
+  <em>hessian</em>computes the hessian matrix of &lt;expr&gt; w.r.t. the
+  variables in &lt;variable\_list&gt;.
+</p>
 
-<B>HESSIAN</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-<P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>hessian</em>(&lt;expr&gt;,&lt;variable\_list&gt;) 
-<P>
-<P>
-<P>
-&lt;expr&gt; :- a scalar expression. 
-<P>
-<P>
-&lt;variable\_list&gt; :- either a single variable or a list of 
- variables. 
-<P>
-<P>
-<em>hessian</em>computes the hessian matrix of &lt;expr&gt; w.r.t. the 
-variables in &lt;variable\_list&gt;. 
-<P>
-<P>
-This is an n by n matrix where n is the number of variables and the 
-(i,j)'th entry is 
-<A HREF=r37_0148.html>df</A>(&lt;expr&gt;,&lt;variable\_list&gt;(i), 
-&lt;variable\_list&gt;(j)). 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p>
+  This is an n by n matrix where n is the number of variables and the (i,j)'th
+  entry is
+  <a href="r37_0148.html">df</a>(&lt;expr&gt;,&lt;variable\_list&gt;(i),
+  &lt;variable\_list&gt;(j)).
+</p>
+
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 
 hessian(x*y*z+x^2,{w,x,y,z}); 
 
@@ -48,7 +51,8 @@ hessian(x*y*z+x^2,{w,x,y,z});
   [          ]
   [0  y  x  0]
 
-</TT></PRE><P>Related functions: 
-<A HREF=r37_0148.html>df</A>. 
-<P>
-<P>
+</TT></PRE>
+<p>Related functions: <a href="r37_0148.html">df</a>.</p>
+
+<p></p>
+<p></p>

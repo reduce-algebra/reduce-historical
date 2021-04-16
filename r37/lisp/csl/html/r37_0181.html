@@ -1,37 +1,38 @@
+<a name="STRUCTR"> <title>STRUCTR</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>STRUCTR</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=STRUCTR>
+<p></p>
+<p></p>
 
-<TITLE>STRUCTR</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  The <em>structr</em> operator breaks its argument expression into named
+  subexpressions.
+</p>
 
-
-
-<B>STRUCTR</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
- <P>
-<P>
-The <em>structr</em> operator breaks its argument expression into named 
-subexpressions. 
-<P>
-<P>
- <P> <H3> 
-syntax: </H3>
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
 <em>structr</em>(&lt;expression&gt; [,&lt;identifier&gt;[,&lt;identifier&gt; ...
-]]) 
-<P>
-<P>
-<P>
-&lt;expression&gt; may be any valid REDUCE scalar expression. 
-&lt;identifier&gt; may be any valid REDUCE <em>identifier</em>. The first 
-identifier 
-is the stem for subexpression names, the second is the name to be assigned 
-to the structured expression. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+]])
+<p></p>
+<p></p>
+<p>
+  &lt;expression&gt; may be any valid REDUCE scalar expression.
+  &lt;identifier&gt; may be any valid REDUCE <em>identifier</em>. The first
+  identifier is the stem for subexpression names, the second is the name to be
+  assigned to the structured expression.
+</p>
+
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 structr(sqrt(x**2 + 2*x) + sin(x**2*z)); 
 
 
@@ -56,21 +57,24 @@ structr((x+1)**5 + tan(x*y*z),var,aa);
   VAR1=TAN(X*Y*Z)
   AA=VAR1+X**5+5.*X**4+10.*X**3+10.X**2+5.*X+1
 
-</TT></PRE><P>The second argument to <em>structr</em> is optional. If it is not 
-given, the 
-default stem <em>ANS</em> is used by REDUCE to construct names for the 
-subexpression. The names are only for display purposes: REDUCE does not 
-store the names and their values unless the switch 
-<A HREF=r37_0331.html>savestructr</A> is 
-on. 
-<P>
-<P>
-If a third argument is given, the structured expression as a whole is named by 
-this argument, when 
-<A HREF=r37_0289.html>fort</A> is on. The expression is not stored 
-under this 
-name. You can send these structured Fortran expressions to a file with the 
-<em>out</em> command. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  The second argument to <em>structr</em> is optional. If it is not given, the
+  default stem <em>ANS</em> is used by REDUCE to construct names for the
+  subexpression. The names are only for display purposes: REDUCE does not store
+  the names and their values unless the switch
+  <a href="r37_0331.html">savestructr</a> is on.
+</p>
+
+<p></p>
+<p>
+  If a third argument is given, the structured expression as a whole is named by
+  this argument, when
+  <a href="r37_0289.html">fort</a> is on. The expression is not stored under
+  this name. You can send these structured Fortran expressions to a file with
+  the <em>out</em> command.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

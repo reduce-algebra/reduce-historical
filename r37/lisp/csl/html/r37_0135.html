@@ -1,35 +1,36 @@
+<a name="WRITE"> <title>WRITE</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>WRITE</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>command</b></p>
 
-<A NAME=WRITE>
+<p></p>
+<p></p>
 
-<TITLE>WRITE</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  The <em>write</em> command explicitly writes its arguments to the output
+  device (terminal or file).
+</p>
 
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>write</em>&lt;item&gt;{,&lt;item&gt;}*</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;item&gt; can be an expression, an assignment or a
+  <a href="r37_0003.html">string</a>
+  enclosed in double quotation marks (<em>&quot;</em>).
+</p>
 
-<B>WRITE</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>command</B><P>
-<P>
- 
- <P>
-<P>
-The <em>write</em> command explicitly writes its arguments to the output device 
-
-(terminal or file). 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>write</em>&lt;item&gt;{,&lt;item&gt;}* 
-<P>
-<P>
-<P>
-&lt;item&gt; can be an expression, an assignment or a 
-<A HREF=r37_0003.html>string</A> 
-enclosed in double quotation marks (<em>&quot;</em>). 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 write a, sin x, &quot;this is a string&quot;; 
 
 
@@ -65,16 +66,21 @@ m(4);
 
   8
 
-</TT></PRE><P>The items specified by a single <em>write</em> statement print on 
-a single line 
-unless they are too long. A printed line is always ended with a carriage 
-return, so the next item printed starts a new line. 
-<P>
-<P>
-When an assignment statement is printed, the assignment is also made. This 
-allows you to get feedback on filling slots in an array with a 
-<A HREF=r37_0047.html>for</A> 
- statement, as shown in the last example above. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  The items specified by a single <em>write</em> statement print on a single
+  line unless they are too long. A printed line is always ended with a carriage
+  return, so the next item printed starts a new line.
+</p>
+
+<p></p>
+<p>
+  When an assignment statement is printed, the assignment is also made. This
+  allows you to get feedback on filling slots in an array with a
+  <a href="r37_0047.html">for</a>
+  statement, as shown in the last example above.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

@@ -1,36 +1,37 @@
+<a name="ORDER"> <title>ORDER</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>ORDER</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>declaration</b></p>
 
-<A NAME=ORDER>
+<p></p>
+<p></p>
 
-<TITLE>ORDER</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  The <em>order</em> declaration changes the order of precedence of kernels for
+  display purposes only.
+</p>
 
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>order</em>&lt;identifier&gt;{,&lt;identifier&gt;}*</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;kernel&gt; must be a valid
+  <a href="r37_0002.html">kernel</a> or
+  <a href="r37_0211.html">operator</a> name complete with argument or a
+  <a href="r37_0053.html">list</a> of such objects.
+</p>
 
-<B>ORDER</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>declaration</B><P>
-<P>
- 
- <P>
-<P>
-The <em>order</em> declaration changes the order of precedence of kernels for 
-display purposes only. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>order</em>&lt;identifier&gt;{,&lt;identifier&gt;}* 
-<P>
-<P>
-<P>
-&lt;kernel&gt; must be a valid 
-<A HREF=r37_0002.html>kernel</A> or 
-<A HREF=r37_0211.html>operator</A> name 
-complete with argument or a 
-<A HREF=r37_0053.html>list</A> of such objects. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 x + y + z + cos(a); 
 
   COS(A) + X + Y + Z 
@@ -56,26 +57,30 @@ order nil;
         2                 2
   COS(Z)  + 2*COS(Z)*Z + Z
 
-</TT></PRE><P><em>order</em>affects the printing order of the identifiers only; 
-internal 
-order is unchanged. Change internal order of evaluation with the 
-declaration 
-<A HREF=r37_0198.html>korder</A>. You can use <em>order</em> to feature variable
-s 
-or functions you are particularly interested in. 
-<P>
-<P>
-Declarations made with <em>order</em> are cumulative: kernels in new order 
-declarations are ordered behind those in previous declarations, and 
-previous declarations retain their relative order. Of course, specific 
-kernels named in new declarations are removed from previous ones and given 
-the new priority. Return to the standard canonical printing order with the 
-statement <em>order nil</em>. 
-<P>
-<P>
-The print order specified by <em>order</em> commands is not in effect if the 
-switch 
-<A HREF=r37_0319.html>pri</A> is off. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  <em>order</em>affects the printing order of the identifiers only; internal
+  order is unchanged. Change internal order of evaluation with the declaration
+  <a href="r37_0198.html">korder</a>. You can use <em>order</em> to feature
+  variable s or functions you are particularly interested in.
+</p>
+
+<p></p>
+<p>
+  Declarations made with <em>order</em> are cumulative: kernels in new order
+  declarations are ordered behind those in previous declarations, and previous
+  declarations retain their relative order. Of course, specific kernels named in
+  new declarations are removed from previous ones and given the new priority.
+  Return to the standard canonical printing order with the statement
+  <em>order nil</em>.
+</p>
+
+<p></p>
+<p>
+  The print order specified by <em>order</em> commands is not in effect if the
+  switch <a href="r37_0319.html">pri</a> is off.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

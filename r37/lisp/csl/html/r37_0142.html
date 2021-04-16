@@ -1,37 +1,38 @@
+<a name="COEFFN"> <title>COEFFN</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>COEFFN</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=COEFFN>
+<p></p>
+<p></p>
 
-<TITLE>COEFFN</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  The <em>coeffn</em> operator takes three arguments: an expression, a kernel,
+  and a non-negative integer. It returns the coefficient of the kernel to that
+  integer power, appearing in the expression.
+</p>
 
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>coeffn</em>(&lt;expression&gt;,&lt;kernel&gt;,&lt;integer&gt;)
+<p></p>
+<p></p>
+<p>
+  &lt;expression&gt; must be a polynomial, unless
+  <a href="r37_0322.html">ratarg</a> is on which allows rational expressions.
+  &lt;kernel&gt; must be a kernel, and &lt;integer&gt; must be a non-negative
+  integer.
+</p>
 
-
-<B>COEFFN</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
- <P>
-<P>
-The <em>coeffn</em> operator takes three arguments: an expression, a kernel, and
- 
-a non-negative integer. It returns the coefficient of the kernel to that 
-integer power, appearing in the expression. 
-<P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>coeffn</em>(&lt;expression&gt;,&lt;kernel&gt;,&lt;integer&gt;) 
-<P>
-<P>
-<P>
-&lt;expression&gt; must be a polynomial, unless 
-<A HREF=r37_0322.html>ratarg</A> is on which 
-allows rational expressions. &lt;kernel&gt; must be a kernel, and 
-&lt;integer&gt; must be a non-negative integer. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 
 ff := x**7 + sin(y)*x**5 + y**4 + x + 7; 
 
@@ -82,13 +83,15 @@ coeffn(rr,y,5);
    2
   Y
 
-</TT></PRE><P>If the given power of the kernel does not appear in the expression
-, 
-<em>coeffn</em> returns 0. Negative powers are never detected, even if 
-they appear in the expression and 
-<A HREF=r37_0322.html>ratarg</A> are on. <em>coeffn</em> 
-with an integer argument of 0 returns any terms in the expression that 
-do not contain the given kernel. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  If the given power of the kernel does not appear in the expression ,
+  <em>coeffn</em> returns 0. Negative powers are never detected, even if they
+  appear in the expression and <a href="r37_0322.html">ratarg</a> are on.
+  <em>coeffn</em> with an integer argument of 0 returns any terms in the
+  expression that do not contain the given kernel.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

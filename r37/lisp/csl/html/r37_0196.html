@@ -1,33 +1,32 @@
+<a name="INFIX"> <title>INFIX</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>INFIX</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>declaration</b></p>
 
-<A NAME=INFIX>
+<p></p>
+<p></p>
 
-<TITLE>INFIX</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p><em>infix</em>declares identifiers to be infix operators.</p>
 
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>infix</em>&lt;identifier&gt;{,&lt;identifier&gt;}*</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;identifier&gt; can be any valid REDUCE identifier, which has not already
+  been declared an operator, array or matrix, and is not reserved by the system.
+</p>
 
-<B>INFIX</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>declaration</B><P>
-<P>
- 
- <P>
-<P>
-<em>infix</em>declares identifiers to be infix operators. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>infix</em>&lt;identifier&gt;{,&lt;identifier&gt;}* 
-<P>
-<P>
-<P>
-&lt;identifier&gt; can be any valid REDUCE identifier, which has not already 
-been declared an operator, array or matrix, and is not reserved by the 
-system. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 infix aa; 
 
 for all x,y let aa(x,y) = cos(x)*cos(y) - sin(x)*sin(y); 
@@ -48,27 +47,32 @@ aa(pi,pi);
 
   1
 
-</TT></PRE><P>A 
-<A HREF=r37_0199.html>let</A> statement must be used to attach functionality to 
+</TT></PRE>
+<p>
+  A <a href="r37_0199.html">let</a> statement must be used to attach
+  functionality to the operator. Note that the operator is defined in prefix
+  form in the <em>let</em> statement. After its definition, the operator may be
+  used in either prefix or infix mode. The above operator aa finds the cosine of
+  the sum of two angles by the formula
+</p>
 
-the operator. Note that the operator is defined in prefix form in 
-the <em>let</em> statement. 
-After its definition, the operator may be used in either prefix or infix 
-mode. The above operator aa finds the cosine of the sum 
-of two angles by the formula 
-<P>
-<P>
-cos(x+y) = cos(x)*cos(y) - sin(x)*sin(y). 
-<P>
-<P>
-Precedence may be attached to infix operators with the 
+<p></p>
+<p>cos(x+y) = cos(x)*cos(y) - sin(x)*sin(y).</p>
 
-<A HREF=r37_0213.html>precedence</A> declaration. 
-<P>
-<P>
-User-defined infix operators may be used in prefix form. If they are used 
-in infix form, a space must be left on each side of the operator to avoid 
-ambiguity. Infix operators are always binary. 
-<P>
-<P>
-<P>
+<p></p>
+<p>
+  Precedence may be attached to infix operators with the
+
+  <a href="r37_0213.html">precedence</a> declaration.
+</p>
+
+<p></p>
+<p>
+  User-defined infix operators may be used in prefix form. If they are used in
+  infix form, a space must be left on each side of the operator to avoid
+  ambiguity. Infix operators are always binary.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

@@ -1,32 +1,33 @@
+<a name="MSHELL"> <title>MSHELL</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>MSHELL</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>command</b></p>
 
-<A NAME=MSHELL>
+<p></p>
+<p>
+  The <em>mshell</em> command puts particles on the mass shell in high-energy
+  physics calculations.
+</p>
 
-<TITLE>MSHELL</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>mshell</em>&lt;vector-var&gt;{,&lt;vector-var&gt;}*</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;vector-var&gt; must have had a mass attached to it by a
+  <a href="r37_0413.html">mass</a>
+  declaration.
+</p>
 
-
-<B>MSHELL</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>command</B><P>
-<P>
- 
-The <em>mshell</em> command puts particles on the mass shell in high-energy 
-physics calculations. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>mshell</em>&lt;vector-var&gt;{,&lt;vector-var&gt;}* 
-<P>
-<P>
-<P>
-&lt;vector-var&gt; must have had a mass attached to it by a 
-<A HREF=r37_0413.html>mass</A> 
-declaration. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 vector v1,v2; 
 
 mass v1=m,v2=q; 
@@ -51,10 +52,13 @@ v1.v1*v2.v2;
    2  2
   M *Q
 
-</TT></PRE><P>Even though a mass is attached to a vector variable representing a
- 
-particle, the replacement does not take place until the <em>mshell</em> 
-declaration is given for that vector variable. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  Even though a mass is attached to a vector variable representing a particle,
+  the replacement does not take place until the <em>mshell</em> declaration is
+  given for that vector variable.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

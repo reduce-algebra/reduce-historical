@@ -1,33 +1,35 @@
+<a name="REMAINDER"> <title>REMAINDER</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>REMAINDER</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=REMAINDER>
+<p></p>
+<p></p>
 
-<TITLE>REMAINDER</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  The <em>remainder</em> operator returns the remainder after its first argument
+  is divided by its second argument.
+</p>
 
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>remainder</em>(&lt;expression&gt;,&lt;expression&gt;)
+<p></p>
+<p></p>
+<p>
+  &lt;expression&gt; can be any valid REDUCE polynomial, and is not limited to
+  numeric values.
+</p>
 
-
-<B>REMAINDER</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
- <P>
-<P>
-The <em>remainder</em> operator returns the remainder after its first 
-argument is divided by its second argument. 
-<P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>remainder</em>(&lt;expression&gt;,&lt;expression&gt;) 
-<P>
-<P>
-<P>
-&lt;expression&gt; can be any valid REDUCE polynomial, and is not limited 
-to numeric values. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 remainder(13,6); 
 
   1 
@@ -48,15 +50,18 @@ remainder(sin(2*x),x*y);
 
   SIN(2*X)
 
-</TT></PRE><P>In the default case, remainders are calculated over the integers. 
-If you 
-need the remainder with respect to another domain, it must be declared 
-explicitly. 
-<P>
-<P>
-If the first argument to <em>remainder</em> contains a denominator not equal to 
+</TT></PRE>
+<p>
+  In the default case, remainders are calculated over the integers. If you need
+  the remainder with respect to another domain, it must be declared explicitly.
+</p>
 
-1, an error occurs. 
-<P>
-<P>
-<P>
+<p></p>
+<p>
+  If the first argument to <em>remainder</em> contains a denominator not equal
+  to 1, an error occurs.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

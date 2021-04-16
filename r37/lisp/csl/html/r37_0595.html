@@ -1,46 +1,53 @@
+<a name="jacobian"> <title>jacobian</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>JACOBIAN</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=jacobian>
+<p></p>
+<p></p>
 
-<TITLE>jacobian</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>jacobian</em>(&lt;expr\_list&gt;,&lt;variable\_list&gt;)
+<p></p>
+<p></p>
+<p>
+  &lt;expr\_list&gt; :- either a single algebraic expression or a list of
+  algebraic expressions.
+</p>
 
+<p></p>
+<p>
+  &lt;variable\_list&gt; :- either a single variable or a list of variables.
+</p>
 
+<p></p>
+<p>
+  <em>jacobian</em>computes the jacobian matrix of &lt;expr\_list&gt; w.r.t.
+  &lt;variable\_list&gt;.
+</p>
 
-<B>JACOBIAN</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-<P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>jacobian</em>(&lt;expr\_list&gt;,&lt;variable\_list&gt;) 
-<P>
-<P>
-<P>
-&lt;expr\_list&gt; :- either a single algebraic expression or a list 
- of algebraic expressions. 
-<P>
-<P>
-&lt;variable\_list&gt; :- either a single variable or a list of 
- variables. 
-<P>
-<P>
-<em>jacobian</em>computes the jacobian matrix of &lt;expr\_list&gt; 
-w.r.t. &lt;variable\_list&gt;. 
-<P>
-<P>
-This is a matrix whose (i,j)'th entry is 
-<A HREF=r37_0148.html>df</A>(&lt;expr\_list&gt; 
-(i),&lt;variable\_list&gt;(j)). 
-<P>
-<P>
-The matrix is n by m where n is the number of variables and m the number 
-of expressions. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p>
+  This is a matrix whose (i,j)'th entry is
+  <a href="r37_0148.html">df</a>(&lt;expr\_list&gt;
+  (i),&lt;variable\_list&gt;(j)).
+</p>
+
+<p></p>
+<p>
+  The matrix is n by m where n is the number of variables and m the number of
+  expressions.
+</p>
+
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
  
 jacobian({x^4,x*y^2,x*y*z^3},{w,x,y,z}); 
 
@@ -54,9 +61,12 @@ jacobian({x^4,x*y^2,x*y*z^3},{w,x,y,z});
   [      3     3          2]
   [0  y*z   x*z    3*x*y*z ]
 
-</TT></PRE><P>Related functions: 
+</TT></PRE>
+<p>
+  Related functions:
 
-<A HREF=r37_0593.html>hessian</A>, 
-<A HREF=r37_0148.html>df</A>. 
-<P>
-<P>
+  <a href="r37_0593.html">hessian</a>, <a href="r37_0148.html">df</a>.
+</p>
+
+<p></p>
+<p></p>

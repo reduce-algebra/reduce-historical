@@ -1,45 +1,43 @@
+<a name="SORT"> <title>SORT</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>SORT</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=SORT>
+<p></p>
+<p></p>
 
-<TITLE>SORT</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  The <em>sort</em> operator sorts the elements of a list according to an
+  arbitrary comparison operator.
+</p>
 
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>sort</em>(&lt;lst&gt;,&lt;comp&gt;)</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;lst&gt; is a
+  <a href="r37_0053.html">list</a> of algebraic expressions. &lt;comp&gt; is a
+  comparison operator which defines a partial ordering among the members of
+  &lt;lst&gt;. &lt;comp&gt; may be one of the builtin comparison operators like
+  <em>&lt;</em>( <a href="r37_0115.html">lessp</a>), <em>&lt;=</em>(
+  <a href="r37_0114.html">leq</a>) etc., or &lt;comp&gt; may be the name of a
+  comparison procedure. Such a procedure has two arguments, and it returns
 
-<B>SORT</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
- <P>
-<P>
-The <em>sort</em> operator sorts the elements of a list according to 
-an arbitrary comparison operator. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>sort</em>(&lt;lst&gt;,&lt;comp&gt;) 
-<P>
-<P>
-<P>
-&lt;lst&gt; is a 
-<A HREF=r37_0053.html>list</A> of algebraic expressions. 
-&lt;comp&gt; is a comparison operator which defines a partial 
-ordering among the members of &lt;lst&gt;. &lt;comp&gt; may be 
-one of the builtin comparison operators like 
-<em>&lt;</em>(
-<A HREF=r37_0115.html>lessp</A>), <em>&lt;=</em>(
-<A HREF=r37_0114.html>leq</A>) 
-etc., or &lt;comp&gt; may be the name of a comparison procedure. 
-Such a procedure has two arguments, and it returns 
+  <a href="r37_0122.html">true</a> if the first argument ranges before the
+  second one, and 0 or <a href="r37_0014.html">nil</a> otherwise. The result of
+  <em>sort</em> is a new list which contains the elements of &lt;lst&gt; in a
+  sequence corresponding to &lt;comp&gt;.
+</p>
 
-<A HREF=r37_0122.html>true</A> if the first argument 
-ranges before the second one, and 0 or 
-<A HREF=r37_0014.html>nil</A> otherwise. 
-The result of <em>sort</em> is a new list which contains the 
-elements of &lt;lst&gt; in a sequence corresponding to &lt;comp&gt;. 
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
  procedure ce(a,b);
 
    if evenp a and not evenp b then 1 else 0;
@@ -74,5 +72,7 @@ sort({x^2,y^2,x*y},cd);
     2      2
   {x ,x*y,y }
 
-</TT></PRE><P><P>
-<P>
+</TT></PRE>
+<p></p>
+<p></p>
+<p></p>

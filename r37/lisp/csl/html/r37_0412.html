@@ -1,30 +1,29 @@
+<a name="INDEX"> <title>INDEX</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>INDEX</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>declaration</b></p>
 
-<A NAME=INDEX>
+<p></p>
+<p>
+  The declaration <em>index</em> flags a four-vector as an index for subsequent
+  high-energy physics calculations.
+</p>
 
-<TITLE>INDEX</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>index</em>&lt;vector-id&gt;{,&lt;vector-id&gt;}*</p>
 
+<p></p>
+<p></p>
+<p>&lt;vector-id&gt; must have been declared of type <em>vector</em>.</p>
 
-
-<B>INDEX</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>declaration</B><P>
-<P>
- 
-The declaration <em>index</em> flags a four-vector as an index for subsequent 
-high-energy physics calculations. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>index</em>&lt;vector-id&gt;{,&lt;vector-id&gt;}* 
-<P>
-<P>
-<P>
-&lt;vector-id&gt; must have been declared of type <em>vector</em>. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 vector aa,bb,cc; 
 
 index uu; 
@@ -40,16 +39,19 @@ let aa.bb = 0;
 
   AA.CC
 
-</TT></PRE><P>Index variables are used to represent contraction over components 
-of 
-vectors when scalar products are taken by the . operator, as well as 
-indicating contraction for the 
-<A HREF=r37_0410.html>eps</A> operator or metric tensor. 
-<P>
-<P>
-The special status of a vector as an index can be revoked with the 
-declaration 
-<A HREF=r37_0416.html>remind</A>. The object remains a vector, however. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  Index variables are used to represent contraction over components of vectors
+  when scalar products are taken by the . operator, as well as indicating
+  contraction for the <a href="r37_0410.html">eps</a> operator or metric tensor.
+</p>
+
+<p></p>
+<p>
+  The special status of a vector as an index can be revoked with the declaration
+  <a href="r37_0416.html">remind</a>. The object remains a vector, however.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

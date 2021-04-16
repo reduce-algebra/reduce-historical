@@ -1,64 +1,67 @@
+<a name="bounds"> <title>bounds</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>BOUNDS</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=bounds>
+<p></p>
+<p></p>
 
-<TITLE>bounds</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  Upper and lower bounds of a real valued function over an
 
+  <a href="r37_0422.html">interval</a> or a rectangular multivariate domain are
+  comp uted by the operator <em>bounds</em>. The algorithmic basis is the
+  computation with inequalities: starting from the interval(s) of the variables,
+  the bounds are propagated in the expression using the rules for inequality
+  computation. Some knowledge about the behavior of special functions like ABS,
+  SIN, COS, EXP, LOG, fractional exponentials etc. is integrated and can be
+  evaluated if the operator <em>bounds</em> is called with rounded mode on
+  (otherwise only algebraic evaluation rules are available).
+</p>
 
+<p></p>
+<p>
+  If <em>bounds</em> finds a singularity within an interval, the evaluation is
+  stopped with an error message indicating the problem part of the expression.
+</p>
 
-<B>BOUNDS</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-<P>
-<P>
-Upper and lower bounds of a real valued function over an 
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>bounds</em>(&lt;exp&gt;,&lt;var&gt;=(&lt;l&gt; .. &lt;u&gt;)
+[,&lt;var&gt;=(&lt;l&gt; .. &lt;u&gt;) ...])
+<p></p>
+<p>or</p>
 
-<A HREF=r37_0422.html>interval</A> or a rectangular multivariate domain are comp
-uted 
-by the operator <em>bounds</em>. The algorithmic basis is the computation 
-with inequalities: starting from the interval(s) of the 
-variables, the bounds are propagated in the expression 
-using the rules for inequality computation. Some knowledge 
-about the behavior of special functions like ABS, SIN, COS, EXP, LOG, 
-fractional exponentials etc. is integrated and can be evaluated 
-if the operator <em>bounds</em> is called with rounded mode on 
-(otherwise only algebraic evaluation rules are available). 
- <P>
-<P>
-If <em>bounds</em> finds a singularity within an interval, the evaluation 
-is stopped with an error message indicating the problem part 
-of the expression. 
- <P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>bounds</em>(&lt;exp&gt;,&lt;var&gt;=(&lt;l&gt; .. &lt;u&gt;) 
- [,&lt;var&gt;=(&lt;l&gt; .. &lt;u&gt;) ...]) 
-<P>
-<P>
-or 
-<P>
-<P>
-<em>bounds</em>(&lt;exp&gt;,{&lt;var&gt;=(&lt;l&gt; .. &lt;u&gt;) 
- [,&lt;var&gt;=(&lt;l&gt; .. &lt;u&gt;) ...]}) 
-<P>
-<P>
-<P>
-<P>
-where &lt;exp&gt; is the function to be investigated, 
-&lt;var&gt; are the variables of &lt;exp&gt;, 
-&lt;l&gt; and &lt;u&gt; specify the area as set of 
-<A HREF=r37_0422.html>interval</A><em>s</em>. 
-<P>
-<P>
-<em>bounds</em>computes upper and lower bounds for the expression in the 
-given area. An 
-<A HREF=r37_0422.html>interval</A> is returned. 
- <P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p>
+  <em>bounds</em>(&lt;exp&gt;,{&lt;var&gt;=(&lt;l&gt; .. &lt;u&gt;)
+  [,&lt;var&gt;=(&lt;l&gt; .. &lt;u&gt;) ...]})
+</p>
+
+<p></p>
+<p></p>
+<p></p>
+<p>
+  where &lt;exp&gt; is the function to be investigated, &lt;var&gt; are the
+  variables of &lt;exp&gt;, &lt;l&gt; and &lt;u&gt; specify the area as set of
+  <a href="r37_0422.html">interval</a><em>s</em>.
+</p>
+
+<p></p>
+<p>
+  <em>bounds</em>computes upper and lower bounds for the expression in the given
+  area. An <a href="r37_0422.html">interval</a> is returned.
+</p>
+
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 bounds(sin x,x=(1 .. 2));
 
   -1 .. 1
@@ -75,4 +78,5 @@ bounds(x**2+x,x=(-0.5 .. 0.5));
 
   - 0.25 .. 0.75
 
-</TT></PRE><P>
+</TT></PRE>
+<p></p>

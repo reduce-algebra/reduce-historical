@@ -1,25 +1,24 @@
+<a name="MODULAR"> <title>MODULAR</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>MODULAR</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>switch</b></p>
 
-<A NAME=MODULAR>
+<p></p>
+<p></p>
 
-<TITLE>MODULAR</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  When <em>modular</em> is on, polynomial coefficients are reduced by the
+  modulus set by <a href="r37_0104.html">setmod</a>. If no modulus has been set,
+  <em>modular</em> has no effect.
+</p>
 
-
-
-<B>MODULAR</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>switch</B><P>
-<P>
- 
- <P>
-<P>
-When <em>modular</em> is on, polynomial coefficients are reduced by the 
-modulus set by 
-<A HREF=r37_0104.html>setmod</A>. If no modulus has been set, <em>modular</em> 
-has no effect. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 setmod 2; 
 
   1 
@@ -40,16 +39,19 @@ on modular;
    2
   X  + X*Y + 1
 
-</TT></PRE><P>Modular operations are only conducted on the coefficients, not the
- 
-exponents. The modulus is not restricted to being prime. When the modulus 
-is prime, division by a number not relatively prime to the modulus results 
-in a &lt;Zero divisor&gt; error message. When the modulus is a composite 
-number, division by a power of the modulus results in an error message, but 
-division by an integer which is a factor of the modulus does not. 
-The representation of modular number can be influenced by 
+</TT></PRE>
+<p>
+  Modular operations are only conducted on the coefficients, not the exponents.
+  The modulus is not restricted to being prime. When the modulus is prime,
+  division by a number not relatively prime to the modulus results in a &lt;Zero
+  divisor&gt; error message. When the modulus is a composite number, division by
+  a power of the modulus results in an error message, but division by an integer
+  which is a factor of the modulus does not. The representation of modular
+  number can be influenced by
 
-<A HREF=r37_0269.html>balanced_mod</A>. 
-<P>
-<P>
-<P>
+  <a href="r37_0269.html">balanced_mod</a>.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

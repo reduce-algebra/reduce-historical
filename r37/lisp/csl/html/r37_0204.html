@@ -1,36 +1,37 @@
+<a name="NODEPEND"> <title>NODEPEND</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>NODEPEND</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>declaration</b></p>
 
-<A NAME=NODEPEND>
+<p></p>
+<p></p>
 
-<TITLE>NODEPEND</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p>
+  The <em>nodepend</em> declaration removes the dependency declared with
 
+  <a href="r37_0192.html">depend</a>.
+</p>
 
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p><em>nodepend</em>&lt;dep-kernel&gt;{,&lt;kernel&gt;}+</p>
 
-<B>NODEPEND</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>declaration</B><P>
-<P>
- 
- <P>
-<P>
-The <em>nodepend</em> declaration removes the dependency declared with 
+<p></p>
+<p></p>
+<p></p>
+<p>
+  &lt;dep-kernel&gt; must be a kernel that has had a dependency declared upon
+  the one or more other kernels that are its other arguments.
+</p>
 
-<A HREF=r37_0192.html>depend</A>. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-<em>nodepend</em>&lt;dep-kernel&gt;{,&lt;kernel&gt;}+ 
-<P>
-<P>
-<P>
-<P>
-&lt;dep-kernel&gt; must be a kernel that has had a dependency declared upon the 
-
-one or more other kernels that are its other arguments. 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 depend y,x,z; 
 
 df(sin y,x); 
@@ -54,9 +55,12 @@ df(sin y,x,z);
 
   0
 
-</TT></PRE><P>A warning message is printed if the dependency had not been declar
-ed by 
-<em>depend</em>. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  A warning message is printed if the dependency had not been declar ed by
+  <em>depend</em>.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

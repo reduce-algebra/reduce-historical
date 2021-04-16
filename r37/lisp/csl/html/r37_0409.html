@@ -1,35 +1,34 @@
+<a name="HE_dot"> <title>HE_dot</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>.</b> _ _ _ <b>HE-DOT</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=HE_dot>
+<p></p>
+<p>
+  The . operator is used to denote the scalar product of two Lorentz
+  four-vectors.
+</p>
 
-<TITLE>HE_dot</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<h3>syntax:</h3>
+<p></p>
+<p>&lt;vector&gt; <em>.</em> &lt;vector&gt;</p>
 
+<p></p>
+<p></p>
+<p>
+  &lt;vector&gt; must be an identifier declared to be of type <em>vector</em> to
+  h ave the scalar product definition. When applied to arguments that are not
+  vectors, the <a href="r37_0043.html">cons</a> operator is used, whose symbol
+  is also ``dot.''
+</p>
 
-
-<B>.</B> _ _ _ <B>HE-DOT</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-The . operator is used to denote the scalar product of two Lorentz 
-four-vectors. 
- <P> <H3> 
-syntax: </H3>
-<P>
-<P>
-&lt;vector&gt; <em>.</em> &lt;vector&gt; 
-<P>
-<P>
-<P>
-&lt;vector&gt; must be an identifier declared to be of type <em>vector</em> to h
-ave 
-the scalar product definition. When applied to arguments that are not 
-vectors, the 
-<A HREF=r37_0043.html>cons</A> operator is used, 
-whose symbol is also ``dot.'' 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 vector aa,bb,cc; 
 
 let aa.bb = 0; 
@@ -53,23 +52,29 @@ q;
 
   AA.CC
 
-</TT></PRE><P>Since vectors are special high-energy physics entities that do not
- contain 
-values, the . product will not return a true scalar product. You can 
-assign a scalar identifier to the result of a . operation, or assign a . 
-operation to have the value of the scalar you supply, as shown above. Note 
-that the result of a . operation is a scalar, not a vector. 
-<P>
-<P>
-The metric tensor g(u,v) can be represented by <em>u.v</em>. If contraction 
-over the indices is required, <em>u</em> and <em>v</em> should be declared to 
-be of type 
-<A HREF=r37_0412.html>index</A>. 
-<P>
-<P>
-The dot operator has the highest precedence of the infix operators, so 
-expressions involving . and other operators have the scalar product 
-evaluated first before other operations are done. 
-<P>
-<P>
-<P>
+</TT></PRE>
+<p>
+  Since vectors are special high-energy physics entities that do not contain
+  values, the . product will not return a true scalar product. You can assign a
+  scalar identifier to the result of a . operation, or assign a . operation to
+  have the value of the scalar you supply, as shown above. Note that the result
+  of a . operation is a scalar, not a vector.
+</p>
+
+<p></p>
+<p>
+  The metric tensor g(u,v) can be represented by <em>u.v</em>. If contraction
+  over the indices is required, <em>u</em> and <em>v</em> should be declared to
+  be of type <a href="r37_0412.html">index</a>.
+</p>
+
+<p></p>
+<p>
+  The dot operator has the highest precedence of the infix operators, so
+  expressions involving . and other operators have the scalar product evaluated
+  first before other operations are done.
+</p>
+
+<p></p>
+<p></p>
+<p></p>

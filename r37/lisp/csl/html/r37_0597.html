@@ -1,47 +1,49 @@
+<a name="lu_decom"> <title>lu_decom</title></a>
+<b><a href="r37_idx.html">INDEX</a></b>
+<p></p>
+<p><b>LU_DECOM</b> _ _ _ _ _ _ _ _ _ _ _ _ <b>operator</b></p>
 
-<A NAME=lu_decom>
+<p></p>
+<p></p>
 
-<TITLE>lu_decom</TITLE></A>
-<b><a href=r37_idx.html>INDEX</a></b><p><p>
+<p></p>
+<p></p>
+<p></p>
+<h3>syntax:</h3>
+<em>lu_decom</em>(&lt;matrix&gt;)
+<p></p>
+<p></p>
+<p>
+  &lt;matrix&gt; :- a
+  <a href="r37_0345.html">matrix</a> containing either numeric entries or
+  imaginary entries with numeric coefficients.
+</p>
 
+<p></p>
+<p>
+  <em>lu_decom</em>performs LU decomposition on &lt;matrix&gt;, ie: it returns
+  {L,U} where L is a lower diagonal <a href="r37_0345.html">matrix</a>, U an
+  upper diagonal <a href="r37_0345.html">matrix</a> and A = LU.
+</p>
 
+<p></p>
+<p>Caution:</p>
 
-<B>LU_DECOM</B> _ _ _  _ _ _  _ _ _  _ _ _ <B>operator</B><P>
-<P>
- 
-<P>
-<P>
- <P> <H3> 
-syntax: </H3>
-<em>lu_decom</em>(&lt;matrix&gt;) 
-<P>
-<P>
-<P>
-&lt;matrix&gt; :- a 
-<A HREF=r37_0345.html>matrix</A> containing either numeric entries 
- or imaginary entries with numeric coefficients. 
-<P>
-<P>
-<em>lu_decom</em>performs LU decomposition on &lt;matrix&gt;, ie: it 
-returns {L,U} where L is a lower diagonal 
-<A HREF=r37_0345.html>matrix</A>, U an 
-upper diagonal 
-<A HREF=r37_0345.html>matrix</A> and A = LU. 
-<P>
-<P>
-Caution: 
-<P>
-<P>
-The algorithm used can swap the rows of &lt;matrix&gt; during the 
-calculation. This means that LU does not equal &lt;matrix&gt; but a row 
-equivalent of it. Due to this, <em>lu_decom</em> returns {L,U,vec}. 
-The call <em>convert(meta{matrix</em>,vec)} will return the matrix that has 
-been decomposed, i.e: LU = convert(&lt;matrix&gt;,vec). 
-<P>
-<P>
- <P> <H3> 
-examples: </H3>
-<P><PRE><TT>
+<p></p>
+<p>
+  The algorithm used can swap the rows of &lt;matrix&gt; during the calculation.
+  This means that LU does not equal &lt;matrix&gt; but a row equivalent of it.
+  Due to this, <em>lu_decom</em> returns {L,U,vec}. The call
+  <em>convert(meta{matrix</em>,vec)} will return the matrix that has been
+  decomposed, i.e: LU = convert(&lt;matrix&gt;,vec).
+</p>
+
+<p></p>
+<p></p>
+<p></p>
+<h3>examples:</h3>
+<p></p>
+<pre><TT>
 
 K := mat((1,3,5),(-4,3,7),(8,6,4)); 
 
@@ -132,10 +134,13 @@ convert(P,third lu);
   [                   ]
   [i + 1  i + 2  i + 3]
 
-</TT></PRE><P> 
-<P>
-<P>
-Related functions: 
-<A HREF=r37_0581.html>cholesky</A>. 
-<P>
-<P>
+</TT></PRE>
+<p></p>
+<p></p>
+<p>
+  Related functions:
+  <a href="r37_0581.html">cholesky</a>.
+</p>
+
+<p></p>
+<p></p>
